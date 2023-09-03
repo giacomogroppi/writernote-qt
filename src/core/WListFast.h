@@ -121,34 +121,34 @@ public:
     class iterator
     {
     private:
-        T ** _array;
+        T *** _array;
         int _index;
     public:
-        iterator(T **data, int index) noexcept : _array(data), _index(index) {; };
+        iterator(T ***data, int index) noexcept : _array(data), _index(index) {; };
 
-        T* operator->()         { return _array[_index]; };
-        T &operator*() const    { return *_array[_index]; };
+        T* operator->()         { return (*_array)[_index]; };
+        T &operator*() const    { return *(*_array)[_index]; };
         constexpr bool operator==(iterator i) const         { return _index == i._index; }
         constexpr bool operator!=(iterator i) const         { return _index != i._index || _array != i._array; }
         iterator &operator++()                              { _index ++; return *this; }
         iterator operator++(int) { auto copy = *this; ++*this; return copy; }
         iterator operator+(int i) const { return iterator(_array, _index + i); }
         iterator operator-(int i) const { return iterator(_array, _index - i); };
+
+        explicit operator int () const { return this->_index; }
     };
 
     class const_iterator
     {
     private:
-        const T ** _array;
+        const T ***_array;
         int _index;
     public:
-        const_iterator(const T **data, int index) noexcept : _array(data), _index(index) { W_ASSERT(index >= 0); };
+        const_iterator(const T ***data, int index) noexcept : _array(data), _index(index) { W_ASSERT(index >= 0); };
         const_iterator(const const_iterator &other) : _array(other._array), _index(other._index) {}
 
-        const T* operator->() const   { return _array[_index]; };
-        const T &operator*() const    {
-            return *_array[_index];
-        };
+        const T* operator->() const   { return (*_array)[_index]; };
+        const T &operator*() const    { return *(*_array)[_index]; };
 
         auto operator=(const const_iterator &other) -> const_iterator & = default;
 
@@ -159,17 +159,22 @@ public:
         
         const_iterator operator+(int i) const { return const_iterator(_array, _index + i); }
         const_iterator operator-(int i) const { return const_iterator(_array, _index - i); };
+
+        explicit operator int () const { return _index; }
     };
 
-    [[nodiscard]] auto begin() noexcept -> iterator { return iterator((T **)_data, 0); };
-    [[nodiscard]] auto end()   noexcept -> iterator { return iterator((T **)_data, size());  };
+    [[nodiscard]]
+    auto begin() noexcept -> iterator { return iterator((T ***)&_data, 0); };
 
-    auto constBegin() const noexcept -> const_iterator { return const_iterator((const T **)_data, 0); }
-    auto constEnd()   const noexcept -> const_iterator { return const_iterator((const T **)_data, size()); }
-    auto cBegin() const noexcept -> const_iterator { return const_iterator((const T **)_data, 0); }
-    auto cEnd()   const noexcept -> const_iterator { return const_iterator((const T **)_data, size()); }
-    auto begin() const noexcept -> const_iterator { return const_iterator((const T **)_data, 0); }
-    auto end()   const noexcept -> const_iterator { return const_iterator((const T **)_data, size()); }
+    [[nodiscard]]
+    auto end()   noexcept -> iterator { return iterator((T ***)&_data, size());  };
+
+    auto constBegin() const noexcept -> const_iterator { return const_iterator((const T ***)&_data, 0); }
+    auto constEnd()   const noexcept -> const_iterator { return const_iterator((const T ***)&_data, size()); }
+    auto cBegin() const noexcept -> const_iterator { return const_iterator((const T ***)&_data, 0); }
+    auto cEnd()   const noexcept -> const_iterator { return const_iterator((const T ***)&_data, size()); }
+    auto begin() const noexcept -> const_iterator { return const_iterator((const T ***)&_data, 0); }
+    auto end()   const noexcept -> const_iterator { return const_iterator((const T ***)&_data, size()); }
 
     /**
      * \param writable needs to have write(const void *data, size_t size) and it needs to return < 0 in case

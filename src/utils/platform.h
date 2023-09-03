@@ -41,7 +41,6 @@
 #else
 #  define is_mac 0
 #  define is_ios 0
-#  error "Prova"
 #endif // __APPLE__
 
 force_inline bool is_mobile_static()
@@ -51,4 +50,4 @@ force_inline bool is_mobile_static()
 
 static_assert(is_mac == 0 or is_mac == 1);
 static_assert(is_ios == 0 or is_ios == 1);
-static_assert(is_mac + is_ios == 1);
+//static_assert(is_mac + is_ios == 1);
