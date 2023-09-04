@@ -56,7 +56,7 @@ void TabletUtils::load()
     const WSizeF sizeRect           = createSizeRect(this->_doc, DRAW_CREATE_SIZE_RECT_DEF_COUNTER_HEIGTH,  _m);
 
     StrokePre &strokeToDraw = *__tmp;
-
+    
     int counterPage;
     getPainter().setAntialeasing();
     
@@ -124,6 +124,6 @@ void singleLoad(
     const RectF targetRect(PointF(x, y), sizeRect.castTo<double>());
     const RectF source = pix.rect().castTo<double>();
 
-    WDebug(true, source);
+    WDebug(false, source);
     painter.drawPixmap(targetRect, pix, source);
 }

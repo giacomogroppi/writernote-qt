@@ -79,7 +79,9 @@ public:
 
 inline bool StrokePre::isEmpty() const noexcept
 {
-    return this->_point.isEmpty() and _stroke->isEmpty();
+    const auto pointsEmpty = _point.isEmpty();
+    const auto strokeEmpty = _stroke->isEmpty();
+    return pointsEmpty and strokeEmpty;
 }
 
 inline const PointF &StrokePre::last() const
@@ -142,7 +144,7 @@ force_inline void StrokePre::draw(WPainter &painter, WPen &pen, double prop, con
         //_img.write("/Users/giacomo/Desktop/tmp_foto/prova.png", "PNG");
 
         //painter.drawPixmap(target, _img, source);
-        painter.drawPixmap(RectF(0, 0, Page::getWidth(), Page::getHeight()).castTo<int>(), _img, _img.rect());
+        painter.drawPixmap(RectF(0, 0, Page::getWidth(), Page::getHeight()).castTo<double>(), _img, _img.rect().castTo<double>());
     } else {
         _stroke->draw(painter, false, 0, pen, prop);
     }

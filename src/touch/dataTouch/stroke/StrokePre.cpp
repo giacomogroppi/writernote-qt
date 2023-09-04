@@ -8,14 +8,12 @@
 
 StrokePre::StrokePre()  :
     _img(1, true),
-    _stroke(),
+    _stroke(new StrokeNormal),
     _last_draw_point(_point.constBegin()),
     _last_draw_press(_pressure.constBegin()),
     _min({0., 0.}, false),
     _max({0., 0.}, false)
 {
-    _stroke = std::unique_ptr<StrokeNormal>(new StrokeNormal);
-
     W_ASSERT(_stroke->isEmpty());
     //W_ASSERT(this->isImageEmpty());
     //W_ASSERT(QImage(100, 100, QImage::Format_ARGB32) == QImage(100, 100, QImage::Format_ARGB32));
@@ -24,7 +22,7 @@ StrokePre::StrokePre()  :
 StrokePre::~StrokePre() noexcept = default;
 
 // TODO: return a UniquePtr from core
-std::shared_ptr<Stroke> StrokePre::merge()
+auto StrokePre::merge() -> std::shared_ptr<Stroke>
 {
     using namespace WCommonScript;
     W_ASSERT(this->already_merge == false);

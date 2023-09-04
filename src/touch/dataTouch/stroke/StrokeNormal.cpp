@@ -314,13 +314,11 @@ void StrokeNormal::removeAt(int indexFrom, int indexTo)
     }
 }
 
-std::unique_ptr<Stroke> StrokeNormal::clone() const
+UniquePtr<Stroke> StrokeNormal::clone() const
 {
-    StrokeNormal *s = new StrokeNormal(*this);
-    std::unique_ptr<StrokeNormal> tmp(new StrokeNormal(*this));
+    UniquePtr<StrokeNormal> tmp(new StrokeNormal(*this));
 
     W_ASSERT(*this == *tmp);
-    WDebug(true, "Prova");
     return tmp;
 }
 

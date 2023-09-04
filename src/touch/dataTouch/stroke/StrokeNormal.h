@@ -253,7 +253,7 @@ force_inline void StrokeNormal::draw(
     WPixmap img;
     WPainterSafe _painterPrivate;
     WPainter *painter;
-    PointF lastPoint, pointDraw;
+    PointF lastPoint;
     const bool isHigh = pen.color().getAlfa() < 255;
     const double prop = _prop == PROP_RESOLUTION ? _prop : 1.;
     const bool isPrivatePainter = isHigh;
@@ -269,39 +269,39 @@ force_inline void StrokeNormal::draw(
     }
 
     lastPoint = Page::at_translation(*data.begin_point, page) * prop;
-
+    
     for (data.begin_point ++; data.begin_point != data.end_point; data.begin_point ++) {
-        const PointF point = Page::at_translation(*data.begin_point, page);
+        const PointF pointDraw = Page::at_translation(*data.begin_point, page) * prop;
         const pressure_t pressure = *(data.begin_press);
 
         if(!data.press_null){
             data.begin_press ++;
         }
 
-        pointDraw = point * prop;
-
         set_press(pen, pressure, _prop, is_rubber, color);
         painter->setPen(pen);
 
         if (un(is_rubber)) {
             pen.setWidthF(pen.widthF() * deltaColorNull);
-        }
-        else if (un(isHigh)) {
+        } else if (un(isHigh)) {
             const auto curr = painter->compositionMode();
             painter->setCompositionMode(WPainter::CompositionMode_Clear);
             painter->drawPoint(lastPoint);
             painter->setCompositionMode(curr);
         }
-
-        if (data.index_start == 0 || data.index_start == 1) {
+        
+        if (data.index_start == 0 || data.index_start == 1 or false) {
             painter->drawLine(lastPoint, pointDraw);
+            WDebug(true, "Draw line directly");
         } else {
             // do the trick
-            const auto previousPoint1 = Page::at_translation(*(data.begin_point - 1), page) * prop;
             const auto previousPoint2 = Page::at_translation(*(data.begin_point - 2), page) * prop;
+            const auto previousPoint1 = Page::at_translation(*(data.begin_point - 1), page) * prop;
             
             const auto mid1 = PointF::mid(previousPoint1, previousPoint2);
-            const auto mid2 = PointF::mid(point, previousPoint1);
+            const auto mid2 = PointF::mid(pointDraw, previousPoint1);
+            
+            WDebug(true, mid1 << mid2 << previousPoint2 << previousPoint1);
             
             painter->move(mid1);
             painter->addCurve(mid2, previousPoint1);

@@ -43,20 +43,14 @@ void WPainterUnsafe::execute(const std::function<void()> &function)
     dispatch_block_t realMethod = ^{
         @autoreleasepool {
             // Crea un renderer di immagini con le opzioni desiderate
-            UIGraphicsImageRendererFormat *format = [UIGraphicsImageRendererFormat defaultFormat];
-            format.scale = 1;
-            format.opaque = NO;
-            format.preferredRange = UIGraphicsImageRendererFormatRangeStandard;
-
-            // Qui puoi eseguire il disegno dell'immagine
             CGContextRef context = UIGraphicsGetCurrentContext();
-                
-            // Esempio: Disegna un cerchio con anti-aliasing abilitato
+
             CGContextSetShouldAntialias(context, YES);
             CGContextSetLineCap(context, kCGLineCapRound);
             CGContextSetLineJoin(context, kCGLineJoinRound);
             CGContextSetBlendMode(context, realCompositionMode);
-                
+            CGContextSetLineWidth(context, _pen.widthF());
+            
             function();
         }
     };
@@ -114,7 +108,7 @@ auto WPainterUnsafe::move(const PointF &point) -> void
 void WPainterUnsafe::addCurve (const PointF &to, const PointF &controll)
 {
     CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextAddQuadCurveToPoint(context, to.x(), to.y(), controll.x(), controll.y());
+    CGContextAddQuadCurveToPoint(context, controll.x(), controll.y(), to.x(), to.y());
 }
 
 void WPainterUnsafe::closePath ()

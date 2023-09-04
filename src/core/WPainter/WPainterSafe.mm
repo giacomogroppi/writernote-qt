@@ -48,16 +48,18 @@ void WPainterSafe::execute(const std::function<void()> &function)
                 CGContextSetShouldAntialias(context, YES);
                 CGContextSetLineCap(context, kCGLineCapRound);
                 CGContextSetBlendMode(context, realCompositionMode);
+                CGContextSetLineWidth(context, _pen.widthF());
                 [_target->_d->image drawAtPoint:CGPointZero];
                 _target->_d->image = nil;
                 
                 if (this->_needToMove) {
                     CGContextMoveToPoint(context, _pointMove.x(), _pointMove.y());
+                    _needToMove = false;
                 }
-                _needToMove = false;
                 
                 if (this->_needToCurve) {
-                    CGContextAddQuadCurveToPoint(context, _to.x(), _to.y(), _controll.x(), _controll.y());
+                    CGContextAddQuadCurveToPoint(context, _controll.x(), _controll.y(), _to.x(), _to.y());
+                    this->_needToCurve = false;
                 }
                 
                 function();

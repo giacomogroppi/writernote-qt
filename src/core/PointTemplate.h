@@ -348,7 +348,7 @@ inline auto PointTemplate<T>::rotate(const PointTemplate<T> &cir, T angle) const
 template <class T>
 inline Q_CORE_EXPORT QDebug operator<<(QDebug d, const PointTemplate<T> &p)
 {
-    d.nospace() << "PointTemplate(" << p.x() << ',' << p.y() << ')';
+    d.nospace() << "(" << p.x() << ',' << p.y() << ')';
     return d.nospace();
 }
 
@@ -357,7 +357,10 @@ inline Q_CORE_EXPORT QDebug operator<<(QDebug d, const PointTemplate<T> &p)
 template <class T>
 inline std::ostream& operator<<(std::ostream& os, const PointTemplate<T>& dt)
 {
+    os << "(";
     os << dt.x();
+    os << " ";
     os << dt.y();
+    os << ")";
     return os;
 }
