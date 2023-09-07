@@ -34,7 +34,7 @@ void WPainterSafe::execute(const std::function<void()> &function)
             
             // Qui puoi eseguire il disegno dell'immagine
             CGContextRef context = UIGraphicsGetCurrentContext();
-                
+
             // Esempio: Disegna un cerchio con anti-aliasing abilitato
             CGContextSetShouldAntialias(context, YES);
             CGContextSetLineCap(context, kCGLineCapRound);

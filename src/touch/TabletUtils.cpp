@@ -98,7 +98,7 @@ void TabletUtils::load(bool only_page)
     _doc.drawImage(getPainter());
     
     /* stroke not already add to page */
-    if (!only_page or true)
+    if (!only_page)
         drawSingleStroke(strokeToDraw, getPainter(), _pen, zoom * _m, _doc.getPointFirstPageNoZoom());
     
     this->loadLaser();

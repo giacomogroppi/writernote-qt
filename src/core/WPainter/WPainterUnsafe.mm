@@ -27,13 +27,13 @@ static auto getAdaptCompositionMode (WPainter::CompositionMode compositionMode) 
     W_ASSERT_TEXT(0, "Composition mode not implemented");
 }
 
-WPainterUnsafe::WPainterUnsafe() noexcept
+WPainterUnsafe::WPainterUnsafe () noexcept
     : _dataPrivate(nullptr)
 {
     
 }
 
-void WPainterUnsafe::execute(const std::function<void()> &function)
+void WPainterUnsafe::execute (const std::function<void()> &function)
 {
     auto realCompositionMode = getAdaptCompositionMode(_compositionMode);
     
@@ -61,7 +61,7 @@ void WPainterUnsafe::execute(const std::function<void()> &function)
         realMethod();
 }
 
-bool WPainterUnsafe::begin(WImage *pixmap)
+bool WPainterUnsafe::begin (WImage *pixmap)
 {
     WMutexLocker _(this->_lock);
     W_ASSERT_TEXT(pixmap != nullptr, "Pixmap passed as target is null");
