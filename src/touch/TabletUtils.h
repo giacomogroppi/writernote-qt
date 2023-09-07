@@ -4,7 +4,7 @@
 #include "currenttitle/document.h"
 #include "touch/laser/Laser.h"
 #include "utils/Optional.h"
-
+#include "core/WFlags.h"
 
 class TabletUtils {
 private:
@@ -54,9 +54,16 @@ public:
     constexpr double getZoom() const;
 
     static double pressureToWidth(double val);
-    
-    
-    void load(bool only_page = false);
+
+    enum LoadType {
+        page = BIT(1),
+        sheet = BIT(2),
+        stroke = BIT(3)
+    };
+
+    using LoadTypes = WFlags<LoadType>;
+
+    void load(LoadTypes types);
 private:
     void loadLaser();
 

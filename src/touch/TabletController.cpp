@@ -100,7 +100,7 @@ void TabletController::getImageStroke(WPainter &painter, double width) const
             }
     );
 
-    loader.load(false);
+    loader.load(TabletUtils::LoadType::stroke);
 
     //this->_img.write("/Users/giacomo/Desktop/tmp_foto/prova.png", "PNG");
     
@@ -131,7 +131,7 @@ void TabletController::getImagePage(WPainter &painter, double width) const
             }
     );
 
-    loader.load(true);
+    loader.load(TabletUtils::LoadType::page | TabletUtils::LoadType::sheet);
 
     //this->_img.write("/Users/giacomo/Desktop/tmp_foto/prova.png", "PNG");
     
@@ -172,7 +172,7 @@ void TabletController::draw(WPainter &painter, double width) const
             }
     );
 
-    loader.load();
+    loader.load(TabletUtils::LoadType::stroke);
 
     //this->_img.write("/Users/giacomo/Desktop/tmp_foto/prova.png", "PNG");
     
