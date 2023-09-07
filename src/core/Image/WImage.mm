@@ -7,12 +7,14 @@
 #import <UIKit/UIKit.h>
 
 constexpr const auto color_fill = WColor(255, 255, 255, 255);
+constexpr const bool need_to_fill = false;
 
 WImage::WImage () noexcept
     : _d(new WImagePrivate)
     , _rect()
 {
-    this->fill(color_fill);
+    if (need_to_fill)
+        this->fill(color_fill);
 }
 
 WImage::WImage (int page, bool consideringResolution)
@@ -25,7 +27,9 @@ WImage::WImage (int page, bool consideringResolution)
     
     _d->image = [[UIImage alloc] init];
     _rect = RectF(0, 0, width, height);
-    this->fill(color_fill);
+    
+    if (need_to_fill)
+        this->fill(color_fill);
 }
 
 WImage::WImage (int width, int height, WImageType format)
@@ -33,7 +37,8 @@ WImage::WImage (int width, int height, WImageType format)
     , _rect(0, 0, width, height)
 {
     _d->image = [[UIImage alloc] init];
-    this->fill(color_fill);
+    if (need_to_fill)
+        this->fill(color_fill);
 }
 
 WImage::WImage (WImage &&other) noexcept
@@ -157,13 +162,6 @@ auto WImage::getRawDataPNG() const -> WByteArray
 auto WImage::rect() const -> RectF
 {
     return this->_rect;
-    UIImage *img = _d->image;
-    CGSize size = img.size;
-    return RectF {
-        0., 0.,
-        size.width,
-        size.height
-    };
 }
 
 auto WImage::isNull() const -> bool
@@ -175,11 +173,12 @@ auto WImage::fill(const WColor &_color) -> void
 {
     WColor color = _color;
     if (color == color_transparent)
-        color = color_white;
+        return;
+        //color = color_fill;
+    
     const auto rect = this->rect();
     CGSize size = CGSizeMake(rect.width(), rect.height());
     
-    // Crea un renderer di immagini con le opzioni desiderate
     UIGraphicsImageRendererFormat *format = [UIGraphicsImageRendererFormat defaultFormat];
     format.scale = 1;//[UIScreen mainScreen].scale;
     format.opaque = NO;
@@ -188,13 +187,11 @@ auto WImage::fill(const WColor &_color) -> void
     UIGraphicsImageRenderer *renderer = [[UIGraphicsImageRenderer alloc] initWithSize:size format:format];
 
     _d->image = [renderer imageWithActions:^(UIGraphicsImageRendererContext * _Nonnull rendererContext) {
-        // Qui puoi eseguire il disegno dell'immagine
         CGContextRef context = rendererContext.CGContext;
-        
-        //NSColor *color = [NSColor colorWithCalibrateRed:color.getRed() green:color.getGreen() blue:color.getBlue() alpha:color.getAlfa()];
+
         [[UIColor colorWithRed:color.getRedNormalize() green:color.getGreenNormalize() blue:color.getBlueNormalize() alpha:color.getAlfaNormalize()] setFill];
         
-        UIRectFill (CGRectMake(rect.topLeft().x(), rect.topLeft().y(), rect.bottomRight().x(), rect.bottomRight().y()));
+        UIRectFill (CGRectMake(0, 0, rect.width(), rect.height()));
     }];
 }
 

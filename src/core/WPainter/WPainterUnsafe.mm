@@ -45,11 +45,11 @@ void WPainterUnsafe::execute(const std::function<void()> &function)
             // Crea un renderer di immagini con le opzioni desiderate
             CGContextRef context = UIGraphicsGetCurrentContext();
 
-            CGContextSetShouldAntialias(context, YES);
+            CGContextSetShouldAntialias(context, _isAntialeasing);
             CGContextSetLineCap(context, kCGLineCapRound);
             CGContextSetLineJoin(context, kCGLineJoinRound);
-            CGContextSetBlendMode(context, realCompositionMode);
             CGContextSetLineWidth(context, _pen.widthF());
+            //CGContextSetBlendMode(context, realCompositionMode);
             
             function();
         }
@@ -68,46 +68,41 @@ bool WPainterUnsafe::begin(WImage *pixmap)
     W_ASSERT_TEXT(!isActive(), "Trying to begin on an WPainter not ended");
     
     this->_target = pixmap;
+    
+    const auto w = width();
+    const auto h = height();
 
-    UIGraphicsBeginImageContext(CGSizeMake(this->width(), this->height()));
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(w, h), false, 1.0);
+    //UIGraphicsBeginImageContext(CGSizeMake(this->width(), this->height()));
     //W_ASSERT(_dataPrivate == nil);
     //this->_dataPrivate = new WPainterUnsafePrivate(UIGraphicsGetCurrentContext());
-    
-    /*
-    UIGraphicsImageRendererFormat *format = [UIGraphicsImageRendererFormat defaultFormat];
-    format.scale = 1.0;
-    format.opaque = NO;
-    format.preferredRange = UIGraphicsImageRendererFormatRangeStandard;
-    */
     
     [_target->_d->image drawAtPoint:CGPointZero];
     
     return true;
 }
 
-auto WPainterUnsafe::end() -> bool
+auto WPainterUnsafe::end () -> bool
 {
-    //W_ASSERT(_dataPrivate != nullptr);
-    
     _target->_d->image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    
-    //_dataPrivate->context = nil;
-    //delete this->_dataPrivate;
     
     _target = nullptr;
     return true;
 }
 
-auto WPainterUnsafe::move(const PointF &point) -> void
+auto WPainterUnsafe::move (const PointF &point) -> void
 {
+    drawPoint(point);
     CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetLineWidth(context, _pen.widthF());
     CGContextMoveToPoint(context, point.x(), point.y());
 }
 
 void WPainterUnsafe::addCurve (const PointF &to, const PointF &controll)
 {
     CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetLineWidth(context, _pen.widthF());
     CGContextAddQuadCurveToPoint(context, controll.x(), controll.y(), to.x(), to.y());
 }
 

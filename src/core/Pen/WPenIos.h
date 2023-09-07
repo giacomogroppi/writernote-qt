@@ -10,20 +10,20 @@ public:
     WPen();
     ~WPen() = default;
 
-    void setColorNull();
-    void setColor(const WColor &color);
+    auto setColorNull() -> WPen&;
+    auto setColor(const WColor &color) -> WPen&;
     WColor color() const;
     double widthF() const;
 
     // todo --> try to remove
-    void setSolidPattern();
+    auto setSolidPattern() -> WPen&;
 
-    void setWidthF(double value);
+    auto setWidthF(double value) -> WPen&;
 
     enum WPenStyle {
         DotLine
     };
-    void setStyle(enum WPenStyle style);
+    auto setStyle(enum WPenStyle style) -> WPen&;
     
     friend class WPainter;
 private:

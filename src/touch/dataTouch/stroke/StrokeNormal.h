@@ -251,7 +251,7 @@ force_inline void StrokeNormal::draw(
     W_ASSERT(painterPublic.isActive());
 
     WPixmap img;
-    WPainterSafe _painterPrivate;
+    WPainterUnsafe _painterPrivate;
     WPainter *painter;
     PointF lastPoint;
     const bool isHigh = pen.color().getAlfa() < 255;
@@ -292,7 +292,6 @@ force_inline void StrokeNormal::draw(
         
         if (data.index_start == 0 || data.index_start == 1 or false) {
             painter->drawLine(lastPoint, pointDraw);
-            WDebug(true, "Draw line directly");
         } else {
             // do the trick
             const auto previousPoint2 = Page::at_translation(*(data.begin_point - 2), page) * prop;
@@ -300,8 +299,6 @@ force_inline void StrokeNormal::draw(
             
             const auto mid1 = PointF::mid(previousPoint1, previousPoint2);
             const auto mid2 = PointF::mid(pointDraw, previousPoint1);
-            
-            WDebug(true, mid1 << mid2 << previousPoint2 << previousPoint1);
             
             painter->move(mid1);
             painter->addCurve(mid2, previousPoint1);

@@ -9,14 +9,17 @@ WPen::WPen()
     
 }
 
-auto WPen::setColorNull() -> void
+auto WPen::setColorNull() -> WPen&
 {
     this->_color = color_transparent;
+    
+    return *this;
 }
 
-void WPen::setColor(const WColor &color)
+auto WPen::setColor(const WColor &color) -> WPen&
 {
     this->_color = color;
+    return *this;
 }
 
 // TODO: change the name to getColor
@@ -31,13 +34,15 @@ auto WPen::widthF() const -> double
     return this->_size;
 }
 
-void WPen::setWidthF(double value)
+auto WPen::setWidthF(double value) -> WPen&
 {
     this->_size = value;
+    return *this;
 }
 
-void WPen::setStyle(enum WPenStyle style)
+auto WPen::setStyle(enum WPenStyle style) -> WPen&
 {
     this->_style = style;
+    return *this;
 }
 #endif

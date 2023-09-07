@@ -77,6 +77,68 @@ TabletController::TabletController(WObject *parent,
     _objectFinder = new ObjectFinder(this, callUpdate);
 }
 
+// TODO: to remove
+void TabletController::getImageStroke(WPainter &painter, double width) const
+{
+    if (this->getDoc().isEmpty()) {
+        return;
+    }
+
+    TIME_START(time_load);
+
+    TabletUtils loader(
+            painter, this->_isPlaying,
+            this->_getTimePlaying, width / Page::getWidth(),
+            Optional(_tools._laser), getDoc(),
+            true, false,
+            RectF {
+                // top left of the page
+                getDoc().getPointFirstPage(),
+
+                // bottom right of the page
+                getDoc().getPointFirstPage() + PointF { width, width * Page::getProportion() }
+            }
+    );
+
+    loader.load(false);
+
+    //this->_img.write("/Users/giacomo/Desktop/tmp_foto/prova.png", "PNG");
+    
+    // TODO: remove this
+    TIME_STOP(time_load, "Load function:");
+}
+
+// TODO: to remove
+void TabletController::getImagePage(WPainter &painter, double width) const
+{
+    if (this->getDoc().isEmpty()) {
+        return;
+    }
+
+    TIME_START(time_load);
+
+    TabletUtils loader(
+            painter, this->_isPlaying,
+            this->_getTimePlaying, width / Page::getWidth(),
+            Optional(_tools._laser), getDoc(),
+            true, false,
+            RectF {
+                // top left of the page
+                getDoc().getPointFirstPage(),
+
+                // bottom right of the page
+                getDoc().getPointFirstPage() + PointF { width, width * Page::getProportion() }
+            }
+    );
+
+    loader.load(true);
+
+    //this->_img.write("/Users/giacomo/Desktop/tmp_foto/prova.png", "PNG");
+    
+    // TODO: remove this
+    TIME_STOP(time_load, "Load function:");
+}
+
 void TabletController::getImg(WPainter &painter, double width) const
 {
     this->draw(painter, width);
@@ -115,7 +177,7 @@ void TabletController::draw(WPainter &painter, double width) const
     //this->_img.write("/Users/giacomo/Desktop/tmp_foto/prova.png", "PNG");
     
     // TODO: remove this
-    //TIME_STOP(time_load, "Load function:");
+    TIME_STOP(time_load, "Load function:");
 }
 
 void TabletController::objectMove(const PointF &point)

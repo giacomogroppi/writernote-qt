@@ -284,7 +284,7 @@ void * __page_load(void *__data)
     auto *  extra = (struct page_thread_data *)_data->extra;
     WPixmap img;
     WPen m_pen;
-    WPainterSafe painter;
+    WPainterUnsafe painter;
     auto &mutex = *extra->append;
     int m_pos_ris = extra->m_pos_ris;
     const Page *page = extra->parent;
@@ -400,7 +400,7 @@ void Page::drawToImage(
     cint                flag) const
 {
     WPen pen;
-    WPainterSafe painter;
+    WPainterUnsafe painter;
 
     if (flag & DR_IMG_INIT_IMG) {
         __initImg(img);
@@ -464,7 +464,7 @@ void Page::triggerRenderImage(int m_pos_ris, bool all)
 
     all = initImg(all);
 
-    WPainterSafe painter;
+    WPainterUnsafe painter;
     painter.begin(&_imgDraw);
 
     this->draw(painter, m_pos_ris, all);
@@ -531,7 +531,7 @@ void Page::removeAndDraw(
 void Page::drawIfInside(int m_pos_ris, const RectF &area)
 {
     int index = lengthStroke() - 1;
-    WPainterSafe painter;
+    WPainterUnsafe painter;
     painter.begin(&this->_imgDraw);
 
     for(; index >= 0; index --){
@@ -555,7 +555,7 @@ void Page::decreaseAlfa(const WVector<int> &pos, int decrease)
         return this->triggerRenderImage(-1, true);
     }
 
-    WPainterSafe painter;
+    WPainterUnsafe painter;
     painter.begin(&_imgDraw);
 
     this->decreaseAlfa(pos, &painter, decrease);
@@ -633,7 +633,7 @@ void Page::drawForceColorStroke(const WVector<int> &pos, int m_pos_ris, const WC
     if(initImg(false))
         return this->triggerRenderImage(m_pos_ris, true);
 
-    WPainterSafe painter;
+    WPainterUnsafe painter;
     painter.begin(&_imgDraw);
 
     for (const auto &index: std::as_const(pos)) {

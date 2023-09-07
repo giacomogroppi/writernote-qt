@@ -30,40 +30,34 @@ void WPainterSafe::execute(const std::function<void()> &function)
     
     dispatch_block_t realMethod = ^{
         @autoreleasepool {
-            CGSize size = CGSizeMake(width(), height());
+            UIGraphicsBeginImageContextWithOptions(CGSizeMake(width(), height()), false, 1.0);
             
-            // Crea un renderer di immagini con le opzioni desiderate
-            UIGraphicsImageRendererFormat *format = [UIGraphicsImageRendererFormat defaultFormat];
-            format.scale = 1;
-            format.opaque = NO;
-            format.preferredRange = UIGraphicsImageRendererFormatRangeStandard;
-
-            UIGraphicsImageRenderer *renderer = [[UIGraphicsImageRenderer alloc] initWithSize:size format:format];
-
-            _target->_d->image = [renderer imageWithActions:^(UIGraphicsImageRendererContext * _Nonnull rendererContext) {
-                // Qui puoi eseguire il disegno dell'immagine
-                CGContextRef context = rendererContext.CGContext;
+            // Qui puoi eseguire il disegno dell'immagine
+            CGContextRef context = UIGraphicsGetCurrentContext();
                 
-                // Esempio: Disegna un cerchio con anti-aliasing abilitato
-                CGContextSetShouldAntialias(context, YES);
-                CGContextSetLineCap(context, kCGLineCapRound);
-                CGContextSetBlendMode(context, realCompositionMode);
-                CGContextSetLineWidth(context, _pen.widthF());
-                [_target->_d->image drawAtPoint:CGPointZero];
-                _target->_d->image = nil;
+            // Esempio: Disegna un cerchio con anti-aliasing abilitato
+            CGContextSetShouldAntialias(context, YES);
+            CGContextSetLineCap(context, kCGLineCapRound);
+            CGContextSetBlendMode(context, realCompositionMode);
+            CGContextSetLineWidth(context, _pen.widthF());
+            [_target->_d->image drawAtPoint:CGPointZero];
+            _target->_d->image = nil;
                 
-                if (this->_needToMove) {
-                    CGContextMoveToPoint(context, _pointMove.x(), _pointMove.y());
-                    _needToMove = false;
-                }
+            if (this->_needToMove) {
+                CGContextMoveToPoint(context, _pointMove.x(), _pointMove.y());
+                _needToMove = false;
+            }
                 
-                if (this->_needToCurve) {
-                    CGContextAddQuadCurveToPoint(context, _controll.x(), _controll.y(), _to.x(), _to.y());
-                    this->_needToCurve = false;
-                }
+            if (this->_needToCurve) {
+                CGContextAddQuadCurveToPoint(context, _controll.x(), _controll.y(), _to.x(), _to.y());
+                this->_needToCurve = false;
+            }
                 
-                function();
-            }];
+            function();
+            
+            
+            _target->_d->image = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
         }
     };
     

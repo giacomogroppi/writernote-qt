@@ -54,7 +54,9 @@ public:
     constexpr double getZoom() const;
 
     static double pressureToWidth(double val);
-    void load();
+    
+    
+    void load(bool only_page = false);
 private:
     void loadLaser();
 

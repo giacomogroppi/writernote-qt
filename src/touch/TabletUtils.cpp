@@ -48,13 +48,13 @@ void TabletUtils::loadLaser()
     }
 }
 
-void TabletUtils::load()
+void TabletUtils::load(bool only_page)
 {
     int lenPage                     = this->_doc.lengthPage();
     const PointF &PointFirstPage    = this->_doc.getPointFirstPageNoZoom();
     const auto zoom                 = this->getZoom();
     const WSizeF sizeRect           = createSizeRect(this->_doc, DRAW_CREATE_SIZE_RECT_DEF_COUNTER_HEIGTH,  _m);
-
+    
     StrokePre &strokeToDraw = *__tmp;
     
     int counterPage;
@@ -73,8 +73,8 @@ void TabletUtils::load()
 
     counterPage = _isExportingPdf ? 0 : _doc.getFirstPageVisible();
     
-    WDebug(false, "Start draw img from" << counterPage);
-    for (; counterPage < 1 && lenPage and true; counterPage ++) {
+    WDebug(true, "Start draw img from" << counterPage << only_page);
+    for (; counterPage < 1 && lenPage and (only_page); counterPage ++) {
         const Page &page = _doc.at(counterPage);
         const auto isPageVisible = page.isVisible();
         const auto &img = page.getImg();
@@ -83,8 +83,8 @@ void TabletUtils::load()
             WDebug(false, __func__ << "Page at index" << counterPage << "not visible: Break");
             continue;
         }
-
-        page.get_stroke_page().draw(getPainter(), _m, page, sizeRect, {0., 0., 150., 150.});
+        
+        page.get_stroke_page().draw(getPainter(), _m, page, sizeRect, {0., 0., Page::getWidth(), Page::getHeight()});
         singleLoad(getPainter(), img, sizeRect, {0., 0.}, counterPage, _doc.getZoom());
 
         //img.write("/Users/giacomo/Desktop/tmp_foto/prova.png", "PNG");
@@ -98,7 +98,8 @@ void TabletUtils::load()
     _doc.drawImage(getPainter());
     
     /* stroke not already add to page */
-    drawSingleStroke(strokeToDraw, getPainter(), _pen, zoom * _m, _doc.getPointFirstPageNoZoom());
+    if (!only_page or true)
+        drawSingleStroke(strokeToDraw, getPainter(), _pen, zoom * _m, _doc.getPointFirstPageNoZoom());
     
     this->loadLaser();
 }
@@ -124,6 +125,6 @@ void singleLoad(
     const RectF targetRect(PointF(x, y), sizeRect.castTo<double>());
     const RectF source = pix.rect().castTo<double>();
 
-    WDebug(false, source);
+    //painter.drawPixmap(pix.rect(), pix, source);
     painter.drawPixmap(targetRect, pix, source);
 }

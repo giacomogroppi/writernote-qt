@@ -57,21 +57,24 @@ void WPainter::drawEllipse (const PointF &center, double rx, double ry)
 
 void WPainter::drawImage (const RectF &target, const WImage &image, const RectF &source)
 {
+    if (image._d->image == nil) {
+        WDebug(true, "Image is null.");
+        return;
+    }
     this->execute([this, &target, &image, &source](){
         WMutexLocker _(this->_lock);
-        UIImage *imageSource = image._d->image;
         
         CGRect targetRect = CGRectMake(target.topLeft().x(), target.topLeft().y(), target.width(), target.height());
-        
-        // Definisci la regione rettangolare da ritagliare (rect è in coordinate dell'immagine originale)
         CGRect cropRect = CGRectMake(source.topLeft().x(), source.topLeft().y(), source.width(), source.height());
-
+        
         // Esegui il crop dell'immagine
         CGImageRef imageRef = CGImageCreateWithImageInRect([image._d->image CGImage], cropRect);
         UIImage *croppedImage = [UIImage imageWithCGImage:imageRef];
         CGImageRelease(imageRef);
         
-        [croppedImage drawInRect:targetRect blendMode:kCGBlendModeMultiply alpha:1.0];
+        TIME_START(wpainter_drawimage);
+        [croppedImage drawInRect:targetRect blendMode:kCGBlendModeNormal alpha:1.0];
+        //TIME_STOP(wpainter_drawimage, "wpainter_drawimage");
     });
 }
 
@@ -209,10 +212,12 @@ WPainter::~WPainter()
 
 auto WPainter::height() const -> int
 {
+    W_ASSERT(_target != nullptr);
     return this->_target->rect().height();
 }
 
 auto WPainter::width() const -> int
 {
+    W_ASSERT(_target != nullptr);
     return this->_target->rect().width();
 }

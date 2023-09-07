@@ -11,7 +11,7 @@
 
 void preview::get(WPixmap &ref, const Document &doc, cbool withPdf, const int width)
 {
-    WPainterSafe painter;
+    WPainterUnsafe painter;
     const double size_orizzontale = doc.biggerX();
     const double delta = (double)width / (double)size_orizzontale;
 

@@ -138,6 +138,7 @@ public:
 
 #ifndef USE_QT
 # define color_red         WColor(255, 0, 0, 255)
+# define color_blue        WColor(0, 0, 255, 255)
 # define color_black       WColor(0, 0, 0, 255)
 # define color_white       WColor(255, 255, 255, 255)
 # define color_transparent WColor(0, 0, 0, 0)

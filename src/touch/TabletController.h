@@ -51,7 +51,9 @@ public:
                               const std::function<int()>  &getTimePlaying);
 
     void getImg(WPainter &painter, double width) const;
-
+    void getImagePage(WPainter &painter, double width) const;
+    void getImageStroke(WPainter &painter, double width) const;
+    
     Tools* getCurrentTool() const;
 
     DEFINE_LISTENER(selectType(int type));
