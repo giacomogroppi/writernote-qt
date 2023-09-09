@@ -58,7 +58,7 @@ void TabletUtils::load(LoadTypes types)
     StrokePre &strokeToDraw = *__tmp;
     
     int counterPage;
-    getPainter().setAntialeasing();
+    getPainter().setAntialiasing();
     
 #ifdef PDFSUPPORT
     if(_withPdf)

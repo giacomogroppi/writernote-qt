@@ -191,7 +191,7 @@ void StrokePre::append(const PointF &point, const pressure_t &press, WPen &_pen,
         WPainterUnsafe painter;
         WPen pen;
         painter.setPen(pen);
-        painter.setAntialeasing();
+        painter.setAntialiasing();
         painter.begin(&_img);
         painter.drawLine(0, 0, 100, 100);
         painter.end();
@@ -208,7 +208,7 @@ void StrokePre::append(const PointF &point, const pressure_t &press, WPen &_pen,
         _pressure.append(press);
 
         painter.setPen(pen);
-        painter.setAntialeasing();
+        painter.setAntialiasing();
 
         if (_point.size() == 1) {
             _last_draw_point = this->_point.constBegin();

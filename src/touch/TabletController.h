@@ -10,6 +10,7 @@
 #include <atomic>
 #include "touch/tools/Tools.h"
 #include "Scheduler/WObject.h"
+#include "touch/UpdateEvent.h"
 
 class TabletController : public WObject
 {
@@ -65,7 +66,8 @@ public:
     DEFINE_LISTENER(touchUpdate(const PointF &point, double pressure));
     DEFINE_LISTENER(touchEnd(const PointF &point, double pressure));
 
-    W_EMITTABLE_2(onNeedRefresh, int, pageMin, int, pageMax);
+    W_EMITTABLE_1(onNeedRefresh, const UpdateEvent&, event);
+
     W_EMITTABLE_0(onToolChanged);
     W_EMITTABLE_0(onPropertyHide);
     W_EMITTABLE_1(onNumberOfPageChanged, int, numerberOfPage);

@@ -262,7 +262,7 @@ force_inline void StrokeNormal::draw(
         img = WPixmap(1, true);
         img.fill(WColor(color_transparent));
         _painterPrivate.begin(&img);
-        _painterPrivate.setAntialeasing();
+        _painterPrivate.setAntialiasing();
         painter = &_painterPrivate;
     } else {
         painter = &painterPublic;

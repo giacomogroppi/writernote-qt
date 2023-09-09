@@ -454,7 +454,8 @@ inline int DataStruct::whichPage(const PointF &point) const
     return index;
 }
 
-/* the function automatically launches the drawing for the pages
+/**
+ * the function automatically launches the drawing for the pages
  * to which data has been added*/
 inline void DataStruct::append(const WListFast<std::shared_ptr<Stroke>> &stroke, int m_pos_ris)
 {

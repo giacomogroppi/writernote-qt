@@ -561,7 +561,42 @@ inline T min(T one, T two)
 template <class T>
 inline T toRad (T value)
 {
-    return value / 180 * M_PI;
+    return value / T(180) * M_PI;
+}
+
+template <class T>
+inline T toDeg (T value)
+{
+    return value * T(180) / M_PI;
+}
+
+// degree
+template <class T>
+inline T sinD (T value)
+{
+    return std::sin(toRad(value));
+}
+
+// radius
+template <class T>
+inline T sinR (T value)
+{
+    return std::sin(value);
+}
+
+// sin -1 radius
+template <class T>
+inline T asinR (T value)
+{
+    return std::asin(value);
+}
+
+// sin -1 radius
+template <class T>
+inline T asinD (T value)
+{
+    W_ASSERT(value >= -1.0 and value <= 1.0);
+    return toDeg(std::asin(value));
 }
 
 }

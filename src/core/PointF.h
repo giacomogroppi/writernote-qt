@@ -1,9 +1,4 @@
-//
-// Created by Giacomo Groppi on 01/05/23.
-//
-
-#ifndef WRITERNOTE_POINTF_H
-#define WRITERNOTE_POINTF_H
+#pragma once
 
 #include "PointTemplate.h"
 #include "utils/WCommonScript.h"
@@ -38,6 +33,3 @@ namespace WCommonScript {
         return std::sqrt(WCommonScript::distance_not_square(first, second));
     }
 }
-
-
-#endif //WRITERNOTE_POINTF_H

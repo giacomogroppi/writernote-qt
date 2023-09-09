@@ -18,7 +18,7 @@ TabletController::TabletController(WObject *parent,
     , _getTimePlaying(getTimePlaying)
 {
     auto objectMove = [this](const PointF &point) { this->objectMove(point); };
-    auto callUpdate = [this]() { W_EMIT_2(onNeedRefresh, 0, this->getDoc().lengthPage()); };
+    auto callUpdate = [this]() { W_EMIT_1(onNeedRefresh, UpdateEvent::makeAll()); };
     auto getDoc = [this]() -> Document & { return this->getDoc(); };
 
     auto showProperty = [this] (const PointF &point, ActionProperty prop) {
@@ -172,7 +172,7 @@ void TabletController::draw(WPainter &painter, double width) const
             }
     );
 
-    loader.load(TabletUtils::LoadType::stroke);
+    loader.load(TabletUtils::LoadType::stroke | TabletUtils::LoadType::page | TabletUtils::LoadType::sheet);
 
     //this->_img.write("/Users/giacomo/Desktop/tmp_foto/prova.png", "PNG");
     
@@ -195,11 +195,11 @@ void TabletController::checkCreatePage()
 
 void TabletController::touchBegin(const PointF &point, double pressure)
 {
+    //TODO: adjust touchBegin touchUpdate touchEnd to return modified element in UI
     checkCreatePage();
     const auto res = _currentTool->touchBegin(point, pressure, *_doc);
     if (res >= 0) {
-        W_EMIT_2(onNeedRefresh, 0, 1);
-        //emit onNeedRefresh(res, res + 1);
+        W_EMIT_1(onNeedRefresh, UpdateEvent::makeStroke() | UpdateEvent::makePage(0, 1));
     }
 }
 
@@ -207,9 +207,7 @@ void TabletController::touchUpdate(const PointF &point, double pressure)
 {
     const auto res = _currentTool->touchUpdate(point, pressure, this->getDoc());
     if (res >= 0) {
-        W_EMIT_2(onNeedRefresh, 0, 1);
-
-//        emit onNeedRefresh(res, res + 1);
+        W_EMIT_2(onNeedRefreshPage, 0, 1);
     }
 }
 
@@ -218,7 +216,7 @@ void TabletController::touchEnd(const PointF &point, double pressure)
     const auto res = _currentTool->touchEnd(point, *_doc);
     // da aggiustare
 
-    W_EMIT_2(onNeedRefresh, 0, 1);
+    W_EMIT_2(onNeedRefreshPage, 0, 1);
    /*emit onNeedRefresh(
         res >= 0 ? res : 0,
         res >= 0 ? res + 1: this->getDoc().lengthPage()

@@ -37,7 +37,7 @@ public:
     void drawEllipse (const PointF &center, double rx, double ry);
 
     virtual void move (const PointF &point) = 0;
-    virtual void addCurve(const PointF &to, const PointF &control) = 0;
+    virtual void addCurve(const PointF &to, const PointF &controll) = 0;
     virtual void closePath () = 0;
     
     enum CompositionMode {
@@ -50,7 +50,7 @@ public:
     [[nodiscard]]
     auto compositionMode() const -> WPainter::CompositionMode;
 
-    void setAntialeasing();
+    void setAntialiasing();
     void setCompositionClear();
 
     virtual bool end() = 0;

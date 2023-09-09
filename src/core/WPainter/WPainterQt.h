@@ -55,11 +55,11 @@ public:
     void setCompositionMode(enum CompositionMode compositionMode);
     [[nodiscard]] WPainter::CompositionMode compositionMode() const;
 
-    void setAntialeasing();
+    void setAntialiasing();
     void setCompositionClear();
 
     void move (const PointF& point) noexcept;
-    void addCurve(const PointF &to, const PointF &control) noexcept;
+    void addCurve(const PointF &to, const PointF &controll) noexcept;
     void closePath () noexcept;
 
     bool end();

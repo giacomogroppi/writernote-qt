@@ -70,6 +70,16 @@ public:
     constexpr auto operator/=(double d) -> PointTemplate<T>&;
     constexpr auto operator+=(const PointTemplate<T> &other) -> PointTemplate<T>&;
     constexpr auto operator-=(const PointTemplate<T> &other) -> PointTemplate<T>&;
+
+
+#ifdef USE_QT
+    operator QPointF() const
+    {
+        return QPointF {
+            _x, _y
+        };
+    }
+#endif // USE_QT
 };
 
 template<typename T>
@@ -351,7 +361,6 @@ inline Q_CORE_EXPORT QDebug operator<<(QDebug d, const PointTemplate<T> &p)
     d.nospace() << "(" << p.x() << ',' << p.y() << ')';
     return d.nospace();
 }
-
 #endif // USE_QT
 
 template <class T>
