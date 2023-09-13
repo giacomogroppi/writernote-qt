@@ -1,75 +1,30 @@
 #pragma once
 
-#include <QPainter>
+#include <utility>
+#include <initializer_list>
 
-template <class Enum>
+template<typename Enum>
+    requires (sizeof(Enum) < sizeof(unsigned long) && std::is_enum_v<Enum>)
 class WFlags
 {
-private:
-    using Type = unsigned long;
+    typedef typename std::conditional_t<
+        std::is_signed<Enum>::value,
+            signed long,
+            unsigned long
+        > Type;
+
     Type _d;
 public:
-    WFlags() noexcept : _d(0) {}
-    WFlags(const Enum &e) noexcept : _d(Type(e)) {};
+    constexpr WFlags(Enum f) : _d(Type(f)) {}
+    constexpr WFlags() : _d(0) {}
+    constexpr WFlags(Type f) : _d(f) {}
 
-    WFlags(WFlags &&other) = default;
-    WFlags(const WFlags &other) = default;
+    constexpr auto operator&=(Type mask) -> WFlags<Enum> & { _d &= mask; return *this; }
+    constexpr auto operator|=(WFlags<Enum> f) -> WFlags<Enum> &{ _d |= f.i; return *this; }
 
-    auto operator&(Enum value) const -> WFlags { WFlags result; result._d = Type(value) & _d; return result; }
-    auto operator|(Enum value) const -> WFlags { WFlags result; result._d = Type(value) | _d; return result; }
+    constexpr operator Type() const { return _d; }
 
-    auto operator&(WFlags value) const -> WFlags { WFlags result; result._d = value._d & _d; return result; }
-    auto operator|(WFlags value) const -> WFlags { WFlags result; result._d = value._d | _d; return result; }
-
-    friend auto operator&(WFlags<Enum> f1, WFlags<Enum> &f2) -> WFlags<Enum>
-    {
-        WFlags<Enum> result;
-        result._d = f1._d & f2._d;
-        return result;
-    };
-
-    friend auto operator|(WFlags f1, WFlags &f2) -> WFlags
-    {
-        WFlags<Enum> result;
-        result._d = f1._d | f2._d;
-        return result;
-    };
-
-    /*friend auto operator|(WFlags<Enum> f1, Enum value) -> WFlags<Enum>
-    {
-        WFlags<Enum> result;
-        result._d = f1._d | Type(value);
-        return result;
-    }*/
-
-    auto operator&=(const WFlags<Enum> &d) -> WFlags<Enum>& { _d &= d._d; return *this; }
-    auto operator|=(const WFlags<Enum> &d) -> WFlags<Enum>& { _d |= d._d; return *this; }
-
-    auto operator=(const WFlags<Enum> &d) -> WFlags<Enum>& { _d = d._d; return *this;}
-
-    auto operator=(WFlags<Enum> &&d) -> WFlags<Enum>&
-    {
-        this->operator=(std::as_const(d));
-        return *this;
-    };
-
-    operator bool () const { return _d != 0; }
+    constexpr auto operator|(WFlags<Enum> f) const -> WFlags<Enum> { return Type(_d | f._d); }
+    constexpr auto operator&(Type mask) const -> WFlags<Enum> { return Type(_d & mask); }
+    constexpr auto operator~() const -> WFlags<Enum> { return Type(~_d); }
 };
-
-template <class T>
-inline WFlags<T> operator|(const WFlags<T> &f1, const WFlags<T> &f2)
-{
-    return f1.operator|(f2);
-}
-
-template <class T>
-inline WFlags<T> operator|(const T& f1, const T& f2)
-{
-    return WFlags<T>(f1).operator|(f2);
-}
-
-template <class T>
-inline WFlags<T> operator|(const WFlags<T>& f1, const T& f2)
-{
-    return f1.operator|(f2);
-}

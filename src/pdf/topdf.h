@@ -46,6 +46,6 @@ inline void topdf::draw(WPainter &painter, double m, cbool withPdf)
         true,
         RectF());
 
-    loader.load(TabletUtils::LoadType::stroke | TabletUtils::LoadType::page | TabletUtils::LoadType::sheet);
+    loader.load(UpdateEvent::stroke | UpdateEvent::page | UpdateEvent::sheet);
 }
 

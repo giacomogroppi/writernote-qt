@@ -100,7 +100,7 @@ void TabletController::getImageStroke(WPainter &painter, double width) const
             }
     );
 
-    loader.load(TabletUtils::LoadType::stroke);
+    loader.load(WFlags{UpdateEvent::stroke});
 
     //this->_img.write("/Users/giacomo/Desktop/tmp_foto/prova.png", "PNG");
     
@@ -131,7 +131,7 @@ void TabletController::getImagePage(WPainter &painter, double width) const
             }
     );
 
-    loader.load(TabletUtils::LoadType::page | TabletUtils::LoadType::sheet);
+    loader.load(UpdateEvent::page | UpdateEvent::sheet);
 
     //this->_img.write("/Users/giacomo/Desktop/tmp_foto/prova.png", "PNG");
     
@@ -172,7 +172,7 @@ void TabletController::draw(WPainter &painter, double width) const
             }
     );
 
-    loader.load(TabletUtils::LoadType::stroke | TabletUtils::LoadType::page | TabletUtils::LoadType::sheet);
+    loader.load(UpdateEvent::stroke | UpdateEvent::page | UpdateEvent::sheet);
 
     //this->_img.write("/Users/giacomo/Desktop/tmp_foto/prova.png", "PNG");
     
@@ -199,7 +199,7 @@ void TabletController::touchBegin(const PointF &point, double pressure)
     checkCreatePage();
     const auto res = _currentTool->touchBegin(point, pressure, *_doc);
     if (res >= 0) {
-        W_EMIT_1(onNeedRefresh, UpdateEvent::makeStroke() | UpdateEvent::makePage(0, 1));
+        W_EMIT_1(onNeedRefresh, UpdateEvent::makeStroke() | UpdateEvent::makePageAll());
     }
 }
 
@@ -207,20 +207,15 @@ void TabletController::touchUpdate(const PointF &point, double pressure)
 {
     const auto res = _currentTool->touchUpdate(point, pressure, this->getDoc());
     if (res >= 0) {
-        W_EMIT_2(onNeedRefreshPage, 0, 1);
+        W_EMIT_1(onNeedRefresh, UpdateEvent::makeStroke() | UpdateEvent::makePageAll());
     }
 }
 
 void TabletController::touchEnd(const PointF &point, double pressure)
 {
     const auto res = _currentTool->touchEnd(point, *_doc);
-    // da aggiustare
 
-    W_EMIT_2(onNeedRefreshPage, 0, 1);
-   /*emit onNeedRefresh(
-        res >= 0 ? res : 0,
-        res >= 0 ? res + 1: this->getDoc().lengthPage()
-    );*/
+    W_EMIT_1(onNeedRefresh, UpdateEvent::makeStroke() | UpdateEvent::makePageAll());
 }
 
 void TabletController::selectColor(const WColor &color)

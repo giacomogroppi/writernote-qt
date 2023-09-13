@@ -7,8 +7,6 @@
 #include "core/WFlags.h"
 #include "utils/WCommonScript.h"
 
-
-
 class UpdateEvent {
 public:
     enum UpdateEventType {
@@ -20,7 +18,7 @@ public:
 
     UpdateEvent(WFlags<UpdateEventType> flags) : _flags(std::move(flags)), _low(0), _high(0) {};
 
-    static auto makePage(int low, int high) { return UpdateEvent(UpdateEventType::page, low, high); }
+    static auto makePage(int low, int high) { return UpdateEvent(WFlags{UpdateEventType::page}, low, high); }
     static auto makePageAll() -> UpdateEvent;
     static auto makeSheet() -> UpdateEvent;
     static auto makeStroke() -> UpdateEvent;
@@ -30,6 +28,16 @@ public:
     auto operator|(const UpdateEvent& d) const -> UpdateEvent { return {_flags | d._flags}; }
     auto operator&(const WFlags<UpdateEventType> &f) const -> WFlags<UpdateEventType> { return _flags & f; }
 
+    /**
+     * This function is defined only if the event has UpdateEventType::page and isAll() return false
+    */
+    auto getPageLow() const -> int;
+
+    /**
+     * This function is defined only if the event has UpdateEventType::page and isAll() return false
+    */
+    auto getPageHigh() const -> int;
+    auto isAll() const -> bool;
 
 private:
     WFlags<UpdateEventType> _flags;
@@ -43,22 +51,39 @@ private:
 
 inline auto UpdateEvent::makeSheet() -> UpdateEvent
 {
-    return {UpdateEventType::stroke};
+    return WFlags{UpdateEventType::stroke};
 }
 
 inline auto UpdateEvent::makeStroke() -> UpdateEvent
 {
-    return {UpdateEventType::stroke};
+    return WFlags{UpdateEventType::stroke};
 }
 
 inline auto UpdateEvent::makePageAll() -> UpdateEvent
 {
     UpdateEvent event;
 
-    event._flags = UpdateEventType::page;
+    event._flags = WFlags{UpdateEventType::page};
     event._low = 0;
     event._high = 0;
     event._all = true;
 
     return event;
+}
+
+inline auto UpdateEvent::getPageLow() const -> int
+{
+    W_ASSERT(!isAll());
+    return this->_low;
+}
+
+inline auto UpdateEvent::getPageHigh() const -> int
+{
+    W_ASSERT(!isAll());
+    return _high;
+}
+
+inline auto UpdateEvent::isAll() const -> bool
+{
+    return _all;
 }

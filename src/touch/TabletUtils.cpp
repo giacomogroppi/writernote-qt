@@ -74,7 +74,7 @@ void TabletUtils::load(LoadTypes types)
     counterPage = _isExportingPdf ? 0 : _doc.getFirstPageVisible();
     
     WDebug(true, "Start draw img from" << counterPage);
-    for (; counterPage < 1 && lenPage and (types & (LoadType::page | LoadType::sheet)); counterPage ++) {
+    for (; counterPage < 1 && lenPage and (types & (UpdateEvent::page | UpdateEvent::sheet)); counterPage ++) {
         const Page &page = _doc.at(counterPage);
         const auto isPageVisible = page.isVisible();
         const auto &img = page.getImg();
@@ -84,9 +84,9 @@ void TabletUtils::load(LoadTypes types)
             continue;
         }
 
-        if (types & LoadType::sheet)
+        if (types & UpdateEvent::sheet)
             page.get_stroke_page().draw(getPainter(), _m, page, sizeRect, {0., 0., Page::getWidth(), Page::getHeight()});
-        if (types & LoadType::page)
+        if (types & UpdateEvent::page)
             singleLoad(getPainter(), img, sizeRect, {0., 0.}, counterPage, _doc.getZoom());
 
         //img.write("/Users/giacomo/Desktop/tmp_foto/prova.png", "PNG");
@@ -100,10 +100,11 @@ void TabletUtils::load(LoadTypes types)
     _doc.drawImage(getPainter());
     
     /* stroke not already add to page */
-    if (types & LoadType::stroke)
+    if (types & UpdateEvent::stroke)
         drawSingleStroke(strokeToDraw, getPainter(), _pen, zoom * _m, _doc.getPointFirstPageNoZoom());
     
-    this->loadLaser();
+    if (types & UpdateEvent::laser)
+        this->loadLaser();
 }
 
 constexpr bool TabletUtils::withPdf() const

@@ -5,6 +5,7 @@
 #include "touch/laser/Laser.h"
 #include "utils/Optional.h"
 #include "core/WFlags.h"
+#include "touch/UpdateEvent.h"
 
 class TabletUtils {
 private:
@@ -55,13 +56,7 @@ public:
 
     static double pressureToWidth(double val);
 
-    enum LoadType {
-        page = BIT(1),
-        sheet = BIT(2),
-        stroke = BIT(3)
-    };
-
-    using LoadTypes = WFlags<LoadType>;
+    using LoadTypes = WFlags<UpdateEvent::UpdateEventType>;
 
     void load(LoadTypes types);
 private:

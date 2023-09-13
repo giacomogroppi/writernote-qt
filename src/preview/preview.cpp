@@ -42,7 +42,7 @@ void preview::get(WPixmap &ref, const Document &doc, cbool withPdf, const int wi
     painter.begin(&ref);
     W_ASSERT(painter.isActive());
 
-    loader.load(TabletUtils::LoadType::page | TabletUtils::LoadType::stroke);
+    loader.load(UpdateEvent::page | UpdateEvent::stroke);
 
     painter.end();
 
