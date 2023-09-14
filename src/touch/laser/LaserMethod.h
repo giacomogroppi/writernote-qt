@@ -13,9 +13,9 @@ public:
                 WPen &pen, WColor &color);
 
     virtual ~LaserMethod() = default;
-    int touchBegin(const PointF& point, double size, class Document &doc) final;
-    int touchUpdate(const PointF& point, double size, class Document &doc) final;
-    int touchEnd(const PointF& point, class Document &doc) final;
+    auto touchBegin(const PointF& point, double size, class Document &doc) -> UpdateEvent final;
+    auto touchUpdate(const PointF& point, double size, class Document &doc) -> UpdateEvent final;
+    auto touchEnd(const PointF& point, class Document &doc) -> UpdateEvent final;
 private:
     /**
      * La funzione passata da costruttore deve essere in grado di gestire l'inserimento del

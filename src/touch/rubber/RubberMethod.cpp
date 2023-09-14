@@ -297,14 +297,15 @@ void actionRubberSingleTotal(DataPrivateMuThread &data)
  * this function is call by tabletEvent
  * it returns true if it actually deleted something, otherwise it returns false
 */
-int RubberMethod::touchUpdate(const PointF &__lastPoint,
+auto RubberMethod::touchUpdate(const PointF &__lastPoint,
                                double,
-                               Document &doc)
+                               Document &doc) -> UpdateEvent
 {
     int lenStroke, count, indexPage, thread_create;
     cbool isTotal = (_rubber_type == RubberMethod::total);
     const PointF &lastPoint = doc.adjustPoint(__lastPoint);
     auto *dataThread = thread_group->get_thread_data();
+    int pageMod;
     RubberPrivateData dataPrivate;
 
     WDebug(true, &this->_last);
@@ -420,6 +421,7 @@ int RubberMethod::touchUpdate(const PointF &__lastPoint,
     }
 
     out2:
+    pageMod = _base;
     if (!isTotal) {
         _base = -1;
         _data_to_remove.clear();
@@ -427,8 +429,8 @@ int RubberMethod::touchUpdate(const PointF &__lastPoint,
 
     save_point:
     _last = lastPoint;
-    
-    return true;
+
+    return UpdateEvent::makePage(pageMod, pageMod + 1);
 }
 
 bool RubberMethod::is_image_not_null(const Page *page,
@@ -479,7 +481,7 @@ bool RubberMethod::is_image_not_null(const Page *page,
     return false;
 }
 
-int RubberMethod::touchEnd(const PointF&, Document &doc )
+auto RubberMethod::touchEnd(const PointF&, Document &doc) -> UpdateEvent
 {
     int i, len = _data_to_remove.size();
     int index_mod = -1;
@@ -510,7 +512,7 @@ int RubberMethod::touchEnd(const PointF&, Document &doc )
     }
 
     this->reset();
-    return index_mod;
+    return UpdateEvent::makePage(index_mod, index_mod + 1);
 }
 
 RubberMethod::~RubberMethod()
@@ -518,7 +520,7 @@ RubberMethod::~RubberMethod()
     WDelete(thread_group);
 }
 
-int RubberMethod::touchBegin(const PointF &point, double, Document &doc)
+auto RubberMethod::touchBegin(const PointF &point, double, Document &doc) -> UpdateEvent
 {
     _last = true;
     _last = doc.adjustPoint(point);
@@ -526,5 +528,5 @@ int RubberMethod::touchBegin(const PointF &point, double, Document &doc)
     WDebug(true, &this->_last);
 
     W_ASSERT(_last.isSet());
-    return false;
+    return UpdateEvent::makeEmpty();
 }

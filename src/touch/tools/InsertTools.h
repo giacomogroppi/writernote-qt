@@ -17,11 +17,11 @@ protected:
                 WPen &pen);
     virtual ~InsertTools() = default;
 
-    virtual unsigned char getAlfa() const = 0;
+    virtual auto getAlfa() const -> unsigned char = 0;
 
 public:
-    virtual int touchBegin(const PointF& point, double size, class Document &doc);
-    virtual int touchUpdate(const PointF& point, double size, class Document &doc);
-    virtual int touchEnd(const PointF& point, class Document &doc);
+    virtual auto touchBegin(const PointF& point, double size, class Document &doc) -> UpdateEvent;
+    virtual auto touchUpdate(const PointF& point, double size, class Document &doc) -> UpdateEvent;
+    virtual auto touchEnd(const PointF& point, class Document &doc) -> UpdateEvent;
 };
 

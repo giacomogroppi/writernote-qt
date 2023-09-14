@@ -19,7 +19,7 @@ InsertTools::InsertTools(std::function<int()> getTime,
 {
 }
 
-int InsertTools::touchBegin(const PointF &point, double size, class Document &doc)
+auto InsertTools::touchBegin(const PointF &point, double size, class Document &doc) -> UpdateEvent
 {
     pressure_t pressure;
     StrokePre &strokeTmp = *__tmp;
@@ -35,10 +35,11 @@ int InsertTools::touchBegin(const PointF &point, double size, class Document &do
 
     strokeTmp.append(point, pressure, _pen, getProp(doc));
 
-    return true;
+    // TODO: adjust [maybe]
+    return UpdateEvent::makeStroke();
 }
 
-int InsertTools::touchUpdate(const PointF &point, double size, class Document &doc)
+auto InsertTools::touchUpdate(const PointF &point, double size, class Document &doc) -> UpdateEvent
 {
     StrokePre &strokeTmp = *__tmp;
     pressure_t pressure;
@@ -49,17 +50,18 @@ int InsertTools::touchUpdate(const PointF &point, double size, class Document &d
 
     this->_objectMove(point);
 
-    return true;
+    // TODO: adjust [maybe]
+    return UpdateEvent::makeStroke();
 }
 
-int InsertTools::touchEnd(const PointF &, class Document &doc)
+auto InsertTools::touchEnd(const PointF &, class Document &doc) -> UpdateEvent
 {
     StrokePre & strokeToAppend = *__tmp;
     int pageMod;
     const PointF &PointFirstPage = doc.getPointFirstPage();
 
     if (un(strokeToAppend.isEmpty()))
-        return -1;
+        return UpdateEvent::makeSheet();
 
     strokeToAppend.adjust(PointFirstPage);
 
@@ -76,5 +78,5 @@ int InsertTools::touchEnd(const PointF &, class Document &doc)
 
     W_ASSERT(__tmp->isEmpty());
 
-    return pageMod;
+    return UpdateEvent::makeStroke() | UpdateEvent::makePage(pageMod, pageMod + 1);
 }

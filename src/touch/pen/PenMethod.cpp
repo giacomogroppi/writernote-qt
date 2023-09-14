@@ -13,17 +13,17 @@ PenMethod::PenMethod(std::function<pressure_t(double)> getSize,
 {
 }
 
-int PenMethod::touchBegin(const PointF &point, double size, Document &doc)
+auto PenMethod::touchBegin(const PointF &point, double size, Document &doc) -> UpdateEvent
 {
     return InsertTools::touchBegin(point, size, doc);
 }
 
-int PenMethod::touchUpdate(const PointF &point, double size, Document &doc)
+auto PenMethod::touchUpdate(const PointF &point, double size, Document &doc) -> UpdateEvent
 {
     return InsertTools::touchUpdate(point, size, doc);
 }
 
-int PenMethod::touchEnd(const PointF &point, Document &doc)
+auto PenMethod::touchEnd(const PointF &point, Document &doc) -> UpdateEvent
 {
     return InsertTools::touchEnd(point, doc);
 }

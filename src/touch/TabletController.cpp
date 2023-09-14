@@ -195,27 +195,23 @@ void TabletController::checkCreatePage()
 
 void TabletController::touchBegin(const PointF &point, double pressure)
 {
-    //TODO: adjust touchBegin touchUpdate touchEnd to return modified element in UI
     checkCreatePage();
     const auto res = _currentTool->touchBegin(point, pressure, *_doc);
-    if (res >= 0) {
-        W_EMIT_1(onNeedRefresh, UpdateEvent::makeStroke() | UpdateEvent::makePageAll());
-    }
+    W_EMIT_1(onNeedRefresh, res);
 }
 
 void TabletController::touchUpdate(const PointF &point, double pressure)
 {
     const auto res = _currentTool->touchUpdate(point, pressure, this->getDoc());
-    if (res >= 0) {
-        W_EMIT_1(onNeedRefresh, UpdateEvent::makeStroke() | UpdateEvent::makePageAll());
-    }
+
+    W_EMIT_1(onNeedRefresh, res);
 }
 
 void TabletController::touchEnd(const PointF &point, double pressure)
 {
     const auto res = _currentTool->touchEnd(point, *_doc);
 
-    W_EMIT_1(onNeedRefresh, UpdateEvent::makeStroke() | UpdateEvent::makePageAll());
+    W_EMIT_1(onNeedRefresh, res);
 }
 
 void TabletController::selectColor(const WColor &color)

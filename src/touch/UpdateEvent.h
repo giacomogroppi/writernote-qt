@@ -13,15 +13,18 @@ public:
         page = BIT(1),
         stroke = BIT(2),
         sheet = BIT(3),
-        laser = BIT(4)
+        laser = BIT(4),
+        square = BIT(5)
     };
 
-    UpdateEvent(WFlags<UpdateEventType> flags) : _flags(std::move(flags)), _low(0), _high(0) {};
+    UpdateEvent(WFlags<UpdateEventType> flags) : _flags(flags), _low(0), _high(0) {};
 
     static auto makePage(int low, int high) { return UpdateEvent(WFlags{UpdateEventType::page}, low, high); }
     static auto makePageAll() -> UpdateEvent;
     static auto makeSheet() -> UpdateEvent;
     static auto makeStroke() -> UpdateEvent;
+    static auto makeSquare() -> UpdateEvent;
+    static auto makeEmpty() -> UpdateEvent;
 
     static auto makeAll() -> UpdateEvent { return makePageAll() | makeStroke() | makeSheet(); }
 
@@ -42,12 +45,17 @@ public:
 private:
     WFlags<UpdateEventType> _flags;
     int _low, _high;
-    bool _all;
+    bool _all = false;
 
     UpdateEvent() = default;
 
-    explicit UpdateEvent(WFlags<UpdateEventType> flags, int low, int high): _flags(std::move(flags)), _low(low), _high(high), _all(false) {};
+    explicit UpdateEvent(WFlags<UpdateEventType> flags, int low, int high): _flags(flags), _low(low), _high(high), _all(false) {};
 };
+
+inline auto UpdateEvent::makeEmpty() -> UpdateEvent
+{
+    return WFlags<UpdateEventType>{0};
+}
 
 inline auto UpdateEvent::makeSheet() -> UpdateEvent
 {
@@ -57,6 +65,11 @@ inline auto UpdateEvent::makeSheet() -> UpdateEvent
 inline auto UpdateEvent::makeStroke() -> UpdateEvent
 {
     return WFlags{UpdateEventType::stroke};
+}
+
+inline auto UpdateEvent::makeSquare() -> UpdateEvent
+{
+    return WFlags{UpdateEventType::square};
 }
 
 inline auto UpdateEvent::makePageAll() -> UpdateEvent

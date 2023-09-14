@@ -32,9 +32,9 @@ public:
                           std::function<Document &()> getDoc);
     ~SquareMethod() ;
 
-    int touchBegin(const PointF& point, double size, class Document &doc) final;
-    int touchUpdate(const PointF& point, double size, class Document &doc) final;
-    int touchEnd(const PointF& point, class Document &doc) final;
+    auto touchBegin(const PointF& point, double size, class Document &doc) -> UpdateEvent final;
+    auto touchUpdate(const PointF& point, double size, class Document &doc) -> UpdateEvent final;
+    auto touchEnd(const PointF& point, class Document &doc) -> UpdateEvent final;
 
     void adjustPoint();
     void needReload(WPainter &painter, const Document &doc);
@@ -48,6 +48,7 @@ public:
 
 private:
     static constexpr auto debugSquare = false;
+    // TODO: make this function return a pair of page changed
     int endMoving(Document &doc);
 
     void move(const PointF &punto, Document &doc);

@@ -116,7 +116,7 @@ void * __square_search(void *__data)
     return nullptr;
 }
 
-int SquareMethod::touchBegin(const PointF &point, double, Document &doc)
+auto SquareMethod::touchBegin(const PointF &point, double, Document &doc) -> UpdateEvent
 {
     constexpr auto not_used debugSquare = false;
     WDebug(debugSquare, "call");
@@ -130,10 +130,10 @@ int SquareMethod::touchBegin(const PointF &point, double, Document &doc)
         initPointSearch(point, doc);
     }
 
-    return true;
+    return UpdateEvent::makeSquare();
 }
 
-int SquareMethod::touchUpdate(const PointF &point, double, Document &doc)
+auto SquareMethod::touchUpdate(const PointF &point, double, Document &doc) -> UpdateEvent
 {
     if (somethingInBox()) {
         W_ASSERT(this->_pointinit.isSet());
@@ -148,10 +148,10 @@ int SquareMethod::touchUpdate(const PointF &point, double, Document &doc)
         this->updatePoint(point, doc);
     }
 
-    return true;
+    return UpdateEvent::makeSquare();
 }
 
-int SquareMethod::touchEnd(const PointF &, class Document &doc)
+auto SquareMethod::touchEnd(const PointF &, class Document &doc) -> UpdateEvent
 {
     bool done = somethingInBox();
 
@@ -161,7 +161,9 @@ int SquareMethod::touchEnd(const PointF &, class Document &doc)
         find(doc);
     }
 
-    return endMoving(doc);
+    const auto result = endMoving(doc);
+    // TODO: adjust
+    return UpdateEvent::makePageAll() | UpdateEvent::makeSquare();
 }
 
 /**

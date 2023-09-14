@@ -21,17 +21,17 @@ HighligterMethod::HighligterMethod(
 {
 }
 
-int HighligterMethod::touchBegin(const PointF &point, double size, Document &doc)
+auto HighligterMethod::touchBegin(const PointF &point, double size, Document &doc) -> UpdateEvent
 {
     return InsertTools::touchBegin(point, size, doc);
 }
 
-int HighligterMethod::touchUpdate(const PointF &point, double size, Document &doc)
+auto HighligterMethod::touchUpdate(const PointF &point, double size, Document &doc) -> UpdateEvent
 {
     return InsertTools::touchUpdate(point, size, doc);
 }
 
-int HighligterMethod::touchEnd(const PointF &point, Document &doc)
+auto HighligterMethod::touchEnd(const PointF &point, Document &doc) -> UpdateEvent
 {
     return InsertTools::touchEnd(point, doc);
 }

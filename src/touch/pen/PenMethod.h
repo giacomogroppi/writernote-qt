@@ -13,9 +13,9 @@ public:
               WColor &color,
               WPen &pen);
 
-    int touchBegin(const PointF& point, double size, Document &doc) final;
-    int touchUpdate(const PointF& point, double size, Document &doc) final;
-    int touchEnd(const PointF& point, Document &doc) final;
+    auto touchBegin(const PointF& point, double size, Document &doc) -> UpdateEvent final;
+    auto touchUpdate(const PointF& point, double size, Document &doc) -> UpdateEvent final;
+    auto touchEnd(const PointF& point, Document &doc) -> UpdateEvent final;
 
     [[nodiscard]] unsigned char getAlfa() const final;
 };

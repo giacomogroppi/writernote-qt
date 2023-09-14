@@ -12,7 +12,6 @@ class WFlags
             signed long,
             unsigned long
         > Type;
-
     Type _d;
 public:
     constexpr WFlags(Enum f) : _d(Type(f)) {}
@@ -25,6 +24,18 @@ public:
     constexpr operator Type() const { return _d; }
 
     constexpr auto operator|(WFlags<Enum> f) const -> WFlags<Enum> { return Type(_d | f._d); }
-    constexpr auto operator&(Type mask) const -> WFlags<Enum> { return Type(_d & mask); }
+    consteval auto operator|(Enum value) const -> WFlags<Enum> { return Type(_d | value); };
+
+    constexpr auto operator&(WFlags<Enum> f) const -> WFlags<Enum> { return Type(_d & f._d); }
+    constexpr auto operator&(Enum value) const -> WFlags<Enum> { return Type(_d & value); };
+
+    template <class T = Type>
+        requires (std::is_arithmetic_v<T> and sizeof(T) < sizeof(Type))
+    constexpr auto operator&(T value) const -> WFlags { return Type (_d & value); }
+
+    template <class T = Type>
+        requires (std::is_arithmetic_v<T> and sizeof(T) < sizeof(Type))
+    constexpr auto operator|(T value) const -> WFlags { return Type (_d | value); }
+
     constexpr auto operator~() const -> WFlags<Enum> { return Type(~_d); }
 };

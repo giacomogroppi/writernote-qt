@@ -23,25 +23,25 @@ LaserMethod::LaserMethod(std::function<pressure_t(double)> getPress,
 {
 }
 
-int LaserMethod::touchBegin(const PointF &point, double size, Document &doc)
+auto LaserMethod::touchBegin(const PointF &point, double size, Document &doc) -> UpdateEvent
 {
     return InsertTools::touchBegin(point, size, doc);
 }
 
-int LaserMethod::touchUpdate(const PointF &point, double size, Document &doc)
+auto LaserMethod::touchUpdate(const PointF &point, double size, Document &doc) -> UpdateEvent
 {
     return InsertTools::touchUpdate(point, size, doc);
 }
 
-int LaserMethod::touchEnd(const PointF &, Document &)
+auto LaserMethod::touchEnd(const PointF &, Document &) -> UpdateEvent
 {
     if (un(__tmp->isEmpty()))
-        return -1;
+        return UpdateEvent::makeEmpty();
 
     this->_append_to(*__tmp);
     *__tmp = StrokePre();
 
-    return -1;
+    return UpdateEvent::makeEmpty();
 }
 
 unsigned char LaserMethod::getAlfa() const
