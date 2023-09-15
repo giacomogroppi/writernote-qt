@@ -76,6 +76,9 @@ Scheduler::Scheduler()
             if (needToDie())
                 return;
 
+            if (_timersWaiting.isEmpty())
+                continue;
+
             if (_timersWaiting.getFirst()->getEnd() < lastValueEnd) {
                 // we need to wait
                 continue;
