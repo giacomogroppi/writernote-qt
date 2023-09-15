@@ -88,3 +88,13 @@ auto Document::write(Writable &writable, const Document &doc) -> int
         return -1;
     return 0;
 }
+
+inline auto Document::getAudioPath() const -> const WString &
+{
+    return this->_audioPositionPath;
+}
+
+inline auto Document::getAudioData() const -> const WByteArray &
+{
+    return this->_audioRawData;
+}

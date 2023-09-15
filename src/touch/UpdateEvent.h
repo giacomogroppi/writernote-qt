@@ -24,11 +24,12 @@ public:
     static auto makeSheet() -> UpdateEvent;
     static auto makeStroke() -> UpdateEvent;
     static auto makeSquare() -> UpdateEvent;
+    static auto makeLaser() -> UpdateEvent;
     static auto makeEmpty() -> UpdateEvent;
 
-    static auto makeAll() -> UpdateEvent { return makePageAll() | makeStroke() | makeSheet(); }
+    static auto makeAll() -> UpdateEvent { return makePageAll() | makeStroke() | makeSheet() | makeSquare() | makeLaser(); }
 
-    auto operator|(const UpdateEvent& d) const -> UpdateEvent { return {_flags | d._flags}; }
+    auto operator|(const UpdateEvent& d) const -> UpdateEvent;
     auto operator&(const WFlags<UpdateEventType> &f) const -> WFlags<UpdateEventType> { return _flags & f; }
 
     /**
@@ -52,6 +53,16 @@ private:
     explicit UpdateEvent(WFlags<UpdateEventType> flags, int low, int high): _flags(flags), _low(low), _high(high), _all(false) {};
 };
 
+inline auto UpdateEvent::operator|(const UpdateEvent &d) const -> UpdateEvent
+{
+    UpdateEvent event;
+    event._low = std::min(_low, d._low);
+    event._high = std::max(_high, d._high);
+    event._all = _all + d._all;
+    event._flags = _flags | d._flags;
+    return event;
+}
+
 inline auto UpdateEvent::makeEmpty() -> UpdateEvent
 {
     return WFlags<UpdateEventType>{0};
@@ -72,13 +83,18 @@ inline auto UpdateEvent::makeSquare() -> UpdateEvent
     return WFlags{UpdateEventType::square};
 }
 
+inline auto UpdateEvent::makeLaser() -> UpdateEvent
+{
+    return WFlags{UpdateEventType::laser};
+}
+
 inline auto UpdateEvent::makePageAll() -> UpdateEvent
 {
     UpdateEvent event;
 
     event._flags = WFlags{UpdateEventType::page};
-    event._low = 0;
-    event._high = 0;
+    event._low = -1;
+    event._high = -1;
     event._all = true;
 
     return event;

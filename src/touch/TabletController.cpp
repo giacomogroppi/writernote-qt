@@ -139,9 +139,9 @@ void TabletController::getImagePage(WPainter &painter, double width) const
     TIME_STOP(time_load, "Load function:");
 }
 
-void TabletController::getImg(WPainter &painter, double width) const
+void TabletController::getImg(WPainter &painter, double width, WFlags<UpdateEvent::UpdateEventType> flags) const
 {
-    this->draw(painter, width);
+    this->draw(painter, width, flags);
     return;
     if (this->_needUpdate or 1) {
 
@@ -150,7 +150,7 @@ void TabletController::getImg(WPainter &painter, double width) const
     this->_needUpdate = false;
 }
 
-void TabletController::draw(WPainter &painter, double width) const
+void TabletController::draw(WPainter &painter, double width, WFlags<UpdateEvent::UpdateEventType> flags) const
 {
     if (this->getDoc().isEmpty()) {
         return;
@@ -172,7 +172,7 @@ void TabletController::draw(WPainter &painter, double width) const
             }
     );
 
-    loader.load(UpdateEvent::stroke | UpdateEvent::page | UpdateEvent::sheet);
+    loader.load(flags);
 
     //this->_img.write("/Users/giacomo/Desktop/tmp_foto/prova.png", "PNG");
     

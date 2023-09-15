@@ -44,14 +44,14 @@ private:
     const std::function<bool()> _isPlaying;
     const std::function<int()> _getTimePlaying;
     void checkCreatePage();
-    void draw(WPainter &painter, double width) const;
+    void draw(WPainter &painter, double width, WFlags<UpdateEvent::UpdateEventType> flags) const;
 public:
     explicit TabletController(WObject *parent,
                               const std::function<int()>  &getTimeRecording,
                               const std::function<bool()> &isPlaying,
                               const std::function<int()>  &getTimePlaying);
 
-    void getImg(WPainter &painter, double width) const;
+    void getImg(WPainter &painter, double width, WFlags<UpdateEvent::UpdateEventType> flags) const;
     void getImagePage(WPainter &painter, double width) const;
     void getImageStroke(WPainter &painter, double width) const;
     

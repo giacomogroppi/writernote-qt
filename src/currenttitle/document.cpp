@@ -132,11 +132,9 @@ auto Document::controllForRepositioning() -> void
 }
 
 Document::Document(Document &&other) noexcept
-    : DataStruct(std::move (other))
-    , ImageContainerDrawable(std::move (other))
-#ifdef PDFSUPPORT
-    , frompdf(std::move(other))
-#endif // PDFSUPPORT
+    : DataStruct(std::forward<DataStruct> (other))
+    , PdfContainerDrawable(std::forward<PdfContainerDrawable>(other))
+    , ImageContainerDrawable(std::forward<ImageContainerDrawable>(other))
     , _audioPositionPath(std::move(other._audioPositionPath))
     , _audioRecordStatus(other._audioRecordStatus)
     , _audioRawData(std::move(other._audioRawData))
@@ -161,10 +159,10 @@ auto Document::operator=(Document &&other) noexcept -> Document &
     if (this == &other)
         return *this;
 
-    DataStruct::operator=(std::move(static_cast<DataStruct&>(other)));
-    ImageContainerDrawable::operator=(std::move(static_cast<ImageContainerDrawable &>(other)));
+    DataStruct::operator=(std::forward<DataStruct&>(other));
+    ImageContainerDrawable::operator=(std::forward<ImageContainerDrawable>(other));
 
-    PdfContainerDrawable::operator=(std::move(static_cast<PdfContainerDrawable&>(other)));
+    PdfContainerDrawable::operator=(std::forward<PdfContainerDrawable>(other));
 
     _audioRecordStatus = other._audioRecordStatus;
     _audioRawData = std::move(other._audioRawData);
@@ -183,21 +181,9 @@ void Document::setRecordStatus(Document::AudioRecordStatus status)
     this->_audioRecordStatus = status;
 }
 
-auto Document::getAudioPath() const -> const WString &
-{
-    // TODO: move this function in .h file
-    return this->_audioPositionPath;
-}
-
 auto Document::isRecorded() const -> bool
 {
     return this->_audioRecordStatus != Document::AudioRecordStatus::not_record;
-}
-
-auto Document::getAudioData() const -> const WByteArray &
-{
-    // TODO: move this function in .h file
-    return this->_audioRawData;
 }
 
 auto Document::recordStatus() const -> Document::AudioRecordStatus

@@ -18,6 +18,7 @@ Scheduler::Scheduler()
     W_ASSERT(instance == nullptr);
 
     instance = this;
+
     // TODO --> change this parameter
     _threads.reserve(8);
     std::vector<std::thread> thread;
@@ -60,7 +61,6 @@ Scheduler::Scheduler()
                     ? std::chrono::milliseconds (100'000).count()
                     : this->_timersWaiting.getFirst()->getDuration());
 
-            //const auto lastValueEnd = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
             const auto lastValueEnd = _timersWaiting.isEmpty()
                     ? std::chrono::milliseconds (100'000).count()
                     : _timersWaiting.getFirst()->getEnd();
@@ -69,7 +69,7 @@ Scheduler::Scheduler()
                 // if the list has been modified we need to reschedule the
                 // timer for std::condition_value, or we need to die
                 return needToDie() || (
-                        _timersWaiting.size() &&
+                        _timersWaiting.size() != 0 &&
                         _timersWaiting.getFirst()->getEnd() != lastValueEnd);
             });
 
