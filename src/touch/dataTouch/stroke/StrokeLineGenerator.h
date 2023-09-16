@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Stroke.h"
+#include "core/pointer/UniquePtr.h"
 
 class StrokeLineGenerator
 {
@@ -9,11 +10,18 @@ private:
     static void model_line_adjust_m(double &m);
     static void is_near_line(double m, double &max, double q, const PointF *point);
 
-    static void makeVertical(const class StrokePre *from, class StrokeLine &res);
-    static void makeGeneric(const class StrokePre *from, class StrokeLine &res);
+    static void makeVertical(const WListFast<PointF>& points,
+                             const WListFast<pressure_t>& pressures,
+                             const RectF& area, class StrokeLine &res);
+    static void makeGeneric(const WListFast<PointF>& points,
+                            const WListFast<pressure_t>& pressures,
+                            const RectF& area, class StrokeLine &res);
 
 public:
-    static std::unique_ptr<Stroke> make(const StrokePre *from);
-    static double model_near(const class StrokePre &stroke);
+    static UniquePtr<Stroke> make(const WListFast<PointF>& points,
+                                        const WListFast<pressure_t>& pressures,
+                                        const RectF& area);
+    static double model_near(const WListFast<PointF> &points, const WListFast<pressure_t> &pressures,
+                             const RectF &area) noexcept;
 };
 

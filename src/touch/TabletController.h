@@ -25,7 +25,6 @@ private:
 
     WListFast<Tools*> _toolsContainer;
 
-    ObjectFinder *_objectFinder;
     Tools *_currentTool;
     WColor _color;
     WPen _pen;

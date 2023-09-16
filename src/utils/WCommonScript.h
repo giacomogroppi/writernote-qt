@@ -172,26 +172,6 @@ force_inline int is_present_in_list_order_list(const T &list, const T& element)
 
 
 template <typename T>
-force_inline void append_if_not_present(T &list, const T& value)
-{
-    if(list.indexOf(value) == -1)
-        list.append(value);
-}
-
-template<typename T>
-force_inline void append_if_not_present_order(T &list, const T& value)
-{
-#if defined(DEBUGINFO)
-    Q_ASSERT(is_order(list));
-#endif
-
-    if(is_present_in_list_order(list, value) == -1){
-        // we can append
-        list.append(value);
-    }
-}
-
-template <typename T>
 force_inline bool included(const T min, const T max, const T value)
 {
     W_ASSERT(min <= max);
@@ -406,28 +386,6 @@ force_inline bool is_included(const T& val, const T& min, const T& max)
 {
     W_ASSERT(min <= max);
     return min <= val and max >= val;
-}
-
-template<typename T>
-force_inline void append_order(T & list, const T& element)
-{
-    int i, len;
-
-    W_ASSERT(is_order_list(list));
-
-    len = list.length();
-
-    for (i = 0; i < len; i++) {
-        if (un(list.at(i) > element)) {
-            list.insert(i, element);
-            return;
-        }
-    }
-
-    list.append(element);
-
-    W_ASSERT(is_order_list(list));
-    W_ASSERT(list.contains(element));
 }
 
 inline constexpr size_t WStrlen(const char *str)

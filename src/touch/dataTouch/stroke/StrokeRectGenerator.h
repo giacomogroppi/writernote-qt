@@ -14,7 +14,10 @@ private:
     static double is_near_rect(const RectF &area, const PointF &point);
 
 public:
-    static std::unique_ptr<Stroke> make(const StrokePre *from);
-    static double model_near(const class StrokePre &stroke);
+    static auto make(const WListFast<PointF>& points,
+                                        const WListFast<pressure_t>& pressures,
+                                        const RectF& area) -> UniquePtr<Stroke>;
+    static auto model_near(const WListFast<PointF> &points, const WListFast<pressure_t> &pressures,
+                             const RectF &area) -> double;
 
 };

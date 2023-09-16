@@ -3,7 +3,7 @@
 #include "utils/WCommonScript.h"
 #include "touch/dataTouch/stroke/StrokePre.h"
 
-static RectF area;
+static RectF areaRect;
 
 bool StrokeRectGenerator::is_near_rect_x(const RectF &area, const PointF &point)
 {
@@ -42,35 +42,36 @@ double StrokeRectGenerator::is_near_rect(const RectF &area, const PointF &point)
     return StrokeComplexCommon::error;
 }
 
-std::unique_ptr<Stroke> StrokeRectGenerator::make(const StrokePre *from)
+auto StrokeRectGenerator::make(const WListFast<PointF>& points,
+                               const WListFast<pressure_t>& pressures,
+                               const RectF& area) -> UniquePtr<Stroke>
 {
-    std::unique_ptr<StrokeRect> res(new StrokeRect());
+    UniquePtr<StrokeRect> res(new StrokeRect());
 
     res->_data = {
         .rect = area,
-        .press = from->getPressure()
+        .press = pressures.first()
     };
 
     return res;
 }
 
-double StrokeRectGenerator::model_near(const StrokePre &stroke)
+double StrokeRectGenerator::model_near(const WListFast<PointF> &points, const WListFast<pressure_t> &pressures,
+                                       const RectF &area)
 {
     using namespace WCommonScript;
 
     double precision = 0.;
     int err = 0;
 
-    if( !is_near(stroke._point.first().x(), stroke._point.last().x(), 30) or
-        !is_near(stroke._point.first().y(), stroke._point.last().y(), 30))
+    if( !is_near(points.first().x(), points.last().x(), 30) or
+        !is_near(points.first().y(), points.last().y(), 30))
         return StrokeComplexCommon::error;
-
-    area = stroke.getBiggerPointInStroke();
 
     if (std::abs(area.topLeft().y() - area.bottomLeft().y()) < 40)
         return StrokeComplexCommon::error;
 
-    for (const auto &p : stroke._point) {
+    for (const auto &p : std::as_const(points)) {
         const auto res = is_near_rect(area, p);
         if (res == StrokeComplexCommon::error) {
 
@@ -85,5 +86,5 @@ double StrokeRectGenerator::model_near(const StrokePre &stroke)
 
     WDebug(StrokeRectGeneratorDebug, precision);
 
-    return precision / stroke._point.size() * 3.;
+    return precision / points.size() * 3.;
 }

@@ -8,7 +8,7 @@
 
 // è lo stesso stroke definito nel file tabletevent.cpp
 extern StrokePre *__tmp;
-
+/*
 ObjectFinder::ObjectFinder(WObject *parent, std::function<void()> callUpdate)
     : WObject{parent}
     , _callUpdate(std::move(callUpdate))
@@ -25,9 +25,10 @@ void ObjectFinder::endTimer()
     if (!stroke.isEmpty()) {
         WDebug(debug, "call");
 
-        if (model::find(stroke)) {
+        if (model::find(stroke, <#initializer#>)) {
             this->_callUpdate();
             stroke.reset_img();
         }
     }
 }
+*/

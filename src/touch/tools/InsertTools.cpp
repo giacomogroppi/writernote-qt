@@ -33,7 +33,7 @@ auto InsertTools::touchBegin(const PointF &point, double size, class Document &d
 
     pressure = this->_getSize(size);
 
-    strokeTmp.append(point, pressure, _pen, getProp(doc));
+    strokeTmp.append(point, pressure, getProp(doc));
 
     // TODO: adjust [maybe]
     return UpdateEvent::makeStroke();
@@ -46,7 +46,7 @@ auto InsertTools::touchUpdate(const PointF &point, double size, class Document &
 
     pressure = this->_getSize(size);
 
-    strokeTmp.append(point, pressure, (WPen &)_pen, getProp(doc));
+    strokeTmp.append(point, pressure, getProp(doc));
 
     this->_objectMove(point);
 
@@ -74,7 +74,7 @@ auto InsertTools::touchEnd(const PointF &, class Document &doc) -> UpdateEvent
             false
     );
 
-    strokeToAppend = StrokePre();
+    strokeToAppend.reset();
 
     W_ASSERT(__tmp->isEmpty());
 

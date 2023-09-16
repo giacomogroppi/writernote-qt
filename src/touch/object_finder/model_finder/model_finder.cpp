@@ -3,6 +3,7 @@
 #include "touch/dataTouch/stroke/StrokeCircleGenerator.h"
 #include "touch/dataTouch/stroke/StrokeLineGenerator.h"
 #include "touch/dataTouch/stroke/StrokeRectGenerator.h"
+#include "Scheduler/Scheduler.h"
 
 #define THREAD_FINDER 3
 
@@ -13,22 +14,38 @@ static struct{
     double is[THREAD_FINDER];
 } finder;
 
-double (*functions[])(const StrokePre &) = {
-    &StrokeLineGenerator    ::model_near,
-    &StrokeRectGenerator    ::model_near,
-    &StrokeCircleGenerator  ::model_near
+double (*functions[])(const WListFast<PointF>& points, const WListFast<pressure_t>& pressures, const RectF& area) = {
+        &StrokeLineGenerator::model_near,
+        &StrokeRectGenerator    ::model_near,
+        &StrokeCircleGenerator  ::model_near
 };
 
-std::unique_ptr<Stroke> (*function_create[])(const StrokePre *) = {
-    &StrokeLineGenerator    ::make,
-    &StrokeRectGenerator    ::make,
-    &StrokeCircleGenerator  ::make
+UniquePtr<Stroke> (*function_create[])(
+            const WListFast<PointF>& points,
+            const WListFast<pressure_t>& pressures,
+            const RectF& area
+        ) = {
+        &StrokeLineGenerator    ::make,
+        &StrokeRectGenerator    ::make,
+        &StrokeCircleGenerator  ::make
 };
 
-static struct{
-    pthread_t _thread[THREAD_FINDER];
-    const StrokePre *_stroke;
-} ctrl;
+class ArgsFinder
+{
+public:
+    const WListFast<PointF> &points;
+    const WListFast<pressure_t> &pressures;
+    const RectF &rect;
+
+    ArgsFinder(
+                const WListFast<PointF>& points,
+                const WListFast<pressure_t>& pressures,
+                const RectF& rect
+            )
+            : points(points)
+            , pressures(pressures)
+            , rect (rect) {}
+};
 
 void __init__ init_finder()
 {
@@ -37,18 +54,6 @@ void __init__ init_finder()
     for (i = 0; i < THREAD_FINDER; i++) {
         finder.is[i] = _min_precision * 2.;
     }
-}
-
-static void *model_finder(void *_index)
-{
-    const auto index = (intptr_t)(_index);
-    auto function = functions[index];
-
-    finder.is[index] = function(*ctrl._stroke);
-
-    WDebug(debug_model, "index: " << index << finder.is[index]);
-
-    return nullptr;
 }
 
 static int get_index_most_prob(cdouble min_precision)
@@ -75,42 +80,40 @@ static int get_index_most_prob(cdouble min_precision)
     return index;
 }
 
-bool model::find(StrokePre &stroke)
+auto model::find(const WListFast<PointF> &points, const WListFast<pressure_t> &pressures, const RectF &area) -> UniquePtr<Stroke>
 {
-    unsigned long i;
-    const auto color = stroke.getColor();
     std::unique_ptr<Stroke> res;
 
-    W_ASSERT(!stroke.isEmpty());
+    W_ASSERT(!points.isEmpty());
 
-    if (!stroke._stroke->isEmpty())
-        return false;
+    WListFast<WTask *> tasks;
 
-    ctrl._stroke = &stroke;
-    for (i = 0; i < THREAD_FINDER; i++) {
-        pthread_create(&ctrl._thread[i], nullptr, model_finder, (void *)i);
+    for (int i = 0; i < THREAD_FINDER; i++) {
+        WTask *task = new WTaskFunction(nullptr, [=]() {
+            auto function = functions[i];
+
+            finder.is[i] = function(points, pressures, area);
+
+            WDebug(debug_model, "index: " << i << finder.is[i]);
+        });
+        Scheduler::getInstance().addTaskGeneric(task);
     }
 
-    for (i = 0; i < THREAD_FINDER; i++) {
-        pthread_join(ctrl._thread[i], nullptr);
-    }
+    tasks.forAll([](WTask* task) { task->join(); });
+
 
     const auto index = get_index_most_prob(_min_precision);
     WDebug(debug_model, index);
 
     if (index < 0){
-        return false;
+        return nullptr;
     }
 
     W_ASSERT(index < THREAD_FINDER);
 
-    res = function_create[index](&stroke);
+    res = function_create[index](points, pressures, area);
 
     W_ASSERT(res != nullptr);
 
-    stroke.setStrokeComplex(std::move(res));
-
-    stroke.setColor(color);
-
-    return true;
+    return res;
 }

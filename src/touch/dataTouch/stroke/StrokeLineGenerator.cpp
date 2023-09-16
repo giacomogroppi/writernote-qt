@@ -28,14 +28,18 @@ void StrokeLineGenerator::is_near_line(double m, double &max, cdouble q, const P
     }
 }
 
-void StrokeLineGenerator::makeVertical(const StrokePre *from, StrokeLine &res)
+void StrokeLineGenerator::makeVertical(const WListFast<PointF>& points,
+                                       const WListFast<pressure_t>& pressures,
+                                       const RectF& area, StrokeLine &res)
 {
     using namespace WCommonScript;
-    const auto press = from->getPressure();
+
+    // TODO: make this an average
+    const auto press = pressures.first();
 
     const RectF FL {
-        from->_point.first(),
-        from->_point.last()
+         points.first(),
+         points.last()
     };
 
     PointF TL = FL.topLeft();
@@ -52,13 +56,16 @@ void StrokeLineGenerator::makeVertical(const StrokePre *from, StrokeLine &res)
     res._data.press = press;
 }
 
-void StrokeLineGenerator::makeGeneric(const StrokePre *from, StrokeLine &res)
+void StrokeLineGenerator::makeGeneric(const WListFast<PointF>& points,
+                                      const WListFast<pressure_t>& pressures,
+                                      const RectF& area, StrokeLine &res)
 {
     using namespace WCommonScript;
 
-    const auto pressure = from->getPressure();
-    res._data.pt1 = from->_point.first();
-    res._data.pt2 = from->_point.last();
+    // make the pressure an average
+    const auto pressure = pressures.first();
+    res._data.pt1 = points.first();
+    res._data.pt2 = points.last();
 
     if (res._data.pt1.y() > res._data.pt2.y()) {
         swap(res._data.pt1, res._data.pt2);
@@ -67,19 +74,20 @@ void StrokeLineGenerator::makeGeneric(const StrokePre *from, StrokeLine &res)
     res._data.press = pressure;
 }
 
-std::unique_ptr<Stroke> StrokeLineGenerator::make(const StrokePre *from)
+std::unique_ptr<Stroke> StrokeLineGenerator::make(const WListFast<PointF>& points,
+                                                  const WListFast<pressure_t>& pressures,
+                                                  const RectF& area)
 {
     std::unique_ptr<StrokeLine> tmp(new StrokeLine);
 
-    W_ASSERT(from->_stroke->isEmpty());
-
     if (line_data.is_vertical) {
-        StrokeLineGenerator::makeVertical(from, *tmp);
+        StrokeLineGenerator::makeVertical(points, pressures, area, *tmp);
     } else {
-        StrokeLineGenerator::makeGeneric(from, *tmp);
+        StrokeLineGenerator::makeGeneric(points, pressures, area, *tmp);
     }
 
-    tmp->_data.press = from->getPressure();
+    // TODO: make this an average
+    tmp->_data.press = pressures.first();
 
     return tmp;
 }
@@ -95,13 +103,13 @@ force_inline void StrokeLineGenerator::model_line_adjust_m(double &m)
     }
 }
 
-double StrokeLineGenerator::model_near(const StrokePre &stroke)
+double StrokeLineGenerator::model_near(const WListFast<PointF> &points, const WListFast<pressure_t> &pressures,
+                                       const RectF &area) noexcept
 {
     int segno_var_x, segno_var_y;
     const PointF *one, *two;
-    const auto &area = stroke.getFirstAndLast();
-    auto b = stroke.constBegin();
-    const auto e = stroke.constEnd();
+    auto b = points.constBegin();
+    const auto e = points.constEnd();
 
     double &m = line_data.m;
     double &q = line_data.q;
@@ -162,7 +170,7 @@ cont:
         m = 1. / m;
     }
 
-    one = & (*stroke.constBegin());
+    one = & (*points.constBegin());
 
     if (is_vertical) {
         q = one->x();
@@ -170,7 +178,7 @@ cont:
         q = one->y() - (one->x()) * m;
     }
 
-    for( b = stroke.constBegin(); b != e; b++ ){
+    for( b = points.constBegin(); b != e; b++ ){
         one = & (*b);
 
         is_near_line(m, precision, q, one);

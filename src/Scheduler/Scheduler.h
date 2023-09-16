@@ -53,6 +53,12 @@ public:
     static void addTaskGeneric(WTask *task);
     static void addTaskMainThread(WTask *task);
 
+    template <class List>
+    static void addTaskGeneric(const List& list);
+
+    template<class List>
+    static void addTaskMain(const List& list);
+
     static
     Scheduler &getInstance();
 

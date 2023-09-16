@@ -27,26 +27,30 @@ void StrokeCircleGenerator::model_circle_precision(const PointF &point, double &
     }
 }
 
-std::unique_ptr<Stroke> StrokeCircleGenerator::make(const StrokePre *from)
+auto StrokeCircleGenerator::make(const WListFast<PointF>& points,
+                                 const WListFast<pressure_t>& pressures,
+                                 const RectF& area) -> UniquePtr<Stroke>
 {
-    std::unique_ptr<StrokeCircle> res(new StrokeCircle);
+    UniquePtr<StrokeCircle> res(new StrokeCircle);
 
-    W_ASSERT(from);
+    unused(points);
+    unused(area);
 
     res->_data = {
         .x = tmp._x,
         .y = tmp._y,
         .r = tmp._r,
-        .press = from->getPressure()
+        .press = pressures.first()
     };
 
     return res;
 }
 
-double StrokeCircleGenerator::model_near(const StrokePre &stroke)
+auto StrokeCircleGenerator::model_near(const WListFast<PointF> &points,
+                                       const WListFast<pressure_t> &pressures,
+                                       const RectF &area) -> double
 {
     using namespace WCommonScript;
-    const auto area = stroke.getBiggerPointInStroke();
     constexpr auto coef = 500.;
     constexpr auto _end = 10.;
     double precision = 0.;
@@ -54,10 +58,12 @@ double StrokeCircleGenerator::model_near(const StrokePre &stroke)
     double &y = tmp._y;
     double &r = tmp._r;
 
-    W_ASSERT(stroke._stroke->isEmpty());
-
     {
-        const auto rect = stroke.getFirstAndLast();
+        const auto rect = RectF {
+                points.first(),
+                points.last()
+        };
+
         if (!is_near(rect.topLeft(), rect.bottomRight(), _end)) {
             WDebug(StrokeCircleGeneratorDebug, "first point and last are not near" << rect.topLeft() << rect.bottomRight());
             return StrokeComplexCommon::error;
@@ -72,8 +78,8 @@ double StrokeCircleGenerator::model_near(const StrokePre &stroke)
     W_ASSERT(x >= 0.);
     W_ASSERT(y >= 0.);
 
-    for (auto b = stroke.constBegin(); b != stroke.constEnd(); b ++) {
-        model_circle_precision(*b, precision);
+    for (const auto &point: std::as_const(points)) {
+        model_circle_precision(point, precision);
     }
 
     precision /= coef;

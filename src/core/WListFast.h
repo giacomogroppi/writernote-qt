@@ -101,6 +101,9 @@ public:
     void insert(int index, const T& object);
     T takeFirst();
 
+    void forAll(std::function<void(const T&)> method) const;
+    void forAll(std::function<void(T&)> method);
+
     [[nodiscard]]
     WListFast<T> mid(int from, int to) const;
 
@@ -109,6 +112,10 @@ public:
     WListFast<T>& operator=(const WListFast<T> &other);
     WListFast<T>& operator=(WListFast<T> &&other) noexcept;
 
+    template <class T2 = T>
+    T2 average () const;
+
+    // TODO: move outside declaration
     template <typename Func>
     [[nodiscard]] bool anyMatch(Func func) const {
         for (const auto &value: *this) {
@@ -238,6 +245,19 @@ public:
             ) -> int;
 };
 
+template <class T>
+template <class T2>
+inline T2 WListFast<T>::average () const
+{
+    T2 result = T2(0);
+
+    for (const auto &ref: std::as_const(*this)) {
+        result += ref;
+    }
+
+    return result / T2(size());
+}
+
 template<class T>
 inline WListFast<T>::WListFast(int reserve)
     : _data(nullptr)
@@ -245,6 +265,22 @@ inline WListFast<T>::WListFast(int reserve)
     , _reserved(0)
 {
     this->reserve(reserve);
+}
+
+template <class T>
+inline void WListFast<T>::forAll(std::function<void(const T &)> method) const
+{
+    for (const auto &ref: std::as_const(*this)) {
+        method(ref);
+    }
+}
+
+template <class T>
+inline void WListFast<T>::forAll(std::function<void(T &)> method)
+{
+    for (auto &ref: *this) {
+        method(ref);
+    }
 }
 
 template <class T>

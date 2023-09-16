@@ -6,15 +6,21 @@
 #include "touch/object_finder/model_finder/model_finder.h"
 #include "core/Pixmap/WPixmap.h"
 #include "touch/dataTouch/page/Page.h"
+#include "Scheduler/WTimer.h"
 
-class StrokePre
+class StrokePre: public WObject
 {
 private:
     template <class T>
     using List = WListFast<T>;
     
     WPixmap _img;
-    std::unique_ptr<Stroke> _stroke;
+    UniquePtr<Stroke> _stroke;
+
+    WTimer *_timer;
+    void timerEnd();
+
+    std::function<void()> callUpdate;
 
     List<PointF>       _point;
     List<pressure_t>   _pressure;
@@ -36,10 +42,8 @@ private:
     [[nodiscard]] List<pressure_t>::const_iterator get_last_press() const;
     [[nodiscard]] List<PointF>::const_iterator get_last_point() const;
     [[nodiscard]] const Stroke &get_stroke_for_draw() const;
-
-    void setStrokeComplex(std::unique_ptr<Stroke> &&stroke);
 public:
-    StrokePre ();
+    StrokePre (std::function<void()> callUpdate);
     StrokePre (const StrokePre &other) noexcept;
     StrokePre (StrokePre &&other) noexcept;
     ~StrokePre() noexcept;
@@ -62,19 +66,19 @@ public:
     void reset_img();
 
     void draw(WPainter &painter, WPen &pen, double prop, const PointF &pointFirstPage);
-    void append(const PointF &point, const pressure_t &press, WPen &pen, double prop);
+    void append(const PointF &point, const pressure_t &press, double prop);
     [[nodiscard]] WColor getColor(double division = 1.) const;
 
-    auto merge() -> std::shared_ptr<Stroke>;
+    auto merge() -> UniquePtr<Stroke>;
 
     auto operator=(const StrokePre &other) -> StrokePre&;
 
-    friend bool model::find(StrokePre &stroke);
-
+    /*
     friend class StrokeLineGenerator;
     friend class StrokeRectGenerator;
     friend class StrokeCircleGenerator;
-    friend class stroke_drawer;
+    */
+     friend class stroke_drawer;
 };
 
 inline bool StrokePre::isEmpty() const noexcept
@@ -91,7 +95,8 @@ inline const PointF &StrokePre::last() const
 
 inline void StrokePre::reset()
 {
-    *this = StrokePre();
+    // adjust
+    *this = StrokePre(callUpdate);
 }
 
 inline void StrokePre::setColor(const WColor &color) noexcept

@@ -50,7 +50,7 @@ inline constexpr void WTask::setDestroyLater(bool needToDestroy)
     this->_deleteLater = needToDestroy;
 }
 
-class WTaskFunction final: public WTask {
+class WTaskFunction final: public WTask{
 private:
     std::function<void()> _method;
 public:

@@ -5,6 +5,7 @@
 #include "Scheduler/WObject.h"
 #include "Scheduler/WTimer.h"
 
+/*
 class ObjectFinder : public WObject
 {
 public:
@@ -68,4 +69,4 @@ force_inline bool ObjectFinder::isActive() const
 {
     return _timer->isActive();
 }
-
+*/

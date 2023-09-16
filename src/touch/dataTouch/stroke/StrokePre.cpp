@@ -6,13 +6,17 @@
 #include "touch/dataTouch/stroke/StrokeNormal.h"
 #include "touch/dataTouch/page/Page.h"
 
-StrokePre::StrokePre()  :
-    _img(1, true),
-    _stroke(new StrokeNormal),
-    _last_draw_point(_point.constBegin()),
-    _last_draw_press(_pressure.constBegin()),
-    _min({0., 0.}, false),
-    _max({0., 0.}, false)
+StrokePre::StrokePre(std::function<void()> callUpdate)
+    : WObject(nullptr)
+    , _img(1, true)
+    , _stroke(new StrokeNormal)
+    , _timer(new WTimer(this, [this]() { this->timerEnd(); }, 500))
+    , callUpdate(std::move(callUpdate))
+    , _last_draw_point(_point.constBegin())
+    , _last_draw_press(_pressure.constBegin())
+    , _max_pressure(0.)
+    , _min({0., 0.}, false)
+    , _max({0., 0.}, false)
 {
     W_ASSERT(_stroke->isEmpty());
     //W_ASSERT(this->isImageEmpty());
@@ -21,8 +25,27 @@ StrokePre::StrokePre()  :
 
 StrokePre::~StrokePre() noexcept = default;
 
-// TODO: return a UniquePtr from core
-auto StrokePre::merge() -> std::shared_ptr<Stroke>
+void StrokePre::timerEnd()
+{
+    if (isEmpty() or _stroke->type() != Stroke::COMPLEX_NORMAL)
+        return;
+
+    UniquePtr<Stroke> stroke = model::find(_point, _pressure, getBiggerPointInStroke());
+
+    if (stroke != nullptr) {
+        this->_stroke = std::move(stroke);
+
+        this->_stroke = std::move(stroke);
+        this->_img = WPixmap();
+
+        this->_point.clear();
+        this->_pressure.clear();
+
+        callUpdate();
+    }
+}
+
+auto StrokePre::merge() -> UniquePtr<Stroke>
 {
     using namespace WCommonScript;
     W_ASSERT(this->already_merge == false);
@@ -35,10 +58,10 @@ auto StrokePre::merge() -> std::shared_ptr<Stroke>
 
     if (this->_stroke->type() != Stroke::COMPLEX_NORMAL) {
         W_ASSERT(this->_point.isEmpty());
-        std::shared_ptr<Stroke> res = std::move(this->_stroke);
-        W_ASSERT(res.unique());
+        UniquePtr<Stroke> res = std::move(this->_stroke);
+
         W_ASSERT(_stroke == nullptr);
-        this->_stroke = nullptr;
+
         return res;
     }
 
@@ -50,7 +73,7 @@ auto StrokePre::merge() -> std::shared_ptr<Stroke>
     W_ASSERT(_pressure.isEmpty());
     
     {
-        std::shared_ptr<Stroke> res = std::move(this->_stroke);
+        UniquePtr<Stroke> res = std::move(this->_stroke);
         W_ASSERT(_stroke == nullptr);
         return res;
     }
@@ -79,9 +102,9 @@ void StrokePre::setTime(int time)
     _stroke->setPositionAudio(time);
 }
 
-RectF StrokePre::getBiggerPointInStroke() const
+auto StrokePre::getBiggerPointInStroke() const -> RectF
 {
-    /** TODO --> define a cache */
+    // TODO: define a cache
     const auto res = (_stroke->isEmpty()) ?
                     StrokeNormal::getBiggerPointInStroke(
                                                 this->_point.constBegin(),
@@ -114,16 +137,6 @@ void StrokePre::reset_img()
     _img.fill({color_transparent});
 }
 
-void StrokePre::setStrokeComplex(std::unique_ptr<Stroke> &&stroke)
-{
-    W_ASSERT(stroke->type() != Stroke::COMPLEX_NORMAL);
-    this->_stroke = std::move(stroke);
-    this->_img = WPixmap();
-
-    this->_point.clear();
-    this->_pressure.clear();
-}
-
 WColor StrokePre::getColor(double division) const
 {
     return _stroke->getColor(division);
@@ -153,7 +166,8 @@ StrokePre &StrokePre::operator=(const StrokePre &other)
 }
 
 StrokePre::StrokePre(const StrokePre &other) noexcept
-    : _img(other._img)
+    : WObject(nullptr)
+    , _img(other._img)
     , _stroke(other._stroke->clone())
     , _point(other._point)
     , _pressure(other._pressure)
@@ -166,7 +180,9 @@ StrokePre::StrokePre(const StrokePre &other) noexcept
 }
 
 StrokePre::StrokePre(StrokePre &&other) noexcept
-    : _img(std::move(other._img))
+    : WObject(nullptr)
+    , _timer(new WTimer())
+    , _img(std::move(other._img))
     , _stroke(std::move(other._stroke))
     , _point(std::move(other._point))
     , _pressure(std::move(other._pressure))
@@ -178,25 +194,11 @@ StrokePre::StrokePre(StrokePre &&other) noexcept
 {
 }
 
-void StrokePre::append(const PointF &point, const pressure_t &press, WPen &_pen, double prop)
+void StrokePre::append(const PointF &point, const pressure_t &press, double prop)
 {
     const auto normal = (_stroke->type() == Stroke::COMPLEX_NORMAL);
 
     W_ASSERT(normal);
-    
-    if (0){
-        // TODO: remove this tmp statement
-        _point.append(point);
-        _pressure.append(press);
-        WPainterUnsafe painter;
-        WPen pen;
-        painter.setPen(pen);
-        painter.setAntialiasing();
-        painter.begin(&_img);
-        painter.drawLine(0, 0, 100, 100);
-        painter.end();
-        return;
-    }
     
     if (normal) {
         WPainterUnsafe painter;
