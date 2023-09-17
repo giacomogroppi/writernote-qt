@@ -84,6 +84,14 @@ public:
     const T& get(int i) const;
     int size() const;
 
+    template <class T2 = T>
+    bool isOrderLowToHigh() const;
+
+    template <class T2 = T>
+    bool isOrderHighToLow() const;
+
+
+
     /**
      * Remove all the object [from, to)
      * */
@@ -105,7 +113,7 @@ public:
     auto takeFirst() -> T;
     auto constData() const -> const T*;
     auto indexOf(const T &object) -> int;
-    void remove(const T& object);
+    auto remove(const T& object) -> bool;
 
 
     /**
@@ -113,14 +121,14 @@ public:
      * \return True iff we have remove the object passed
      * \param cmp return true iff v1 >= v2
      */
-    auto removeOrderAscending(const T& object, const Fn<bool(const T& v1, const T& v2)> &cmp) noexcept -> bool;
+    auto removeOrderLowToHigh(const T& object, const Fn<bool(const T &, const T &)> &cmp) noexcept -> bool;
 
     /**
      * This method requires that the list is order in descending order
      * \param cmp return true iff v1 >= v2
      * \return true iff we have remove the object passed
      * */
-    auto removeOrderDescending(const T& object, const Fn<bool(const T& v1, const T& v2)> &cmp) noexcept -> bool;
+    auto removeOrderHighToLow(const T& object, const Fn<bool(const T &, const T &)> &cmp) noexcept -> bool;
 
     auto operator=(const WVector<T> &other) -> WVector<T>&;
     auto operator=(WVector &&other) noexcept -> WVector<T>&;
@@ -225,13 +233,13 @@ public:
 };
 
 template<class T>
-auto WVector<T>::removeOrderDescending(
+auto WVector<T>::removeOrderHighToLow(
             const T &object,
             const Fn<bool(const T &, const T &)> &cmp
         ) noexcept -> bool
 {
     // ordine decrescente
-    const auto iterator = WAbstractList::binary_search<WVector<T>::iterator, T, true>(
+    const auto iterator = WAbstractList::binary_search<WVector<T>::iterator, T, false>(
             begin(),
             end(),
             object,
@@ -627,7 +635,7 @@ inline auto WVector<T>::load(
 }
 
 template <class T>
-inline auto WVector<T>::removeOrderAscending(
+inline auto WVector<T>::removeOrderLowToHigh(
             const T &object,
             const Fn<bool(const T &, const T &)> &cmp
         ) noexcept -> bool
@@ -641,7 +649,7 @@ inline auto WVector<T>::removeOrderAscending(
 #endif // DEBUGINFO
 
     // ordine crescente
-    const auto iterator = WAbstractList::binary_search<WVector<T>::iterator, T, false>(
+    const auto iterator = WAbstractList::binary_search<WVector<T>::iterator, T, true>(
             begin(),
             end(),
             object,
@@ -677,6 +685,12 @@ template <class T>
 auto WVector<T>::rbegin() -> riterator
 {
     return this->_data.rbegin();
+}
+
+template <class T>
+auto WVector<T>::remove(const T &object) -> bool
+{
+    return std::erase_if(_data, [&](const T& item) { return item == object; }) != 0;
 }
 
 template <class T>

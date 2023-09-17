@@ -288,7 +288,7 @@ void SquareMethod::moveObjectIntoPrivate(WListFast<WVector<int>> &index, Documen
     _stroke.clear();
 
     for (auto &list: index) {
-        WAbstractList::sort(list);
+        WAbstractList::sort(list.begin(), list.end());
     }
 
     this->initImg(doc);

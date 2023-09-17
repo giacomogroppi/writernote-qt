@@ -305,7 +305,7 @@ auto RubberMethod::touchUpdate(const PointF &__lastPoint,
     cbool isTotal = (_rubber_type == RubberMethod::total);
     const PointF &lastPoint = doc.adjustPoint(__lastPoint);
     auto *dataThread = thread_group->get_thread_data();
-    int pageMod;
+    int pageMod = 0;
     RubberPrivateData dataPrivate;
 
     WDebug(true, &this->_last);
@@ -502,7 +502,7 @@ auto RubberMethod::touchEnd(const PointF&, Document &doc) -> UpdateEvent
                 index_mod = i + _base;
             }
 
-            WAbstractList::sort(arr);
+            WAbstractList::sort(arr.begin(), arr.end());
 
             const auto rect = doc.getSizeArea(arr, i + _base);
             page.removeAndDraw(-1, arr, rect);

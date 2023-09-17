@@ -1,11 +1,13 @@
 #include "WTimer.h"
 #include "Scheduler.h"
-
+#include <chrono>
 #include <utility>
 
-WTimer::WTimer(WObject *parent, Fn<void()> function, int millisecond)
+WTimer::WTimer(WObject *parent, Fn<void()> function, int millisecond, bool onMainThread)
     : WObject(parent)
     , _isActive(false)
+    , _isSingleShot(false)
+    , _executionMainThread(onMainThread)
     , _millisecond(millisecond)
     , _timeStart(0)
     , _function(std::move(function))
@@ -15,13 +17,14 @@ WTimer::WTimer(WObject *parent, Fn<void()> function, int millisecond)
 
 void WTimer::start(int millisecond)
 {
+    using namespace std::chrono;
+
     // TODO: enable timer
-    return;
     if (millisecond != -1)
         this->_millisecond = millisecond;
 
     this->_isActive = true;
-    this->_timeStart = clock();
+    this->_timeStart = now();
 
     Scheduler::getInstance().addTimer(this);
 }
@@ -68,5 +71,11 @@ auto WTimer::trigger() -> void
 auto WTimer::getEnd() const -> unsigned long
 {
     return this->_millisecond + this->_timeStart;
+}
+
+auto WTimer::now() -> unsigned long
+{
+    using namespace std::chrono;
+    return duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 }
 

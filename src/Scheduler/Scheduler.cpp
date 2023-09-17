@@ -79,7 +79,11 @@ Scheduler::Scheduler()
             if (_timersWaiting.isEmpty())
                 continue;
 
-            if (_timersWaiting.getFirst()->getEnd() < lastValueEnd) {
+            WDebug(true, "Wake up!" << _timersWaiting.getFirst()->getDuration() << _timersWaiting.getFirst()->getEnd() << "size: " << _timersWaiting.size());
+
+            if (_timersWaiting.getFirst()->getEnd() < WTimer::now()) {
+
+            } else if (_timersWaiting.getFirst()->getEnd() < lastValueEnd) {
                 // we need to wait
                 continue;
             }
@@ -87,9 +91,15 @@ Scheduler::Scheduler()
             auto *timer = _timersWaiting.takeFirst();
 
             // mutex is already locked
-            Scheduler::addTaskMainThread(new WTaskFunction(nullptr, [timer]() {
-                timer->trigger();
-            }, true));
+            if (timer->isExecutionMainThread()) {
+                Scheduler::addTaskMainThread(new WTaskFunction(nullptr, [timer] {
+                    timer->trigger();
+                }, true));
+            } else {
+                Scheduler::addTaskGeneric(new WTaskFunction(nullptr, [timer] {
+                    timer->trigger();
+                }, true));
+            }
 
             if (not timer->isSingleShot()) {
                 Scheduler::getInstance().addTimerUnsafe(timer);
@@ -190,6 +200,9 @@ auto Scheduler::removeTimer(WTimer *timer) -> void
 {
     W_ASSERT(timer != nullptr);
     WMutexLocker _(this->_muxTimers);
+
     if (_timersWaiting.removeIfPresent(timer))
         this->_c.notify_all();
 }
+
+

@@ -20,9 +20,15 @@ namespace WAbstractList {
     };
 
     template <class T>
-    auto sort (T &list) -> void
+    auto sort (T begin, T end) -> void
     {
-        std::sort(list.begin(), list.end());
+        std::sort(begin, end);
+    }
+
+    template <class T, class F>
+    auto sort (T begin, T end, Fn<bool(const F& v1, const F& v2)> cmp) -> void
+    {
+        std::sort(begin, end, cmp);
     }
 
     /**
@@ -81,9 +87,9 @@ namespace WAbstractList {
      * \param end The end iterator
      * \return end iff object is not between [begin, end)
      * \param cmp needs to return true in case v1 >= v2
-     * \tparam descending true if the list if descending [ordine decrescente]
+     * \tparam lowToHigh true if the list if ascending [ordine crescente]
      * */
-    template <class Iterator, class T, bool descending = false>
+    template <class Iterator, class T, bool lowToHigh>
     auto binary_search(
             Iterator begin,
             Iterator end,
@@ -107,15 +113,15 @@ namespace WAbstractList {
             }
 
             if (cmp(*(begin + mid), object)) {
-                if constexpr (descending)
-                    left = mid + 1;
-                else
+                if constexpr (lowToHigh)
                     right = mid - 1;
+                else
+                    left = mid + 1;
             } else {
-                if constexpr (descending)
-                    right = mid - 1;
-                else
+                if constexpr (lowToHigh)
                     left = mid + 1;
+                else
+                    right = mid - 1;
             }
         }
 
@@ -134,4 +140,21 @@ namespace WAbstractList {
             }
         }
     }
+
+    /**
+     * \tparam Iterator iterator for the list
+     * \tparam T the object contained in the list
+     * \tparam lowToHigh true if the list should be order from low item to high item
+     *
+     * \param begin the begin of the list
+     * \param end the end of the list
+     * \param cmp should return true iff v1 >= v2
+     * */
+    template <class Iterator, class T, bool lowToHigh>
+    auto createHeap(Iterator begin, Iterator end, Fn<bool(const T& v1, const T& v2)> cmp) -> bool
+    {
+        if (lowToHigh)
+            WAbstractList::sort(begin, end, cmp);
+        W_ASSERT(0);
+    };
 };
