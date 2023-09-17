@@ -3,7 +3,7 @@
 
 #include <utility>
 
-WTimer::WTimer(WObject *parent, std::function<void()> function, int millisecond)
+WTimer::WTimer(WObject *parent, Fn<void()> function, int millisecond)
     : WObject(parent)
     , _isActive(false)
     , _millisecond(millisecond)

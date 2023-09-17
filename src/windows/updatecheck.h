@@ -20,8 +20,8 @@
 class updatecheck: public WObject
 {
 public:
-    updatecheck(WObject *parent, std::function<void(const WString &message, const WString &version)> showDialog,
-                std::function<void(bool)> setVisibleUpdateButton);
+    updatecheck(WObject *parent, Fn<void(const WString &message, const WString &version)> showDialog,
+                Fn<void(bool)> setVisibleUpdateButton);
     ~updatecheck();
 
     void checkupdate();
@@ -40,8 +40,8 @@ public:
     };
 
 private:
-    std::function<void(const WString &message, const WString &version)> _showDialog;
-    std::function<void(bool)> _setVisibleUpdateButton;
+    Fn<void(const WString &message, const WString &version)> _showDialog;
+    Fn<void(bool)> _setVisibleUpdateButton;
 
     DEFINE_LISTENER(managerFinished());
     /** result == true there are update */

@@ -7,15 +7,13 @@
 extern StrokePre *__tmp;
 
 HighligterMethod::HighligterMethod(
-        std::function<int()> getTime,
-        std::function<pressure_t(double)> getSize,
-        std::function<void(const PointF&)> objectMove,
+        Fn<int()> getTime,
+        Fn<pressure_t(double)> getSize,
         WPen &pen,
         WColor &color
         )
     : InsertTools(std::move(getTime),
                   std::move(getSize),
-                  std::move(objectMove),
                   color,
                   pen)
 {

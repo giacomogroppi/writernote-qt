@@ -8,11 +8,11 @@
 
 #define W_EMITTABLE_PRIVATE_LIST(name_signals, ...) \
     private:                                   \
-    std::vector<std::function<void( __VA_ARGS__)>> w_object_observer_##name_signals; \
+    std::vector<Fn<void( __VA_ARGS__)>> w_object_observer_##name_signals; \
 
 #define W_EMITTABLE_PRIVATE_REGI(name_signals, ...) \
     public: \
-    void reg##name_signals(const std::function<void(__VA_ARGS__)> &nameFunc) {                    \
+    void reg##name_signals(const Fn<void(__VA_ARGS__)> &nameFunc) {                    \
         this->w_object_observer_##name_signals.push_back(nameFunc);                                \
     } \
     private:

@@ -14,7 +14,7 @@
 class WPainter
 {
 protected:
-    virtual void execute(const std::function<void()> &function) = 0;
+    virtual void execute(const Fn<void()> &function) = 0;
 
     WPainter() noexcept;
 public:

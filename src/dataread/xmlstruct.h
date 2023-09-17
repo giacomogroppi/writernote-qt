@@ -37,7 +37,7 @@ public:
     const WByteArray &getPath() const;
 
     /* return true if we can load this file */
-    static bool manageMessage(int res, const std::function<void(const WString &)>& showMessage);
+    static bool manageMessage(int res, const Fn<void(const WString &)>& showMessage);
 
     int xmlstruct_read_file_old(int ver, WZip &zip, cbool LoadPdf, cbool LoadImg);
 

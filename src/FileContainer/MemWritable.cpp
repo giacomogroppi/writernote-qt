@@ -63,7 +63,7 @@ MemWritable::~MemWritable()
     }
 }
 
-auto MemWritable::merge(const std::function<int(const void *, size_t)>& append) -> int
+auto MemWritable::merge(const Fn<int(const void *, size_t)>& append) -> int
 {
     // write all the blocks
     for (auto iter = _allocatedMemory.cbegin(); iter < _allocatedMemory.cend() - 1; iter ++) {

@@ -16,7 +16,7 @@ class WPainterUnsafe final: public WPainter
 {
 protected:
     class WPainterUnsafePrivate* _dataPrivate;
-    void execute(const std::function<void()> &function) final;
+    void execute(const Fn<void()> &function) final;
 public:
     WPainterUnsafe() noexcept;
     ~WPainterUnsafe() final = default;

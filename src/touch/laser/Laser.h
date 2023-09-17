@@ -17,15 +17,14 @@ private:
     static constexpr int _time = 2000;
 
     WList<StrokePre> _stroke;
-    std::function<void()> _callUpdate;
+    Fn<void()> _callUpdate;
     WTimer *_timer;
 
 public:
     explicit Laser(WObject *parent,
-                   std::function<pressure_t(double)> getSize,
-                   std::function<void(const PointF&)> objectMove,
+                   Fn<pressure_t(double)> getSize,
                    WColor &color, WPen &pen,
-                   std::function<void()> callUpdate);
+                   Fn<void()> callUpdate);
     ~Laser();
 
     void startMove();

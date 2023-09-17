@@ -7,10 +7,8 @@
 class LaserMethod: public InsertTools
 {
 public:
-    LaserMethod(std::function<pressure_t(double)> getPress,
-                std::function<void(const PointF&)> objectMove,
-                std::function<void(const StrokePre &stroke)> appent_to,
-                WPen &pen, WColor &color);
+    LaserMethod(Fn<pressure_t(double)> getPress,
+                Fn<void(const StrokePre &stroke)> appent_to, WPen &pen, WColor &color);
 
     virtual ~LaserMethod() = default;
     auto touchBegin(const PointF& point, double size, class Document &doc) -> UpdateEvent final;
@@ -21,7 +19,7 @@ private:
      * La funzione passata da costruttore deve essere in grado di gestire l'inserimento del
      * dato Stroke in qualche punto, non nella Page.
      * */
-    std::function<void(const StrokePre &stroke)> _append_to;
+    Fn<void(const StrokePre &stroke)> _append_to;
     unsigned char getAlfa() const final;
 };
 

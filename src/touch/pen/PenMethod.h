@@ -7,9 +7,8 @@ class PenMethod: public InsertTools
 {
 private:
 public:
-    PenMethod(std::function<pressure_t (double size)> getSize,
-              std::function<int()> getTime,
-              std::function<void(const PointF &point)> objectMove,
+    PenMethod(Fn<pressure_t (double size)> getSize,
+              Fn<int()> getTime,
               WColor &color,
               WPen &pen);
 

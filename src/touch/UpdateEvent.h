@@ -17,43 +17,45 @@ public:
         square = BIT(5)
     };
 
-    UpdateEvent(WFlags<UpdateEventType> flags) : _flags(flags), _low(0), _high(0) {};
+    constexpr UpdateEvent(WFlags<UpdateEventType> flags) : _flags(flags), _low(0), _high(0) {};
 
-    static auto makePage(int low, int high) { return UpdateEvent(WFlags{UpdateEventType::page}, low, high); }
-    static auto makePageAll() -> UpdateEvent;
-    static auto makeSheet() -> UpdateEvent;
-    static auto makeStroke() -> UpdateEvent;
-    static auto makeSquare() -> UpdateEvent;
-    static auto makeLaser() -> UpdateEvent;
-    static auto makeEmpty() -> UpdateEvent;
+    static constexpr auto makePage(int low, int high) { return UpdateEvent(WFlags{UpdateEventType::page}, low, high); }
+    static constexpr auto makePageAll() -> UpdateEvent;
+    static constexpr auto makePageSingle(int page) -> UpdateEvent;
 
-    static auto makeAll() -> UpdateEvent { return makePageAll() | makeStroke() | makeSheet() | makeSquare() | makeLaser(); }
+    static constexpr auto makeSheet() -> UpdateEvent;
+    static constexpr auto makeStroke() -> UpdateEvent;
+    static constexpr auto makeSquare() -> UpdateEvent;
+    static constexpr auto makeLaser() -> UpdateEvent;
+    static constexpr auto makeEmpty() -> UpdateEvent;
 
-    auto operator|(const UpdateEvent& d) const -> UpdateEvent;
-    auto operator&(const WFlags<UpdateEventType> &f) const -> WFlags<UpdateEventType> { return _flags & f; }
+    static constexpr auto makeAll() -> UpdateEvent { return makePageAll() | makeStroke() | makeSheet() | makeSquare() | makeLaser(); }
 
-    /**
-     * This function is defined only if the event has UpdateEventType::page and isAll() return false
-    */
-    auto getPageLow() const -> int;
+    constexpr auto operator|(const UpdateEvent& d) const -> UpdateEvent;
+    constexpr auto operator&(const WFlags<UpdateEventType> &f) const -> WFlags<UpdateEventType> { return _flags & f; }
 
     /**
      * This function is defined only if the event has UpdateEventType::page and isAll() return false
     */
-    auto getPageHigh() const -> int;
-    auto isAll() const -> bool;
+    constexpr auto getPageLow() const -> int;
+
+    /**
+     * This function is defined only if the event has UpdateEventType::page and isAll() return false
+    */
+    constexpr auto getPageHigh() const -> int;
+    constexpr auto isAll() const -> bool;
 
 private:
     WFlags<UpdateEventType> _flags;
-    int _low, _high;
+    int _low = -1, _high = -1;
     bool _all = false;
 
-    UpdateEvent() = default;
+    constexpr UpdateEvent() = default;
 
-    explicit UpdateEvent(WFlags<UpdateEventType> flags, int low, int high): _flags(flags), _low(low), _high(high), _all(false) {};
+    constexpr explicit UpdateEvent(WFlags<UpdateEventType> flags, int low, int high): _flags(flags), _low(low), _high(high), _all(false) {};
 };
 
-inline auto UpdateEvent::operator|(const UpdateEvent &d) const -> UpdateEvent
+inline constexpr auto UpdateEvent::operator|(const UpdateEvent &d) const -> UpdateEvent
 {
     UpdateEvent event;
     event._low = std::min(_low, d._low);
@@ -63,32 +65,32 @@ inline auto UpdateEvent::operator|(const UpdateEvent &d) const -> UpdateEvent
     return event;
 }
 
-inline auto UpdateEvent::makeEmpty() -> UpdateEvent
+inline constexpr auto UpdateEvent::makeEmpty() -> UpdateEvent
 {
     return WFlags<UpdateEventType>{0};
 }
 
-inline auto UpdateEvent::makeSheet() -> UpdateEvent
+inline constexpr auto UpdateEvent::makeSheet() -> UpdateEvent
 {
     return WFlags{UpdateEventType::stroke};
 }
 
-inline auto UpdateEvent::makeStroke() -> UpdateEvent
+inline constexpr auto UpdateEvent::makeStroke() -> UpdateEvent
 {
     return WFlags{UpdateEventType::stroke};
 }
 
-inline auto UpdateEvent::makeSquare() -> UpdateEvent
+inline constexpr auto UpdateEvent::makeSquare() -> UpdateEvent
 {
     return WFlags{UpdateEventType::square};
 }
 
-inline auto UpdateEvent::makeLaser() -> UpdateEvent
+inline constexpr auto UpdateEvent::makeLaser() -> UpdateEvent
 {
     return WFlags{UpdateEventType::laser};
 }
 
-inline auto UpdateEvent::makePageAll() -> UpdateEvent
+inline constexpr auto UpdateEvent::makePageAll() -> UpdateEvent
 {
     UpdateEvent event;
 
@@ -100,19 +102,25 @@ inline auto UpdateEvent::makePageAll() -> UpdateEvent
     return event;
 }
 
-inline auto UpdateEvent::getPageLow() const -> int
+inline constexpr auto UpdateEvent::getPageLow() const -> int
 {
     W_ASSERT(!isAll());
     return this->_low;
 }
 
-inline auto UpdateEvent::getPageHigh() const -> int
+inline constexpr auto UpdateEvent::getPageHigh() const -> int
 {
     W_ASSERT(!isAll());
     return _high;
 }
 
-inline auto UpdateEvent::isAll() const -> bool
+inline constexpr auto UpdateEvent::isAll() const -> bool
 {
     return _all;
+}
+
+inline constexpr auto UpdateEvent::makePageSingle(int page) -> UpdateEvent
+{
+    W_ASSERT(page >= 0);
+    return UpdateEvent::makePage(page, page + 1);
 }

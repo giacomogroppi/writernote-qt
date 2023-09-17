@@ -17,12 +17,12 @@ private:
     /**
      * \return true iff v1 >= v2
      * */
-    std::function<bool(const T& v1, const T& v2)> _cmpOriginal;
+    Fn<bool(const T& v1, const T& v2)> _cmpOriginal;
 
     /**
      * return true iff v1 should be before v2
      */
-    std::function<bool(const T& v1, const T& v2)> _cmp;
+    Fn<bool(const T& v1, const T& v2)> _cmp;
 
     /**
      * It will create a heap
@@ -32,7 +32,7 @@ public:
     /**
      * \param cmp Function that return true iff v1 >= v2
      * */
-    WHeap(std::function<bool(const T& v1, const T& v2)> cmp) noexcept;
+    WHeap(Fn<bool(const T& v1, const T& v2)> cmp) noexcept;
 
     template <class T2 = T>
         requires (std::is_pointer_v<T2>)
@@ -161,7 +161,7 @@ WHeap<T, min>::WHeap() noexcept
 }
 
 template <class T, bool min>
-WHeap<T, min>::WHeap(std::function<bool(const T &, const T &)> cmp) noexcept
+WHeap<T, min>::WHeap(Fn<bool(const T &, const T &)> cmp) noexcept
     : _d()
     , _cmpOriginal(std::move(cmp))
     , _cmp ([this](const T& v1, const T& v2) {

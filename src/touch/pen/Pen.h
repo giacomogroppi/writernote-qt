@@ -8,8 +8,7 @@ class Pen: public WObject, public PenMethod
 {
 public:
     Pen(WObject *parent,
-        std::function<int()> getTime,
-        std::function<void(const PointF &point)> objectMove,
+        Fn<int()> getTime,
         WColor &color, WPen &pen);
     virtual ~Pen() = default;
 

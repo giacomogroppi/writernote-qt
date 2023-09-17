@@ -2,18 +2,18 @@
 
 #include <utility>
 
-Pen::Pen(WObject *parent,
-         std::function<int ()> getTime,
-         std::function<void(const PointF &)> objectMove,
-         WColor &color,
-         WPen &pen)
+Pen::Pen(
+            WObject *parent,
+            Fn<int ()> getTime,
+            WColor &color,
+            WPen &pen
+        )
     : WObject(parent)
     , PenMethod(
         [&](double press) -> pressure_t {
             return Pen::getSize(press);
         }
     , std::move(getTime)
-    , std::move(objectMove)
     , color
     , pen)
 {

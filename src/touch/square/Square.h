@@ -18,10 +18,10 @@ class Square: public WObject,
 {
 public:
     explicit Square(WObject *parent,
-                    std::function<void()> hideProperty,
-                    std::function<void(const PointF& point, ActionProperty signal)> showProperty,
-                    std::function<Document &()> getDoc,
-                    std::function<void()> callUpdate);
+                    Fn<void()> hideProperty,
+                    Fn<void(const PointF& point, ActionProperty signal)> showProperty,
+                    Fn<Document &()> getDoc,
+                    Fn<void(UpdateEvent event)> callUpdate);
     ~Square() override;
 
     int getType() const final;
@@ -30,8 +30,8 @@ public:
     void reset() override;
 
 private:
-    std::function<void()> _callUpdate;
-    void needRefreshPrivate() override;
+    Fn<void(UpdateEvent event)> _callUpdate;
+    void needRefreshPrivate(UpdateEvent event) override;
 };
 
 inline constexpr int Square::type()

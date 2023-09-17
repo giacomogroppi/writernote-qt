@@ -67,7 +67,7 @@ public:
      * set to false, so it is up to whoever receives the task to destroy it.
      * The function pass will be executed in a generic thread
      * */
-    static constexpr auto startNewTask = [] (std::function<void()> function) -> WTask * {
+    static constexpr auto startNewTask = [] (Fn<void()> function) -> WTask * {
         WTask *task = new WTaskFunction(nullptr, std::move(function));
 
         task->setDestroyLater(false);

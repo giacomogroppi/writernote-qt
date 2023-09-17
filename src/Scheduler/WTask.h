@@ -52,9 +52,9 @@ inline constexpr void WTask::setDestroyLater(bool needToDestroy)
 
 class WTaskFunction final: public WTask{
 private:
-    std::function<void()> _method;
+    Fn<void()> _method;
 public:
-    WTaskFunction (WObject *parent, std::function<void()> method, bool destroyLater = false)
+    WTaskFunction (WObject *parent, Fn<void()> method, bool destroyLater = false)
         : WTask(parent, destroyLater)
         , _method(std::move(method))
         {};

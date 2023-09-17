@@ -16,7 +16,7 @@ class TabletController : public WObject
 {
 private:
     struct {
-        Highligter *_highligter;
+        Highlighter *_highligter;
         Pen *_pen;
         Rubber *_rubber;
         Laser *_laser;
@@ -34,21 +34,20 @@ private:
 
     mutable std::atomic<bool> _isDrawing;
 
-    void objectMove(const PointF &point);
     void setAndCallTool(Tools *tool);
 
     Document &getDoc();
     const Document &getDoc() const;
 
-    const std::function<bool()> _isPlaying;
-    const std::function<int()> _getTimePlaying;
+    const Fn<bool()> _isPlaying;
+    const Fn<int()> _getTimePlaying;
     void checkCreatePage();
     void draw(WPainter &painter, double width, WFlags<UpdateEvent::UpdateEventType> flags) const;
 public:
     explicit TabletController(WObject *parent,
-                              const std::function<int()>  &getTimeRecording,
-                              const std::function<bool()> &isPlaying,
-                              const std::function<int()>  &getTimePlaying);
+                              const Fn<int()>  &getTimeRecording,
+                              const Fn<bool()> &isPlaying,
+                              const Fn<int()>  &getTimePlaying);
 
     void getImg(WPainter &painter, double width, WFlags<UpdateEvent::UpdateEventType> flags) const;
     void getImagePage(WPainter &painter, double width) const;

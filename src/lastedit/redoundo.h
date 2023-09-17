@@ -13,11 +13,11 @@ private:
     WVector<Document *> m_list;
     class TabletCanvas *canvas;
     static constexpr int max = 10;
-    std::function<Document*()> _getDoc;
+    Fn<Document*()> _getDoc;
     void append(Document *doc);
 
 public:
-    redoundo(TabletCanvas *m_canvas, std::function<Document*()> getDoc);
+    redoundo(TabletCanvas *m_canvas, Fn<Document*()> getDoc);
     ~redoundo();
 
     void copy();

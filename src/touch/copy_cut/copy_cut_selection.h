@@ -7,6 +7,7 @@
 #include "core/WListFast.h"
 #include "core/RectF.h"
 #include <memory>
+#include "core/pointer/SharedPtr.h"
 
 class Stroke;
 class DataStruct;
@@ -24,7 +25,7 @@ public:
     int selection(DataStruct &data,
                   const WListFast<
                         WListFast<
-                            std::shared_ptr<Stroke>
+                            SharedPtr<Stroke>
                         >
                     > &stroke,
                   int __flags, const PointF &offsetTouch);
@@ -46,10 +47,10 @@ private:
 #define FLAG_CUT 0x2 /* if the point is from a cut operation */
     int flags = 0;
 
-    WListFast<std::shared_ptr<Stroke>> m_stroke;
+    WListFast<SharedPtr<Stroke>> m_stroke;
 
-    void single(const WListFast<std::shared_ptr<Stroke>> &from, WListFast<std::shared_ptr<Stroke>> &append_data);
-    RectF get_size_area(const WListFast<WListFast<std::shared_ptr<Stroke>>> & stroke);
+    void single(const WListFast<SharedPtr<Stroke>> &from, WListFast<SharedPtr<Stroke>> &append_data);
+    RectF get_size_area(const WListFast<WListFast<SharedPtr<Stroke>>> & stroke);
 };
 
 inline bool copy::isSomeThingCopy() const

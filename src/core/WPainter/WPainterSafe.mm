@@ -22,7 +22,7 @@ static auto getAdaptCompositionMode (WPainter::CompositionMode compositionMode) 
     W_ASSERT_TEXT(0, "Composition mode not implemented");
 }
 
-void WPainterSafe::execute(const std::function<void()> &function)
+void WPainterSafe::execute(const Fn<void()> &function)
 {
     auto realCompositionMode = getAdaptCompositionMode(_compositionMode);
     

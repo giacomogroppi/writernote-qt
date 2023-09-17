@@ -13,9 +13,9 @@ static PointF          __s;
 static WVector<int>     *__index;
 static bool             *__in_box;
 
-SquareMethod::SquareMethod(std::function<void()> hideProperty,
-                           std::function<void (const PointF &, ActionProperty)> showProperty,
-                           std::function<Document &()> getDoc)
+SquareMethod::SquareMethod(Fn<void()> hideProperty,
+                           Fn<void (const PointF &, ActionProperty)> showProperty,
+                           Fn<Document &()> getDoc)
     : _hideProperty(hideProperty)
     , _showProperty(std::move(showProperty))
     , _getDoc(getDoc)
@@ -63,7 +63,7 @@ void SquareMethod::reset()
         goto out;
 
     for (i = 0; i < len; i++) {
-        WListFast<std::shared_ptr<Stroke>> ll   = _stroke.operator[](i);
+        WListFast<SharedPtr<Stroke>> ll   = _stroke.operator[](i);
 
 #ifdef DEBUGINFO
         WCommonScript::for_each(ll, [](const std::shared_ptr<Stroke>& stroke){
@@ -295,7 +295,7 @@ void SquareMethod::moveObjectIntoPrivate(WListFast<WVector<int>> &index, Documen
 
     auto preappend = [&, len]() {
         for (auto i = 0; i < len; i++) {
-            _stroke.append(WListFast<std::shared_ptr<Stroke>> ());
+            _stroke.append(WListFast<SharedPtr<Stroke>> ());
         }
     };
 
@@ -321,8 +321,8 @@ void SquareMethod::moveObjectIntoPrivate(WListFast<WVector<int>> &index, Documen
     }
 
 #ifdef DEBUGINFO
-    WCommonScript::for_each(_stroke, [](const WListFast<std::shared_ptr<Stroke>> &list) {
-        WCommonScript::for_each(list, [](const std::shared_ptr<Stroke>& s) {
+    WCommonScript::for_each(_stroke, [](const WListFast<SharedPtr<Stroke>> &list) {
+        WCommonScript::for_each(list, [](const SharedPtr<Stroke>& s) {
             W_ASSERT(!s->isEmpty());
         });
     });
@@ -491,7 +491,7 @@ void SquareMethod::actionProperty(PropertySignals action)
         this->reset();
     }
 
-    this->needRefreshPrivate();
+    this->needRefreshPrivate(UpdateEvent::makeSquare() | UpdateEvent::makePage(this->_base, _base + this->_stroke.size() - 1));
 }
 
 /**

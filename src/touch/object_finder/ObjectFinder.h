@@ -9,7 +9,7 @@
 class ObjectFinder : public WObject
 {
 public:
-    explicit ObjectFinder(WObject *parent, std::function<void()> callUpdate);
+    explicit ObjectFinder(WObject *parent, Fn<void()> callUpdate);
     ~ObjectFinder() override = default;
 
     void move(const PointF &point);
@@ -17,7 +17,7 @@ public:
     void reset();
 
 private:
-    std::function<void()> _callUpdate;
+    Fn<void()> _callUpdate;
     [[nodiscard]] bool isActive() const;
     PointSettable _point;
     static constexpr auto debug = false;

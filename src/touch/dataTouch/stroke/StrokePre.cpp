@@ -6,12 +6,12 @@
 #include "touch/dataTouch/stroke/StrokeNormal.h"
 #include "touch/dataTouch/page/Page.h"
 
-StrokePre::StrokePre(std::function<void()> callUpdate)
+StrokePre::StrokePre(Fn<void()> callUpdate)
     : WObject(nullptr)
     , _img(1, true)
     , _stroke(new StrokeNormal)
-    , _timer(new WTimer(this, [this]() { this->timerEnd(); }, 500))
-    , callUpdate(std::move(callUpdate))
+    , _timer(new WTimer(this, this->_timerEndLambda, _timerTime))
+    , _callUpdate(std::move(callUpdate))
     , _last_draw_point(_point.constBegin())
     , _last_draw_press(_pressure.constBegin())
     , _max_pressure(0.)
@@ -41,7 +41,7 @@ void StrokePre::timerEnd()
         this->_point.clear();
         this->_pressure.clear();
 
-        callUpdate();
+        _callUpdate();
     }
 }
 
@@ -169,6 +169,7 @@ StrokePre::StrokePre(const StrokePre &other) noexcept
     : WObject(nullptr)
     , _img(other._img)
     , _stroke(other._stroke->clone())
+    , _timer(new WTimer(this, _timerEndLambda, _timerTime))
     , _point(other._point)
     , _pressure(other._pressure)
     , _last_draw_point(other._last_draw_point)
@@ -181,9 +182,9 @@ StrokePre::StrokePre(const StrokePre &other) noexcept
 
 StrokePre::StrokePre(StrokePre &&other) noexcept
     : WObject(nullptr)
-    , _timer(new WTimer())
     , _img(std::move(other._img))
     , _stroke(std::move(other._stroke))
+    , _timer(new WTimer(this, this->_timerEndLambda, _timerTime))
     , _point(std::move(other._point))
     , _pressure(std::move(other._pressure))
     , _last_draw_point(other._last_draw_point)
@@ -249,6 +250,7 @@ void StrokePre::append(const PointF &point, const pressure_t &press, double prop
 
         painter.end();
 
+        timerReset(point);
     } else {
         W_ASSERT(_point.isEmpty());
         W_ASSERT(_pressure.isEmpty());
@@ -260,4 +262,26 @@ void StrokePre::append(const PointF &point, const pressure_t &press, double prop
 inline bool StrokePre::isImageEmpty() const
 {
     return this->_img == WPixmap(1, true);
+}
+
+void StrokePre::timerReset(const PointF &point) noexcept
+{
+    if(_timerPoint.isSet()){
+        // if the point is equal we don't have to stop the timer
+        if(un(WCommonScript::is_near(_timerPoint, point, 1.))){
+            return;
+        }
+
+        // if the point is different we need to write it and restart the timer
+        _timerPoint = point;
+    }else{
+        _timerPoint.set(true);
+        _timerPoint = point;
+    }
+
+    if(_timer->isActive()){
+        _timer->stop();
+    }
+
+    _timer->start(this->_timerTime);
 }

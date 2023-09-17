@@ -58,8 +58,8 @@ void updatecheck::start()
 }
 
 updatecheck::updatecheck(WObject *parent,
-                         std::function<void(const WString &message, const WString &version)> showDialog,
-                         std::function<void(bool)> setVisibleUpdateButton)
+                         Fn<void(const WString &message, const WString &version)> showDialog,
+                         Fn<void(bool)> setVisibleUpdateButton)
     : WObject(parent)
     , _showDialog(showDialog)
     , _setVisibleUpdateButton(setVisibleUpdateButton)

@@ -8,19 +8,24 @@
 #include "touch/dataTouch/page/Page.h"
 #include "Scheduler/WTimer.h"
 
+
 class StrokePre: public WObject
 {
 private:
     template <class T>
     using List = WListFast<T>;
-    
+
+    static constexpr auto _timerTime = 500;
+    Fn<void()> _timerEndLambda = [this]() { this->timerEnd(); };
+
     WPixmap _img;
     UniquePtr<Stroke> _stroke;
 
     WTimer *_timer;
     void timerEnd();
+    Settable<PointF> _timerPoint;
 
-    std::function<void()> callUpdate;
+    Fn<void()> _callUpdate;
 
     List<PointF>       _point;
     List<pressure_t>   _pressure;
@@ -43,7 +48,7 @@ private:
     [[nodiscard]] List<PointF>::const_iterator get_last_point() const;
     [[nodiscard]] const Stroke &get_stroke_for_draw() const;
 public:
-    StrokePre (std::function<void()> callUpdate);
+    StrokePre (Fn<void()> callUpdate);
     StrokePre (const StrokePre &other) noexcept;
     StrokePre (StrokePre &&other) noexcept;
     ~StrokePre() noexcept;
@@ -79,6 +84,8 @@ public:
     friend class StrokeCircleGenerator;
     */
      friend class stroke_drawer;
+
+    void timerReset(const PointF &point) noexcept;
 };
 
 inline bool StrokePre::isEmpty() const noexcept
@@ -96,7 +103,7 @@ inline const PointF &StrokePre::last() const
 inline void StrokePre::reset()
 {
     // adjust
-    *this = StrokePre(callUpdate);
+    *this = StrokePre(_callUpdate);
 }
 
 inline void StrokePre::setColor(const WColor &color) noexcept

@@ -81,13 +81,13 @@ private:
 
     void mergeList() noexcept;
 
-    void AppendDirectly(const std::shared_ptr<Stroke>& stroke);
+    void AppendDirectly(const SharedPtr<Stroke>& stroke);
     auto initImg(bool flag) -> bool;
 
     void decreaseAlfa(const WVector<int> &pos, WPainter *painter, int decrease);
 
     static auto at_translation(const PointF &point, cint page) -> PointF;
-    static auto get_size_area(const WListFast<std::shared_ptr<Stroke>> & item, int from, int to) -> RectF;
+    static auto get_size_area(const WListFast<SharedPtr<Stroke>> & item, int from, int to) -> RectF;
 
 public:
     const WPixmap &getImg() const;
@@ -99,9 +99,9 @@ public:
     ~Page();
 
 #define PAGE_SWAP_TRIGGER_VIEW BIT(1)
-    void swap(WListFast<std::shared_ptr<Stroke>> &stroke, const WVector<int> & pos, int flag);
-    void swap(WListFast<std::shared_ptr<Stroke>> &stroke, int from, int to);
-    auto swap(int index, std::shared_ptr<Stroke> newData) -> std::shared_ptr<Stroke>;
+    void swap(WListFast<SharedPtr<Stroke>> &stroke, const WVector<int> & pos, int flag);
+    void swap(WListFast<SharedPtr<Stroke>> &stroke, int from, int to);
+    auto swap(int index, const SharedPtr<Stroke>& newData) -> SharedPtr<Stroke>;
 
     bool updateFlag(const PointF &FirstPoint, double zoom, double heightView);
     void setVisible(bool vis) const;
@@ -124,12 +124,12 @@ public:
      *  the drawing of the whole sheet, they wait for
      *  the triggerRenderImage to be executed.
     */
-    __fast void append(const std::shared_ptr<Stroke>& stroke);
-    __fast void append(std::shared_ptr<Stroke> &&stroke);
+    __fast void append(const SharedPtr<Stroke> &stroke);
+    __fast void append(SharedPtr<Stroke> &&stroke);
     __fast void reserve(int stroke) { _strokeTmp.reserve(stroke); } ;
     // TODO --> make template
-    __fast void append(const WList<std::shared_ptr<Stroke>> & stroke);
-    __fast void append(const WListFast<std::shared_ptr<Stroke>> &stroke);
+    __fast void append(const WList<SharedPtr<Stroke>> &stroke);
+    __fast void append(const WListFast<SharedPtr<Stroke>> &stroke);
 
     [[deprecated]]
     __fast const Stroke             & atStroke(int i) const;
@@ -276,7 +276,7 @@ force_inline int Page::getIndex() const
     return this->getCount() - 1;
 }
 
-force_inline void Page::AppendDirectly(const std::shared_ptr<Stroke>& stroke)
+force_inline void Page::AppendDirectly(const SharedPtr<Stroke>& stroke)
 {
     this->_stroke.append(stroke);
 }
@@ -447,7 +447,7 @@ inline Stroke &Page::lastMod()
     return *this->_stroke.operator[](this->lengthStroke() - 1);
 }
 
-inline void Page::append(std::shared_ptr<Stroke> &&stroke)
+inline void Page::append(SharedPtr<Stroke> &&stroke)
 {
     W_ASSERT(stroke and not stroke->isEmpty());
 
@@ -458,10 +458,10 @@ inline void Page::append(std::shared_ptr<Stroke> &&stroke)
     WDebug(pageDebug, this->_count);
 }
 
-force_inline void Page::append(const std::shared_ptr<Stroke>& strokeAppend)
+force_inline void Page::append(const SharedPtr<Stroke> &stroke)
 {
-    std::shared_ptr<Stroke> stroke = strokeAppend;
-    return this->append(std::move(stroke));
+    auto copy = stroke;
+    return this->append(std::move(copy));
 }
 
 force_inline double Page::minHeight() const
@@ -542,7 +542,7 @@ force_inline constexpr PointF Page::sizePoint()
     };
 }
 
-inline void Page::append(const WListFast<std::shared_ptr<Stroke>> &stroke)
+inline void Page::append(const WListFast<SharedPtr<Stroke>> &stroke)
 {
     for (auto &ref: stroke) {
         this->append(ref);

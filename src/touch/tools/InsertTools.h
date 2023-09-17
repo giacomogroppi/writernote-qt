@@ -4,15 +4,13 @@
 
 class InsertTools: public Tools {
 protected:
-    std::function<int()> _getTime;
-    std::function<pressure_t(double size)> _getSize;
-    std::function<void(const PointF &)> _objectMove;
+    Fn<int()> _getTime;
+    Fn<pressure_t(double size)> _getSize;
     WColor &_color;
     WPen &_pen;
 
-    InsertTools(std::function<int()> getTime,
-                std::function<pressure_t (double press)> getSize,
-                std::function<void(const PointF&)> objectMove,
+    InsertTools(Fn<int()> getTime,
+                Fn<pressure_t (double press)> getSize,
                 WColor &color,
                 WPen &pen);
     virtual ~InsertTools() = default;

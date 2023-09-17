@@ -7,9 +7,9 @@ extern StrokePre *__tmp;
 extern bool hasDraw;
 
 TabletController::TabletController(WObject *parent,
-                                   const std::function<int()>& getTimeRecording,
-                                   const std::function<bool()> &isPlaying,
-                                   const std::function<int()> &getTimePlaying)
+                                   const Fn<int()>& getTimeRecording,
+                                   const Fn<bool()> &isPlaying,
+                                   const Fn<int()> &getTimePlaying)
     : WObject{parent}
     , _doc(new Document)
     , _needUpdate(true)
@@ -17,9 +17,17 @@ TabletController::TabletController(WObject *parent,
     , _isPlaying(isPlaying)
     , _getTimePlaying(getTimePlaying)
 {
-    auto objectMove = [this](const PointF &point) { this->objectMove(point); };
-    auto callUpdate = [this]() { W_EMIT_1(onNeedRefresh, UpdateEvent::makeAll()); };
+    // auto callUpdate = [this]() { W_EMIT_1(onNeedRefresh, UpdateEvent::makeAll()); };
     auto getDoc = [this]() -> Document & { return this->getDoc(); };
+
+    /**
+     * Dobbiamo instanzare lo strokePre in questo punto devo codice
+     * perchè vogliamo assicurare a tutto il codice che accede a tale
+     * oggetti che esso è valido. --> [non vogliamo controllare che sia nullo :)]
+    */
+    __tmp = new StrokePre([this] {
+        W_EMIT_1(onNeedRefresh, UpdateEvent::makeStroke());
+    });
 
     auto showProperty = [this] (const PointF &point, ActionProperty prop) {
         W_EMIT_2(onPropertyShow, point, prop);
@@ -30,17 +38,15 @@ TabletController::TabletController(WObject *parent,
     };
 
     this->_tools = {
-        ._highligter = new Highligter (
+        ._highligter = new Highlighter (
                 this,
                 getTimeRecording,
-                objectMove,
                 _color,
                 _pen
             ),
         ._pen = new Pen (
                 this,
                 getTimeRecording,
-                objectMove,
                 _color,
                 _pen
             ),
@@ -50,17 +56,16 @@ TabletController::TabletController(WObject *parent,
         ._laser = new Laser (
                 this,
                 [] (double) -> pressure_t { return 10.; },
-                objectMove,
                 _color,
                 _pen,
-                callUpdate
+                [this] { W_EMIT_1(onNeedRefresh, UpdateEvent::makeLaser()); }
             ),
         ._square = new Square(
                 this,
                 hideProperty,
                 showProperty,
                 getDoc,
-                callUpdate
+                [this] (UpdateEvent event) { W_EMIT_1(onNeedRefresh, event); }
             )
     };
 
@@ -72,9 +77,8 @@ TabletController::TabletController(WObject *parent,
         _tools._highligter
     });
 
-    *__tmp = StrokePre();
+    __tmp->reset();
     _currentTool = _tools._pen;
-    _objectFinder = new ObjectFinder(this, callUpdate);
 }
 
 // TODO: to remove
@@ -178,11 +182,6 @@ void TabletController::draw(WPainter &painter, double width, WFlags<UpdateEvent:
     
     // TODO: remove this
     TIME_STOP(time_load, "Load function:");
-}
-
-void TabletController::objectMove(const PointF &point)
-{
-    _objectFinder->move(point);
 }
 
 void TabletController::checkCreatePage()

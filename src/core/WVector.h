@@ -113,14 +113,14 @@ public:
      * \return True iff we have remove the object passed
      * \param cmp return true iff v1 >= v2
      */
-    auto removeOrderAscending(const T& object, const std::function<bool(const T& v1, const T& v2)> &cmp) noexcept -> bool;
+    auto removeOrderAscending(const T& object, const Fn<bool(const T& v1, const T& v2)> &cmp) noexcept -> bool;
 
     /**
      * This method requires that the list is order in descending order
      * \param cmp return true iff v1 >= v2
      * \return true iff we have remove the object passed
      * */
-    auto removeOrderDescending(const T& object, const std::function<bool(const T& v1, const T& v2)> &cmp) noexcept -> bool;
+    auto removeOrderDescending(const T& object, const Fn<bool(const T& v1, const T& v2)> &cmp) noexcept -> bool;
 
     auto operator=(const WVector<T> &other) -> WVector<T>&;
     auto operator=(WVector &&other) noexcept -> WVector<T>&;
@@ -227,7 +227,7 @@ public:
 template<class T>
 auto WVector<T>::removeOrderDescending(
             const T &object,
-            const std::function<bool(const T &, const T &)> &cmp
+            const Fn<bool(const T &, const T &)> &cmp
         ) noexcept -> bool
 {
     // ordine decrescente
@@ -629,7 +629,7 @@ inline auto WVector<T>::load(
 template <class T>
 inline auto WVector<T>::removeOrderAscending(
             const T &object,
-            const std::function<bool(const T &, const T &)> &cmp
+            const Fn<bool(const T &, const T &)> &cmp
         ) noexcept -> bool
 {
 #ifdef DEBUGINFO

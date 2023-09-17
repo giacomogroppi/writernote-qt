@@ -11,8 +11,8 @@ class TabletUtils {
 private:
     const bool _withPdf;
     const bool _isExportingPdf;
-    const std::function<bool()> &_isPlay;
-    const std::function<int ()> &_positionAudio;
+    const Fn<bool()> &_isPlay;
+    const Fn<int ()> &_positionAudio;
     double _m;
     Optional<Laser> _laser;
     WPen _pen;
@@ -25,8 +25,8 @@ public:
     struct DataPaint{
         bool withPdf;
         bool IsExportingPdf;
-        const std::function<bool()> &isPlay;
-        const std::function<int()>  &positionAudio;
+        const Fn<bool()> &isPlay;
+        const Fn<int()>  &positionAudio;
         double m;
         Optional<Laser> laser;
 
@@ -43,8 +43,8 @@ public:
     .lastPoint = Point()
     };
 
-    explicit TabletUtils(WPainter &painter, const std::function<bool()> &isPlay,
-                         const std::function<int()> &positionAudio,
+    explicit TabletUtils(WPainter &painter, const Fn<bool()> &isPlay,
+                         const Fn<int()> &positionAudio,
                          double m, Optional<Laser> laser, const Document &doc,
                          bool withPdf, bool isExporting, const RectF &visibleArea);
     ~TabletUtils() = default;
@@ -68,7 +68,7 @@ private:
     constexpr WPainter &getPainter();
 };
 
-inline TabletUtils::TabletUtils(WPainter &painter, const std::function<bool()> &isPlay, const std::function<int()> &positionAudio, double m, Optional<Laser> laser, const Document &doc, bool withPdf, bool isExporting, const RectF &visibleArea)
+inline TabletUtils::TabletUtils(WPainter &painter, const Fn<bool()> &isPlay, const Fn<int()> &positionAudio, double m, Optional<Laser> laser, const Document &doc, bool withPdf, bool isExporting, const RectF &visibleArea)
     : _withPdf(withPdf)
     , _isExportingPdf(isExporting)
     , _isPlay(isPlay)

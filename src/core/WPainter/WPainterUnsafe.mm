@@ -33,7 +33,7 @@ WPainterUnsafe::WPainterUnsafe () noexcept
     
 }
 
-void WPainterUnsafe::execute (const std::function<void()> &function)
+void WPainterUnsafe::execute (const Fn<void()> &function)
 {
     auto realCompositionMode = getAdaptCompositionMode(_compositionMode);
     

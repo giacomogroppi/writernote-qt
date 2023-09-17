@@ -34,7 +34,7 @@ void copy::managePaste(
     }
 }
 
-RectF copy::get_size_area(const WListFast<WListFast<std::shared_ptr<Stroke>>> &data)
+RectF copy::get_size_area(const WListFast<WListFast<SharedPtr<Stroke>>> &data)
 {
     RectF size_area(0, 0, 0, 0);
 
@@ -49,8 +49,8 @@ RectF copy::get_size_area(const WListFast<WListFast<std::shared_ptr<Stroke>>> &d
 }
 
 void copy::single(
-                const WListFast<    std::shared_ptr<Stroke>> &from,
-                WListFast<          std::shared_ptr<Stroke>> &append_data)
+                const WListFast<    SharedPtr<Stroke>> &from,
+                WListFast<          SharedPtr<Stroke>> &append_data)
 {
     for (const auto &currentStroke : std::as_const(from)) {
         append_data.append(currentStroke->clone());
@@ -74,7 +74,7 @@ void copy::single(
 */
 int copy::selection(
         DataStruct                  &data,
-        const WListFast<WListFast<std::shared_ptr<Stroke>>>  &stroke,
+        const WListFast<WListFast<SharedPtr<Stroke>>>  &stroke,
         int                         __flags,
         const PointF               &pointTouch)
 {

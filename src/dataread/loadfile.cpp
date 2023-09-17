@@ -50,7 +50,7 @@ int xmlstruct::readFile(FileContainer *fileZip, WByteArray &arr,
     return ERROR;
 }
 
-bool xmlstruct::manageMessage(const int res, const std::function<void (const WString &)>& showMessage)
+bool xmlstruct::manageMessage(const int res, const Fn<void (const WString &)>& showMessage)
 {
     switch (res) {
         case OK: return true;

@@ -5,9 +5,9 @@
 #include "core/WPainter/WPainter.h"
 
 Square::Square(WObject *parent,
-               std::function<void()> hideProperty,
-               std::function<void(const PointF& point, ActionProperty signal)> showProperty,
-               std::function<Document &()> getDoc, std::function<void ()> callUpdate)
+               Fn<void()> hideProperty,
+               Fn<void(const PointF& point, ActionProperty signal)> showProperty,
+               Fn<Document &()> getDoc, Fn<void (UpdateEvent event)> callUpdate)
     : WObject(parent)
     , SquareMethod(std::move(hideProperty), std::move(showProperty), std::move(getDoc))
     , _callUpdate(std::move(callUpdate))
@@ -26,7 +26,7 @@ void Square::reset()
     SquareMethod::reset();
 }
 
-void Square::needRefreshPrivate()
+void Square::needRefreshPrivate(UpdateEvent event)
 {
-    _callUpdate();
+    _callUpdate(event);
 }

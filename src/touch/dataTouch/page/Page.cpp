@@ -145,7 +145,7 @@ void Page::drawNewPage(n_style __style) noexcept
     stroke.setPressure(widthToPressure(style.thickness));
 }
 
-void Page::swap(WListFast<std::shared_ptr<Stroke>> &list,
+void Page::swap(WListFast<SharedPtr<Stroke>> &list,
         const WVector<int>  &pos,
         int                 flag)
 {
@@ -178,7 +178,7 @@ void Page::swap(WListFast<std::shared_ptr<Stroke>> &list,
 /*
  * this function mantain the item already in list
 */
-void Page::swap(WListFast<std::shared_ptr<Stroke> > &list,
+void Page::swap(WListFast<SharedPtr<Stroke> > &list,
                 int             from,
                 int             to)
 {
@@ -200,9 +200,9 @@ void Page::swap(WListFast<std::shared_ptr<Stroke> > &list,
             );
 }
 
-std::shared_ptr<Stroke> Page::swap(int index, std::shared_ptr<Stroke> newData)
+auto Page::swap(int index, const SharedPtr<Stroke>& newData) -> SharedPtr<Stroke>
 {
-    std::shared_ptr<Stroke> res = this->_stroke.at(index);
+    SharedPtr<Stroke> res = this->_stroke.at(index);
     W_ASSERT(newData);
 
     _stroke[index] = newData;
@@ -224,7 +224,7 @@ void Page::removeAt(const WVector<int> &pos)
     }
 }
 
-void Page::append(const WList<std::shared_ptr<Stroke>> &stroke)
+void Page::append(const WList<SharedPtr<Stroke>> &stroke)
 {
     reserve(stroke.size());
     for (const auto & tmp : std::as_const(stroke)) {
@@ -563,7 +563,7 @@ void Page::decreaseAlfa(const WVector<int> &pos, int decrease)
     End_painter(painter);
 }
 
-RectF Page::get_size_area(const WListFast<std::shared_ptr<Stroke> > &item, int from, int to)
+RectF Page::get_size_area(const WListFast<SharedPtr<Stroke> > &item, int from, int to)
 {
     RectF result;
 

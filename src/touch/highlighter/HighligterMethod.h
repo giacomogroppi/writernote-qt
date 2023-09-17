@@ -6,9 +6,8 @@
 class HighligterMethod: public InsertTools {
 private:
 public:
-    HighligterMethod(std::function<int()> getTime,
-                     std::function<pressure_t(double)> getSize,
-                     std::function<void(const PointF &)> objectMove,
+    HighligterMethod(Fn<int()> getTime,
+                     Fn<pressure_t(double)> getSize,
                      WPen &pen,
                      WColor &color);
 

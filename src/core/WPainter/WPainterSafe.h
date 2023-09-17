@@ -7,7 +7,7 @@
 class WPainterSafe final: public WPainter
 {
 protected:
-    void execute(const std::function<void()> &function) final;
+    void execute(const Fn<void()> &function) final;
 public:
     WPainterSafe() noexcept = default;
     ~WPainterSafe() final = default;

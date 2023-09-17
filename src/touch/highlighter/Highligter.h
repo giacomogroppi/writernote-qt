@@ -3,29 +3,28 @@
 #include "Scheduler/WObject.h"
 #include "HighligterMethod.h"
 
-class Highligter final:
+class Highlighter final:
         public WObject,
         public HighligterMethod
 {
 private:
-    enum HighligterType {
-        HighligterTypePressure,
-        HighligterTypeConstSize
+    enum HighlighterType {
+        HighlighterTypePressure,
+        HighlighterTypeConstSize
     };
 
-    HighligterType _type;
+    HighlighterType _type;
     pressure_t _size;
     int _alfa;
 
     [[nodiscard]] unsigned char getAlfa() const override;
 public:
-    explicit Highligter(WObject *parent,
-                        std::function<int()> getTime,
-                        std::function<void(const PointF &)> objectMove,
-                        WColor &color,
-                        WPen &pen);
+    explicit Highlighter(WObject *parent,
+                         Fn<int()> getTime,
+                         WColor &color,
+                         WPen &pen);
 
-    ~Highligter() final = default;
+    ~Highlighter() final = default;
 
     int getType() const final;
     static constexpr int type();
@@ -44,7 +43,7 @@ public:
 };
 
 
-inline constexpr int Highligter::type()
+inline constexpr int Highlighter::type()
 {
     return 2;
 }

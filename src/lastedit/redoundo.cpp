@@ -7,7 +7,7 @@ void redoundo::append(Document *doc)
     W_ASSERT(m_list.size() == max);
 }
 
-redoundo::redoundo(TabletCanvas *__canvas, std::function<Document *()> getDoc)
+redoundo::redoundo(TabletCanvas *__canvas, Fn<Document *()> getDoc)
     : _getDoc(getDoc)
 {
     uint i;

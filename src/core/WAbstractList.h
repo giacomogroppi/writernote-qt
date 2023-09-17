@@ -41,7 +41,7 @@ namespace WAbstractList {
             Iterator begin,
             Iterator end,
             const T& object,
-            std::function<int(const T& v1, const T& v2)> cmp = [](const T& v1, const T& v2) {
+            Fn<int(const T& v1, const T& v2)> cmp = [](const T& v1, const T& v2) {
                 if (v1 == v2) return 0;
                 if (v1 > v2)  return 1;
                 if (v1 < v2)  return -1;
@@ -88,7 +88,7 @@ namespace WAbstractList {
             Iterator begin,
             Iterator end,
             const T& object,
-            std::function<bool(const T& v1, const T& v2)> cmp = [](const T& v1, const T& v2) {
+            Fn<bool(const T& v1, const T& v2)> cmp = [](const T& v1, const T& v2) {
                 return v1 >= v2;
             }
         ) -> Iterator

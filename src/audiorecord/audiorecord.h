@@ -16,15 +16,15 @@
 class AudioRecord : public WObject
 {
 private:
-    std::function<void(const WString &)> _error;
-    std::function<void(int)> _durationChange;
+    Fn<void(const WString &)> _error;
+    Fn<void(int)> _durationChange;
 public:
     /**
      * duration is express in seconds
     */
     explicit AudioRecord(WObject *parent,
-                         std::function<void(const WString &)> error,
-                         std::function<void(int)> durationChange);
+                         Fn<void(const WString &)> error,
+                         Fn<void(int)> durationChange);
     ~AudioRecord();
 
     bool isRecording() const;

@@ -1,15 +1,16 @@
 #include "PenMethod.h"
 #include <utility>
 
-PenMethod::PenMethod(std::function<pressure_t(double)> getSize,
-                     std::function<int()> getTime,
-                     std::function<void(const PointF &point)> objectMove,
-                     WColor &color, WPen &pen) :
-        InsertTools(std::move(getTime),
+PenMethod::PenMethod(
+            Fn<pressure_t(double)> getSize,
+            Fn<int()> getTime,
+            WColor &color, WPen &pen
+        ) : InsertTools(
+                    std::move(getTime),
                     std::move(getSize),
-                    std::move(objectMove),
                     color,
-                    pen)
+                    pen
+                )
 {
 }
 

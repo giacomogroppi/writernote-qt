@@ -16,9 +16,9 @@ private:
     unsigned long _millisecond;
     unsigned long _timeStart;
 
-    std::function<void()> _function;
+    Fn<void()> _function;
 public:
-    WTimer(WObject *parent, std::function<void()> function, int millisecond);
+    WTimer(WObject *parent, Fn<void()> function, int millisecond);
     ~WTimer() override = default;
 
     bool isActive() const;

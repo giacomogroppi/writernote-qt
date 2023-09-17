@@ -2,63 +2,61 @@
 
 #include <utility>
 
-Highligter::Highligter(WObject *parent,
-                       std::function<int()> getTime,
-                       std::function<void(const PointF &)> objectMove,
-                       WColor &color,
-                       WPen &pen)
+Highlighter::Highlighter(WObject *parent,
+                         Fn<int()> getTime,
+                         WColor &color,
+                         WPen &pen)
     : WObject(parent)
     , HighligterMethod(std::move(getTime),
                        [&](double press) -> pressure_t {
-                            return Highligter::getSize(press);
+                            return Highlighter::getSize(press);
                         },
-                       std::move(objectMove),
                        pen,
                        color)
-    , _type(HighligterType::HighligterTypeConstSize)
+    , _type(HighlighterType::HighlighterTypeConstSize)
 {
     // TODO: load data from settings
 }
 
-int Highligter::getType() const
+int Highlighter::getType() const
 {
-    return Highligter::type();
+    return Highlighter::type();
 }
 
-void Highligter::setHighligterPressureConst()
+void Highlighter::setHighligterPressureConst()
 {
-    this->_type = HighligterType::HighligterTypeConstSize;
+    this->_type = HighlighterType::HighlighterTypeConstSize;
     W_EMIT_0(onTypeChanged);
 }
 
-void Highligter::setHighligterSize()
+void Highlighter::setHighligterSize()
 {
-    this->_type = HighligterType::HighligterTypePressure;
+    this->_type = HighlighterType::HighlighterTypePressure;
     W_EMIT_0(onTypeChanged);
 }
 
-pressure_t Highligter::getSize(double pressure)
+pressure_t Highlighter::getSize(double pressure)
 {
     static_assert(sizeof(pressure_t) <= sizeof(pressure));
-    if (this->_type == HighligterType::HighligterTypeConstSize) {
+    if (this->_type == HighlighterType::HighlighterTypeConstSize) {
         return this->_size;
     }
     return static_cast<pressure_t>(pressure) * 20.;
 }
 
-unsigned char Highligter::getAlfa() const
+unsigned char Highlighter::getAlfa() const
 {
     return this->_alfa;
 }
 
-void Highligter::setAlfa(int alfa)
+void Highlighter::setAlfa(int alfa)
 {
     W_ASSERT(alfa > 0 and alfa <= 255);
     this->_alfa = alfa;
     W_EMIT_0(onAlfaChanged);
 }
 
-void Highligter::setSize(double size)
+void Highlighter::setSize(double size)
 {
     this->_size = static_cast<pressure_t>(size);
     W_EMIT_0(onSizeChanged);

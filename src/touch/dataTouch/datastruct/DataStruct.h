@@ -72,7 +72,7 @@ public:
     void removeAt(int indexPage);
 
     /* the draw function triggers the drawing of the points automatically */
-    void append(const WListFast<std::shared_ptr<Stroke>> &stroke, int m_pos_ris);
+    void append(const WListFast<SharedPtr<Stroke>> &stroke, int m_pos_ris);
 
     /**
      * This method take the object from 'object'
@@ -457,7 +457,7 @@ inline int DataStruct::whichPage(const PointF &point) const
 /**
  * the function automatically launches the drawing for the pages
  * to which data has been added*/
-inline void DataStruct::append(const WListFast<std::shared_ptr<Stroke>> &stroke, int m_pos_ris)
+inline void DataStruct::append(const WListFast<SharedPtr<Stroke>> &stroke, int m_pos_ris)
 {
     WListFast<int> trigger;
 

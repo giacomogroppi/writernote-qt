@@ -9,7 +9,7 @@
 // è lo stesso stroke definito nel file tabletevent.cpp
 extern StrokePre *__tmp;
 /*
-ObjectFinder::ObjectFinder(WObject *parent, std::function<void()> callUpdate)
+ObjectFinder::ObjectFinder(WObject *parent, Fn<void()> callUpdate)
     : WObject{parent}
     , _callUpdate(std::move(callUpdate))
     , _timer(new WTimer(this, [this]() { endTimer(); }, time))

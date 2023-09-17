@@ -7,6 +7,7 @@
 #include "utils/common_def.h"
 #include <type_traits>
 #include <algorithm>
+#include <functional>
 
 #if DEBUG
 # define DEBUGINFO
@@ -25,6 +26,9 @@
 #define WDISABILE_COPY(ClassName) \
     ClassName(const ClassName &) = delete;\
     ClassName &operator=(const ClassName &) = delete;
+
+template<typename R>
+using Fn = std::function<R>;
 
 #include <iostream>
 #include <cstring>

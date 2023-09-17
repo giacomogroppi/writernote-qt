@@ -7,16 +7,16 @@
 
 extern StrokePre *__tmp;
 
-LaserMethod::LaserMethod(std::function<pressure_t(double)> getPress,
-                         std::function<void(const PointF&)> objectMove,
-                         std::function<void(const StrokePre &stroke)> append_to,
-                         WPen &pen,
-                         WColor &color)
+LaserMethod::LaserMethod(
+            Fn<pressure_t(double)> getPress,
+            Fn<void(const StrokePre &stroke)> append_to,
+            WPen &pen,
+            WColor &color
+        )
     : InsertTools([]() {
         return 0;
     }
     , std::move(getPress)
-    , std::move(objectMove)
     , color
     , pen)
     , _append_to(std::move(append_to))
@@ -39,7 +39,7 @@ auto LaserMethod::touchEnd(const PointF &, Document &) -> UpdateEvent
         return UpdateEvent::makeEmpty();
 
     this->_append_to(*__tmp);
-    *__tmp = StrokePre();
+    __tmp->reset();
 
     return UpdateEvent::makeEmpty();
 }

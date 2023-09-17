@@ -101,8 +101,8 @@ public:
     void insert(int index, const T& object);
     T takeFirst();
 
-    void forAll(std::function<void(const T&)> method) const;
-    void forAll(std::function<void(T&)> method);
+    void forAll(Fn<void(const T&)> method) const;
+    void forAll(Fn<void(T&)> method);
 
     [[nodiscard]]
     WListFast<T> mid(int from, int to) const;
@@ -196,7 +196,7 @@ public:
     /**
      * To load the data save with this method it's required to call WListFast::loadMultiThread
      * \param list The list to save
-     * \param startNewThread Function that receive a std::function<void()> and return the WTask * associated
+     * \param startNewThread Function that receive a Fn<void()> and return the WTask * associated
      * \param writable Writable
      * \return &lt 0 in case of error
      * */
@@ -205,8 +205,8 @@ public:
     auto writeMultiThread (
             WritableAbstract &writable,
             const WListFast<T2> &list,
-            const std::function<WTask *(
-                std::function<void()>
+            const Fn<WTask *(
+                Fn<void()>
             )> &startNewThread
     ) noexcept -> int;
 
@@ -215,15 +215,15 @@ public:
     auto loadMultiThread (
                             const VersionFileController &versionController,
                             ReadableAbstract &readable,
-                            const std::function<WTask *(
-                                    std::function<void()>
+                            const Fn<WTask *(
+                                    Fn<void()>
                             )> &startNewThread
                         ) noexcept -> WPair<int, WListFast<T2>>;
 
     static auto load  (
                 const VersionFileController &versionController,
                 ReadableAbstract &readable,
-                std::function<WPair<int, T>(
+                Fn<WPair<int, T>(
                             const VersionFileController &versionController,
                             ReadableAbstract &readable
                         )> func
@@ -238,7 +238,7 @@ public:
     static auto write (
                 WritableAbstract &writable,
                 const WListFast<T> &list,
-                std::function<int(
+                Fn<int(
                         WritableAbstract &writable,
                         const T&
                 )> save
@@ -268,7 +268,7 @@ inline WListFast<T>::WListFast(int reserve)
 }
 
 template <class T>
-inline void WListFast<T>::forAll(std::function<void(const T &)> method) const
+inline void WListFast<T>::forAll(Fn<void(const T &)> method) const
 {
     for (const auto &ref: std::as_const(*this)) {
         method(ref);
@@ -276,7 +276,7 @@ inline void WListFast<T>::forAll(std::function<void(const T &)> method) const
 }
 
 template <class T>
-inline void WListFast<T>::forAll(std::function<void(T &)> method)
+inline void WListFast<T>::forAll(Fn<void(T &)> method)
 {
     for (auto &ref: *this) {
         method(ref);
@@ -287,7 +287,7 @@ template <class T>
 inline auto WListFast<T>::load(
         const VersionFileController &versionController,
         ReadableAbstract &readable,
-        std::function<
+        Fn<
                 WPair<int, T>(
                     const VersionFileController &versionController,
                     ReadableAbstract &readable)
@@ -327,7 +327,7 @@ template <class T>
 inline auto WListFast<T>::write(
             WritableAbstract &writable,
             const WListFast<T> &list,
-            std::function<int(WritableAbstract &writable, const T&)> save
+            Fn<int(WritableAbstract &writable, const T&)> save
         ) -> int
 {
     static_assert_type(list._size, int);
@@ -357,8 +357,8 @@ template<class T2>
 inline auto WListFast<T>::writeMultiThread(
             WritableAbstract &writable,
             const WListFast<T2> &list,
-            const std::function<WTask *(
-                    std::function<void()>
+            const Fn<WTask *(
+                    Fn<void()>
             )> &startNewThread
         ) noexcept -> int
 {
@@ -433,8 +433,8 @@ template<class T2>
 inline auto WListFast<T>::loadMultiThread(
             const VersionFileController &versionController,
             ReadableAbstract &readable,
-            const std::function<WTask *(
-                    std::function<void()>
+            const Fn<WTask *(
+                    Fn<void()>
             )> &startNewThread
         ) noexcept -> WPair<int, WListFast<T2>>
 {

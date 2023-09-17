@@ -6,14 +6,12 @@
 
 extern StrokePre *__tmp;
 
-InsertTools::InsertTools(std::function<int()> getTime,
-                         std::function<pressure_t(double)> getSize,
-                         std::function<void(const PointF &)> objectMove,
+InsertTools::InsertTools(Fn<int()> getTime,
+                         Fn<pressure_t(double)> getSize,
                          WColor &color,
                          WPen &pen)
     : _getTime(std::move(getTime))
     ,  _getSize(std::move(getSize))
-    ,  _objectMove(std::move(objectMove))
     ,  _color(color)
     ,  _pen(pen)
 {
@@ -47,8 +45,6 @@ auto InsertTools::touchUpdate(const PointF &point, double size, class Document &
     pressure = this->_getSize(size);
 
     strokeTmp.append(point, pressure, getProp(doc));
-
-    this->_objectMove(point);
 
     // TODO: adjust [maybe]
     return UpdateEvent::makeStroke();

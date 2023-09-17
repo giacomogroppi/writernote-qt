@@ -27,9 +27,9 @@ enum PropertySignals: int {
 class SquareMethod: public Tools, public Scrollable
 {
 public:
-    explicit SquareMethod(std::function<void()> hideProperty,
-                          std::function<void(const PointF& point, ActionProperty signal)> showProperty,
-                          std::function<Document &()> getDoc);
+    explicit SquareMethod(Fn<void()> hideProperty,
+                          Fn<void(const PointF& point, ActionProperty signal)> showProperty,
+                          Fn<Document &()> getDoc);
     ~SquareMethod() ;
 
     auto touchBegin(const PointF& point, double size, class Document &doc) -> UpdateEvent final;
@@ -52,9 +52,9 @@ private:
     int endMoving(Document &doc);
 
     void move(const PointF &punto, Document &doc);
-    std::function<void()> _hideProperty;
-    std::function<void(const PointF& point, ActionProperty signal)> _showProperty;
-    std::function<Document &()> _getDoc;
+    Fn<void()> _hideProperty;
+    Fn<void(const PointF& point, ActionProperty signal)> _showProperty;
+    Fn<Document &()> _getDoc;
 
     void initPointSearch(const PointF &point, const Document &doc);
     void initPointMove(const PointF &point, const Document &doc);
@@ -74,7 +74,7 @@ private:
     void moveObjectIntoPrivate(WListFast<WVector<int> > &index, Document &doc);
 
     WPixmap _img;
-    WListFast<WListFast<std::shared_ptr<Stroke>>> _stroke;
+    WListFast<WListFast<SharedPtr<Stroke>>> _stroke;
 
     int _base;
     WListFast<int> _index_img; /* image */
@@ -96,7 +96,7 @@ private:
     bool find(Document &doc);
 
 protected:
-    virtual void needRefreshPrivate() = 0;
+    virtual void needRefreshPrivate(UpdateEvent event) = 0;
     virtual void reset();
     void actionProperty(PropertySignals action);
 };
