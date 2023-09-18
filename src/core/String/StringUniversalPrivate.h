@@ -101,17 +101,17 @@ public:
     auto operator=(WString &&other) noexcept -> WString& = default;
 };
 
-inline unsigned long WString::size() const
+inline auto WString::size() const -> unsigned long
 {
     return this->_data.size();
 }
 
-inline const WByteArray &WString::toUtf8() const
+inline auto WString::toUtf8() const -> const WByteArray &
 {
     return this->_data;
 }
 
-inline WListFast<WString> WString::split(char character) const
+inline auto WString::split(char character) const -> WListFast<WString>
 {
     WListFast<WString> res {};
     WString tmp {};
@@ -129,15 +129,15 @@ inline WListFast<WString> WString::split(char character) const
     return res;
 }
 
-inline int WString::indexOf(const WString &other) const
+inline auto WString::indexOf(const WString &other) const -> int
 {
     W_ASSERT(other.size() > 0);
 
-    // TODO optimize
-    for (int i = 0; i < size(); i++) {
+    for (unsigned long i = 0; i < size(); i++) {
         if (other.at(i) == this->at(i)) {
             bool find = false;
-            int k;
+            unsigned long k;
+
             for (k = 0; k < other.size() && i + k < size(); k++) {
                 if (at(i + k) != other.at(k)) {
                     find = false;
@@ -160,7 +160,7 @@ inline int WString::indexOf(const WString &other) const
     return -1;
 }
 
-inline int WString::indexOf(char character) const
+inline auto WString::indexOf(char character) const -> int
 {
     for (int i = 0; i < size(); i++) {
         if (at(i) == character) {
@@ -193,9 +193,9 @@ inline int WString::lastIndexOf(char character) const
 
 inline void WString::replace(char oldChar, char newChar)
 {
-    for (int i = 0; i < this->size(); i++) {
-        if (at(i) == oldChar) {
-            this->operator[](i) = newChar;
+    for (auto &ref: *this) {
+        if (ref == oldChar) {
+            ref = newChar;
         }
     }
 }
@@ -237,7 +237,7 @@ inline WString WString::fromUtf8(const char *data, int size)
     return res;
 }
 
-inline WString WString::arg(const WString &arg) const
+inline auto WString::arg(const WString &arg) const -> WString
 {
     WString res {this->_data};
     //int index = 1;
@@ -266,12 +266,12 @@ inline WString WString::arg(const WString &arg) const
     return res;
 }
 
-inline bool WString::operator!=(const WString &other) const
+inline auto WString::operator!=(const WString &other) const -> bool
 {
     return !(*this == other);
 }
 
-inline bool operator<(const WString &first, const WString &second)
+inline auto operator<(const WString &first, const WString &second) -> bool
 {
     unsigned long i;
 
@@ -310,7 +310,7 @@ inline WString::WString(const std::string &other)
 
 }
 
-inline WString WString::toUpper() const
+inline auto WString::toUpper() const -> WString
 {
     WString result(*this);
     for (auto &c: result)
@@ -334,7 +334,7 @@ inline auto WString::remove(int index) -> void
     _data.remove(index);
 }
 
-inline bool WString::operator==(const WString &other) const
+inline auto WString::operator==(const WString &other) const -> bool
 {
     return this->_data == other._data;
 }
@@ -349,19 +349,19 @@ inline WString WString::operator+(const WString &other)
     return result;
 }
 
-inline WString &WString::operator+=(const WString &other)
+inline auto WString::operator+=(const WString &other) -> WString&
 {
     _data.append(other._data);
     return *this;
 }
 
-inline WString &WString::operator+=(char c)
+inline auto WString::operator+=(char c) -> WString&
 {
     _data.append(c);
     return *this;
 }
 
-inline WString WString::arg(int a) const
+inline auto WString::arg(int a) const -> WString
 {
     WString result (*this);
     WString number = WString::number(a);
@@ -403,7 +403,7 @@ inline auto WString::operator[](int i) const -> char
     return this->_data[i];
 }
 
-inline std::string WString::toStdString() const noexcept
+inline auto WString::toStdString() const noexcept -> std::string
 {
     return this->_data.toStdString();
 }

@@ -20,9 +20,6 @@ public:
     WColor color() const;
     double widthF() const;
 
-    // todo --> try to remove
-    void setSolidPattern();
-
     void setWidthF(double value);
 
     enum WPenStyle {
