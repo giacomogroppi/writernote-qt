@@ -49,7 +49,6 @@ void WTimer::setSingleShot(bool singleShot)
 
 void WTimer::stop()
 {
-    WMutexLocker _(this->_lock);
     W_ASSERT(this->isActive());
     Scheduler::getInstance().removeTimer(this);
 }
