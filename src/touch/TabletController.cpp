@@ -13,6 +13,7 @@ TabletController::TabletController(WObject *parent,
     : WObject{parent}
     , _doc(new Document)
     , _needUpdate(true)
+    , _color(color_black)
     , _isDrawing(false)
     , _isPlaying(isPlaying)
     , _getTimePlaying(getTimePlaying)
@@ -38,7 +39,7 @@ TabletController::TabletController(WObject *parent,
     };
 
     this->_tools = {
-        ._highligter = new Highlighter (
+        ._highlighter = new Highlighter (
                 this,
                 getTimeRecording,
                 _color,
@@ -74,7 +75,7 @@ TabletController::TabletController(WObject *parent,
         _tools._pen,
         _tools._laser,
         _tools._rubber,
-        _tools._highligter
+        _tools._highlighter
     });
 
     __tmp->reset();

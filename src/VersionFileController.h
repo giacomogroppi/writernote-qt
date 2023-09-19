@@ -14,7 +14,8 @@ private:
     static constexpr unsigned short currentVersion##name = version;             \
     unsigned short _version##name;                                              \
     public:                                                                     \
-    constexpr auto getVersion##name() const -> int { return _version##name; }
+    constexpr auto getVersion##name() const -> int { return _version##name; }   \
+    private:
 
     DEFINE_VERSION(WListFast, 0);
     DEFINE_VERSION(WString, 0);
@@ -39,6 +40,10 @@ private:
     DEFINE_VERSION(WImage, 0);
     DEFINE_VERSION(WMap, 0);
 
+    static constexpr auto numberOfElements = 22;
+
+    static
+    auto getArray(VersionFileController &versionController) -> std::unique_ptr<unsigned short *>;
 public:
     VersionFileController() = default;
 
@@ -52,6 +57,37 @@ public:
     auto operator=(const VersionFileController &other) noexcept -> VersionFileController& = default;
 };
 
+inline auto VersionFileController::getArray(VersionFileController &versionController) -> std::unique_ptr<unsigned short *>
+{
+    auto array = new unsigned short* [numberOfElements]{
+        &versionController._versionWListFast,
+        &versionController._versionWString,
+        &versionController._versionWPair,
+        &versionController._versionSharedPtr,
+        &versionController._versionWByteArray,
+        &versionController._versionDataStruct,
+        &versionController._versionPointTemplate,
+        &versionController._versionPage,
+        &versionController._versionStroke,
+        &versionController._versionStrokeCircle,
+        &versionController._versionRectTemplate,
+        &versionController._versionMetadataStroke,
+        &versionController._versionStrokeNormal,
+        &versionController._versionStrokeLine,
+        &versionController._versionStrokeRect,
+        &versionController._versionPressure,
+        &versionController._versionWColor,
+        &versionController._versionStrokeForPage,
+        &versionController._versionWPixmap,
+        &versionController._versionImageDrawable,
+        &versionController._versionWImage,
+        &versionController._versionWMap
+    };
+    static_assert(sizeof (VersionFileController) == sizeof(unsigned short) * numberOfElements);
+
+    return std::unique_ptr<unsigned short*>(array);
+}
+
 inline auto VersionFileController::load(ReadableAbstract &readable) -> std::pair<int, VersionFileController>
 {
     VersionFileController result{};
@@ -60,21 +96,25 @@ inline auto VersionFileController::load(ReadableAbstract &readable) -> std::pair
     if (readable.read(versionVersionFileController) < 0)
         return {-1, result};
 
-    unsigned short *d[] = {
-    };
+    std::unique_ptr<unsigned short*> d = getArray(result);
 
-    for (auto & i : d) {
-        if (readable.read (&i, sizeof (*d)) < 0)
+    for (int i = 0; i < numberOfElements; i++) {
+        if (readable.read (&(*d)[i], sizeof (unsigned short)) < 0)
             return {-1, result};
     }
 
-    // TODO: implement
-    
     return {0, result};
 }
 
 inline auto VersionFileController::write(WritableAbstract& writable) -> int
 {
-    // TODO: implement
+    VersionFileController object{};
+    auto array = getArray(object);
+
+    for (int i = 0; i < VersionFileController::numberOfElements; ++i) {
+        if (writable.write(&(*array)[i], sizeof(unsigned short)) < 0)
+            return -1;
+    }
+
     return 0;
 }

@@ -62,7 +62,7 @@ size_t Document::createSingleControll() const
         lenStroke = page.lengthStroke();
 
         for(counterStroke = 0; counterStroke < lenStroke; counterStroke++){
-            ctrl += page.atStroke(counterStroke).createControll();
+            ctrl += page.atStroke(counterStroke).createControl();
         }
     }
 

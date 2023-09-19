@@ -3,11 +3,13 @@
 #include <utility>
 #include "touch/TabletUtils.h"
 
-Laser::Laser(WObject *parent,
-             Fn<pressure_t(double)> getSize,
-             WColor &color,
-             WPen &pen,
-             Fn<void()> callUpdate)
+Laser::Laser(
+            WObject *parent,
+            Fn<pressure_t(double)> getSize,
+            WColor &color,
+            WPen &pen,
+            Fn<void()> callUpdate
+        )
     : WObject(parent)
     , LaserMethod(
                 std::move(getSize),
@@ -15,16 +17,15 @@ Laser::Laser(WObject *parent,
                     this->append(stroke);
                 },
                 pen,
-                color)
+                color
+    )
     , _callUpdate(std::move(callUpdate))
     , _timer(new WTimer(this, [this]() { this->endTimer(); }, Laser::_time ))
 {
+    _timer->setSingleShot(true);
 }
 
-Laser::~Laser()
-{
-    delete this->_timer;
-}
+Laser::~Laser() = default;
 
 int Laser::getType() const
 {

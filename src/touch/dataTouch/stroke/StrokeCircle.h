@@ -34,7 +34,7 @@ public:
 
     void append(const PointF &point, pressure_t pressure);
     void append (WListFast<PointF> &&points, WListFast<pressure_t> &&pressures) final;
-    virtual size_t createControll() const;
+    virtual size_t createControl() const;
 
     RectF getBiggerPointInStroke() const;
     bool isInside(const RectF &rect) const final;

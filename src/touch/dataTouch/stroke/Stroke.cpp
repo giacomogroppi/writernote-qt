@@ -252,7 +252,7 @@ void Stroke::setMetadata(const metadata_stroke &metadata)
     this->_metadata = metadata;
 }
 
-size_t Stroke::createControll() const
+size_t Stroke::createControl() const
 {
     size_t controll = 0;
     int i;

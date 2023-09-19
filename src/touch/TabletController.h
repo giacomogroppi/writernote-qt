@@ -16,7 +16,7 @@ class TabletController : public WObject
 {
 private:
     struct {
-        Highlighter *_highligter;
+        Highlighter *_highlighter;
         Pen *_pen;
         Rubber *_rubber;
         Laser *_laser;

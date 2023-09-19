@@ -177,29 +177,25 @@ bool StrokeNormal::is_inside(const RectF &rect, double precision) const
         }
     }
 
-    const auto function = [rect](const PointF &point) {
-        return datastruct_isinside(rect, point);
-    };
-
     return _point.anyMatch([&rect](const PointF &point) {
         return datastruct_isinside(rect, point);
     });
 }
 
-size_t StrokeNormal::createControll() const
+size_t StrokeNormal::createControl() const
 {
-    size_t controll = 0;
+    size_t control = 0;
 
     for(const auto &p : std::as_const(this->_point)){
-        controll += WCommonScript::diff(p.x());
-        controll += WCommonScript::diff(p.y());
+        control += WCommonScript::diff(p.x());
+        control += WCommonScript::diff(p.y());
     }
 
     for(const auto &p : std::as_const(this->_pressure)){
-        controll += WCommonScript::diff(p);
+        control += WCommonScript::diff(p);
     }
 
-    return controll + Stroke::createControll();
+    return control + Stroke::createControl();
 }
 
 RectF StrokeNormal::getBiggerPointInStroke() const

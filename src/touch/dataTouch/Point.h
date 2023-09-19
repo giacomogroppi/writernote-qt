@@ -16,7 +16,9 @@
 #endif
 
 template <class T>
-class Settable: public T {
+    requires(std::is_class_v<T>)
+class Settable: public T
+{
 private:
     bool _set;
 public:
@@ -34,18 +36,22 @@ public:
 
     Settable<T>& operator=(const Settable<T> &other) noexcept;
 
-    auto operator=(Settable<T> &&other) noexcept -> Settable<T>& {
+    auto operator=(Settable<T> &&other) noexcept -> Settable<T>&
+    {
         this->_set = other._set;
-        T::operator=(std::move(other));
+        T::operator=(std::forward<T>(other));
         return *this;
     }
 
-    Settable<T>& operator=(const T& other) {
+    Settable<T>& operator=(const T& other)
+    {
         T::operator=(other);
         return *this;
     }
 
-    Settable<T>& operator=(bool set) {
+    template <class T2 = T>
+    Settable<T>& operator=(bool set)
+    {
         this->_set = set;
         return *this;
     }
@@ -90,7 +96,8 @@ inline Settable<T>::Settable(T value, bool set)
 }
 
 // TODO move this class in a proper file
-class WColor{
+class WColor
+{
 private:
     unsigned char red;
     unsigned char green;
@@ -109,7 +116,7 @@ public:
     constexpr WColor(unsigned char u1, unsigned char u2, unsigned char u3, unsigned char u4);
     WColor(WColor &&other) noexcept;
 
-    void set_alfa(unsigned char alfa);
+    void set_alfa(unsigned char alpha);
 
 #ifdef USE_QT
     [[nodiscard]] WColor tocolore_s(double division) const;
@@ -182,7 +189,7 @@ inline double WColor::getBlueNormalize() const
 inline double WColor::getAlfaNormalize() const
 {
     unsigned char value = this->getAlfa();
-    const double valueCasted = static_cast<double>(value);
+    const auto valueCasted = static_cast<double>(value);
     const double result = valueCasted / 255.;
     W_ASSERT(result >= 0. and result <= 1.);
     return result;

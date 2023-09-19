@@ -67,7 +67,14 @@ public:
      * \param value The value to remove
      * \return True iff we have remove value from the heap
      * */
-    bool removeIfPresent(const T &value) noexcept;
+    auto removeIfPresent(const T &value) noexcept -> bool;
+
+    /**
+     * \brief This method remove the first occurrence of the object
+     * \param value The object to remove from the data structure
+     * \return True if an item has been removed
+     */
+    auto removeIfPresentSingle(const T& value) noexcept -> bool;
 
     auto isEmpty() const noexcept -> bool;
 };
@@ -81,7 +88,13 @@ auto WHeap<T, lowToHigh>::isEmpty() const noexcept -> bool
 template <class T, bool lowToHigh>
 inline auto WHeap<T, lowToHigh>::removeIfPresent(const T &value) noexcept -> bool
 {
-    _d.remove(value);
+    return _d.remove(value);
+}
+
+template <class T, bool lowToHigh>
+inline auto WHeap<T, lowToHigh>::removeIfPresentSingle(const T &value) noexcept -> bool
+{
+    return _d.removeSingle(value);
 }
 
 template<class T, bool lowToHigh>

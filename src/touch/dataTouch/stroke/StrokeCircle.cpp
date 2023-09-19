@@ -290,7 +290,7 @@ void StrokeCircle::decreasePrecision()
 {
 }
 
-size_t StrokeCircle::createControll() const
+size_t StrokeCircle::createControl() const
 {
     return 0;
 }

@@ -18,6 +18,7 @@ StrokePre::StrokePre(Fn<void()> callUpdate)
     , _min({0., 0.}, false)
     , _max({0., 0.}, false)
 {
+    _timer->setSingleShot(timerIsSingleShot);
     W_ASSERT(_stroke->isEmpty());
     //W_ASSERT(this->isImageEmpty());
     //W_ASSERT(QImage(100, 100, QImage::Format_ARGB32) == QImage(100, 100, QImage::Format_ARGB32));
@@ -178,6 +179,7 @@ StrokePre::StrokePre(const StrokePre &other) noexcept
     , _min(other._min)
     , _max(other._max)
 {
+    _timer->setSingleShot(timerIsSingleShot);
 }
 
 StrokePre::StrokePre(StrokePre &&other) noexcept
@@ -193,6 +195,7 @@ StrokePre::StrokePre(StrokePre &&other) noexcept
     , _min(other._min)
     , _max(other._max)
 {
+    _timer->setSingleShot(timerIsSingleShot);
 }
 
 void StrokePre::append(const PointF &point, const pressure_t &press, double prop)

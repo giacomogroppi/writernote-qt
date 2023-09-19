@@ -80,7 +80,7 @@ public:
 
 #   define stroke_append_default (-1.)
     void append(const PointF &point, pressure_t pressure) final;
-    size_t createControll() const final;
+    size_t createControl() const final;
 
     RectF getBiggerPointInStroke() const final;
     bool isInside(const RectF &rect) const final;

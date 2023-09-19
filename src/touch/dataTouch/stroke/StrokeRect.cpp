@@ -130,7 +130,7 @@ bool StrokeRect::operator!=(const Stroke &other) const
     return !(*this == other);
 }
 
-size_t StrokeRect::createControll() const
+size_t StrokeRect::createControl() const
 {
     return 0;
 }

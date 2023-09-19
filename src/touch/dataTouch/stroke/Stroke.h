@@ -126,7 +126,7 @@ public:
     void setMetadata(int posizione_audio, const WColor &color);
     void setMetadata(const metadata_stroke &metadata);
     void setPositionAudio(int m_pos_ris);
-    virtual size_t createControll() const;
+    virtual size_t createControl() const;
 
     int getPosizionAudio() const;
     virtual RectF getBiggerPointInStroke() const;

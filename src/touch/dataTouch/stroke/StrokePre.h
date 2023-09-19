@@ -21,6 +21,7 @@ private:
     WPixmap _img;
     UniquePtr<Stroke> _stroke;
 
+    static constexpr bool timerIsSingleShot = true;
     WTimer *_timer;
     void timerEnd();
     Settable<PointF> _timerPoint;

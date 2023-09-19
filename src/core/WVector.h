@@ -112,9 +112,25 @@ public:
 
     auto takeFirst() -> T;
     auto constData() const -> const T*;
-    auto indexOf(const T &object) -> int;
-    auto remove(const T& object) -> bool;
 
+    /**
+     * \return The index of the object, -1 in case there is no object equals to object
+     * */
+    auto indexOf(const T &object) -> int;
+
+    /**
+     * \brief This method remove all the occurrences of object in the array
+     * \param object The object to be removed from the array
+     * \return The number of object removed
+     * */
+    auto remove(const T& object) -> int;
+
+    /**
+     * \brief This method remove the first occurrences of the object in the array
+     * \param object The object to be removed from the array
+     * \return True iff the function removed the object from the data structure
+     */
+    auto removeSingle(const T& object) -> bool;
 
     /**
      * This method requires that the list is order in ascending order [crescente]
@@ -688,9 +704,22 @@ auto WVector<T>::rbegin() -> riterator
 }
 
 template <class T>
-auto WVector<T>::remove(const T &object) -> bool
+auto WVector<T>::remove(const T &object) -> int
 {
     return std::erase_if(_data, [&](const T& item) { return item == object; }) != 0;
+}
+
+template <class T>
+auto WVector<T>::removeSingle(const T &object) -> bool
+{
+    const auto index = this->indexOf(object);
+
+    if (index == -1)
+        return false;
+
+    this->removeAt(index);
+
+    return true;
 }
 
 template <class T>

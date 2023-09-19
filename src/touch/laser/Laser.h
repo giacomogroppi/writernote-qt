@@ -25,7 +25,7 @@ public:
                    Fn<pressure_t(double)> getSize,
                    WColor &color, WPen &pen,
                    Fn<void()> callUpdate);
-    ~Laser();
+    ~Laser() override;
 
     void startMove();
     void endMove();
@@ -34,6 +34,7 @@ public:
     [[nodiscard]] auto begin() { return this->_stroke.begin(); };
     [[nodiscard]] auto end() { return this->_stroke.end(); };
 
+    [[nodiscard]]
     int getType() const final;
     static constexpr int type();
 

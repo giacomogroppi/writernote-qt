@@ -95,7 +95,7 @@ void StrokeLine::append(const PointF &point, pressure_t pressure)
     }
 }
 
-size_t StrokeLine::createControll() const
+size_t StrokeLine::createControl() const
 {
     return 0;
 }

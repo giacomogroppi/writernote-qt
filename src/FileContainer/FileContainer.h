@@ -80,7 +80,7 @@ public:
 
 inline auto FileContainer::closeFileReader(FileReader &file) const -> void
 {
-    
+    unused(file);
 }
 
 inline auto FileContainer::isOpen() const -> bool
