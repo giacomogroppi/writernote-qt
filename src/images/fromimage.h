@@ -7,6 +7,7 @@
 #include "FileContainer/WZip.h"
 #include "core/Image/WImage.h"
 #include "ImageDrawable.h"
+#include "core/Settable.h"
 
 #define DELTA_POINT 200
 #define SUFFIX_IMG "_img_"
@@ -17,10 +18,13 @@ class ImageContainerDrawable
 {
 private:
     WListFast<ImageDrawable> m_img;
-    WListFast<WString> get_name_img();
-    static unsigned insert_image(const WString &__pos, const PointSettable *point, ImageDrawable &img);
+    auto get_name_img() -> WListFast<WString>;
 
-    static inline WByteArray getName_img(unsigned i);
+    static
+    auto insert_image(const WString &__pos, const PointSettable *point, ImageDrawable &img) -> unsigned ;
+
+    static
+    auto getName_img(unsigned i) -> WByteArray;
 public:
     ImageContainerDrawable (const ImageContainerDrawable &other) noexcept;
     ImageContainerDrawable (ImageContainerDrawable &&other) noexcept;
@@ -50,9 +54,9 @@ public:
 
     void moveImage(const WListFast<int> &index, const PointF &translation);
 
-    static  void drawImage(WPainter &painter, const RectF &rect, const WImage &img);
-    static  void drawImage(WPainter &painter, const ImageDrawable &img);
-    static  void drawImage(WPainter &painter, const WListFast<ImageDrawable> &list);
+    static void drawImage(WPainter &painter, const RectF &rect, const WImage &img);
+    static void drawImage(WPainter &painter, const ImageDrawable &img);
+    static void drawImage(WPainter &painter, const WListFast<ImageDrawable> &list);
 
     void drawImage(WPainter &painter) const;
 
@@ -64,10 +68,10 @@ public:
     auto operator=(ImageContainerDrawable &&other) noexcept -> ImageContainerDrawable &;
 
 private:
-    static load_res_img getImageRawData(WByteArray &arr, const WString &path) ;
-    load_res_img loadMetadataImage(WZipReaderSingle &reader, int len);
-    static load_res_img loadSingleImage(const WByteArray &arr, ImageDrawable &img);
-    load_res_img loadMultipleImage(const WListFast<WByteArray> &arr);
+    static auto getImageRawData(WByteArray &arr, const WString &path) -> load_res_img;
+    auto loadMetadataImage(WZipReaderSingle &reader, int len) -> load_res_img;
+    static auto loadSingleImage(const WByteArray &arr, ImageDrawable &img) -> load_res_img;
+    auto loadMultipleImage(const WListFast<WByteArray> &arr) -> load_res_img;
 
 protected:
     /**
@@ -81,7 +85,7 @@ protected:
     static auto write (WritableAbstract &writable, const ImageContainerDrawable &source) -> int;
 };
 
-inline WByteArray ImageContainerDrawable::getName_img(const unsigned i)
+inline auto ImageContainerDrawable::getName_img(const unsigned i) -> WByteArray
 {
     const auto tmp = WString(SUFFIX_IMG) + WString::number(i);
     return tmp.toUtf8();

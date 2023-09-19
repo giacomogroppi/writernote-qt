@@ -9,6 +9,7 @@
 #include "core/Image/WImage.h"
 #include "core/String/WString.h"
 #include "touch/dataTouch/Point.h"
+#include "core/Color/WColor.h"
 
 class WPixmap : public QPixmap
 {

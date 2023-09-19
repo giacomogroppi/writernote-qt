@@ -111,12 +111,16 @@ public:
     void insert(int index, const T& data);
 
     auto takeFirst() -> T;
+
+    [[deprecated]]
     auto constData() const -> const T*;
+
+    auto contains(const T& value) const -> bool;
 
     /**
      * \return The index of the object, -1 in case there is no object equals to object
      * */
-    auto indexOf(const T &object) -> int;
+    auto indexOf(const T &object) const -> int;
 
     /**
      * \brief This method remove all the occurrences of object in the array
@@ -126,7 +130,7 @@ public:
     auto remove(const T& object) -> int;
 
     /**
-     * \brief This method remove the first occurrences of the object in the array
+     * \brief This method remove the first occurrence of the object in the array
      * \param object The object to be removed from the array
      * \return True iff the function removed the object from the data structure
      */
@@ -247,6 +251,12 @@ public:
         return 0;
     }
 };
+
+template<class T>
+auto WVector<T>::contains(const T &value) const -> bool
+{
+    return indexOf(value) != -1;
+}
 
 template<class T>
 auto WVector<T>::removeOrderHighToLow(
@@ -459,7 +469,7 @@ inline auto WVector<T>::constData() const -> const T *
 }
 
 template<class T>
-inline auto WVector<T>::indexOf(const T &object) -> int
+inline auto WVector<T>::indexOf(const T &object) const -> int
 {
     const auto pos = std::find(_data.cbegin(), _data.cend(), object);
     if (pos == _data.cend())

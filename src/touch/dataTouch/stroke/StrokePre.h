@@ -7,6 +7,7 @@
 #include "core/Pixmap/WPixmap.h"
 #include "touch/dataTouch/page/Page.h"
 #include "Scheduler/WTimer.h"
+#include "core/Settable.h"
 
 
 class StrokePre: public WObject

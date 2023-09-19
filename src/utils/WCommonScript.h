@@ -222,19 +222,6 @@ force_inline int div_diff(T num, T den)
     return diff(double(num) / double(den));
 }
 
-template <typename T>
-inline int is_present_in_list(const T *list, size_t len, const T val)
-{
-    size_t i;
-
-    for(i = 0; i < len; i ++){
-        if(list[i] == val)
-            return 1;
-    }
-
-    return 0;
-}
-
 force_inline void abortIfDebug(cchar *file, int line){
 #ifdef DEBUGINFO
     std::cout << __func__ << file << line;

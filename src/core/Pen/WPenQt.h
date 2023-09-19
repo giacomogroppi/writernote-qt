@@ -3,6 +3,7 @@
 #ifdef USE_QT
 
 #include "touch/dataTouch/Point.h"
+#include "core/Color/WColor.h"
 
 #include <QPen>
 #include <QBrush>

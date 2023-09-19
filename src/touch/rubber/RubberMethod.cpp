@@ -256,7 +256,7 @@ void actionRubberSingleTotal(DataPrivateMuThread &data)
         auto &stroke = _page->atStrokeMod(data.from);
         int index;
 
-        if(WCommonScript::is_present_in_list(_al_find->constData(), data_already_len, data.from))
+        if (_al_find->contains(data.from))
             continue;
 
         index = stroke.is_inside(area, 0, __m_size_gomma, false);
