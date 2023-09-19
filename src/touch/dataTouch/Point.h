@@ -58,6 +58,7 @@ public:
 };
 
 template<class T>
+    requires(std::is_class_v<T>)
 inline Settable<T> &Settable<T>::operator=(const Settable<T> &other) noexcept
 {
     if (this == &other)
@@ -70,6 +71,7 @@ inline Settable<T> &Settable<T>::operator=(const Settable<T> &other) noexcept
 }
 
 template<class T>
+    requires(std::is_class_v<T>)
 inline Settable<T>::Settable(const Settable<T> &other)
     : T(static_cast<const T&>(other))
     , _set(other._set)
@@ -77,18 +79,21 @@ inline Settable<T>::Settable(const Settable<T> &other)
 }
 
 template<class T>
+    requires(std::is_class_v<T>)
 inline void Settable<T>::set(bool set)
 {
     _set = set;
 }
 
 template<class T>
+    requires(std::is_class_v<T>)
 inline bool Settable<T>::isSet() const
 {
     return _set;
 }
 
 template<class T>
+    requires(std::is_class_v<T>)
 inline Settable<T>::Settable(T value, bool set)
     : T(value)
     , _set(set)
