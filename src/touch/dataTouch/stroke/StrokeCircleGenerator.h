@@ -14,6 +14,7 @@ public:
                      const WListFast<pressure_t>& pressures,
                      const RectF& area) -> UniquePtr<Stroke>;
 
+    // TODO: make this method return a StrokeGeneratorData
     static auto model_near(const WListFast<PointF> &points,
                              const WListFast<pressure_t> &pressures,
                              const RectF &area) -> double;
