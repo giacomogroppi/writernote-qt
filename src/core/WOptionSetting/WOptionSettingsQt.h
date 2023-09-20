@@ -9,7 +9,8 @@
 
 #include <QSettings>
 
-class WOptionSettings {
+class WOptionSettings
+{
 private:
     QSettings *settings;
 public:

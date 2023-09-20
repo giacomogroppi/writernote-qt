@@ -80,6 +80,7 @@ public:
 
 inline auto FileContainer::closeFileReader(FileReader &file) const -> void
 {
+    /// for now it's not necessary to do anything at all to close a FileReader
     unused(file);
 }
 

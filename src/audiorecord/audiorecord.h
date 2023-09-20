@@ -25,11 +25,11 @@ public:
     explicit AudioRecord(WObject *parent,
                          Fn<void(const WString &)> error,
                          Fn<void(int)> durationChange);
-    ~AudioRecord();
+    ~AudioRecord() override;
 
-    bool isRecording() const;
-    bool isPauseRecording() const;
-    bool isStopped() const;
+    auto isRecording() const -> bool;
+    auto isPauseRecording() const -> bool;
+    auto isStopped() const -> bool;
 
     void startRecord();
     void pauseRecord();
@@ -37,9 +37,9 @@ public:
 
     void setOutputLocation(const WString &path);
 
-    unsigned long getCurrentTime();
+    auto getCurrentTime() -> unsigned long;
 
-    const WString getPath() const;
+    auto getPath() const -> const WString;
 
 
     DEFINE_LISTENER(displayErrorMessage());

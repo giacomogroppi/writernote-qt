@@ -1,9 +1,8 @@
 #pragma once
 
-class slash
+namespace slash
 {
-public:
-    static constexpr char __slash()
+    consteval char __slash()
     {
 #if defined (WIN32) || defined(WIN64) || defined(__OS2__)
         return '\\';
