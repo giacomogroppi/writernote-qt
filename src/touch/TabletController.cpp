@@ -1,4 +1,7 @@
 #include "TabletController.h"
+
+#include <memory>
+#include <utility>
 #include "core/WMutexLocker.h"
 #include "sheet/style_struct.h"
 #include "TabletUtils.h"
@@ -6,14 +9,16 @@
 extern StrokePre *__tmp;
 extern bool hasDraw;
 
-TabletController::TabletController(WObject *parent,
-                                   const Fn<int()>& getTimeRecording,
-                                   const Fn<bool()> &isPlaying,
-                                   const Fn<int()> &getTimePlaying)
+TabletController::TabletController(WObject *parent, const Fn<int()> &getTimeRecording,
+                                   const Fn<bool()> &isPlaying, const Fn<int()> &getTimePlaying,
+                                   const WString& defaultPathSaving)
     : WObject{parent}
+    , _tools()
+    , _settings()
+    , _fileManager(nullptr)
+    , _color(color_black)
     , _doc(new Document)
     , _needUpdate(true)
-    , _color(color_black)
     , _isDrawing(false)
     , _isPlaying(isPlaying)
     , _getTimePlaying(getTimePlaying)
@@ -70,7 +75,7 @@ TabletController::TabletController(WObject *parent,
             )
     };
 
-    this->_toolsContainer.append(WListFast<Tools*>{
+    this->_toolsContainer.append(WListFast<Tools*> {
         _tools._square,
         _tools._pen,
         _tools._laser,
@@ -80,6 +85,18 @@ TabletController::TabletController(WObject *parent,
 
     __tmp->reset();
     _currentTool = _tools._pen;
+
+    this->_settings.begin();
+
+    this->_fileManager = std::make_unique<FileManager>(
+            nullptr,
+            _settings.value(
+                        WOptionSettings::namePathSaving,
+                        defaultPathSaving.addSlashIfNecessary()
+                    ).toString().toUtf8()
+    );
+
+    this->_settings.save();
 }
 
 // TODO: to remove
@@ -240,7 +257,7 @@ void TabletController::setAndCallTool(Tools *tool)
     }
 }
 
-Document &TabletController::getDoc()
+auto TabletController::getDoc() -> Document&
 {
     return *this->_doc;
 }
@@ -255,4 +272,21 @@ void TabletController::selectType(int type)
     }
 
     _tools._square->reset();
+}
+
+auto TabletController::getCurrentPathSaving() const -> WString
+{
+    return this->_fileManager->getCurrentPath();
+}
+
+TabletController::~TabletController()
+{
+    _settings.begin();
+    _settings.setValue(WOptionSettings::namePathSaving, _fileManager->getCurrentPath());
+    _settings.save();
+}
+
+void TabletController::setCurrentPathSaving(WString path)
+{
+    this->_fileManager->moveTo(std::move(path));
 }

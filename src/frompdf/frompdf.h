@@ -26,6 +26,8 @@ protected:
     static auto load (const VersionFileController &versionController, Readable &readable) -> WPair<int, PdfContainerDrawable>
     {
         // TODO: implement
+        unused(versionController);
+        unused(readable);
         return {0, PdfContainerDrawable()};
     };
 
@@ -33,6 +35,8 @@ protected:
     static auto write (Writable &writable, const PdfContainerDrawable &source) -> int
     {
         // TODO: implement
+        unused(writable);
+        unused(source);
         return 0;
     };
 };

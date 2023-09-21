@@ -11,7 +11,7 @@ private:
     WList<WFile> _files;
     WByteArray _path;
 
-    static WList<WFile> getAllFile(const WByteArray &path);
+    static auto getAllFile(const WByteArray &path) -> WList<WFile>;
 public:
     explicit Directory (const WByteArray &path);
     Directory (Directory &&other) noexcept = default;
@@ -28,8 +28,10 @@ public:
 
     auto allDirsInFolder() const -> WList<WByteArray>;
 
-    auto operator ==(const Directory &other) const -> bool;
-    auto operator !=(const Directory &other) const -> bool;
+    auto moveAllFilesTo(const WString &newPath) -> void;
+
+    auto operator==(const Directory &other) const -> bool;
+    auto operator!=(const Directory &other) const -> bool;
 
     auto operator=(const Directory &other) noexcept -> Directory & = delete;
     auto operator=(Directory &&other) noexcept -> Directory & = default;
@@ -44,4 +46,6 @@ inline bool Directory::operator !=(const Directory &other) const
 {
     return !(*this == other);
 }
+
+
 

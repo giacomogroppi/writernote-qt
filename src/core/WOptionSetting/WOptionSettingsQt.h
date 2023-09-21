@@ -22,6 +22,12 @@ public:
 
     auto value(const WByteArray &key, const WVariant &defaultMessage) -> WVariant;
     void setValue(const WByteArray &key, const WVariant &value);
+
+    /**
+     * This is the name used for WOptionSettings for identify the
+     * position in which the application should save.
+    */
+    static constexpr auto namePathSaving = "path_saving";
 };
 
 #endif // USE_QT

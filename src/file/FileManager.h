@@ -6,18 +6,26 @@
 #include "core/ByteArray/WByteArray.h"
 #include "core/WList.h"
 
-class FileManager final: public WObject
+class FileManager final:
+        public WObject
 {
 private:
-    const WByteArray _basePath;
-    WList<Directory> _dir;
+    WByteArray _basePath;
+    WListFast<Directory> _dir;
 
-    static WList<Directory> getAllDir(const WByteArray &path);
+    static WListFast<Directory> getAllDir(const WByteArray &path);
 public:
     explicit FileManager(WObject *parent, WByteArray basePath);
     ~FileManager() final;
 
-    const WList<Directory> &getDirectory() const;
+    auto getDirectory() const -> const WListFast<Directory> &;
+    auto getCurrentPath() const -> WString;
+
+    /**
+     * \paragraph This method move all the files from the current directory to the new one
+     * \param newPath New path to move all the file in the current directory
+     * */
+    auto moveTo(const WString& newPath) -> void;
 
     int createNewDir();
 

@@ -11,6 +11,8 @@
 #include "touch/tools/Tools.h"
 #include "Scheduler/WObject.h"
 #include "touch/UpdateEvent.h"
+#include "file/FileManager.h"
+#include "core/WOptionSetting/WOptionSettings.h"
 
 class TabletController : public WObject
 {
@@ -24,6 +26,9 @@ private:
     } _tools;
 
     WListFast<Tools*> _toolsContainer;
+
+    WOptionSettings _settings;
+    UniquePtr<FileManager> _fileManager;
 
     Tools *_currentTool;
     WColor _color;
@@ -44,16 +49,40 @@ private:
     void checkCreatePage();
     void draw(WPainter &painter, double width, WFlags<UpdateEvent::UpdateEventType> flags) const;
 public:
-    explicit TabletController(WObject *parent,
-                              const Fn<int()>  &getTimeRecording,
-                              const Fn<bool()> &isPlaying,
-                              const Fn<int()>  &getTimePlaying);
+    explicit TabletController(
+            WObject *parent,
+            const Fn<int()> &getTimeRecording,
+            const Fn<bool()> &isPlaying,
+            const Fn<int()> &getTimePlaying,
+            const WString& defaultPathSaving
+    );
+
+    ~TabletController() override;
 
     void getImg(WPainter &painter, double width, WFlags<UpdateEvent::UpdateEventType> flags) const;
     void getImagePage(WPainter &painter, double width) const;
     void getImageStroke(WPainter &painter, double width) const;
     
-    Tools* getCurrentTool() const;
+    auto getCurrentTool() const -> Tools*;
+    auto getCurrentPathSaving() const -> WString;
+
+    /**
+     * \return -1 in caso di errore in scrittura
+     * */
+    auto closeCurrentFile() -> int;
+
+    /**
+     * In caso ci sia già un file aperto verrà automaticamente chiuso e
+     * salvato.
+     * Il medoto lancia automaticamente i segnali per segnalare che è necessario ridisegnare.
+     * \return &lt 0 in caso di errore nell'apertura del file
+     * */
+    auto openFile(const WString &name) -> int;
+
+    /**
+     * \param path A valid path
+     * */
+    void setCurrentPathSaving(WString path);
 
     DEFINE_LISTENER(selectType(int type));
     DEFINE_LISTENER(selectColor(const WColor &color));
@@ -70,6 +99,7 @@ public:
     W_EMITTABLE_0(onPropertyHide);
     W_EMITTABLE_1(onNumberOfPageChanged, int, numerberOfPage);
     W_EMITTABLE_2(onPropertyShow, const PointF&, point, ActionProperty, actionProperty);
+    W_EMITTABLE_0(onPathChanged);
 };
 
 inline const Document &TabletController::getDoc() const

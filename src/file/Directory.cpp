@@ -10,33 +10,37 @@ Directory::Directory(const WByteArray &path)
 
 Directory::~Directory() = default;
 
-const WList<WFile> &Directory::getFiles() const
+auto Directory::getFiles() const -> const WList<WFile> &
 {
     return this->_files;
 }
 
-bool Directory::addFiles(const WByteArray &position)
+auto Directory::addFiles(const WByteArray &position) -> bool
 {
-    W_ASSERT(0);
-
     this->_files.append(WFile(position));
 
     return true;
 }
 
-WList<WFile> Directory::getAllFile(const WByteArray &path)
+auto Directory::getAllFile(const WByteArray &path) -> WList<WFile>
 {
     WList<WFile> ret = {};
-    Directory dir(path);
+    std::error_code error;
+    const auto iterator = std::filesystem::directory_iterator(path.toStdString(), error);
 
-    for (const auto & entry : std::filesystem::directory_iterator(path.toStdString())) {
+    if (error) {
+        WDebug(true, "Warning folder not exists");
+        return {};
+    }
+
+    for (const auto & entry : iterator) {
         ret.append(WFile(WByteArray(entry.path().c_str())));
     }
 
     return ret;
 }
 
-WList<WByteArray> Directory::allDirsInFolder() const
+auto Directory::allDirsInFolder() const -> WList<WByteArray>
 {
     WList<WByteArray> res {};
 
@@ -47,3 +51,22 @@ WList<WByteArray> Directory::allDirsInFolder() const
     return res;
 }
 
+// TODO: manage error
+auto Directory::moveAllFilesTo(const WString &newPath) -> void
+{
+    namespace fs = std::filesystem;
+    std::error_code error;
+
+    // before move files we need to close everything
+    this->_files.clear();
+
+    fs::rename(fs::path(_path.toStdString()), fs::path(newPath.toStdString()), error);
+
+    if (error) {
+        W_ASSERT_TEXT(0, "move file error...");
+    }
+
+    _path = newPath.toUtf8();
+
+    _files = Directory::getAllFile(_path);
+}

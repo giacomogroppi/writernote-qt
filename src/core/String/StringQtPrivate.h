@@ -8,6 +8,7 @@
 
 #include "VersionFileController.h"
 #include "Writable.h"
+#include "utils/slash/slash.h"
 
 class WString: public QString {
 public:
@@ -19,20 +20,16 @@ public:
 
     };
 
+    WString (char c) noexcept: QString() { this->append(&c, 1); }
+
     WString (const QByteArray &other) noexcept
         : QString (other) {};
 
-
     WString (const char *data) noexcept
-            : QString (data)
-    {
-
-    };
+            : QString (data) {};
 
     WString (const QString &other) noexcept
-            : QString(other)
-    {
-    };
+            : QString(other) {};
 
     WString (QString &&other) noexcept
             : QString(std::move(other)) {}
@@ -61,21 +58,8 @@ public:
 
     static auto load (const VersionFileController& versionController, ReadableAbstract &readable) -> WPair<int, WString>;
 
-    auto operator=(const WString &other) noexcept -> WString &
-    {
-        if (this == &other)
-            return *this;
-        QString::operator=(other);
-        return *this;
-    };
-
-    auto operator=(WString &&other) noexcept -> WString &
-    {
-        if (this == &other)
-            return *this;
-        QString::operator=(std::move (other));
-        return *this;
-    }
+    auto operator=(const WString &other) noexcept -> WString & = default;
+    auto operator=(WString &&other) noexcept -> WString & = default;
 
     /**
      * @return &lt 0 iff writable fail
@@ -90,12 +74,28 @@ public:
             QString::append(QByteArray(d, size));
     }
 
-    void append (const QChar c)
-    {
-        QString::append(c);
-    }
+    auto addSlashIfNecessary() const -> WString;
 
-    auto charAt(int i) const -> char {
-        return at(i).toLatin1();
-    }
+    void append (const QChar c);
+
+    auto charAt(int i) const -> char;
 };
+
+inline void WString::append(const QChar c)
+{
+    QString::append(c);
+}
+
+inline auto WString::charAt(int i) const -> char
+{
+    return at(i).toLatin1();
+}
+
+inline auto WString::addSlashIfNecessary() const -> WString
+{
+    if (isEmpty())
+        return {slash::__slash()};
+    if (at(size() - 1) != slash::__slash())
+        return *this + slash::__slash();
+    return *this;
+}

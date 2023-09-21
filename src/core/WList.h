@@ -100,7 +100,8 @@ inline WList<T> &WList<T>::operator=(WList<T> &&other) noexcept
     if (this == &other)
         return *this;
 
-    WListPrivate<T> next = _first;
+    WListPrivate<T> *next = _first;
+
     while (next != nullptr) {
         auto *n = next->next;
         delete next->data;
