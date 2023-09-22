@@ -8,17 +8,17 @@
 class Directory
 {
 private:
-    WList<WFile> _files;
+    WListFast<WFile> _files;
     WByteArray _path;
 
-    static auto getAllFile(const WByteArray &path) -> WList<WFile>;
+    static auto getAllFile(const WByteArray &path) -> WListFast<WFile>;
 public:
     explicit Directory (const WByteArray &path);
     Directory (Directory &&other) noexcept = default;
     Directory (const Directory &other) noexcept = delete;
     ~Directory();
 
-    const WList<WFile>& getFiles() const;
+    auto getFiles() const -> const WListFast<WFile>&;
 
     /**
      * requires
@@ -26,9 +26,15 @@ public:
     */
     auto addFiles(const WByteArray &position) -> bool;
 
-    auto allDirsInFolder() const -> WList<WByteArray>;
+    auto allDirsInFolder() const -> WListFast<WByteArray>;
 
     auto moveAllFilesTo(const WString &newPath) -> void;
+
+    auto getFolderName() const -> WString;
+
+    static int removeDir(const WByteArray &path);
+    static int createDir(const WByteArray &path);
+    static bool exists(const WByteArray &path);
 
     auto operator==(const Directory &other) const -> bool;
     auto operator!=(const Directory &other) const -> bool;

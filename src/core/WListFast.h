@@ -33,7 +33,7 @@ private:
     T *takeObject(int i);
 
 public:
-    WListFast();
+    constexpr WListFast() noexcept;
 
     /**
      * \param reserve The reserve number of element
@@ -43,11 +43,11 @@ public:
     /**
      * \brief Copy constructor
      * */
-    WListFast(const WListFast<T> &other);
+    WListFast(const WListFast<T> &other) noexcept;
 
     /**
      * \brief Copy constructor
-     * \param args The item to add to the list
+     * \param args The items to add to the list
      * */
     WListFast(std::initializer_list<T> args);
 
@@ -64,7 +64,8 @@ public:
      * \param i The index of the item you want, it must be in the range [0, size())
      * \return The item in position "i"
      * */
-    const T& at(int i) const;
+    [[nodiscard]]
+    auto at(int i) const -> const T&;
 
     /**
      * \brief Append the element to the list with a copy
@@ -87,9 +88,14 @@ public:
     void remove(int from, int to);
     void remove(const T &item);
 
-    [[nodiscard]] constexpr bool isEmpty() const;
-    [[nodiscard]] constexpr int size() const;
-    const T& first() const;
+    [[nodiscard]] constexpr
+    auto isEmpty() const -> bool;
+
+    [[nodiscard]] constexpr
+    auto size() const -> int;
+
+    [[nodiscard]]
+    auto first() const -> const T&;
 
     void clear();
     void move(int, int);
@@ -105,12 +111,15 @@ public:
     void forAll(Fn<void(T&)> method);
 
     [[nodiscard]]
-    WListFast<T> mid(int from, int to) const;
+    auto mid(int from, int to) const -> WListFast<T>;
 
-    T& operator[](int i);
-    bool operator==(const WListFast<T> &other) const;
-    WListFast<T>& operator=(const WListFast<T> &other);
-    WListFast<T>& operator=(WListFast<T> &&other) noexcept;
+    auto operator[](int i) -> T&;
+    auto operator[](int i) const -> const T&;
+
+    auto operator==(const WListFast<T> &other) const -> bool;
+
+    auto operator=(const WListFast<T> &other) -> WListFast<T>&;
+    auto operator=(WListFast<T> &&other) noexcept -> WListFast<T>&;
 
     template <class T2 = T>
     T2 average () const;
@@ -549,8 +558,8 @@ inline void WListFast<T>::remove(const T &item)
 }
 
 template<class T>
-inline WListFast<T>::WListFast(const WListFast<T> &other)
-    : _data(nullptr)
+inline WListFast<T>::WListFast(const WListFast<T> &other) noexcept
+        : _data(nullptr)
     , _size(0)
     , _reserved(0)
 {
@@ -715,6 +724,12 @@ inline T &WListFast<T>::operator[](int i)
     return *this->_data[i];
 }
 
+template <class T>
+inline auto WListFast<T>::operator[](int i) const -> const T&
+{
+    return *this->_data[i];
+}
+
 template<class T>
 inline T WListFast<T>::takeFirst()
 {
@@ -766,7 +781,7 @@ inline T*WListFast<T>::takeObject(int index)
 }
 
 template<class T>
-inline T WListFast<T>::takeAt(int index)
+inline auto WListFast<T>::takeAt(int index) -> T
 {
     W_ASSERT(index >= 0 && index < size());
     T* p = takeObject(index);
@@ -805,13 +820,13 @@ inline void WListFast<T>::clear()
 }
 
 template<class T>
-inline const T &WListFast<T>::first() const
+inline auto WListFast<T>::first() const -> const T &
 {
     return *this->_data[0];
 }
 
 template<class T>
-constexpr inline int WListFast<T>::size() const
+constexpr inline auto WListFast<T>::size() const -> int
 {
     return _size;
 }
@@ -915,8 +930,8 @@ inline WListFast<T>::WListFast(std::initializer_list<T> args)
 }
 
 template<class T>
-inline WListFast<T>::WListFast()
-    : _data(nullptr)
+inline constexpr WListFast<T>::WListFast() noexcept
+        : _data(nullptr)
     , _size(0)
     , _reserved(0)
 {

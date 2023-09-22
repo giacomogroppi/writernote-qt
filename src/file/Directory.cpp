@@ -10,7 +10,7 @@ Directory::Directory(const WByteArray &path)
 
 Directory::~Directory() = default;
 
-auto Directory::getFiles() const -> const WList<WFile> &
+auto Directory::getFiles() const -> const WListFast<WFile> &
 {
     return this->_files;
 }
@@ -22,9 +22,9 @@ auto Directory::addFiles(const WByteArray &position) -> bool
     return true;
 }
 
-auto Directory::getAllFile(const WByteArray &path) -> WList<WFile>
+auto Directory::getAllFile(const WByteArray &path) -> WListFast<WFile>
 {
-    WList<WFile> ret = {};
+    WListFast<WFile> ret = {};
     std::error_code error;
     const auto iterator = std::filesystem::directory_iterator(path.toStdString(), error);
 
@@ -40,9 +40,11 @@ auto Directory::getAllFile(const WByteArray &path) -> WList<WFile>
     return ret;
 }
 
-auto Directory::allDirsInFolder() const -> WList<WByteArray>
+auto Directory::allDirsInFolder() const -> WListFast<WByteArray>
 {
-    WList<WByteArray> res {};
+    WListFast<WByteArray> res;
+
+    res.reserve(_files.size());
 
     for (const auto& entry : std::as_const(_files)) {
         res.append(entry.getName());
@@ -69,4 +71,33 @@ auto Directory::moveAllFilesTo(const WString &newPath) -> void
     _path = newPath.toUtf8();
 
     _files = Directory::getAllFile(_path);
+}
+
+auto Directory::getFolderName() const -> WString
+{
+    W_ASSERT(_path[_path.size() - 1] != slash::__slash());
+
+    return this->_path.split(slash::__slash()).last();
+}
+
+int Directory::removeDir(const WByteArray &path)
+{
+    const auto res = std::filesystem::remove_all(path.constData());
+
+    if (res < 1)
+        return -1;
+
+    return 0;
+}
+
+int Directory::createDir(const WByteArray &path)
+{
+    if (std::filesystem::create_directories(path.constData()))
+        return 0;
+    return -1;
+}
+
+bool Directory::exists(const WByteArray &path)
+{
+    return std::filesystem::is_directory(path.toStdString());
 }

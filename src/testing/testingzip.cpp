@@ -6,6 +6,7 @@
 #include "core/WDir.h"
 #include "FileContainer/WZipWriterSingle.h"
 #include "FileContainer/WZipReaderSingle.h"
+#include "file/Directory.h"
 
 #if (defined(DEBUG_CORE) || defined(DEBUGINFO))
 
@@ -86,7 +87,7 @@ static not_used void run_test_1()
     WVector<int> res;
     WByteArray to = "${HOME}/tmp_writernote_test/";
 
-    WDir::createDir(to);
+    Directory::createDir(to);
 
     gen_num(data, 10000, 1000000);
 

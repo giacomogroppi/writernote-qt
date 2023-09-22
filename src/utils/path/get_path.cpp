@@ -16,8 +16,8 @@
 static bool createTempFolder(const WString &path);
 
 static bool createTempFolder(const WString &path){
-    if(!WDir::exists(path.toUtf8())){
-        return WDir::createDir(path.toUtf8());
+    if(!Directory::exists(path.toUtf8())){
+        return Directory::createDir(path.toUtf8());
     }
 
     return true;
