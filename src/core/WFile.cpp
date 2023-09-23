@@ -43,7 +43,17 @@ auto WFile::exists(const std::filesystem::path &path) noexcept -> bool
     return std::filesystem::exists(path);
 }
 
+WFile::WFile(const std::filesystem::path &path, char mode)
+    : _fp(nullptr)
+    , _path(path.string().c_str())
+{
+    const auto *m = convertToCanonical(mode);
+    _fp = fopen (path.c_str(), m);
+}
+
 WFile::WFile(const WByteArray &path, const char mode)
+    : _fp(nullptr)
+    , _path(path)
 {
     const auto *m = convertToCanonical(mode);
 

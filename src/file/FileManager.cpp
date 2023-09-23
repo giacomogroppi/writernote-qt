@@ -123,13 +123,3 @@ auto FileManager::createDirectory(const WString &name) -> int
     this->_dir.append(Directory(path));
     return 0;
 }
-
-auto FileManager::createFile(const WString &name) -> int
-{
-    if (not name.canBeNameFile())
-        return -1;
-
-    const auto path = std::filesystem::path (_basePath.toStdString()) / name.toStdString() / name.toStdString();
-
-    return _dir[_selected].addFiles(path);
-}

@@ -22,7 +22,10 @@ public:
     [[deprecated]]
     explicit WFile(const WString &path);
     explicit WFile(const std::string &path, char mode);
-    explicit WFile(const std::filesystem::path &path);
+
+    explicit WFile (const std::filesystem::path& path);
+    explicit WFile (const std::filesystem::path& path, char mode);
+
     explicit WFile(const char *path, char mode);
     ~WFile();
 

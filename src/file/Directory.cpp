@@ -128,13 +128,3 @@ auto Directory::removeFile(const WString& name) -> int
     std::filesystem::remove(path / std::filesystem::path(name.toStdString()), error);
     return error.operator bool() ? -1: 0;
 }
-
-auto Directory::addFiles(const std::filesystem::path &position) -> int
-{
-    if (WFile::exists(position))
-        return -1;
-
-    this->_files.append(WFile(position));
-
-    return 0;
-}

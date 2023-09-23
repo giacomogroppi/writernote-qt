@@ -30,7 +30,9 @@ public:
      * requires
      *  file in position don't exists
     */
-    auto addFiles(const std::filesystem::path &position) -> int;
+    template <class T>
+            requires (std::is_class<T>::value)
+    auto addFiles(const std::filesystem::path &position, const T& writable) -> int;
 
     [[nodiscard]]
     auto allDirsInFolder() const -> WListFast<WByteArray>;
@@ -71,5 +73,22 @@ inline bool Directory::operator !=(const Directory &other) const
     return !(*this == other);
 }
 
+template <class T>
+    requires (std::is_class<T>::value)
+inline auto Directory::addFiles(const std::filesystem::path &position, const T& objectToWrite) -> int
+{
+    if (WFile::exists(position))
+        return -1;
 
+    WFile file (position);
+
+    if (T::write (file, objectToWrite) < 0)
+        return -1;
+
+    file.close();
+
+    this->_files.append(WFile(position));
+
+    return 0;
+}
 

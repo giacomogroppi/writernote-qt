@@ -42,9 +42,21 @@ public:
     auto moveTo(const WString& newPath) -> void;
 
     auto createDirectory (const WString& name) -> int;
-    auto createFile (const WString& name) -> int;
+
+    template <class T>
+            requires (std::is_class<T>::value)
+    auto createFile (const WString& name, const T& file) -> int;
 
     W_EMITTABLE_0(onDirectoryListChanged);
     W_EMITTABLE_0(onCurrentDirectoryChanged);
     W_EMITTABLE_0(onListFilesChanged);
 };
+
+template <class T>
+    requires (std::is_class<T>::value)
+inline auto FileManager::createFile(const WString& name, const T &file) -> int
+{
+    const auto path = std::filesystem::path (_basePath.toStdString()) / name.toStdString() / name.toStdString();
+
+    return _dir[_selected].addFiles(path, file);
+}
