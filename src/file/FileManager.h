@@ -15,7 +15,7 @@ private:
 
     static WListFast<Directory> getAllDir(const WByteArray &path);
 public:
-    explicit FileManager(WObject *parent, WByteArray basePath);
+    explicit FileManager(WObject *parent, WByteArray basePath, bool createDir);
     ~FileManager() final;
 
     auto getDirectory() const -> const WListFast<Directory> &;

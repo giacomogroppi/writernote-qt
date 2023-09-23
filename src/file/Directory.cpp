@@ -101,3 +101,12 @@ bool Directory::exists(const WByteArray &path)
 {
     return std::filesystem::is_directory(path.toStdString());
 }
+
+auto Directory::removeFile(const WString& name) -> int
+{
+    std::error_code error;
+    std::filesystem::path path (WString(_path).addSlashIfNecessary().toStdString());
+
+    std::filesystem::remove(path / std::filesystem::path(name.toStdString()), error);
+    return error.operator bool() ? -1: 0;
+}

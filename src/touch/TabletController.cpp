@@ -93,7 +93,8 @@ TabletController::TabletController(WObject *parent, const Fn<int()> &getTimeReco
             _settings.value(
                         WOptionSettings::namePathSaving,
                         defaultPathSaving.addSlashIfNecessary()
-                    ).toString().toUtf8()
+                    ).toString().toUtf8(),
+            true
     );
 
     this->_settings.save();

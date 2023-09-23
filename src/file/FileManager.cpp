@@ -2,16 +2,21 @@
 #include "core/WDir.h"
 #include <utility>
 
-FileManager::FileManager(WObject *parent, WByteArray basePath)
+FileManager::FileManager(WObject *parent, WByteArray basePath, bool createDir)
     : WObject(parent)
     , _basePath(std::move(basePath))
     , _dir(FileManager::getAllDir(_basePath))
 {
+    if (createDir and _dir.isEmpty()) {
+        // maybe basePath don't exist
+        Directory::createDir(_basePath);
+    }
 }
 
 FileManager::~FileManager() = default;
 
-const WListFast<Directory> &FileManager::getDirectory() const
+// TODO: move it to .h file
+auto FileManager::getDirectory() const -> const WListFast<Directory> &
 {
     return this->_dir;
 }

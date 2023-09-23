@@ -18,6 +18,7 @@ public:
     Directory (const Directory &other) noexcept = delete;
     ~Directory();
 
+    [[nodiscard]]
     auto getFiles() const -> const WListFast<WFile>&;
 
     /**
@@ -26,11 +27,15 @@ public:
     */
     auto addFiles(const WByteArray &position) -> bool;
 
+    [[nodiscard]]
     auto allDirsInFolder() const -> WListFast<WByteArray>;
 
     auto moveAllFilesTo(const WString &newPath) -> void;
 
+    [[nodiscard]]
     auto getFolderName() const -> WString;
+
+    auto removeFile(const WString& name) -> int;
 
     static int removeDir(const WByteArray &path);
     static int createDir(const WByteArray &path);
