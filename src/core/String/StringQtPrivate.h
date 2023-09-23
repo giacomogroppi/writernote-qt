@@ -15,10 +15,7 @@ public:
     WString() = default;
     WString (const WString &other) = default;
     WString (WString &&other) noexcept
-            : QString(std::move (other))
-    {
-
-    };
+            : QString(std::move (other)) {};
 
     WString (char c) noexcept: QString() { this->append(&c, 1); }
 
@@ -35,11 +32,17 @@ public:
             : QString(std::move(other)) {}
 
     [[nodiscard]]
+    auto canBeNameFile() const -> bool;
+
+    [[nodiscard]]
+    auto contains (std::initializer_list<char> listOfChar) const -> bool;
+
+    [[nodiscard]]
     auto reverse () const -> WString
     {
         WString tmp;
         tmp.reserve(size());
-        for (int i = size() - 1; i >= 0; i--)
+        for (auto i = size() - 1; i >= 0; i--)
             tmp += at(i);
         return tmp;
     }
@@ -98,4 +101,21 @@ inline auto WString::addSlashIfNecessary() const -> WString
     if (at(size() - 1) != slash::__slash())
         return *this + slash::__slash();
     return *this;
+}
+
+inline auto WString::contains(std::initializer_list<char> listOfChar) const -> bool
+{
+    for (const auto &c: std::as_const(*this)) {
+        for (const auto &letter: std::as_const(listOfChar)) {
+            if (c == letter)
+                return true;
+        }
+    }
+
+    return false;
+}
+
+inline auto WString::canBeNameFile() const -> bool
+{
+    return not this->contains({'|', '\\', '/', ':', '.', '?', '!', '|', '.'});
 }

@@ -38,6 +38,11 @@ auto WFile::exists(const WByteArray& array) noexcept -> bool
     return std::filesystem::exists(array.toStdString());
 }
 
+auto WFile::exists(const std::filesystem::path &path) noexcept -> bool
+{
+    return std::filesystem::exists(path);
+}
+
 WFile::WFile(const WByteArray &path, const char mode)
 {
     const auto *m = convertToCanonical(mode);

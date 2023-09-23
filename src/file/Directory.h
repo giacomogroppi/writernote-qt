@@ -4,6 +4,7 @@
 #include "core/WList.h"
 #include "core/ByteArray/WByteArray.h"
 #include "core/WFile.h"
+#include <filesystem>
 
 class Directory
 {
@@ -11,9 +12,13 @@ private:
     WListFast<WFile> _files;
     WByteArray _path;
 
+    [[deprecated]]
     static auto getAllFile(const WByteArray &path) -> WListFast<WFile>;
+    static auto getAllFile(const std::filesystem::path& path) -> WListFast<WFile>;
+
 public:
     explicit Directory (const WByteArray &path);
+    explicit Directory (const std::filesystem::path& path);
     Directory (Directory &&other) noexcept = default;
     Directory (const Directory &other) noexcept = delete;
     ~Directory();
@@ -25,7 +30,7 @@ public:
      * requires
      *  file in position don't exists
     */
-    auto addFiles(const WByteArray &position) -> bool;
+    auto addFiles(const std::filesystem::path &position) -> int;
 
     [[nodiscard]]
     auto allDirsInFolder() const -> WListFast<WByteArray>;
@@ -37,9 +42,17 @@ public:
 
     auto removeFile(const WString& name) -> int;
 
-    static int removeDir(const WByteArray &path);
-    static int createDir(const WByteArray &path);
-    static bool exists(const WByteArray &path);
+    [[deprecated]]
+    static auto removeDir(const WByteArray &path) -> int;
+    static auto removeDir(const std::filesystem::path& path) -> int;
+
+    [[deprecated]]
+    static auto createDir(const WByteArray &path) -> int;
+    static auto createDir(const std::filesystem::path& path) -> int;
+
+    [[deprecated]]
+    static auto exists(const WByteArray &path) -> bool;
+    static auto exists(const std::filesystem::path& path) -> int;
 
     auto operator==(const Directory &other) const -> bool;
     auto operator!=(const Directory &other) const -> bool;

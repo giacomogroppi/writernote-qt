@@ -291,3 +291,8 @@ void TabletController::setCurrentPathSaving(WString path)
 {
     this->_fileManager->moveTo(std::move(path));
 }
+
+auto TabletController::getFileManager() -> const SharedPtr<FileManager>&
+{
+    return this->_fileManager;
+}

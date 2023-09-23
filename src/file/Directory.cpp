@@ -8,6 +8,13 @@ Directory::Directory(const WByteArray &path)
 {
 }
 
+Directory::Directory(const std::filesystem::path &path)
+    : _files (Directory::getAllFile(path))
+    , _path(path.string().c_str())
+{
+
+}
+
 Directory::~Directory() = default;
 
 auto Directory::getFiles() const -> const WListFast<WFile> &
@@ -15,18 +22,11 @@ auto Directory::getFiles() const -> const WListFast<WFile> &
     return this->_files;
 }
 
-auto Directory::addFiles(const WByteArray &position) -> bool
-{
-    this->_files.append(WFile(position));
-
-    return true;
-}
-
-auto Directory::getAllFile(const WByteArray &path) -> WListFast<WFile>
+auto Directory::getAllFile(const std::filesystem::path& path) -> WListFast<WFile>
 {
     WListFast<WFile> ret = {};
     std::error_code error;
-    const auto iterator = std::filesystem::directory_iterator(path.toStdString(), error);
+    const auto iterator = std::filesystem::directory_iterator(path, error);
 
     if (error) {
         WDebug(true, "Warning folder not exists");
@@ -38,6 +38,11 @@ auto Directory::getAllFile(const WByteArray &path) -> WListFast<WFile>
     }
 
     return ret;
+}
+
+auto Directory::getAllFile(const WByteArray &path) -> WListFast<WFile>
+{
+    return Directory::getAllFile(std::filesystem::path(path.toStdString()));
 }
 
 auto Directory::allDirsInFolder() const -> WListFast<WByteArray>
@@ -80,17 +85,30 @@ auto Directory::getFolderName() const -> WString
     return this->_path.split(slash::__slash()).last();
 }
 
+auto Directory::removeDir(const std::filesystem::path &path) -> int
+{
+    if (std::filesystem::remove_all(path) == true)
+        return 0;
+    return -1;
+}
+
 int Directory::removeDir(const WByteArray &path)
 {
     const auto res = std::filesystem::remove_all(path.constData());
 
-    if (res < 1)
-        return -1;
-
-    return 0;
+    if (res)
+        return 0;
+    return -1;
 }
 
-int Directory::createDir(const WByteArray &path)
+auto Directory::createDir(const std::filesystem::path &path) -> int
+{
+    if (std::filesystem::create_directories(path))
+        return 0;
+    return -1;
+}
+
+auto Directory::createDir(const WByteArray &path) -> int
 {
     if (std::filesystem::create_directories(path.constData()))
         return 0;
@@ -109,4 +127,14 @@ auto Directory::removeFile(const WString& name) -> int
 
     std::filesystem::remove(path / std::filesystem::path(name.toStdString()), error);
     return error.operator bool() ? -1: 0;
+}
+
+auto Directory::addFiles(const std::filesystem::path &position) -> int
+{
+    if (WFile::exists(position))
+        return -1;
+
+    this->_files.append(WFile(position));
+
+    return 0;
 }

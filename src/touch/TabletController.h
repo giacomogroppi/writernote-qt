@@ -28,7 +28,7 @@ private:
     WListFast<Tools*> _toolsContainer;
 
     WOptionSettings _settings;
-    UniquePtr<FileManager> _fileManager;
+    SharedPtr<FileManager> _fileManager;
 
     Tools *_currentTool;
     WColor _color;
@@ -65,6 +65,8 @@ public:
     
     auto getCurrentTool() const -> Tools*;
     auto getCurrentPathSaving() const -> WString;
+
+    auto getFileManager() -> const SharedPtr<FileManager>&;
 
     /**
      * \return -1 in caso di errore in scrittura

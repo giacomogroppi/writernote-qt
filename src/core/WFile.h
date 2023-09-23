@@ -4,7 +4,7 @@
 #include "utils/WCommonScript.h"
 #include "utils/time/current_time.h"
 #include "Readable.h"
-
+#include <filesystem>
 
 class WFile final: public ReadableAbstract, public WritableAbstract
 {
@@ -13,10 +13,16 @@ private:
     WByteArray _path;
     WDate lastMod;
 public:
+    [[deprecated]]
     explicit WFile(const WByteArray &path, char mode);
+
+    [[deprecated]]
     explicit WFile(WByteArray path);
+
+    [[deprecated]]
     explicit WFile(const WString &path);
     explicit WFile(const std::string &path, char mode);
+    explicit WFile(const std::filesystem::path &path);
     explicit WFile(const char *path, char mode);
     ~WFile();
 
@@ -71,7 +77,9 @@ public:
     auto operator==(const WFile &other) const -> bool;
     auto operator!=(const WFile &other) const -> bool;
 
+    [[deprecated]]
     static auto exists(const WByteArray& array) noexcept -> bool;
+    static auto exists(const std::filesystem::path &path) noexcept -> bool;
 
     constexpr auto getName() const noexcept -> const WByteArray &;
     auto getLastMod() const noexcept -> WDate;
@@ -163,6 +171,12 @@ inline WFile::WFile(WFile &&file) noexcept
     file._path = "";
 }
 
+inline WFile::WFile(const std::filesystem::path &path)
+    : _fp (nullptr)
+    , _path(path.c_str())
+    , lastMod()
+{
+}
 
 template<class T>
     requires (std::is_arithmetic_v<T> && !std::is_pointer_v<T>)
