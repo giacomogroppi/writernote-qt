@@ -50,7 +50,10 @@ public:
     VersionFileController (const VersionFileController &other) noexcept = default;
     VersionFileController (VersionFileController &&other) noexcept = default;
 
+    [[nodiscard]]
     static auto load (ReadableAbstract &readable) -> std::pair<int, VersionFileController>;
+
+    [[nodiscard]]
     static auto write (WritableAbstract &writable) -> int;
     
     auto operator=(VersionFileController &&other) noexcept -> VersionFileController& = default;

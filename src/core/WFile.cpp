@@ -106,6 +106,7 @@ auto WFile::close() -> bool
 {
     W_ASSERT(_fp);
     const auto res = fclose(_fp);
+    _fp = nullptr;
     return res == 0;
 }
 

@@ -5,6 +5,7 @@
 #include "core/WMutexLocker.h"
 #include "sheet/style_struct.h"
 #include "TabletUtils.h"
+#include "Scheduler/Scheduler.h"
 
 extern StrokePre *__tmp;
 extern bool hasDraw;
@@ -295,4 +296,22 @@ void TabletController::setCurrentPathSaving(WString path)
 auto TabletController::getFileManager() -> const SharedPtr<FileManager>&
 {
     return this->_fileManager;
+}
+
+auto TabletController::openFile(const WString &name) -> int
+{
+    auto data = _fileManager->openFile<Document>(name, Extention::makeWriternote());
+    const auto methodUpdate = [this] {
+        W_EMIT_1(onNeedRefresh, UpdateEvent::makeAll());
+    };
+
+    if (data.first < 0)
+        return -1;
+
+    *this->_doc = std::move (data.second);
+
+    // we need to give the ui the time to switch
+    Scheduler::addTaskMainThread(new WTaskFunction(nullptr, methodUpdate, true));
+
+    return 0;
 }

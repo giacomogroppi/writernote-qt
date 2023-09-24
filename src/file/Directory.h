@@ -80,7 +80,7 @@ inline auto Directory::addFiles(const std::filesystem::path &position, const T& 
     if (WFile::exists(position))
         return -1;
 
-    WFile file (position);
+    WFile file (position, WFile::WFileWrite);
 
     if (T::write (file, objectToWrite) < 0)
         return -1;
