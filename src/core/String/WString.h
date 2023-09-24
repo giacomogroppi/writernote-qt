@@ -28,7 +28,7 @@ inline auto WString::load (const VersionFileController& versionController, Reada
 {
     WString result;
 
-    if (versionController.getVersionWString() != 1)
+    if (versionController.getVersionWString() != 0)
         return {-1, result};
 
     result = WString();

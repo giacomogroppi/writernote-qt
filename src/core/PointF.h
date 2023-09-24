@@ -12,7 +12,8 @@ using PointF = PointTemplate<double>;
 namespace WCommonScript {
     // TODO: move this function into static PointTemplate function
 
-    force_inline bool is_near(const PointF &point1, const PointF &point2, cdouble prec) {
+    template <class T>
+    force_inline bool is_near(const PointTemplate<T> &point1, const PointTemplate<T> &point2, T prec) {
         return is_near(point1.x(), point2.x(), prec) and
                is_near(point1.y(), point2.y(), prec);
     }

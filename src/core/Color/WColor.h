@@ -11,7 +11,6 @@
 #else
 #endif
 
-// TODO move this class in a proper file
 class WColor
 {
 private:
