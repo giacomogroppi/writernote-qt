@@ -6,6 +6,23 @@
 #include "core/ByteArray/WByteArray.h"
 #include "core/WList.h"
 
+// TODO: create proper file
+class Extention {
+private:
+    WString _extention;
+
+    Extention (WString e);
+public:
+
+    static auto makeWriternote() -> Extention;
+
+    [[nodiscard]]
+    auto size() const -> int;
+
+    operator std::filesystem::path () const { return std::filesystem::path (_extention.toStdString()); }
+    operator WString () const { return _extention; }
+};
+
 class FileManager final:
         public WObject
 {
@@ -45,7 +62,7 @@ public:
 
     template <class T>
             requires (std::is_class<T>::value)
-    auto createFile (const WString& name, const T& file) -> int;
+    auto createFile (const WString& name, const T& file, const Extention& extension) -> int;
 
     W_EMITTABLE_0(onDirectoryListChanged);
     W_EMITTABLE_0(onCurrentDirectoryChanged);
@@ -54,9 +71,11 @@ public:
 
 template <class T>
     requires (std::is_class<T>::value)
-inline auto FileManager::createFile(const WString& name, const T &file) -> int
+inline auto FileManager::createFile(const WString& name, const T &file, const Extention &extension) -> int
 {
-    const auto path = std::filesystem::path (_basePath.toStdString()) / name.toStdString() / name.toStdString();
+    const WString nameWithExtension = (name.mid(name.size() - extension.size()) == ('.' + extension)) ?
+                                       name : WString(name + '.' + extension);
+    const auto path = std::filesystem::path (_basePath.toStdString()) / nameWithExtension.toStdString();
 
     return _dir[_selected].addFiles(path, file);
 }

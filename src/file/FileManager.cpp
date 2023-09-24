@@ -123,3 +123,19 @@ auto FileManager::createDirectory(const WString &name) -> int
     this->_dir.append(Directory(path));
     return 0;
 }
+
+// TODO: create proper file
+Extention::Extention(WString e)
+    : _extention(std::move(e))
+{
+}
+
+auto Extention::size() const -> int
+{
+    return this->_extention.size();
+}
+
+auto Extention::makeWriternote() -> Extention
+{
+    return {"writernote"};
+}

@@ -82,6 +82,8 @@ public:
     void append (const QChar c);
 
     auto charAt(int i) const -> char;
+
+    auto operator+(char c) const -> WString;
 };
 
 inline void WString::append(const QChar c)
@@ -119,3 +121,13 @@ inline auto WString::canBeNameFile() const -> bool
 {
     return not this->contains({'|', '\\', '/', ':', '.', '?', '!', '|', '.'});
 }
+
+inline auto WString::operator+(char c) const -> WString
+{
+    WString tmp(*this);
+
+    tmp.append(c);
+
+    return tmp;
+}
+
