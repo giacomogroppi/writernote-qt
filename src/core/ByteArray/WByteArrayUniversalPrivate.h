@@ -23,6 +23,7 @@ public:
     WByteArray(const char *data, Size size = 0);
     WByteArray (WByteArray &&other) noexcept;
     WByteArray (const WByteArray &other) noexcept;
+    WByteArray (const std::string& string) noexcept;
     ~WByteArray();
 
     std::string toStdString() const;
@@ -347,6 +348,14 @@ inline auto WByteArray::operator=(const char *str) noexcept -> WByteArray&
     _data[size] = '\0';
     
     return *this;
+}
+
+inline WByteArray::WByteArray (const std::string& string) noexcept
+    : _data(nullptr)
+    , _size(0)
+    , _reserved(0)
+{
+    append(string.c_str(), string.size());
 }
 
 #endif

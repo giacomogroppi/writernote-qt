@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "core/RectF.h"
 #include "WImagePrivateCommon.h"
 #include "core/String/WString.h"
@@ -9,6 +8,7 @@
 #include "core/WRgb.h"
 #include "touch/dataTouch/Point.h"
 #include "core/Pointer/UniquePtr.h"
+#include "core/Color/WColor.h"
 
 class WImage
 {

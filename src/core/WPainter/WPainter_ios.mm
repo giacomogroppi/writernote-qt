@@ -175,7 +175,7 @@ void WPainter::setPen(const WPen &pen)
     this->_pen = pen;
 }
 
-void WPainter::setAntialeasing()
+void WPainter::setAntialiasing()
 {
     WMutexLocker _(this->_lock);
     // TODO: adjust this to set this property always

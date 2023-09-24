@@ -2,6 +2,7 @@
 
 #include "touch/dataTouch/Point.h"
 #include "utils/platform.h"
+#include "core/Color/WColor.h"
 
 #if is_ios || (is_mac && !USE_QT)
 class WPen

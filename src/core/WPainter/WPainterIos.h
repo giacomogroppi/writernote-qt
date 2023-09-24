@@ -5,6 +5,7 @@
 # error "Trying use WPainterIos with USE_QT set"
 #endif // USE_QT
 
+#include "core/Color/WColor.h"
 #include "core/Pen/WPen.h"
 #include "core/Image/WImage.h"
 #include "core/Pixmap/WPixmap.h"

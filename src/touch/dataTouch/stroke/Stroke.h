@@ -14,6 +14,7 @@
 #include "core/Point.h"
 #include "core/Pen/WPen.h"
 #include "utils/common_error_definition.h"
+#include "core/Color/WColor.h"
 
 #define PROP_RESOLUTION (2.)
 constexpr double deltaPress = 2.;
