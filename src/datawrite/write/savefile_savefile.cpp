@@ -90,12 +90,12 @@ int savefile::savefile_check_file(cbool saveImg)
 }
 
 int save_audio_file(const char *posAudio,
-                    const WByteArray &path)
+                    const WPath &path)
 {
     WZipWriter writer;
 
-    if(writer.init(path.constData()) < 0)
+    if(writer.init(path.getNameWithoutExtension().constData()) < 0)
         return ERROR;
 
-    return savefile::moveFileIntoZip(WByteArray(posAudio), writer, NAME_AUDIO);
+    return savefile::moveFileIntoZip(WPath(posAudio), writer, NAME_AUDIO);
 }

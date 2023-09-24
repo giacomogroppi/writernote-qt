@@ -10,9 +10,11 @@
 extern StrokePre *__tmp;
 extern bool hasDraw;
 
-TabletController::TabletController(WObject *parent, const Fn<int()> &getTimeRecording,
-                                   const Fn<bool()> &isPlaying, const Fn<int()> &getTimePlaying,
-                                   const WString& defaultPathSaving)
+TabletController::TabletController(WObject *parent,
+                                   const Fn<int()>& getTimeRecording,
+                                   const Fn<bool()>& isPlaying,
+                                   const Fn<int()>& getTimePlaying,
+                                   const WPath& defaultPathSaving)
     : WObject{parent}
     , _tools()
     , _settings()
@@ -91,10 +93,11 @@ TabletController::TabletController(WObject *parent, const Fn<int()> &getTimeReco
 
     this->_fileManager = std::make_unique<FileManager>(
             nullptr,
-            _settings.value(
+            WPath(
+                    _settings.value(
                         WOptionSettings::namePathSaving,
-                        defaultPathSaving.addSlashIfNecessary()
-                    ).toString().toUtf8(),
+                        defaultPathSaving.toString()
+                    ).toString()),
             true
     );
 
@@ -276,7 +279,7 @@ void TabletController::selectType(int type)
     _tools._square->reset();
 }
 
-auto TabletController::getCurrentPathSaving() const -> WString
+auto TabletController::getCurrentPathSaving() const -> WPath
 {
     return this->_fileManager->getCurrentPath();
 }
@@ -284,13 +287,13 @@ auto TabletController::getCurrentPathSaving() const -> WString
 TabletController::~TabletController()
 {
     _settings.begin();
-    _settings.setValue(WOptionSettings::namePathSaving, _fileManager->getCurrentPath());
+    _settings.setValue(WOptionSettings::namePathSaving, _fileManager->getCurrentPath().toString());
     _settings.save();
 }
 
 void TabletController::setCurrentPathSaving(WString path)
 {
-    this->_fileManager->moveTo(std::move(path));
+    this->_fileManager->moveTo(WPath(path));
 }
 
 auto TabletController::getFileManager() -> const SharedPtr<FileManager>&

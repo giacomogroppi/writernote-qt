@@ -14,7 +14,7 @@ void xmlstruct::setData(const WByteArray *path_U, Document *currenttitle_U)
     this->_doc = currenttitle_U;
 }
 
-size_t xmlstruct::get_size_file(const WByteArray &path)
+size_t xmlstruct::get_size_file(const WPath &path)
 {
     size_t size;
     WFile file(path);

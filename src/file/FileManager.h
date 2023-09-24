@@ -27,20 +27,20 @@ class FileManager final:
         public WObject
 {
 private:
-    WByteArray _basePath;
+    WPath _basePath;
     WListFast<Directory> _dir;
     unsigned short _selected;
 
-    static WListFast<Directory> getAllDir(const WByteArray &path);
+    static WListFast<Directory> getAllDir(const WPath &path);
 public:
-    explicit FileManager(WObject *parent, WByteArray basePath, bool createDir);
+    explicit FileManager(WObject *parent, WPath basePath, bool createDir);
     ~FileManager() final;
 
     [[nodiscard]]
     auto getDirectory() const -> const WListFast<Directory> &;
 
     [[nodiscard]]
-    auto getCurrentPath() const -> WString;
+    auto getCurrentPath() const -> WPath;
 
     [[nodiscard]]
     auto getCurrentFiles() const -> const WListFast<WFile>&;
@@ -61,7 +61,7 @@ public:
      * \paragraph This method move all the files from the current directory to the new one
      * \param newPath New path to move all the file in the current directory
      * */
-    auto moveTo(const WString& newPath) -> void;
+    auto moveTo(const WPath& newPath) -> void;
 
     auto createDirectory (const WString& name) -> int;
 
@@ -86,9 +86,9 @@ inline auto FileManager::createFile(const WString& name, const T &file, const Ex
     auto& dir = _dir[_selected];
     const WString nameWithExtension = (name.mid(name.size() - extension.size()) == ('.' + extension)) ?
                                        name : WString(name + '.' + extension);
-    const auto path = std::filesystem::path (_basePath.toStdString())
-                        / dir.getFolderName().toStdString()
-                        / nameWithExtension.toStdString();
+    const auto path = _basePath
+                        / dir.getFolderName()
+                        / nameWithExtension;
 
     const auto result = _dir[_selected].addFiles(path, file);
 
@@ -101,9 +101,10 @@ template <class T>
     requires (std::is_class<T>::value)
 inline auto FileManager::openFile(const WString &name, const Extention &extension) -> WPair<int, T>
 {
-    const auto path = std::filesystem::path(_basePath.toStdString())
-            / _dir[_selected].getFolderName().toStdString()
-            / (name + '.' + extension).toStdString();
+    const auto path = _basePath
+            / _dir[_selected].getFolderName()
+            / (name + '.' + extension);
+
     WFile file (path, WFile::WFileReadOnly);
 
     const auto result = VersionFileController::load (file);

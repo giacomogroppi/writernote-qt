@@ -2,15 +2,9 @@
 #include "core/String/WString.h"
 #include <filesystem>
 
-Directory::Directory(const WByteArray &path)
-    : _files(Directory::getAllFile(path))
-    , _path(path)
-{
-}
-
-Directory::Directory(const std::filesystem::path &path)
+Directory::Directory(const WPath &path)
     : _files (Directory::getAllFiles(path))
-    , _path(path.string().c_str())
+    , _path(path)
 {
 
 }
@@ -22,7 +16,7 @@ auto Directory::getFiles() const -> const WListFast<WFile> &
     return this->_files;
 }
 
-auto Directory::getAllFiles(const std::filesystem::path& path) -> WListFast<WFile>
+auto Directory::getAllFiles(const WPath& path) -> WListFast<WFile>
 {
     WListFast<WFile> ret = {};
     std::error_code error;
@@ -41,11 +35,6 @@ auto Directory::getAllFiles(const std::filesystem::path& path) -> WListFast<WFil
     return ret;
 }
 
-auto Directory::getAllFile(const WByteArray &path) -> WListFast<WFile>
-{
-    return Directory::getAllFiles(std::filesystem::path(path.toStdString()));
-}
-
 auto Directory::allDirsInFolder() const -> WListFast<WByteArray>
 {
     WListFast<WByteArray> res;
@@ -62,40 +51,38 @@ auto Directory::allDirsInFolder() const -> WListFast<WByteArray>
 }
 
 // TODO: manage error
-auto Directory::moveAllFilesTo(const WString &newPath) -> void
+auto Directory::moveAllFilesTo(const WPath &newPath) -> void
 {
     namespace fs = std::filesystem;
     std::error_code error;
 
-    // before move files we need to close everything
+    // before move files, we need to close everything
     this->_files.clear();
 
-    fs::rename(fs::path(_path.toStdString()), fs::path(newPath.toStdString()), error);
+    fs::rename(_path, newPath, error);
 
     if (error) {
         W_ASSERT_TEXT(0, "move file error...");
     }
 
-    _path = newPath.toUtf8();
+    _path = newPath;
 
-    _files = Directory::getAllFile(_path);
+    _files = Directory::getAllFiles(_path);
 }
 
 auto Directory::getFolderName() const -> WString
 {
-    W_ASSERT(_path[_path.size() - 1] != slash::__slash());
-
-    return this->_path.split(slash::__slash()).last();
+    return this->_path.getNameWithExtension();
 }
 
-auto Directory::removeDir(const std::filesystem::path &path) -> int
+auto Directory::removeDir(const WPath& path) -> int
 {
     if (std::filesystem::remove_all(path) == true)
         return 0;
     return -1;
 }
 
-int Directory::removeDir(const WByteArray &path)
+int Directory::removeDir(const WByteArray& path)
 {
     const auto res = std::filesystem::remove_all(path.constData());
 
@@ -104,14 +91,14 @@ int Directory::removeDir(const WByteArray &path)
     return -1;
 }
 
-auto Directory::createDir(const std::filesystem::path &path) -> int
+auto Directory::createDir(const WPath& path) -> int
 {
     if (std::filesystem::create_directories(path))
         return 0;
     return -1;
 }
 
-auto Directory::createDir(const WByteArray &path) -> int
+auto Directory::createDir(const WByteArray& path) -> int
 {
     if (std::filesystem::create_directories(path.constData()))
         return 0;
@@ -126,8 +113,7 @@ bool Directory::exists(const WByteArray &path)
 auto Directory::removeFile(const WString& name) -> int
 {
     std::error_code error;
-    std::filesystem::path path (WString(_path).addSlashIfNecessary().toStdString());
 
-    std::filesystem::remove(path / std::filesystem::path(name.toStdString()), error);
+    std::filesystem::remove(_path / std::filesystem::path(name.toStdString()), error);
     return error.operator bool() ? -1: 0;
 }

@@ -48,8 +48,8 @@ public:
 
     void setData(const WByteArray *path_U, Document *currenttitle_U);
 
-    static size_t get_size_file(const WByteArray &path);
-    static bool closeZip(FileContainer *fileZip);
+    static auto get_size_file(const WPath &path) -> size_t;
+    static auto closeZip(FileContainer *fileZip) -> bool;
 };
 
 inline const WByteArray &xmlstruct::getPath() const

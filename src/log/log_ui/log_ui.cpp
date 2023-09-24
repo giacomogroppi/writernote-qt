@@ -12,13 +12,15 @@
 #include "file/File.h"
 #include "core/WOptionSetting/WOptionSettings.h"
 #include <pthread.h>
+
+#include <utility>
 #include "utils/time/current_time.h"
 
 static WMutex mutex;
 
-log_ui::log_ui(WObject *parent, const WByteArray &positionForLog)
+log_ui::log_ui(WObject *parent, WPath positionForLog)
     : WObject(parent)
-    , _positionLog(positionForLog)
+    , _positionLog(std::move(positionForLog))
 {
     this->loadData();
 }
@@ -30,7 +32,7 @@ log_ui::~log_ui()
 
 bool log_ui::getData(WByteArray &data)
 {
-    if(WFile::readFile(data, this->getCurrentPosition().constData()) < 0)
+    if(WFile::readFile(data, this->getCurrentPosition()) < 0)
         return false;
     return true;
 }
@@ -94,7 +96,7 @@ void log_ui::addTime(WString &message)
     message = WDate::now().toString() + WTime::now().toString() + message;
 }
 
-WByteArray log_ui::getNameLog()
+auto log_ui::getNameLog() const -> WByteArray
 {
     return this->_nameLog;
 }

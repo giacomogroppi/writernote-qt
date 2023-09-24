@@ -51,10 +51,10 @@ private:
 public:
     explicit TabletController(
             WObject *parent,
-            const Fn<int()> &getTimeRecording,
-            const Fn<bool()> &isPlaying,
-            const Fn<int()> &getTimePlaying,
-            const WString& defaultPathSaving
+            const Fn<int()>&    getTimeRecording,
+            const Fn<bool()>&   isPlaying,
+            const Fn<int()>&    getTimePlaying,
+            const WPath&        defaultPathSaving
     );
 
     ~TabletController() override;
@@ -64,7 +64,7 @@ public:
     void getImageStroke(WPainter &painter, double width) const;
     
     auto getCurrentTool() const -> Tools*;
-    auto getCurrentPathSaving() const -> WString;
+    auto getCurrentPathSaving() const -> WPath;
 
     auto getFileManager() -> const SharedPtr<FileManager>&;
 

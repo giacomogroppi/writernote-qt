@@ -1,32 +1,29 @@
 #pragma once
 
+#include <utility>
+
 #include "core/ByteArray/WByteArray.h"
 #include "utils/WCommonScript.h"
 #include "utils/time/current_time.h"
 #include "Readable.h"
-#include <filesystem>
+#include "core/Path/WPath.h"
 
 class WFile final: public ReadableAbstract, public WritableAbstract
 {
 private:
     FILE *_fp;
-    WByteArray _path;
+    WPath _path;
     WDate lastMod;
 public:
-    [[deprecated]]
-    explicit WFile(const WByteArray &path, char mode);
-
     [[deprecated]]
     explicit WFile(WByteArray path);
 
     [[deprecated]]
     explicit WFile(const WString &path);
-    explicit WFile(const std::string &path, char mode);
 
-    explicit WFile (const std::filesystem::path& path);
-    explicit WFile (const std::filesystem::path& path, char mode);
+    explicit WFile (WPath  path);
+    explicit WFile (const WPath& path, char mode);
 
-    explicit WFile(const char *path, char mode);
     ~WFile();
 
     WFile (const WFile &other) noexcept = default;
@@ -73,9 +70,9 @@ public:
 
     static auto exits(const std::string &path) -> bool;
     static auto fileExist(const WByteArray &to) -> int;
-    static auto readFile(WByteArray &to, const char *pathFile) -> int;
-    static auto saveArrIntoFile(const WByteArray &arr, const std::string &path) -> int;
-    static auto open(const WByteArray &path, char openMode) -> WFile;
+    static auto readFile(WByteArray &to, const WPath& path) -> int;
+    static auto saveArrIntoFile(const WByteArray &arr, const WPath &path) -> int;
+    static auto open(const WPath &path, char openMode) -> WFile;
 
     auto operator==(const WFile &other) const -> bool;
     auto operator!=(const WFile &other) const -> bool;
@@ -122,7 +119,7 @@ inline auto WFile::size() const -> size_t
  * Pass "r" to open file in load only mode
  * Pass "w" to open file in write mode
 */
-force_inline auto WFile::open(const WByteArray &path, char openMode) -> WFile
+force_inline auto WFile::open(const WPath &path, char openMode) -> WFile
 {
     return WFile {
         path, openMode
@@ -142,7 +139,7 @@ inline auto WFile::sizefp(FILE *fp) -> size_t
 
 inline auto WFile::getName() const noexcept -> WByteArray
 {
-    return std::filesystem::path(_path.toStdString()).stem().string();
+    return _path.getNameWithoutExtension();
 }
 
 inline auto WFile::getLastMod() const noexcept -> WDate
@@ -175,13 +172,12 @@ inline WFile::WFile(WFile &&file) noexcept
     file._path = "";
 }
 
-inline WFile::WFile(const std::filesystem::path &path)
+inline WFile::WFile(WPath path)
     : _fp (nullptr)
-    , _path(path.string())
+    , _path(std::move(path))
     , lastMod()
 {
     WDebug(true, "Create a file with name: " << _path);
-    W_ASSERT(path.string().size() > 0);
 }
 
 template<class T>

@@ -4,6 +4,7 @@
 #include "Scheduler/WObject.h"
 #include "core/ByteArray/WByteArray.h"
 #include "core/String/WString.h"
+#include "core/Path/WPath.h"
 
 #define NAME_LOG_EXT log_write
 
@@ -11,7 +12,7 @@
 class log_ui : public WObject
 {
 public:
-    explicit log_ui(WObject * parent, const WByteArray &positionForLog);
+    explicit log_ui(WObject * parent, WPath positionForLog);
     ~log_ui();
 
     enum type_write: int{
@@ -25,11 +26,11 @@ public:
                enum type_write type);
 
     void print(FILE *fp, const WByteArray &str);
-    bool getData(WByteArray & str);
-    WByteArray getCurrentPosition() const;
+    auto getData(WByteArray & str) -> bool;
+    auto getCurrentPosition() const -> WPath;
 private:
-    WString adjust_path(const WString &str) const;
-    bool check_str(const WString &str) const;
+    auto adjust_path(const WString &str) const -> WString;
+    auto check_str(const WString &str) const -> bool;
     static void addTime(WString &message);
 
     enum permi: int {
@@ -38,22 +39,22 @@ private:
         enable /* ok */
     };
 
-    WByteArray getNameLog();
+    [[nodiscard]]
+    auto getNameLog() const -> WByteArray;
 
     permi m_permi = permi::enable;
 
-    const WByteArray _positionLog;
+    const WPath _positionLog;
     WByteArray _nameLog;
 
     void saveData();
     int loadData();
 };
 
-inline WByteArray log_ui::getCurrentPosition() const
+inline auto log_ui::getCurrentPosition() const -> WPath
 {
-    W_ASSERT(_positionLog.size());
     W_ASSERT(_nameLog.size());
-    return this->_positionLog + _nameLog;
+    return this->_positionLog / _nameLog;
 }
 
 extern log_ui *NAME_LOG_EXT;

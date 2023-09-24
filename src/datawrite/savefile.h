@@ -8,7 +8,7 @@
 class Document;
 
 int save_audio_file(const char *posAudio,
-                    const WByteArray &path);
+                    const WPath &path);
 
 class savefile
 {
@@ -26,7 +26,7 @@ public:
 
     int savefile_check_file(cbool saveImg);
 
-    static int moveFileIntoZip  (const WByteArray &pathFile, WZipWriter &writer, const WByteArray &nameInZip);
+    static int moveFileIntoZip  (const WPath &pathFile, WZipWriter &writer, const WByteArray &nameInZip);
 };
 
 inline savefile::savefile(const WByteArray *path, Document *currenttitle)

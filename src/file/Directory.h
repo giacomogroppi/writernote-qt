@@ -10,16 +10,13 @@ class Directory
 {
 private:
     WListFast<WFile> _files;
-    WByteArray _path;
+    WPath _path;
 
-    [[deprecated]]
-    static auto getAllFile(const WByteArray &path) -> WListFast<WFile>;
-    static auto getAllFiles(const std::filesystem::path& path) -> WListFast<WFile>;
+    static auto getAllFiles(const WPath& path) -> WListFast<WFile>;
 
 public:
     [[deprecated]]
-    explicit Directory (const WByteArray &path);
-    explicit Directory (const std::filesystem::path& path);
+    explicit Directory (const WPath& path);
     Directory (Directory &&other) noexcept = default;
     Directory (const Directory &other) noexcept = delete;
     ~Directory();
@@ -33,12 +30,12 @@ public:
     */
     template <class T>
             requires (std::is_class<T>::value)
-    auto addFiles(const std::filesystem::path &position, const T& writable) -> int;
+    auto addFiles(const WPath &position, const T& writable) -> int;
 
     [[nodiscard]]
     auto allDirsInFolder() const -> WListFast<WByteArray>;
 
-    auto moveAllFilesTo(const WString &newPath) -> void;
+    auto moveAllFilesTo(const WPath &newPath) -> void;
 
     [[nodiscard]]
     auto getFolderName() const -> WString;
@@ -47,15 +44,15 @@ public:
 
     [[deprecated]]
     static auto removeDir(const WByteArray &path) -> int;
-    static auto removeDir(const std::filesystem::path& path) -> int;
+    static auto removeDir(const WPath& path) -> int;
 
     [[deprecated]]
     static auto createDir(const WByteArray &path) -> int;
-    static auto createDir(const std::filesystem::path& path) -> int;
+    static auto createDir(const WPath& path) -> int;
 
     [[deprecated]]
     static auto exists(const WByteArray &path) -> bool;
-    static auto exists(const std::filesystem::path& path) -> int;
+    static auto exists(const WPath& path) -> int;
 
     auto operator==(const Directory &other) const -> bool;
     auto operator!=(const Directory &other) const -> bool;
@@ -76,7 +73,7 @@ inline bool Directory::operator !=(const Directory &other) const
 
 template <class T>
     requires (std::is_class<T>::value)
-inline auto Directory::addFiles(const std::filesystem::path &position, const T& objectToWrite) -> int
+inline auto Directory::addFiles(const WPath &position, const T& objectToWrite) -> int
 {
     if (WFile::exists(position))
         return -1;

@@ -25,49 +25,17 @@ static auto convertToCanonical (char mode) -> const char *
     return nullptr;
 }
 
-WFile::WFile(WByteArray path)
-        : _fp(nullptr)
-        , _path(std::move(path))
-        , lastMod()
-{
-
-}
-
-auto WFile::exists(const WByteArray& array) noexcept -> bool
-{
-    return std::filesystem::exists(array.toStdString());
-}
-
 auto WFile::exists(const std::filesystem::path &path) noexcept -> bool
 {
     return std::filesystem::exists(path);
 }
 
-WFile::WFile(const std::filesystem::path &path, char mode)
-    : _fp(nullptr)
-    , _path(path.string().c_str())
-{
-    const auto *m = convertToCanonical(mode);
-    _fp = fopen (path.c_str(), m);
-}
-
-WFile::WFile(const WByteArray &path, const char mode)
+WFile::WFile(const WPath &path, char mode)
     : _fp(nullptr)
     , _path(path)
 {
     const auto *m = convertToCanonical(mode);
-
-    _fp = fopen(path.constData(), m);
-}
-
-WFile::WFile(const std::string &path, const char mode):
-    WFile(path.c_str(), mode)
-{
-}
-
-WFile::WFile(const char *path, const char mode):
-    WFile(WByteArray(path), mode)
-{
+    _fp = fopen (path.operator std::filesystem::path().c_str(), m);
 }
 
 WFile::~WFile()
@@ -79,7 +47,7 @@ WFile::~WFile()
 auto WFile::open(int openMode) -> bool
 {
     W_ASSERT(this->_fp == nullptr);
-    this->_fp = fopen(this->_path.constData(), convertToCanonical(openMode));
+    this->_fp = fopen(this->_path.operator std::filesystem::path().c_str(), convertToCanonical(openMode));
     return _fp != nullptr;
 }
 
@@ -120,7 +88,7 @@ auto WFile::fileExist(const WByteArray &to) -> int
     return -1;
 }
 
-auto WFile::readFile(WByteArray &to, const char *pathFile) -> int
+auto WFile::readFile(WByteArray &to, const WPath& pathFile) -> int
 {
     WFile f (pathFile, WFile::WFileReadOnly);
 
@@ -140,7 +108,7 @@ auto WFile::readFile(WByteArray &to, const char *pathFile) -> int
     return 0;
 }
 
-auto WFile::saveArrIntoFile(const WByteArray &arr, const std::string &path) -> int
+auto WFile::saveArrIntoFile(const WByteArray &arr, const WPath &path) -> int
 {
     WFile file(path, 'w');
 

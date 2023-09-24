@@ -5,7 +5,7 @@
 
 static const WListFast<WFile> emptyFiles;
 
-FileManager::FileManager(WObject *parent, WByteArray basePath, bool createDir)
+FileManager::FileManager(WObject *parent, WPath basePath, bool createDir)
     : WObject(parent)
     , _basePath(std::move(basePath))
     , _dir(FileManager::getAllDir(_basePath))
@@ -17,7 +17,7 @@ FileManager::FileManager(WObject *parent, WByteArray basePath, bool createDir)
     }
 
     if (_dir.isEmpty() and createDir) {
-        Directory::createDir(std::filesystem::path(_basePath.constData()) / "Not classified");
+        Directory::createDir(_basePath / "Not classified");
     }
 }
 
@@ -36,13 +36,13 @@ auto FileManager::getCurrentFiles() const -> const WListFast<WFile>&
     return _dir[_selected].getFiles();
 }
 
-auto FileManager::getAllDir(const WByteArray &path) -> WListFast<Directory>
+auto FileManager::getAllDir(const WPath &path) -> WListFast<Directory>
 {
     WListFast<Directory> ret = {};
-    auto entry = std::filesystem::directory_iterator(std::filesystem::path(path.toStdString()));
+    auto entry = std::filesystem::directory_iterator(path);
 
     for (const auto& ref: std::as_const(entry)) {
-        ret.append(Directory(ref.path()));
+        ret.append(Directory(WPath(ref.path())));
     }
 
     return ret;
@@ -64,7 +64,7 @@ auto FileManager::removeDirectory (const WString& name) -> int
 
 auto FileManager::removeDirectory (int index) -> int
 {
-    if (Directory::removeDir(std::filesystem::path(_basePath.toStdString()) / _dir.at(index).getFolderName().toStdString()) < 0)
+    if (Directory::removeDir(_basePath / _dir.at(index).getFolderName()) < 0)
         return -1;
 
     _dir.remove(index);
@@ -97,24 +97,24 @@ auto FileManager::getCurrentDirectory() -> Directory&
     return this->_dir[_selected];
 }
 
-auto FileManager::getCurrentPath() const -> WString
+auto FileManager::getCurrentPath() const -> WPath
 {
     return _basePath;
 }
 
-auto FileManager::moveTo(const WString& newPath) -> void
+auto FileManager::moveTo(const WPath& newPath) -> void
 {
     Directory dir (this->_basePath);
     dir.moveAllFilesTo(newPath);
 
-    this->_basePath = newPath.toUtf8();
+    this->_basePath = newPath;
 
     _dir = FileManager::getAllDir(_basePath);
 }
 
 auto FileManager::createDirectory(const WString &name) -> int
 {
-    const auto path = std::filesystem::path (_basePath.toStdString()) / name.toStdString();
+    const auto path = _basePath / name;
 
     if (Directory::createDir(path))
         return -1;
