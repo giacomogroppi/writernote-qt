@@ -23,29 +23,30 @@ Scheduler::Scheduler()
     _threads.reserve(8);
     std::vector<std::thread> thread;
 
-    for (int i = 0; i < 8; i++) {
-        _threads.append(std::thread([this, i]()
-        {
-            WSemaphore *sem =           &this->_semGeneral;
-            WMutex *mux =               &this->_lockGeneric;
-            WList<WTask *> *tasksHeap = &this->_task_General;
+    const auto functionThread = [this]() {
+        WSemaphore *sem =           &this->_semGeneral;
+        WMutex *mux =               &this->_lockGeneric;
+        WList<WTask *> *tasksHeap = &this->_task_General;
 
-            // loop
-            for (;;) {
-                WTask *task;
-                sem->acquire();
+        // loop
+        for (;;) {
+            WTask *task;
+            sem->acquire();
 
-                if (this->needToDie())
-                    return;
+            if (this->needToDie())
+                return;
 
-                {
-                    WMutexLocker _(*mux);
-                    task = tasksHeap->takeFirst();
-                }
-
-                this->manageExecution(task);
+            {
+                WMutexLocker _(*mux);
+                task = tasksHeap->takeFirst();
             }
-        }));
+
+            this->manageExecution(task);
+        }
+    };
+
+    for (int i = 0; i < 8; i++) {
+        _threads.append(std::thread(functionThread));
     }
 
     // start a new threads for timers
@@ -110,6 +111,8 @@ Scheduler::Scheduler()
 
 void Scheduler::manageExecution(WTask *task)
 {
+    WDebug(false, "Execute object" << static_cast<void*>(task));
+
     const auto needToDeleteLater = task->isDeleteLater();
 
     task->run();

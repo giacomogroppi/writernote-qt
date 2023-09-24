@@ -20,6 +20,8 @@ public:
     WByteArray(const QByteArray &other) noexcept;
     WByteArray(QByteArray &&other) noexcept;
 
+    WByteArray (const std::string& string);
+
     WByteArray (const char *d) noexcept;
     WByteArray (const char *d, size_t size) noexcept;
 
@@ -39,6 +41,11 @@ public:
     auto operator=(QByteArray &&other) noexcept -> WByteArray &;
     auto operator=(const char *str) noexcept -> WByteArray &;
 };
+
+inline WByteArray::WByteArray(const std::string &string)
+    : QByteArray(string.c_str(), string.size())
+{
+}
 
 inline auto WByteArray::operator=(const char *str) noexcept -> WByteArray &
 {

@@ -17,7 +17,7 @@ private:
     bool _hasFinish : 1;
 public:
     explicit WTask(WObject *parent = nullptr, bool destroyLater = false);
-    ~WTask() override = default;
+    ~WTask() override;
 
     virtual void run() = 0;
     void join();
@@ -39,6 +39,11 @@ public:
      * */
     W_EMITTABLE_1(finished, WTask*, task)
 };
+
+inline WTask::~WTask()
+{
+    WDebug(false, "Delete object" << static_cast<void*>(this));
+}
 
 inline auto WTask::isDeleteLater() const -> bool
 {

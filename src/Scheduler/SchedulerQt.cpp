@@ -1,15 +1,14 @@
 #include "Scheduler.h"
 
 #ifdef USE_QT
-void Scheduler::addTaskMainThread(WTask *task)
+#include <QTimer>
+auto Scheduler::addTaskMainThread(WTask *task) -> void
 {
     // TODO: use qt scheduler
     W_ASSERT(task);
-    auto &instance = Scheduler::getInstance();
-    
-    WMutexLocker _(instance._lockMain);
-    instance._task_Main.append(task);
 
-    instance._semMain.release();
+    QTimer::singleShot(0, [task] {
+        manageExecution(task);
+    });
 }
 #endif // USE_QT

@@ -39,11 +39,10 @@ auto FileManager::getCurrentFiles() const -> const WListFast<WFile>&
 auto FileManager::getAllDir(const WByteArray &path) -> WListFast<Directory>
 {
     WListFast<Directory> ret = {};
-    Directory dir(path);
-    const auto directories = dir.allDirsInFolder();
+    auto entry = std::filesystem::directory_iterator(std::filesystem::path(path.toStdString()));
 
-    for (const auto &folder: directories) {
-        ret.append(Directory(folder));
+    for (const auto& ref: std::as_const(entry)) {
+        ret.append(Directory(ref.path()));
     }
 
     return ret;

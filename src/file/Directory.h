@@ -14,9 +14,10 @@ private:
 
     [[deprecated]]
     static auto getAllFile(const WByteArray &path) -> WListFast<WFile>;
-    static auto getAllFile(const std::filesystem::path& path) -> WListFast<WFile>;
+    static auto getAllFiles(const std::filesystem::path& path) -> WListFast<WFile>;
 
 public:
+    [[deprecated]]
     explicit Directory (const WByteArray &path);
     explicit Directory (const std::filesystem::path& path);
     Directory (Directory &&other) noexcept = default;

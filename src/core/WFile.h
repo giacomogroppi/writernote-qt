@@ -84,7 +84,8 @@ public:
     static auto exists(const WByteArray& array) noexcept -> bool;
     static auto exists(const std::filesystem::path &path) noexcept -> bool;
 
-    constexpr auto getName() const noexcept -> const WByteArray &;
+    [[nodiscard]]
+    auto getName() const noexcept -> WByteArray;
     auto getLastMod() const noexcept -> WDate;
 
     auto operator=(WFile &&other) noexcept -> WFile & {
@@ -139,9 +140,9 @@ inline auto WFile::sizefp(FILE *fp) -> size_t
     return size;
 }
 
-inline constexpr auto WFile::getName() const noexcept -> const WByteArray &
+inline auto WFile::getName() const noexcept -> WByteArray
 {
-    return this->_path;
+    return std::filesystem::path(_path.toStdString()).stem().string();
 }
 
 inline auto WFile::getLastMod() const noexcept -> WDate
@@ -168,7 +169,7 @@ inline WFile::WFile(const WString &path)
 inline WFile::WFile(WFile &&file) noexcept
     : _fp(file._fp)
     , _path(std::move (file._path))
-    , lastMod(std::move(file.lastMod))
+    , lastMod(file.lastMod)
 {
     file._fp = nullptr;
     file._path = "";
@@ -176,9 +177,11 @@ inline WFile::WFile(WFile &&file) noexcept
 
 inline WFile::WFile(const std::filesystem::path &path)
     : _fp (nullptr)
-    , _path(path.c_str())
+    , _path(path.string())
     , lastMod()
 {
+    WDebug(true, "Create a file with name: " << _path);
+    W_ASSERT(path.string().size() > 0);
 }
 
 template<class T>

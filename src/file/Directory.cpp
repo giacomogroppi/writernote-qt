@@ -9,7 +9,7 @@ Directory::Directory(const WByteArray &path)
 }
 
 Directory::Directory(const std::filesystem::path &path)
-    : _files (Directory::getAllFile(path))
+    : _files (Directory::getAllFiles(path))
     , _path(path.string().c_str())
 {
 
@@ -22,7 +22,7 @@ auto Directory::getFiles() const -> const WListFast<WFile> &
     return this->_files;
 }
 
-auto Directory::getAllFile(const std::filesystem::path& path) -> WListFast<WFile>
+auto Directory::getAllFiles(const std::filesystem::path& path) -> WListFast<WFile>
 {
     WListFast<WFile> ret = {};
     std::error_code error;
@@ -34,7 +34,8 @@ auto Directory::getAllFile(const std::filesystem::path& path) -> WListFast<WFile
     }
 
     for (const auto & entry : iterator) {
-        ret.append(WFile(WByteArray(entry.path().c_str())));
+        WDebug(true, "Name of the file is:" << entry.path().string());
+        ret.append(WFile(entry.path()));
     }
 
     return ret;
@@ -42,7 +43,7 @@ auto Directory::getAllFile(const std::filesystem::path& path) -> WListFast<WFile
 
 auto Directory::getAllFile(const WByteArray &path) -> WListFast<WFile>
 {
-    return Directory::getAllFile(std::filesystem::path(path.toStdString()));
+    return Directory::getAllFiles(std::filesystem::path(path.toStdString()));
 }
 
 auto Directory::allDirsInFolder() const -> WListFast<WByteArray>
@@ -51,7 +52,9 @@ auto Directory::allDirsInFolder() const -> WListFast<WByteArray>
 
     res.reserve(_files.size());
 
+
     for (const auto& entry : std::as_const(_files)) {
+        WDebug(true, entry.getName());
         res.append(entry.getName());
     }
 
