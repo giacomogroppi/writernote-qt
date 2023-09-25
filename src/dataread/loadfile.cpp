@@ -135,21 +135,3 @@ int xmlstruct::loadfile(cbool LoadPdf, cbool LoadImg)
  *
  * TODO -> load audio into the buffer only if you are really opening a new copybook
 */
-#define CLOSE_ZIP_AUDIO(x, y) zip_fclose(x); \
-    zip_close(y);
-
-int load_audio(WByteArray &array, const WString &path)
-{
-    int error;
-    bool ok;
-    WZip zip(path.toUtf8(), ok);
-
-    array.clear();
-
-    if(!ok)
-        return ERROR;
-
-    error = xmlstruct::readFile(zip.get_zip(), array, true, NAME_AUDIO, false);
-
-    return error;
-}

@@ -3,12 +3,12 @@
 #include "utils/WCommonScript.h"
 #include "file/File.h"
 
-xmlstruct::xmlstruct(const WByteArray *path_U, Document *currenttitle_U)
+xmlstruct::xmlstruct(const WPath *path_U, Document *currenttitle_U)
 {
     setData(path_U, currenttitle_U);
 }
 
-void xmlstruct::setData(const WByteArray *path_U, Document *currenttitle_U)
+void xmlstruct::setData(const WPath *path_U, Document *currenttitle_U)
 {
     this->_path = path_U;
     this->_doc = currenttitle_U;
@@ -29,7 +29,7 @@ size_t xmlstruct::get_size_file(const WPath &path)
     return size;
 }
 
-xmlstruct::xmlstruct(const WByteArray &path_U, Document &currenttitle_U)
+xmlstruct::xmlstruct(const WPath &path_U, Document &currenttitle_U)
 {
     setData(&path_U, &currenttitle_U);
 }

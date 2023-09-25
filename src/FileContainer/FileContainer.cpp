@@ -5,7 +5,7 @@
 
 #include <utility>
 
-FileContainer::FileContainer(WString path)
+FileContainer::FileContainer(WPath path)
     : _path(std::move(path))
     , _isOk(false)
     , _file(_path)

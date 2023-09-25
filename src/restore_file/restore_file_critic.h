@@ -17,8 +17,4 @@ namespace restore_file_critic
         restore_ok
     };
 
-    enum n_err restore_file_direct(const WByteArray & path_load,
-                                   const WByteArray& path_save,
-                                   Fn<void(const WString &)> showMessage);
-
 };

@@ -15,15 +15,15 @@ private:
                 SharedPtr<WByteArray>
             >;
 
-    WString _path;
+    WPath _path;
     WListFast<Pair> _subFiles;
     bool _isOk;
     WFile _file;
 
-    auto dataOf (const WString &name) const -> SharedPtr<WByteArray>;
+    auto dataOf (const WString& name) const -> SharedPtr<WByteArray>;
 
 public:
-    explicit FileContainer(WString path);
+    explicit FileContainer(WPath path);
 
     enum FileContainerOpenMode {
         Read,

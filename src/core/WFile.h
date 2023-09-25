@@ -15,12 +15,6 @@ private:
     WPath _path;
     WDate lastMod;
 public:
-    [[deprecated]]
-    explicit WFile(WByteArray path);
-
-    [[deprecated]]
-    explicit WFile(const WString &path);
-
     explicit WFile (WPath  path);
     explicit WFile (const WPath& path, char mode);
 
@@ -39,12 +33,15 @@ public:
      * \return false iff it fail
      * */
     auto open (int openMode) -> bool;
+
+    [[nodiscard]]
     auto isValid() const -> bool;
 
     /**
      * @return integer &lt 0 in case of error
      * */
-    auto write(const void *data, size_t size) -> int;
+    [[nodiscard]]
+    auto write(const void *data, size_t size) -> int override;
 
     /**
      * @return integer &lt 0 in case of error
@@ -155,12 +152,6 @@ inline auto WFile::operator==(const WFile &other) const -> bool
 inline auto WFile::operator!=(const WFile &other) const -> bool
 {
     return !WFile::operator==(other);
-}
-
-inline WFile::WFile(const WString &path)
-    : WFile (WByteArray(path.toUtf8()))
-{
-
 }
 
 inline WFile::WFile(WFile &&file) noexcept

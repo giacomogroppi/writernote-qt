@@ -49,7 +49,7 @@ struct WZipPrivate{
     void            *_data      = nullptr;
     FileContainer   *_zip       = nullptr;
     size_t          _len_file   = 0;
-    WString         _path;
+    WPath           _path;
     PrivateStatus   _status;
     bool            _have_to_close;
 };
@@ -59,10 +59,10 @@ class WZip
 private:
     struct WZipPrivate _data_private;
 
-    bool openZip(const WByteArray &path);
+    bool openZip(const WPath &path);
 
 public:
-    WZip(const WByteArray &path, bool &ok);
+    WZip(const WPath &path, bool &ok);
     WZip(WZip &zip);
     ~WZip();
 

@@ -4,8 +4,10 @@
 
 int WZipCommon::removeFile(const char *fileZip, const char *nameFileInZip)
 {
-    FileContainer container (fileZip);
+    FileContainer container (WPath{fileZip});
+
     if (!container.remove(WString(nameFileInZip)))
         return -1;
+
     return 0;
 }

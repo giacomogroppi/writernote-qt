@@ -2,9 +2,10 @@
 #include "testing/memtest.h"
 #include "FileContainer/WZipCommon.h"
 
-WZip::WZip(const WByteArray &path, bool &ok)
+WZip::WZip(const WPath &path, bool &ok)
 {
     ok = this->openZip(path);
+
     if(ok){
         this->_data_private._status.set_zip_open();
         this->_data_private._status.set_data_not_available();
@@ -39,7 +40,7 @@ void WZip::dealloc_file()
     W_ASSERT(this->_data_private._data);
     W_ASSERT(this->_data_private._status.is_data_available());
     WFree(this->_data_private._data);
-    this->_data_private._data = NULL;
+    this->_data_private._data = nullptr;
     this->_data_private._status.set_data_not_available();
 }
 
@@ -54,9 +55,9 @@ WZip::~WZip()
     DO_IF_DEBUG(this->_data_private._zip = nullptr;)
 }
 
-bool WZip::openZip(const WByteArray &pathZip)
+bool WZip::openZip(const WPath &pathZip)
 {
-    W_ASSERT(!pathZip.isEmpty());
+    W_ASSERT(!pathZip.operator std::filesystem::path().empty());
     W_ASSERT(this->_data_private._zip == nullptr);
     W_ASSERT(this->_data_private._data == nullptr);
 

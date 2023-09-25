@@ -16,9 +16,10 @@
 int load_audio(WByteArray &array, const WString &path);
 
 
-class xmlstruct{
+class xmlstruct
+{
 private:
-    const WByteArray *_path;
+    const WPath *_path;
     static constexpr size_t get_offset_start() { return sizeof(int); };
     Document *_doc = nullptr;
 
@@ -26,15 +27,12 @@ private:
     constexpr static const auto nameAudio = "FileAudio";
 
 public:
-    static int load_stringa(FileReader *f, WString &stringa);
-    static int load_stringa(FileReader *f, WByteArray &str);
-
     static int readFile(FileContainer *fileZip, WByteArray &arr,
                         cbool clear, const WString &name,
                         cbool closeZip);
 
     [[nodiscard]]
-    const WByteArray &getPath() const;
+    auto getPath() const -> const WPath &;
 
     /* return true if we can load this file */
     static bool manageMessage(int res, const Fn<void(const WString &)>& showMessage);
@@ -43,16 +41,16 @@ public:
 
     int loadfile(cbool LoadPdf, cbool LoadImg);
 
-    xmlstruct(const WByteArray *path_U, Document *currenttitle_U);
-    xmlstruct(const WByteArray &path_U, Document &currenttitle_U);
+    xmlstruct(const WPath *path_U, Document *currenttitle_U);
+    xmlstruct(const WPath &path_U, Document &currenttitle_U);
 
-    void setData(const WByteArray *path_U, Document *currenttitle_U);
+    void setData(const WPath *path_U, Document *currenttitle_U);
 
     static auto get_size_file(const WPath &path) -> size_t;
     static auto closeZip(FileContainer *fileZip) -> bool;
 };
 
-inline const WByteArray &xmlstruct::getPath() const
+inline auto xmlstruct::getPath() const -> const WPath &
 {
     return *_path;
 }

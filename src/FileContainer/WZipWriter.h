@@ -41,7 +41,7 @@ inline WZipWriter::~WZipWriter()
         this->close_zip();
 }
 
-inline int WZipWriter::init(const char *fileZip)
+inline auto WZipWriter::init(const char *fileZip) -> int
 {
 #ifdef DEBUGINFO
     W_ASSERT(this->already_init == false);
@@ -56,7 +56,7 @@ inline int WZipWriter::init(const char *fileZip)
     return 0;
 }
 
-inline FileContainer *WZipWriter::openZip(const char *path)
+inline auto WZipWriter::openZip(const char *path) -> FileContainer *
 {
-    return new FileContainer(WString(path));
+    return new FileContainer(WPath(path));
 }

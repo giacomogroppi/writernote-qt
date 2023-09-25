@@ -9,7 +9,7 @@
 #include "core/Rect.h"
 #include "core/WPainter/WPainterSafe.h"
 
-void preview::get(WPixmap &ref, const Document &doc, cbool withPdf, const int width)
+void preview::get(WPixmap &ref, const Document &doc, bool withPdf, const int width)
 {
     WPainterUnsafe painter;
     const double size_orizzontale = doc.biggerX();
@@ -48,8 +48,8 @@ void preview::get(WPixmap &ref, const Document &doc, cbool withPdf, const int wi
 
 }
 
-bool preview::get(WPixmap &ref, cbool withPdf,
-                  const WByteArray &path, const int height, const int width)
+bool preview::get(WPixmap &ref, bool withPdf,
+                  const WPath &path, int height, int width)
 {
     Document doc;
     int ok;    

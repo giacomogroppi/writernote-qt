@@ -5,7 +5,8 @@
 
 bool permission::open(const char *file, e_permission request)
 {
-    WByteArray path(file, strlen(file));
+    WPath path(file);
+
     if(request == e_permission::exist){
         return WFile::exists(path);
     }
