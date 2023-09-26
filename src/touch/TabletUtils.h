@@ -6,14 +6,15 @@
 #include "utils/Optional.h"
 #include "core/WFlags.h"
 #include "touch/UpdateEvent.h"
+#include "core/WElement.h"
 
 class TabletUtils {
 private:
-    const bool _withPdf;
-    const bool _isExportingPdf;
-    const Fn<bool()> &_isPlay;
-    const Fn<int ()> &_positionAudio;
-    double _m;
+    const Bool _withPdf;
+    const Bool _isExportingPdf;
+    const Bool _isPlay;
+    const Unsigned _positionAudio;
+    Double _m;
     Optional<Laser> _laser;
     WPen _pen;
     RectF _visibleArea;
@@ -22,39 +23,23 @@ private:
     WPainter *_painter;
 
 public:
-    struct DataPaint{
-        bool withPdf;
-        bool IsExportingPdf;
-        const Fn<bool()> &isPlay;
-        const Fn<int()>  &positionAudio;
-        double m;
-        Optional<Laser> laser;
-
-        WPen pen;
-        WPoint lastPoint;
-
-        void reset()
-        {
-            this->m = 1.0;
-            this->withPdf = true;
-        }
-#define DATAPAINT_DEFINEREST \
-    .pen = WPen(), \
-    .lastPoint = Point()
-    };
-
-    explicit TabletUtils(WPainter &painter, const Fn<bool()> &isPlay,
-                         const Fn<int()> &positionAudio,
-                         double m, Optional<Laser> laser, const Document &doc,
-                         bool withPdf, bool isExporting, const RectF &visibleArea);
+    explicit TabletUtils(WPainter &painter, Bool isPlay, Unsigned positionAudio,
+                         Double m, Optional<Laser> laser, const Document &doc,
+                         Bool withPdf, Bool isExporting, const RectF &visibleArea);
     ~TabletUtils() = default;
 
-    int getTime() const;
-    constexpr bool withPdf() const;
-    void setPainter(WPainter &painter) noexcept;
-    constexpr double getZoom() const;
+    [[nodiscard]]
+    auto getTime() const -> Unsigned;
 
-    static double pressureToWidth(double val);
+    [[nodiscard]]
+    constexpr auto withPdf() const -> Bool;
+
+    void setPainter(WPainter &painter) noexcept;
+
+    [[nodiscard]]
+    constexpr auto getZoom() const -> double;
+
+    static auto pressureToWidth(double val) -> double;
 
     using LoadTypes = WFlags<UpdateEvent::UpdateEventType>;
 
@@ -68,7 +53,8 @@ private:
     constexpr WPainter &getPainter();
 };
 
-inline TabletUtils::TabletUtils(WPainter &painter, const Fn<bool()> &isPlay, const Fn<int()> &positionAudio, double m, Optional<Laser> laser, const Document &doc, bool withPdf, bool isExporting, const RectF &visibleArea)
+inline TabletUtils::TabletUtils(WPainter &painter, Bool isPlay, Unsigned positionAudio, Double m, Optional<Laser> laser,
+                                const Document &doc, Bool withPdf, Bool isExporting, const RectF &visibleArea)
     : _withPdf(withPdf)
     , _isExportingPdf(isExporting)
     , _isPlay(isPlay)
@@ -117,7 +103,7 @@ inline constexpr double TabletUtils::getZoom() const
     return this->_doc.getZoom();
 }
 
-inline int TabletUtils::getTime() const
+inline auto TabletUtils::getTime() const -> Unsigned
 {
-    return this->_positionAudio();
+    return this->_positionAudio;
 }

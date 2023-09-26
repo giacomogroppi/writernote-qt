@@ -9,30 +9,19 @@
 #include "core/Rect.h"
 #include "core/WPainter/WPainterSafe.h"
 
-void preview::get(WPixmap &ref, const Document &doc, bool withPdf, const int width)
+void preview::get(WPixmap &ref, const Document &doc, bool withPdf, int width)
 {
     WPainterUnsafe painter;
     const double size_orizzontale = doc.biggerX();
     const double delta = (double)width / (double)size_orizzontale;
 
-    auto isPlay = []() { return false; };
-    auto getPositionAudio = []() { return 0; };
-
     // we you only one page obviously
     const auto visibleArea = RectF{Page::getResolutionSize().castTo<double>()};
 
-    TabletUtils loader (painter, isPlay, getPositionAudio, delta, Optional<Laser>(), doc, true, false, visibleArea);
-
-    /*
-    TabletUtils::DataPaint dataPaint = {
-        .withPdf = withPdf,
-        .IsExportingPdf = false,
-        .isPlay = [] () { return false;},
-        .positionAudio = []() {return 0; },
-        .m = delta,
-        DATAPAINT_DEFINEREST
-    };
-    */
+    TabletUtils loader (painter, Bool(false),
+                        Unsigned(0), Double(delta),
+                        Optional<Laser>(), doc,
+                        Bool(true), Bool(false), visibleArea);
 
     if(doc.isEmpty())
         return;

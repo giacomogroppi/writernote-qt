@@ -11,8 +11,8 @@ private:
 
     void translate();
 
-    void draw(WPainter &painter, double m,
-              cbool withPdf);
+    void draw(WPainter &painter, Double m,
+              Bool withPdf);
 
 public:
     topdf(const WString &path, const Document &doc);
@@ -22,29 +22,18 @@ public:
 
 };
 
-inline void topdf::draw(WPainter &painter, double m, cbool withPdf)
+inline void topdf::draw(WPainter &painter, Double m, Bool withPdf)
 {
-    /*
-    TabletUtils::DataPaint dataPaint = {
-        .withPdf = withPdf,
-        .IsExportingPdf = true,
-        .isPlay = []() {return false; },
-        .positionAudio = []() {return 0; },
-        .m = m,
-        .laser = Optional<Laser>(),
-        DATAPAINT_DEFINEREST
-    };
-    TabletUtils::load(painter, *data, dataPaint);
-    */
     TabletUtils loader(painter,
-        [](){return false;},
-        [](){return 0;},
+        Bool(false),
+        Unsigned(0),
         m,
         Optional<Laser>(),
         *data,
         withPdf,
-        true,
-        RectF());
+        Bool(true),
+        RectF()
+    );
 
     loader.load(UpdateEvent::stroke | UpdateEvent::page | UpdateEvent::sheet);
 }

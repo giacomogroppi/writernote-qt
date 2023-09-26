@@ -12,6 +12,8 @@
 #endif // USE_QT
 #include "utils/WCommonScript.h"
 #include "core/String/WString.h"
+#include "core/Path/WPath.h"
+#include "core/WElement.h"
 
 class AudioRecord : public WObject
 {
@@ -27,19 +29,24 @@ public:
                          Fn<void(int)> durationChange);
     ~AudioRecord() override;
 
+    [[nodiscard]]
     auto isRecording() const -> bool;
+
+    [[nodiscard]]
     auto isPauseRecording() const -> bool;
+
+    [[nodiscard]]
     auto isStopped() const -> bool;
 
     void startRecord();
     void pauseRecord();
     void stopRecording();
 
-    void setOutputLocation(const WString &path);
+    void setOutputLocation(const WPath &path);
 
-    auto getCurrentTime() -> unsigned long;
+    auto getCurrentTime() -> UnsignedLong;
 
-    auto getPath() const -> const WString;
+    [[nodiscard]] auto getPath() const -> WPath;
 
 
     DEFINE_LISTENER(displayErrorMessage());

@@ -26,8 +26,8 @@ static void draw_laser(WPainter &painter, Laser &_laser, WPen &pen, double zoom)
 void TabletUtils::drawForAudio()
 {
     static int last_m_pos_ris   = -1;
-    const bool is_play          = _isPlay();
-    const auto m_pos_ris = (is_play) ? (_positionAudio()) : -1;
+    const bool is_play          = _isPlay;
+    const auto m_pos_ris = (is_play) ? (_positionAudio) : -1;
 
     if (un(is_play and !_isExportingPdf)) {
         // the idea is to trigger this view only when
@@ -107,7 +107,7 @@ void TabletUtils::load(LoadTypes types)
         this->loadLaser();
 }
 
-constexpr bool TabletUtils::withPdf() const
+constexpr auto TabletUtils::withPdf() const -> Bool
 {
     return this->_withPdf;
 }

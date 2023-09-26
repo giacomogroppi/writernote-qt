@@ -13,6 +13,8 @@
 #include "touch/UpdateEvent.h"
 #include "file/FileManager.h"
 #include "core/WOptionSetting/WOptionSettings.h"
+#include "audiorecord/audiorecord.h"
+#include "audioplay/audioplay.h"
 
 class TabletController : public WObject
 {
@@ -35,6 +37,9 @@ private:
     WPen _pen;
     Document *_doc;
 
+    UniquePtr<AudioRecord> _audioRecorder;
+    UniquePtr<AudioPlayer> _audioPlayer;
+
     mutable bool _needUpdate;
 
     mutable std::atomic<bool> _isDrawing;
@@ -44,16 +49,11 @@ private:
     Document &getDoc();
     const Document &getDoc() const;
 
-    const Fn<bool()> _isPlaying;
-    const Fn<int()> _getTimePlaying;
     void checkCreatePage();
     void draw(WPainter &painter, double width, WFlags<UpdateEvent::UpdateEventType> flags) const;
 public:
     explicit TabletController(
             WObject *parent,
-            const Fn<int()>&    getTimeRecording,
-            const Fn<bool()>&   isPlaying,
-            const Fn<int()>&    getTimePlaying,
             const WPath&        defaultPathSaving
     );
 
@@ -86,6 +86,18 @@ public:
      * */
     void setCurrentPathSaving(WString path);
 
+    void stopRecording() noexcept;
+    auto startRecording() noexcept -> WPair<int, WString>;
+
+    [[nodiscard]]
+    auto isRecording() const noexcept -> bool;
+
+    [[nodiscard]]
+    auto getAudioPlayer() const -> AudioPlayer&;
+
+    [[nodiscard]]
+    auto getAudioRecorder() const -> AudioRecord&;
+
     DEFINE_LISTENER(selectType(int type));
     DEFINE_LISTENER(selectColor(const WColor &color));
 
@@ -96,6 +108,8 @@ public:
     DEFINE_LISTENER(touchEnd(const PointF &point, double pressure));
 
     W_EMITTABLE_1(onNeedRefresh, const UpdateEvent&, event);
+
+    W_EMITTABLE_1(onPlayAudioStateChanged, bool, isPlaying);
 
     W_EMITTABLE_0(onToolChanged);
     W_EMITTABLE_0(onPropertyHide);

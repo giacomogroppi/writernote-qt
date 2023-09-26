@@ -11,9 +11,6 @@ extern StrokePre *__tmp;
 extern bool hasDraw;
 
 TabletController::TabletController(WObject *parent,
-                                   const Fn<int()>& getTimeRecording,
-                                   const Fn<bool()>& isPlaying,
-                                   const Fn<int()>& getTimePlaying,
                                    const WPath& defaultPathSaving)
     : WObject{parent}
     , _tools()
@@ -23,11 +20,13 @@ TabletController::TabletController(WObject *parent,
     , _doc(new Document)
     , _needUpdate(true)
     , _isDrawing(false)
-    , _isPlaying(isPlaying)
-    , _getTimePlaying(getTimePlaying)
 {
     // auto callUpdate = [this]() { W_EMIT_1(onNeedRefresh, UpdateEvent::makeAll()); };
-    auto getDoc = [this]() -> Document & { return this->getDoc(); };
+    auto getDoc = [this] () -> Document & { return this->getDoc(); };
+    auto getTimeRecording = [this] { return this->_audioRecorder->getCurrentTime(); };
+    auto getTimePlayer    = [this] { return this->_audioPlayer->getCurrentTime(); };
+    auto isRecording = [this] { return this->_audioRecorder->isRecording(); };
+    auto isPlaying =   [this] { return this->_audioPlayer->isPlaying(); };
 
     /**
      * Dobbiamo instanzare lo strokePre in questo punto devo codice
@@ -114,10 +113,14 @@ void TabletController::getImageStroke(WPainter &painter, double width) const
     TIME_START(time_load);
 
     TabletUtils loader(
-            painter, this->_isPlaying,
-            this->_getTimePlaying, width / Page::getWidth(),
-            Optional(_tools._laser), getDoc(),
-            true, false,
+            painter,
+            this->getAudioPlayer().isPlaying(),
+            this->getAudioPlayer().getCurrentTime(),
+            Double(width / Page::getWidth()),
+            Optional(_tools._laser),
+            getDoc(),
+            Bool(true),
+            Bool(false),
             RectF {
                 // top left of the page
                 getDoc().getPointFirstPage(),
@@ -145,10 +148,13 @@ void TabletController::getImagePage(WPainter &painter, double width) const
     TIME_START(time_load);
 
     TabletUtils loader(
-            painter, this->_isPlaying,
-            this->_getTimePlaying, width / Page::getWidth(),
+            painter,
+            getAudioPlayer().isPlaying(),
+            getAudioPlayer().getCurrentTime(),
+            Double(width / Page::getWidth()),
             Optional(_tools._laser), getDoc(),
-            true, false,
+            Bool(true),
+            Bool(false),
             RectF {
                 // top left of the page
                 getDoc().getPointFirstPage(),
@@ -186,10 +192,10 @@ void TabletController::draw(WPainter &painter, double width, WFlags<UpdateEvent:
     TIME_START(time_load);
 
     TabletUtils loader(
-            painter, this->_isPlaying,
-            this->_getTimePlaying, width / Page::getWidth(),
+            painter, getAudioPlayer().isPlaying(),
+            getAudioPlayer().getCurrentTime(), Double(width / Page::getWidth()),
             Optional(_tools._laser), getDoc(),
-            true, false,
+            Bool(true), Bool(false),
             RectF {
                 // top left of the page
                 getDoc().getPointFirstPage(),
