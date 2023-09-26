@@ -56,6 +56,8 @@ public:
 
 #ifdef USE_QT
     friend QDebug operator<<(QDebug d, const WPath& p);
+#else
+    friend std::ostream& operator<<(std::ostream& os, const WPath& dt);
 #endif // USE_QT
 };
 
@@ -184,3 +186,11 @@ inline WPath::operator std::filesystem::path () const
 {
     return _path;
 }
+
+#ifndef USE_QT
+inline std::ostream& operator<<(std::ostream& os, const WPath& dt)
+{
+    os << dt._path;
+    return os;
+}
+#endif // USE_QT

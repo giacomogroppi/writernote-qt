@@ -6,12 +6,12 @@
 
 #import <Foundation/Foundation.h>
 
-auto WOptionSettings::getPathWritable() -> WString
+auto WOptionSettings::getPathWritable() -> WPath
 {
     NSArray *documentDirectories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsPath = [documentDirectories firstObject];
 
-    return WString (documentsPath.UTF8String);
+    return WPath (documentsPath.UTF8String);
 }
 
 #endif

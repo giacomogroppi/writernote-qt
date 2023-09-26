@@ -4,10 +4,10 @@
 #include "core/WFile.h"
 #include "FileContainer/WZipWriter.h"
 
-int savefile::moveFileIntoZip(
+auto savefile::moveFileIntoZip(
         const WPath         &pathFile,
         WZipWriter          &writer,
-        const WByteArray    &nameInZip)
+        const WByteArray    &nameInZip) -> int
 {
     WByteArray tmp;
 
@@ -17,7 +17,7 @@ int savefile::moveFileIntoZip(
 
     W_ASSERT(static_cast<size_t>(tmp.size()) == xmlstruct::get_size_file(pathFile));
 
-    if(writer.write(tmp.constData(), tmp.size(), nameInZip))
+    if(writer.write(tmp.constData(), tmp.size(), nameInZip.constData()))
         return ERROR;
 
     return OK;

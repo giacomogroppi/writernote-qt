@@ -4,14 +4,15 @@
 #include "WVariant.h"
 #include "core/WMap.h"
 #include "core/String/WString.h"
+#include "core/Path/WPath.h"
 
-class WOptionSettings
+class WOptionSettings final: public WOptionSettingsDefault
 {
 private:
     static constexpr auto nameFileConfiguration = "writernote_configuration.txt";
     WMap<WString, WByteArray, WStringHash> _map;
     
-    static auto getPathWritable() -> WString;
+    static auto getPathWritable() -> WPath;
 public:
     WOptionSettings() = default;
     auto begin() -> bool;

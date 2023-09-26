@@ -22,7 +22,7 @@ FileContainer::FileContainer(WPath path)
     static_assert_type(version, int);
     static_assert (sizeof (version) == 4);
 
-    file.read(version);
+    file.ReadableAbstract::read(version);
 
     switch (version) {
         case 0:

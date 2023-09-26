@@ -50,17 +50,10 @@ public:
         requires (std::is_arithmetic_v<T> && !std::is_pointer_v<T>)
     auto write(const T& data) -> int;
 
-
     /**
      * \return < 0 in case of error
      * */
     auto read (void *to, size_t size) const -> int final;
-
-    /**
-     * \return < 0 in case of error
-     * */
-    template <class T>
-    auto read (T &ref) -> int requires (!std::is_pointer<T>::value && !std::is_class<T>::value);
 
     auto close() -> bool;
     auto size() const -> size_t;
@@ -176,13 +169,5 @@ template<class T>
 inline auto WFile::write(const T &data) -> int
 {
     return write(&data, sizeof(data));
-}
-
-template<class T>
-inline auto WFile::read(T &ref) -> int requires (!std::is_pointer<T>::value && !std::is_class<T>::value)
-{
-    if (fread(&ref, sizeof (ref), 1, this->_fp) != 1)
-        return -1;
-    return 0;
 }
 

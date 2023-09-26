@@ -1,10 +1,10 @@
 #pragma once
 
 #include <functional>
-
+#include <type_traits>
 
 template <typename T>
-    requires (std::is_literal_type<T>::value)
+    requires (!std::is_arithmetic<T>::value)
 class WElement
 {
 private:

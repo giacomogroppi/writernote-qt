@@ -27,16 +27,12 @@ public:
     WString toUpper() const;
     WString lower() const;
 
-    [[nodiscard]]
     auto isEmpty() const -> bool;
 
-    [[nodiscard]]
     auto size() const -> unsigned long;
 
-    [[nodiscard]]
     auto toUtf8() const -> const WByteArray&;
 
-    [[nodiscard]]
     auto split(char character) const -> WListFast<WString>;
 
     auto at(unsigned long index) const -> char;
@@ -79,12 +75,12 @@ public:
     Iterator begin() noexcept { return _data.begin(); };
     Iterator end()   noexcept { return _data.end(); };
 
-    [[nodiscard]] auto constBegin() const noexcept  { return _data.constBegin(); }
-    [[nodiscard]] auto constEnd()   const noexcept  { return _data.constEnd(); }
-    [[nodiscard]] auto cBegin() const noexcept      { return _data.constBegin(); }
-    [[nodiscard]] auto cEnd()   const noexcept      { return _data.constEnd(); }
-    [[nodiscard]] auto begin() const noexcept       { return _data.constBegin(); }
-    [[nodiscard]] auto end()   const noexcept       { return _data.constEnd(); }
+    auto constBegin() const noexcept  { return _data.constBegin(); }
+    auto constEnd()   const noexcept  { return _data.constEnd(); }
+    auto cBegin() const noexcept      { return _data.constBegin(); }
+    auto cEnd()   const noexcept      { return _data.constEnd(); }
+    auto begin() const noexcept       { return _data.constBegin(); }
+    auto end()   const noexcept       { return _data.constEnd(); }
 
     friend bool operator<(const WString &first, const WString &second);
 
@@ -92,6 +88,10 @@ public:
 
     auto toStdString() const noexcept -> std::string;
 
+    auto contains(std::initializer_list<char> list) const -> bool;
+    
+    auto operator+(char c) const -> WString;
+    
     auto operator>(const WString &other) const noexcept -> bool;
     auto operator>=(const WString &other) const noexcept -> bool;
     auto operator<=(const WString &other) const noexcept -> bool;
@@ -100,6 +100,24 @@ public:
     auto operator=(const WString &other) noexcept -> WString& = default;
     auto operator=(WString &&other) noexcept -> WString& = default;
 };
+
+inline auto operator+(char c, const WString& string) -> WString
+{
+    WString result;
+    result.reserve(1 + string.size());
+    
+    result += c;
+    result += string;
+        
+    return result;
+}
+
+inline auto WString::operator+(char c) const -> WString
+{
+    WString result(*this);
+    result += c;
+    return result;
+}
 
 inline auto WString::size() const -> unsigned long
 {
@@ -427,4 +445,14 @@ inline std::ostream& operator<<(std::ostream& os, const WString& dt)
 {
     os << dt.toUtf8();
     return os;
+}
+
+inline auto WString::contains(std::initializer_list<char> list) const -> bool
+{
+    for (const auto c: std::as_const(list)) {
+        if (indexOf (c) < 0)
+            return false;
+    }
+    
+    return true;
 }

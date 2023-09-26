@@ -24,7 +24,9 @@ public:
 
     explicit WVariant (const void *raw, int size);
 
-    WVariant (const WByteArray &data);
+    // load data
+    WVariant (const WString& data);
+    WVariant (const WByteArray& data);
     WVariant (int data);
 
     auto toInt() -> int;

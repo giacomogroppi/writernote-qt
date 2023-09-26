@@ -13,7 +13,9 @@ public:
     virtual int read (void *to, size_t size) const = 0;
 
     template <class T>
-            requires (std::is_arithmetic_v<T> && sizeof (T) <= sizeof(void*))
+            requires (std::is_arithmetic_v<T> 
+                      && sizeof (T) <= sizeof(void*)
+                      && std::is_pointer<T>::value == false)
     auto read (T &value)
     {
         return read (&value, sizeof(value));
