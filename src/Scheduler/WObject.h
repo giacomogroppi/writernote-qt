@@ -55,7 +55,17 @@
     W_EMITTABLE_PRIVATE_FUNC_2(name_signals, type1, name1, type2, name2) \
     W_EMITTABLE_PRIVATE_REGI(name_signals, type1, type2)                                              \
 
-#define DEFINE_LISTENER(name_signals) void name_signals
+#define DEFINE_LISTENER_0(name_signals) \
+    void name_signals();                 \
+    Fn<void()> _##name_signals = [this] { name_signals(); }
+
+#define DEFINE_LISTENER_1(name_signals, type0, name0) \
+    void name_signals(type0 name0); \
+    Fn<void(type0)> _##name_signals = [this] (type0 name0) { name_signals(name0); }
+
+#define DEFINE_LISTENER_2(name_signals, type0, name0, type1, name2) \
+    void name_signals(type0 name0, type1 name1);                     \
+    Fn<void(type0, type1)> _##name_signals = [this] (type0 name0, type1 name1) { name_signals(name0, name1); }
 
 #define W_EMIT_0(name_signals) \
     do {                       \
@@ -65,12 +75,13 @@
     } \
     while(0)
 
-#define W_EMIT_1(name_signals, value) \
-    do { \
-        for (const auto &ref##name_signals: std::as_const(w_object_observer_##name_signals)) { \
-            ref##name_signals(value); \
-        } \
-    } while(0)
+#define W_EMIT_1(name_signals, value)                                                           \
+    {                                                                                           \
+        const auto __value = value;                                                             \
+        for (const auto &ref##name_signals: std::as_const(w_object_observer_##name_signals)) {  \
+            ref##name_signals(__value);                                                         \
+        }                                                                                       \
+    }
 
 #define W_EMIT_2(name_signals, value1, value2) \
     do { \
@@ -79,8 +90,11 @@
         } \
     } while(0)
 
-#define w_connect_lister(object, name_signals, listener) \
+#define w_connect_lambda(object, name_signals, listener) \
     (object)->reg##name_signals(listener)
+
+#define w_connect_listener(object, name_signals, listener, signal) \
+    (object)->reg##name_signals((listener)->_##signal)
 
 class WObject {
 private:
@@ -89,4 +103,10 @@ private:
 public:
     explicit WObject(WObject *parent);
     virtual ~WObject();
+
+    /*
+    template <class T>
+            requires (std::is_pointer<T>::value)
+    static void connect(T object, name_signal)*/
 };
+

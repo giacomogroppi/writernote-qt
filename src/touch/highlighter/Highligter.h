@@ -29,10 +29,10 @@ public:
     int getType() const final;
     static constexpr int type();
 
-    DEFINE_LISTENER(setHighligterPressureConst());
-    DEFINE_LISTENER(setHighligterSize());
-    DEFINE_LISTENER(setSize(double size));
-    DEFINE_LISTENER(setAlfa(int alfa));
+    DEFINE_LISTENER_0(setHighligterPressureConst);
+    DEFINE_LISTENER_0(setHighligterSize);
+    DEFINE_LISTENER_1(setSize, double, size);
+    DEFINE_LISTENER_1(setAlfa, int, alfa);
 
 public:
     pressure_t getSize(double pressure);

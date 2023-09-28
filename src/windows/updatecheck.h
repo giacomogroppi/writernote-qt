@@ -43,7 +43,7 @@ private:
     Fn<void(const WString &message, const WString &version)> _showDialog;
     Fn<void(bool)> _setVisibleUpdateButton;
 
-    DEFINE_LISTENER(managerFinished());
+    DEFINE_LISTENER_0(managerFinished);
     /** result == true there are update */
     W_EMITTABLE_1(result, bool, result);
 

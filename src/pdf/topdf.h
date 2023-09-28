@@ -26,7 +26,7 @@ inline void topdf::draw(WPainter &painter, Double m, Bool withPdf)
 {
     TabletUtils loader(painter,
         Bool(false),
-        Unsigned(0),
+        Unsigned(0u),
         m,
         Optional<Laser>(),
         *data,

@@ -24,7 +24,7 @@ TabletController::TabletController(WObject *parent,
     // auto callUpdate = [this]() { W_EMIT_1(onNeedRefresh, UpdateEvent::makeAll()); };
     auto getDoc = [this] () -> Document & { return this->getDoc(); };
     auto getTimeRecording = [this] { return this->_audioRecorder->getCurrentTime(); };
-    auto getTimePlayer    = [this] { return this->_audioPlayer->getCurrentTime(); };
+    auto getTimePlayer    = [this] { return this->_audioPlayer->getCurrentTimeSecond(); };
     auto isRecording = [this] { return this->_audioRecorder->isRecording(); };
     auto isPlaying =   [this] { return this->_audioPlayer->isPlaying(); };
 
@@ -115,7 +115,7 @@ void TabletController::getImageStroke(WPainter &painter, double width) const
     TabletUtils loader(
             painter,
             this->getAudioPlayer().isPlaying(),
-            this->getAudioPlayer().getCurrentTime(),
+            this->getAudioPlayer().getCurrentTimeSecond(),
             Double(width / Page::getWidth()),
             Optional(_tools._laser),
             getDoc(),
@@ -150,7 +150,7 @@ void TabletController::getImagePage(WPainter &painter, double width) const
     TabletUtils loader(
             painter,
             getAudioPlayer().isPlaying(),
-            getAudioPlayer().getCurrentTime(),
+            getAudioPlayer().getCurrentTimeSecond(),
             Double(width / Page::getWidth()),
             Optional(_tools._laser), getDoc(),
             Bool(true),
@@ -193,7 +193,7 @@ void TabletController::draw(WPainter &painter, double width, WFlags<UpdateEvent:
 
     TabletUtils loader(
             painter, getAudioPlayer().isPlaying(),
-            getAudioPlayer().getCurrentTime(), Double(width / Page::getWidth()),
+            getAudioPlayer().getCurrentTimeSecond(), Double(width / Page::getWidth()),
             Optional(_tools._laser), getDoc(),
             Bool(true), Bool(false),
             RectF {
@@ -299,7 +299,7 @@ TabletController::~TabletController()
 
 void TabletController::setCurrentPathSaving(WString path)
 {
-    this->_fileManager->moveTo(WPath(path));
+    this->_fileManager->moveTo(WPath(std::move(path)));
 }
 
 auto TabletController::getFileManager() -> const SharedPtr<FileManager>&
@@ -323,4 +323,14 @@ auto TabletController::openFile(const WString &name) -> int
     Scheduler::addTaskMainThread(new WTaskFunction(nullptr, methodUpdate, true));
 
     return 0;
+}
+
+auto TabletController::getAudioPlayer() const -> AudioPlayer &
+{
+    return *_audioPlayer;
+}
+
+auto TabletController::getAudioRecorder() const -> AudioRecord &
+{
+    return *_audioRecorder;
 }

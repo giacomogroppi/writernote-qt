@@ -39,31 +39,31 @@ void WPixmap::fill(const WColor &color)
     QPixmap::fill(color.toQColor());
 }
 
-WImage WPixmap::toImage() const
+auto WPixmap::toImage() const -> WImage
 {
     return WImage {
-        std::move(QPixmap::toImage())
+        QPixmap::toImage()
     };
 }
 
-bool WPixmap::operator==(const WPixmap &other) const
+auto WPixmap::operator==(const WPixmap &other) const -> bool
 {
     const QImage image1 = toImage();
     const QImage image2 = other.toImage();
     return image1 == image2;
 }
 
-bool WPixmap::loadFromData(const WByteArray &data, const char *formact)
+auto WPixmap::loadFromData(const WByteArray &data, const char *formact) -> bool
 {
     return QPixmap::loadFromData(data, formact);
 }
 
-bool WPixmap::isNull() const
+auto WPixmap::isNull() const -> bool
 {
     return QPixmap::isNull();
 }
 
-size_t WPixmap::getSizeInFile(const WPixmap &source)
+auto WPixmap::getSizeInFile(const WPixmap &source) -> size_t
 {
     WByteArray arr;
     const auto s = source.save_and_size(arr);
@@ -71,7 +71,7 @@ size_t WPixmap::getSizeInFile(const WPixmap &source)
     return s;
 }
 
-size_t WPixmap::save_and_size(WByteArray &arr) const
+auto WPixmap::save_and_size(WByteArray &arr) const -> size_t
 {
     W_ASSERT(arr.size() == 0);
     QBuffer buffer(&arr);
@@ -81,7 +81,7 @@ size_t WPixmap::save_and_size(WByteArray &arr) const
     return arr.size();
 }
 
-WRect WPixmap::rect() const
+auto WPixmap::rect() const -> WRect
 {
     const auto qtRect = QPixmap::rect();
 

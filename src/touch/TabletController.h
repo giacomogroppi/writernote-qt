@@ -46,7 +46,7 @@ private:
 
     void setAndCallTool(Tools *tool);
 
-    Document &getDoc();
+    auto getDoc() -> Document &;
     const Document &getDoc() const;
 
     void checkCreatePage();
@@ -79,6 +79,7 @@ public:
      * Il medoto lancia automaticamente i segnali per segnalare che è necessario ridisegnare.
      * \return &lt 0 in caso di errore nell'apertura del file
      * */
+     // TODO: make this method return WPair<int, WString> with a proper error message returned
     auto openFile(const WString &name) -> int;
 
     /**
@@ -86,26 +87,20 @@ public:
      * */
     void setCurrentPathSaving(WString path);
 
-    void stopRecording() noexcept;
-    auto startRecording() noexcept -> WPair<int, WString>;
-
-    [[nodiscard]]
-    auto isRecording() const noexcept -> bool;
-
     [[nodiscard]]
     auto getAudioPlayer() const -> AudioPlayer&;
 
     [[nodiscard]]
     auto getAudioRecorder() const -> AudioRecord&;
 
-    DEFINE_LISTENER(selectType(int type));
-    DEFINE_LISTENER(selectColor(const WColor &color));
+    DEFINE_LISTENER_1(selectType, int, type);
+    DEFINE_LISTENER_1(selectColor, const WColor&, color);
 
-    DEFINE_LISTENER(positionDocChanged(const PointF &newPosition));
+    DEFINE_LISTENER_1(positionDocChanged, const PointF &, newPosition);
 
-    DEFINE_LISTENER(touchBegin(const PointF &point, double pressure));
-    DEFINE_LISTENER(touchUpdate(const PointF &point, double pressure));
-    DEFINE_LISTENER(touchEnd(const PointF &point, double pressure));
+    DEFINE_LISTENER_2(touchBegin, const PointF &, point, double, pressure);
+    DEFINE_LISTENER_2(touchUpdate, const PointF &, point, double, pressure);
+    DEFINE_LISTENER_2(touchEnd, const PointF &, point, double, pressure);
 
     W_EMITTABLE_1(onNeedRefresh, const UpdateEvent&, event);
 
