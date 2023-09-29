@@ -59,8 +59,7 @@ public:
     auto size() const -> size_t;
 
     static auto exits(const std::string &path) -> bool;
-    [[deprecated]]
-    static auto fileExist(const WByteArray &to) -> int;
+
     static auto remove(const WPath& path) -> int;
     static auto readFile(WByteArray &to, const WPath& path) -> int;
     static auto saveArrIntoFile(const WByteArray &arr, const WPath &path) -> int;
@@ -69,8 +68,6 @@ public:
     auto operator==(const WFile &other) const -> bool;
     auto operator!=(const WFile &other) const -> bool;
 
-    //[[deprecated]]
-    //static auto exists(const WByteArray& array) noexcept -> bool;
     static auto exists(const std::filesystem::path &path) noexcept -> bool;
 
     [[nodiscard]]

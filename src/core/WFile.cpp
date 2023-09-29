@@ -55,7 +55,6 @@ auto WFile::write(const void *data, size_t size) -> int
 {
     W_ASSERT(this->_fp);
     const auto res = fwrite(data, size, 1, this->_fp);
-    //std::ofstream stream("ciao", std::ios_base::binary)
 
     if(un(res != 1))
         return -1;
@@ -76,16 +75,6 @@ auto WFile::close() -> bool
     const auto res = fclose(_fp);
     _fp = nullptr;
     return res == 0;
-}
-
-auto WFile::fileExist(const WByteArray &to) -> int
-{
-    using namespace std;
-    using namespace std::filesystem;
-
-    if (exits(to.toStdString()))
-        return 0;
-    return -1;
 }
 
 auto WFile::readFile(WByteArray &to, const WPath& pathFile) -> int
@@ -124,4 +113,9 @@ auto WFile::saveArrIntoFile(const WByteArray &arr, const WPath &path) -> int
 auto WFile::exits(const std::string &path) -> bool
 {
     return std::filesystem::exists(path);
+}
+
+auto WFile::remove(const WPath& path) -> int
+{
+    return std::filesystem::remove(path) ? 0 : -1;
 }

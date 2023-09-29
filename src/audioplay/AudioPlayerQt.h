@@ -35,12 +35,19 @@ public:
     auto getCurrentTimeMilliseconds() const -> Unsigned;
 
     [[nodiscard]]
+    auto getCurrentDurationSeconds() const -> Unsigned;
+
+    [[nodiscard]]
     auto isPlaying() const -> Bool;
 
-    W_EMITTABLE_0(onAudioStart);
+    void setPositionSecond(Unsigned i) noexcept;;
+
+    W_EMITTABLE_0(onAudioStart)
+
     W_EMITTABLE_0(onAudioStop);
     W_EMITTABLE_1(onTimeChanged, Unsigned, timeInSecond);
     W_EMITTABLE_0(onAudioEnd);
+    W_EMITTABLE_0(onDurationChanged);
 };
 
 #endif // USE_QT

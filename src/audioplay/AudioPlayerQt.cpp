@@ -62,4 +62,18 @@ auto AudioPlayer::getCurrentTimeMilliseconds() const -> Unsigned
     return getCurrentTimeSecond() * Unsigned(1000u);
 }
 
+auto AudioPlayer::getCurrentDurationSeconds() const -> Unsigned
+{
+    const auto current = static_cast<unsigned>(this->_mediaPlayer.duration());
+
+    W_ASSERT(_mediaPlayer.duration() >= 0 and _mediaPlayer.duration() <= UINT32_MAX);
+
+    return Unsigned (current / 1000u);
+}
+
+void AudioPlayer::setPositionSecond(Unsigned i) noexcept
+{
+    this->_mediaPlayer.setPosition(i * 1000u);
+}
+
 #endif // USE_QT
