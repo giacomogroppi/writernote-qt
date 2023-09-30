@@ -34,7 +34,7 @@ private:
     static WListFast<Directory> getAllDir(const WPath &path);
 public:
     explicit FileManager(WObject *parent, WPath basePath, bool createDir);
-    ~FileManager() final;
+    ~FileManager() final = default;
 
     [[nodiscard]]
     auto getDirectory() const -> const WListFast<Directory> &;
@@ -118,4 +118,9 @@ inline auto FileManager::openFile(const WString &name, const Extention &extensio
         return {-1, {}};
 
     return {0, {}};
+}
+
+inline auto FileManager::getDirectory() const -> const WListFast<Directory> &
+{
+    return this->_dir;
 }

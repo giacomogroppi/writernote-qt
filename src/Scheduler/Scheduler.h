@@ -13,6 +13,7 @@
 #include "core/WVector.h"
 #include "core/WHeap.h"
 #include "WTimer.h"
+#include "core/WElement.h"
 
 class Scheduler final: public WObject
 {
@@ -43,7 +44,9 @@ private:
     std::condition_variable _c;
 
     static void manageExecution (WTask *task);
-    
+
+    static auto numberOfThread () -> Unsigned;
+
 public:
     explicit Scheduler();
     ~Scheduler() final;

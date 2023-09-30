@@ -11,13 +11,17 @@ extern StrokePre *__tmp;
 extern bool hasDraw;
 
 TabletController::TabletController(WObject *parent,
-                                   const WPath& defaultPathSaving)
+                                   const WPath& defaultPathSaving,
+                                   Fn<void(const WString&)> showGenericError)
     : WObject{parent}
+    , _showGenericError(std::move(showGenericError))
     , _tools()
     , _settings()
     , _fileManager(nullptr)
     , _color(color_black)
     , _doc(new Document)
+    , _audioRecorder(new AudioRecord(nullptr, _showGenericError))
+    , _audioPlayer(new AudioPlayer(nullptr))
     , _needUpdate(true)
     , _isDrawing(false)
 {

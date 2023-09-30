@@ -4,8 +4,8 @@
 
 #ifdef USE_QT
 
-AudioPlayer::AudioPlayer()
-    : WObject(nullptr)
+AudioPlayer::AudioPlayer(WObject *parent)
+    : WObject(parent)
     , _mediaPlayer(nullptr)
     , _buffer(nullptr)
     , _dataArray()

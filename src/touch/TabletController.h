@@ -19,6 +19,8 @@
 class TabletController : public WObject
 {
 private:
+    Fn<void(const WString&)> _showGenericError;
+
     struct {
         Highlighter *_highlighter;
         Pen *_pen;
@@ -54,7 +56,8 @@ private:
 public:
     explicit TabletController(
             WObject *parent,
-            const WPath&        defaultPathSaving
+            const WPath&        defaultPathSaving,
+            Fn<void(const WString&)> showGenericError
     );
 
     ~TabletController() override;

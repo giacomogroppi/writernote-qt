@@ -27,6 +27,8 @@
     ClassName(const ClassName &) = delete;\
     ClassName &operator=(const ClassName &) = delete;
 
+#define nd [[nodiscard]]
+
 template<typename R>
 using Fn = std::function<R>;
 

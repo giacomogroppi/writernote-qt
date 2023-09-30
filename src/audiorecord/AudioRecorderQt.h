@@ -25,13 +25,13 @@ public:
     ~AudioRecord() override;
 
     [[nodiscard]]
-    auto isRecording() const -> bool;
+    auto isRecording() const -> Bool;
 
     [[nodiscard]]
-    auto isPauseRecording() const -> bool;
+    auto isPauseRecording() const -> Bool;
 
     [[nodiscard]]
-    auto isStopped() const -> bool;
+    auto isStopped() const -> Bool;
 
     void startRecord();
     void pauseRecord();
@@ -58,19 +58,19 @@ private:
     friend class audioqualityoption;
 };
 
-inline bool AudioRecord::isRecording() const
+inline auto AudioRecord::isRecording() const -> Bool
 {
-    return this->recorder->recorderState() == QMediaRecorder::RecordingState;
+    return Bool(this->recorder->recorderState() == QMediaRecorder::RecordingState);
 }
 
-inline bool AudioRecord::isPauseRecording() const
+inline auto AudioRecord::isPauseRecording() const -> Bool
 {
-    return this->recorder->recorderState() == QMediaRecorder::PausedState;
+    return Bool(this->recorder->recorderState() == QMediaRecorder::PausedState);
 }
 
-inline bool AudioRecord::isStopped() const
+inline auto AudioRecord::isStopped() const -> Bool
 {
-    return recorder->recorderState() == QMediaRecorder::StoppedState;
+    return Bool(recorder->recorderState() == QMediaRecorder::StoppedState);
 }
 
 inline void AudioRecord::startRecord()

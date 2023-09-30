@@ -21,7 +21,7 @@ private:
     UniquePtr<QBuffer> _buffer;
     QByteArray _dataArray;
 public:
-    AudioPlayer ();
+    AudioPlayer (WObject *parent);
 
     auto setData(const AudioData& audioData) -> void;
 

@@ -21,14 +21,6 @@ FileManager::FileManager(WObject *parent, WPath basePath, bool createDir)
     }
 }
 
-FileManager::~FileManager() = default;
-
-// TODO: move it to .h file
-auto FileManager::getDirectory() const -> const WListFast<Directory> &
-{
-    return this->_dir;
-}
-
 auto FileManager::getCurrentFiles() const -> const WListFast<WFile>&
 {
     if (_dir.isEmpty())

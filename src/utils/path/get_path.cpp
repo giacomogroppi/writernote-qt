@@ -10,18 +10,6 @@
 #define POS_HOME "USERPROFILE"
 #endif
 
-#define FOLDERNAME ".writernote"
-#define NAME_USER "USERNAME" /* saim form linux and windows */
-
-static bool createTempFolder(const WString &path);
-
-static bool createTempFolder(const WString &path){
-    if(!Directory::exists(path.toUtf8())){
-        return Directory::createDir(path.toUtf8());
-    }
-
-    return true;
-}
 
 /*
  * the function does not check if the

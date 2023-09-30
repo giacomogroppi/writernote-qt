@@ -82,15 +82,6 @@ auto Directory::removeDir(const WPath& path) -> int
     return -1;
 }
 
-int Directory::removeDir(const WByteArray& path)
-{
-    const auto res = std::filesystem::remove_all(path.constData());
-
-    if (res)
-        return 0;
-    return -1;
-}
-
 auto Directory::createDir(const WPath& path) -> int
 {
     if (std::filesystem::create_directories(path))
@@ -98,22 +89,19 @@ auto Directory::createDir(const WPath& path) -> int
     return -1;
 }
 
-auto Directory::createDir(const WByteArray& path) -> int
-{
-    if (std::filesystem::create_directories(path.constData()))
-        return 0;
-    return -1;
-}
-
-bool Directory::exists(const WByteArray &path)
-{
-    return std::filesystem::is_directory(path.toStdString());
-}
-
 auto Directory::removeFile(const WString& name) -> int
 {
     std::error_code error;
 
     std::filesystem::remove(_path / std::filesystem::path(name.toStdString()), error);
+
+    if (not error.operator bool()) {
+        for (int i = 0; i < _files.size(); i++)
+            if (_files[i].getName() == name) {
+                _files.remove(i);
+                break;
+            }
+    }
+
     return error.operator bool() ? -1: 0;
 }

@@ -19,8 +19,7 @@ Scheduler::Scheduler()
 
     instance = this;
 
-    // TODO --> change this parameter
-    _threads.reserve(8);
+    _threads.reserve(numberOfThread());
     std::vector<std::thread> thread;
 
     const auto functionThread = [this]() {

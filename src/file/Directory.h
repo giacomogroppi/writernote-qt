@@ -15,14 +15,22 @@ private:
     static auto getAllFiles(const WPath& path) -> WListFast<WFile>;
 
 public:
-    [[deprecated]]
+    /**
+     * \brief Constructor of the class with a given path. This method doesn't create the folder in case
+     *  it does not exist
+     * \param path The path the the folder
+     * */
     explicit Directory (const WPath& path);
+
     Directory (Directory &&other) noexcept = default;
     Directory (const Directory &other) noexcept = delete;
     ~Directory();
 
-    [[nodiscard]]
-    auto getFiles() const -> const WListFast<WFile>&;
+    /**
+     * \brief Getter
+     * \return The list of files [open or close] in the folder
+     * */
+    nd auto getFiles() const -> const WListFast<WFile>&;
 
     /**
      * requires
@@ -30,29 +38,21 @@ public:
     */
     template <class T>
             requires (std::is_class<T>::value)
-    auto addFiles(const WPath &position, const T& writable) -> int;
+    auto addFiles(const WPath &position, const T& objectToWrite) -> int;
 
-    [[nodiscard]]
-    auto allDirsInFolder() const -> WListFast<WByteArray>;
+    nd auto allDirsInFolder() const -> WListFast<WByteArray>;
 
     auto moveAllFilesTo(const WPath &newPath) -> void;
 
-    [[nodiscard]]
-    auto getFolderName() const -> WString;
+    nd auto getFolderName() const -> WString;
 
-    auto removeFile(const WString& name) -> int;
+    nd auto removeFile(const WString& name) -> int;
 
-    [[deprecated]]
-    static auto removeDir(const WByteArray &path) -> int;
-    static auto removeDir(const WPath& path) -> int;
+    nd static auto removeDir(const WPath& path) -> int;
 
-    [[deprecated]]
-    static auto createDir(const WByteArray &path) -> int;
-    static auto createDir(const WPath& path) -> int;
+    nd static auto createDir(const WPath& path) -> int;
 
-    [[deprecated]]
-    static auto exists(const WByteArray &path) -> bool;
-    static auto exists(const WPath& path) -> int;
+    nd static auto exists(const WPath& path) -> bool;
 
     auto operator==(const Directory &other) const -> bool;
     auto operator!=(const Directory &other) const -> bool;
