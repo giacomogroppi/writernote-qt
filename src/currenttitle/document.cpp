@@ -72,7 +72,7 @@ size_t Document::createSingleControll() const
 void Document::reset()
 {
     this->_audioRecordStatus = Document::not_record;
-    this->_audioPositionPath = "";
+    this->_audioPositionPath.clear();
 
     this->_audioRawData.clear();
 

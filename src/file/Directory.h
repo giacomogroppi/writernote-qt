@@ -32,12 +32,7 @@ public:
      * */
     nd auto getFiles() const -> const WListFast<WFile>&;
 
-    /**
-     * requires
-     *  file in position don't exists
-    */
-    template <class T>
-            requires (std::is_class<T>::value)
+    template <class T> requires (std::is_class<T>::value)
     auto addFiles(const WPath &position, const T& objectToWrite) -> int;
 
     nd auto allDirsInFolder() const -> WListFast<WByteArray>;
@@ -75,8 +70,7 @@ template <class T>
     requires (std::is_class<T>::value)
 inline auto Directory::addFiles(const WPath &position, const T& objectToWrite) -> int
 {
-    if (WFile::exists(position))
-        return -1;
+    const auto exists = WFile::exists(position);
 
     WFile file (position, WFile::WFileWrite);
 
@@ -85,7 +79,8 @@ inline auto Directory::addFiles(const WPath &position, const T& objectToWrite) -
 
     file.close();
 
-    this->_files.append(WFile(position));
+    if (not exists)
+        this->_files.append(WFile(position));
 
     return 0;
 }

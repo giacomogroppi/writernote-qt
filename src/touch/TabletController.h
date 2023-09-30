@@ -38,6 +38,7 @@ private:
     WColor _color;
     WPen _pen;
     Document *_doc;
+    WString _nameDoc;
 
     UniquePtr<AudioRecord> _audioRecorder;
     UniquePtr<AudioPlayer> _audioPlayer;

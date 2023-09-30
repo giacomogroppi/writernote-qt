@@ -71,16 +71,24 @@ public:
 
     template <class T>
             requires (std::is_class<T>::value)
-    [[nodiscard]]
-    auto openFile (const WString& name, const Extention& extension) -> WPair<int, T>;
+    nd auto openFile (const WString& name, const Extention& extension) -> WPair<int, T>;
+
+    template <class T> requires (std::is_class<T>::value)
+    nd auto updateFile (const WString& name, const T& file, const Extention& extension) -> int;
 
     W_EMITTABLE_0(onDirectoryListChanged);
     W_EMITTABLE_0(onCurrentDirectoryChanged);
     W_EMITTABLE_0(onListFilesChanged);
 };
 
-template <class T>
-    requires (std::is_class<T>::value)
+// TODO: small refactor
+template <class T> requires (std::is_class<T>::value)
+inline auto FileManager::updateFile(const WString &name, const T &file, const Extention &extension) -> int
+{
+    return createFile(name, file, extension);
+}
+
+template <class T> requires (std::is_class<T>::value)
 inline auto FileManager::createFile(const WString& name, const T &file, const Extention &extension) -> int
 {
     auto& dir = _dir[_selected];
@@ -106,6 +114,9 @@ inline auto FileManager::openFile(const WString &name, const Extention &extensio
             / (name + '.' + extension);
 
     WFile file (path, WFile::WFileReadOnly);
+
+    if (not file.isValid())
+        return {-1, {}};
 
     const auto result = VersionFileController::load (file);
 

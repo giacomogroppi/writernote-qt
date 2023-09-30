@@ -322,6 +322,7 @@ auto TabletController::openFile(const WString &name) -> int
         return -1;
 
     *this->_doc = std::move (data.second);
+    this->_nameDoc = name;
 
     // we need to give the ui the time to switch
     Scheduler::addTaskMainThread(new WTaskFunction(nullptr, methodUpdate, true));
@@ -337,4 +338,18 @@ auto TabletController::getAudioPlayer() const -> AudioPlayer &
 auto TabletController::getAudioRecorder() const -> AudioRecord &
 {
     return *_audioRecorder;
+}
+
+auto TabletController::closeCurrentFile() -> int
+{
+    const auto result = this->_fileManager->updateFile(_nameDoc, *_doc, Extention::makeWriternote());
+
+    if (result < 0)
+        return result;
+
+    _doc->reset();
+    _nameDoc.clear();
+
+    W_EMIT_1(onNeedRefresh, UpdateEvent::makeAll());
+    W_EMIT_1(onNumberOfPageChanged, 0);
 }
