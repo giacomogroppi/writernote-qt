@@ -183,9 +183,11 @@ StrokeForPage &StrokeForPage::operator=(StrokeForPage &&other) noexcept
 
 auto StrokeForPage::operator==(const StrokeForPage &other) const noexcept -> bool
 {
-    return  this->_needToUpdate == other._needToUpdate &&
-            this->_data == other._data &&
-            this->_pix == other._pix;
+    const auto needToUpdateEquals = this->_needToUpdate == other._needToUpdate;
+    const auto dataEquals = *_data == *other._data;
+    const auto pixmapEquals = this->_pix == other._pix;
+
+    return needToUpdateEquals and dataEquals and pixmapEquals;
 }
 
 auto StrokeForPage::load(const VersionFileController &versionController,

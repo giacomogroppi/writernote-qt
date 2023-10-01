@@ -15,14 +15,13 @@
 #include "core/WPair.h"
 #include "WElement.h"
 
-
 // TODO: do some refactoring
 // this list if O(1) in index access
 template <class T>
 class WListFast
 {
 private:
-    static constexpr auto debug = true;
+    static constexpr auto debug = false;
     void test() const;
 
     using typeOfSize = int;
@@ -343,7 +342,7 @@ inline auto WListFast<T>::write(
 {
     static_assert_type(list._size, int);
 
-    WDebug(true, "Saving: " << typeid(T).name() << list._size);
+    WDebug(debug, "Saving: " << typeid(T).name() << list._size);
 
     if (writable.write(list._size) < 0) {
         return -1;
@@ -715,6 +714,7 @@ inline bool WListFast<T>::operator==(const WListFast<T> &other) const
 {
     if (size() != other.size())
         return false;
+
     for (int i = 0; i < size(); i++) {
         if (at(i) != other.at(i))
             return false;

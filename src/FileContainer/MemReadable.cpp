@@ -21,12 +21,7 @@ auto MemReadable::read(void *to, size_t size) const -> int
         return -1;
     }
 
-    char *c = static_cast<char*>(to);
-    for (int i = 0; i < size; i++) {
-        c[i] = _data[_seek + i];
-    }
-
-    //WCommonScript::WMemcpy(to, _data + _seek, size);
+    WCommonScript::WMemcpy(to, _data + _seek, size);
     _seek += size;
 
     return 0;

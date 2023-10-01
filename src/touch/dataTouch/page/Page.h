@@ -60,7 +60,7 @@ private:
     WListFast<SharedPtr<Stroke>>        _stroke;
     StrokeForPage                       _stroke_writernote;
 
-    static constexpr auto pageDebug = true;
+    static constexpr auto pageDebug = false;
 
     void rep() const noexcept;
 
@@ -551,11 +551,33 @@ inline void Page::append(const WListFast<SharedPtr<Stroke>> &stroke)
 
 inline auto Page::operator==(const Page &other) const noexcept -> bool
 {
-    return  this->_stroke == other._stroke &&
-            this->_isVisible == other._isVisible &&
-            this->_strokeTmp == other._strokeTmp &&
-            this->_stroke_writernote == other._stroke_writernote &&
-            this->_count == other._count;
+    const auto cmpMethod = [] (const WListFast<SharedPtr<Stroke>>& list1, const WListFast<SharedPtr<Stroke>>& list2) {
+        int i;
+        if (list1.size() != list2.size())
+            return false;
+
+        for (i = 0; i < list1.size(); i++) {
+            const Stroke& ref1 = *list1[i];
+            const Stroke& ref2 = *list2[i];
+
+            if (ref1 != ref2)
+                return false;
+        }
+
+        return true;
+    };
+
+    const auto strokeEquals = cmpMethod(_stroke, other._stroke);
+    const auto isVisibleEquals = this->_isVisible == other._isVisible;
+
+    const auto strokeTmpEquals = cmpMethod(_strokeTmp, other._strokeTmp);
+    const auto strokeWriternoteEquals = this->_stroke_writernote == other._stroke_writernote;
+
+    return strokeEquals
+        and isVisibleEquals
+        and strokeTmpEquals
+        and strokeWriternoteEquals
+        and this->_count == other._count;
 }
 
 inline auto Page::operator=(Page &&other) noexcept -> Page &
