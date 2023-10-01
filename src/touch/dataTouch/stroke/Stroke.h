@@ -49,7 +49,7 @@ struct metadata_stroke{
         if (versionController.getVersionMetadataStroke() != 0)
             return {-1, result};
 
-        if (reader.read(&result.posizione_audio, sizeof (result.posizione_audio)) < 0)
+        if (reader.read(result.posizione_audio) < 0)
             return {-1, result};
 
         auto [res, color] = WColor::load (versionController, reader);
@@ -89,7 +89,8 @@ private:
         UPDATE_BIGGER_DATA = BIT(1)
     };
 
-    mutable unsigned char _flag;
+    using typeOfFlag = unsigned char;
+    mutable typeOfFlag _flag;
 
     void setFlag(unsigned char type, bool value) const;
 
@@ -129,7 +130,7 @@ public:
     void setPositionAudio(int m_pos_ris);
     virtual size_t createControl() const;
 
-    int getPosizionAudio() const;
+    auto getPosizionAudio() const -> int;
     virtual RectF getBiggerPointInStroke() const;
     virtual auto isInside(const RectF &rect) const -> bool = 0;
 
@@ -137,7 +138,7 @@ public:
 
     auto getMetadata() const -> const struct metadata_stroke &;
 
-    bool is_highlighter() const;
+    auto is_highlighter() const -> bool;
     auto getAlfa() const -> unsigned char;
     virtual auto getSizeInMemory() const -> size_t = 0;
 
@@ -151,7 +152,7 @@ public:
     /**
      * instanceof(*this) == StrokeNorml ? @result == size() : 0
     */
-    virtual int how_much_decrese() const = 0;
+    virtual auto how_much_decrese() const -> int = 0;
 
     void setColor(const WColor &color);
 

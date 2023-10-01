@@ -124,8 +124,7 @@ WPixmap &WPixmap::operator=(WPixmap &&other) noexcept
     return *this;
 }
 
-auto
-WPixmap::load(const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, WPixmap>
+auto WPixmap::load(const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, WPixmap>
 {
     if (versionController.getVersionWPixmap() != 0)
         return {-1, {}};
@@ -137,6 +136,9 @@ WPixmap::load(const VersionFileController &versionController, ReadableAbstract &
     if (res < 0)
         return {-1, {}};
 
+    if (data.isEmpty())
+        return {0, WPixmap()};
+
     if (not result.loadFromData(data, "PNG"))
         return {-1, {}};
 
@@ -147,16 +149,23 @@ auto WPixmap::getRawDataPNG() const -> WByteArray
 {
     QByteArray arr;
     QBuffer buffer(&arr);
+
     buffer.open(QIODevice::WriteOnly);
     QPixmap::save(&buffer, "PNG");
     buffer.close();
-    return {std::move(arr)};
+
+    return arr;
 }
 
 auto WPixmap::write(WritableAbstract &writable, const WPixmap &pixmap) -> int
 {
-    if (WByteArray::write(writable, pixmap.getRawDataPNG()) < 0)
+    const auto raw = pixmap.getRawDataPNG();
+
+    WDebug(true, raw.size());
+
+    if (WByteArray::write(writable, raw) < 0)
         return -1;
+
     return 0;
 }
 

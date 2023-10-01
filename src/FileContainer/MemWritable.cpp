@@ -2,10 +2,11 @@
 #include "utils/WCommonScript.h"
 
 MemWritable::MemWritable()
-        : _size(0)
+        : _size(0u)
         , _internalStack(0)
         , _allocatedMemory()
 {
+    _allocatedMemory.push_back(malloc(MemWritable::sizePage));
 }
 
 auto MemWritable::getCurrentSize() const -> size_t
@@ -22,35 +23,19 @@ auto MemWritable::merge(WritableAbstract &writable) -> int
 
 int MemWritable::write(const void *data, size_t size)
 {
-    size_t internalDistance = 0;
-    while (size >= MemWritable::sizePage) {
-        // add a new memory block as penultimate, because we want to leave _internalStack unchanged
-        auto position = _allocatedMemory.end() - 2;
+    if (size == 0)
+        return 0;
 
-        this->_allocatedMemory.insert(position, malloc (MemWritable::sizePage));
+    const auto originalSize = size;
+    size -= this->writeUntilEnd(data, size);
 
-        WCommonScript::WMemcpy(
-                *position,
-                static_cast<const char*>(data) + internalDistance,
-                MemWritable::sizePage
-        );
+    if (size > 0) {
+        while (size >= MemWritable::sizePage) {
+            size -= this->writeInDedicated(static_cast<const char*>(data) + originalSize - size, size);
+        }
 
-        internalDistance += MemWritable::sizePage;
-        size -= MemWritable::sizePage;
-        this->_size += MemWritable::sizePage;
-    }
-
-    if (_size + _internalStack >= MemWritable::sizePage * _allocatedMemory.size())
-        _allocatedMemory.push_back(malloc(MemWritable::sizePage));
-
-    if (size != 0) {
-        WCommonScript::WMemcpy(
-                static_cast<char *>(*_allocatedMemory.rbegin()) + _internalStack,
-                static_cast<const char *>(data) + internalDistance,
-                size
-        );
-        this->_internalStack += size;
-        this->_size += size;
+        if (size != 0)
+            this->writeFromZero(static_cast<const char*>(data) + originalSize - size, size);
     }
 
     return 0;
@@ -76,6 +61,48 @@ auto MemWritable::merge(const Fn<int(const void *, size_t)>& append) -> int
         return -1;
 
     return 0;
+}
+
+auto MemWritable::writeUntilEnd(const void *from, size_t size) -> size_t
+{
+    const size_t byteToWrite = std::min(MemWritable::sizePage - _internalStack, size);
+    WCommonScript::WMemcpy(getData() + _internalStack, static_cast<const char*>(from), byteToWrite);
+
+    _size += byteToWrite;
+    _internalStack += byteToWrite;
+
+    if (_internalStack == MemWritable::sizePage) {
+        _allocatedMemory.push_back(malloc (MemWritable::sizePage));
+        _internalStack = 0u;
+    }
+
+    return byteToWrite;
+}
+
+auto MemWritable::writeInDedicated(const void *from, size_t size) -> size_t
+{
+    W_ASSERT(size >= MemWritable::sizePage);
+    W_ASSERT(_internalStack == 0u);
+
+    WCommonScript::WMemcpy(getData(), from, MemWritable::sizePage);
+
+    _allocatedMemory.push_back(malloc(MemWritable::sizePage));
+    _size += MemWritable::sizePage;
+
+    return MemWritable::sizePage;
+}
+
+auto MemWritable::writeFromZero(const void *from, size_t size) -> size_t
+{
+    W_ASSERT(size < MemWritable::sizePage);
+    W_ASSERT(_internalStack == 0u);
+
+    WCommonScript::WMemcpy(getData(), from, size);
+
+    _size += size;
+    _internalStack += size;
+
+    return size;
 }
 
 

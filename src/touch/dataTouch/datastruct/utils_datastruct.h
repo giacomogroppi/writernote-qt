@@ -10,6 +10,7 @@ private:
     float _d;
 public:
     pressure_t() = default;
+
     pressure_t(const pressure_t &other) noexcept = default;
     pressure_t(pressure_t &&other) noexcept = default;
 
@@ -23,8 +24,6 @@ public:
 
     auto operator=(const pressure_t &other) -> pressure_t & = default;
     auto operator=(pressure_t &&other) -> pressure_t & = default;
-
-
 
     auto operator*(float other) const -> float { return _d * other; }
     auto operator/(float other) const -> float { return _d / other; }
@@ -76,9 +75,12 @@ inline auto pressure_t::load(const VersionFileController &versionController,
 {
     if (versionController.getVersionPressure() != 0)
         return {-1, 0.};
+
     pressure_t result{};
-    if (readable.read(&result._d, sizeof (result._d)) < 0)
-        return {-1, 0.};
+
+    if (readable.read(result._d) < 0)
+        return {-1, {}};
+
     return {0, result};
 }
 

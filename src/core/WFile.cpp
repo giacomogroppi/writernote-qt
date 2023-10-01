@@ -42,6 +42,7 @@ WFile::~WFile()
 {
     if(this->_fp)
         fclose(this->_fp);
+    this->_fp = nullptr;
 }
 
 auto WFile::open(int openMode) -> bool
@@ -54,9 +55,12 @@ auto WFile::open(int openMode) -> bool
 auto WFile::write(const void *data, size_t size) -> int
 {
     W_ASSERT(this->_fp);
+    if (size == 0)
+        return 0;
+
     const auto res = fwrite(data, size, 1, this->_fp);
 
-    if(un(res != 1))
+    if (res != 1)
         return -1;
 
     return 0;

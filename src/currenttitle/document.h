@@ -32,7 +32,7 @@ public:
     static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, Document>;
 
     template <class Writable>
-            requires (std::is_base_of_v<WritableAbstract, Writable>)
+            requires (std::is_base_of<WritableAbstract, Writable>::value)
     static auto write (Writable &writable, const Document &doc) -> int;
 
     enum AudioRecordStatus{
@@ -77,7 +77,7 @@ force_inline bool Document::isEmpty() const
     return res;
 }
 
-template<class Writable> requires (std::is_base_of_v<WritableAbstract, Writable>)
+template<class Writable> requires (std::is_base_of<WritableAbstract, Writable>::value)
 auto Document::write(Writable &writable, const Document &doc) -> int
 {
     if (DataStruct::write (writable, doc) < 0)

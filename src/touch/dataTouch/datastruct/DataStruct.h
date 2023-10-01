@@ -55,12 +55,12 @@ public:
 
     void drawIfInside(const RectF &area);
 
-    [[nodiscard]] constexpr auto getZoom() const noexcept { return this->_zoom; };
-    [[nodiscard]] constexpr force_inline PointF getPointFirstPage() const { return _pointFirstPage * _zoom; }
-    [[nodiscard]] constexpr force_inline PointF getPointFirstPageNoZoom() const { return _pointFirstPage; }
+    nd constexpr auto getZoom() const noexcept { return this->_zoom; };
+    nd constexpr auto getPointFirstPage() const { return _pointFirstPage * _zoom; }
+    nd constexpr PointF getPointFirstPageNoZoom() const { return _pointFirstPage; }
 
-    [[nodiscard]] int whichPage(const PointF &point) const;
-    [[nodiscard]] int whichPage(const Stroke &stroke) const;
+    nd auto whichPage(const PointF &point) const -> int;
+    nd auto whichPage(const Stroke &stroke) const -> int;
 
     void setPointFirstPage(const PointF &point)
     {
@@ -79,15 +79,16 @@ public:
      * \param stroke to be added
      * \return the index of the page to which the stroke was added
      * */
-    auto  appendStroke(std::shared_ptr<Stroke> &&object) -> int;
+    auto  appendStroke(SharedPtr<Stroke> &&object) -> int;
+
     /**
      * \param stroke to be added
      * \return the index of the page to which the stroke was added
      * */
-    auto  appendStroke(const std::shared_ptr<Stroke>& stroke) -> int; /* return value: the page of the point */
+    auto  appendStroke(const SharedPtr<Stroke> &stroke) -> int; /* return value: the page of the point */
 
-    void appendStroke(std::shared_ptr<Stroke> &&object, int page);
-    void appendStroke(const std::shared_ptr<Stroke>& stroke, int page);
+    void appendStroke(SharedPtr<Stroke> &&object, int page);
+    void appendStroke(const SharedPtr<Stroke> &stroke, int page);
 
     void restoreLastTranslation(int heightView);
 
@@ -97,17 +98,16 @@ public:
     void movePoint(const WList<WVector<int>> & pos, int base, const PointF &translation);
     void movePoint(const WVector<int> & pos, int pageIndex, const PointF &translation);
 
-    [[nodiscard]] bool userWrittenSomething() const;
+    nd bool userWrittenSomething() const;
 
-    [[nodiscard]]
-    auto adjustStroke(Stroke &stroke) const -> int;
+    nd auto adjustStroke(Stroke &stroke) const -> int;
 
     void changeIdThreadSave(int indexPoint, Stroke &stroke, Page &page);
 
-    [[nodiscard]] constexpr PointF adjustPointReverce(const PointF &pointDatastruct) const;
-    [[nodiscard]] constexpr PointF adjustPoint(const PointF &pointRealTouch) const;
+    nd constexpr PointF adjustPointReverce(const PointF &pointDatastruct) const;
+    nd constexpr PointF adjustPoint(const PointF &pointRealTouch) const;
 
-    [[nodiscard]] bool isEmptyTouch() const;
+    nd auto isEmptyTouch() const -> bool;
     void reset_touch();
     void triggerVisibility(cdouble viewSize);
     [[nodiscard]] double biggerX() const noexcept;
@@ -488,7 +488,7 @@ inline void DataStruct::removeAt(int indexPage){
 
 }
 
-inline int DataStruct::appendStroke(std::shared_ptr<Stroke> &&object)
+inline int DataStruct::appendStroke(SharedPtr<Stroke> &&object)
 {
     const auto page = adjustStroke(*object);
     this->appendStroke(std::move (object), page);
@@ -496,7 +496,7 @@ inline int DataStruct::appendStroke(std::shared_ptr<Stroke> &&object)
     return page;
 }
 
-inline int DataStruct::appendStroke(const std::shared_ptr<Stroke>& stroke)
+inline int DataStruct::appendStroke(const SharedPtr<Stroke> &stroke)
 {
     int page;
 
@@ -509,12 +509,12 @@ inline int DataStruct::appendStroke(const std::shared_ptr<Stroke>& stroke)
     return page;
 }
 
-inline void DataStruct::appendStroke(std::shared_ptr<Stroke> &&object, int page)
+inline void DataStruct::appendStroke(SharedPtr<Stroke> &&object, int page)
 {
     at_mod(page).append(std::move (object));
 }
 
-inline void DataStruct::appendStroke(const std::shared_ptr<Stroke>& stroke, int page)
+inline void DataStruct::appendStroke(const SharedPtr<Stroke> &stroke, int page)
 {
     this->at_mod(page).append(stroke);
 }
@@ -603,45 +603,46 @@ inline void DataStruct::decreaseAlfa(const WVector<int> &pos, int index)
 inline auto DataStruct::load(
             const VersionFileController &versionControl,
             ReadableAbstract &readable
-        ) -> WPair<int, DataStruct> {
+        ) -> WPair<int, DataStruct>
+{
     DataStruct result;
 
     if (versionControl.getVersionDataStruct() != 0)
-        return {-1, result};
+        return {-1, {}};
 
-    if (readable.read(&result._zoom, sizeof(result._zoom)) < 0)
-        return {-1, result};
+    if (readable.read(result._zoom) < 0)
+        return {-1, {}};
 
     {
         auto [res, point] = PointF::load(versionControl, readable);
         if (res < 0)
-            return {-1, result};
+            return {-1, {}};
         result._pointFirstPage = std::move(point);
     }
 
     {
         auto [res, point] = PointF::load(versionControl, readable);
         if (res < 0)
-            return {-1, result};
+            return {-1, {}};
         result._last_translation = std::move(point);
     }
 
-    if (readable.read(&result._pageVisible, sizeof(result._pageVisible)) < 0)
-        return {-1, result};
+    if (readable.read(result._pageVisible) < 0)
+        return {-1, {}};
 
     {
         auto [res, vec] = WVector<Page>::load(versionControl, readable);
         if (res < 0)
-            return {-1, result};
+            return {-1, {}};
         result._page = std::move(vec);
     }
 
-    return {-1, result};
+    return {0, result};
 }
 
 inline auto DataStruct::write (WritableAbstract &writable, const DataStruct &source) -> int
 {
-    if (writable.write (&source._zoom, sizeof (source._zoom)) < 0)
+    if (writable.write (source._zoom) < 0)
         return -1;
 
     if (PointF::write (writable, source._pointFirstPage) < 0)
@@ -650,7 +651,7 @@ inline auto DataStruct::write (WritableAbstract &writable, const DataStruct &sou
     if (PointF::write (writable, source._last_translation) < 0)
         return -1;
 
-    if (writable.write (&source._pageVisible, sizeof (source._pageVisible)) < 0)
+    if (writable.write (source._pageVisible) < 0)
         return -1;
 
     if (WVector<Page>::save (writable, source._page) < 0)

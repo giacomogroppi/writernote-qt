@@ -75,18 +75,19 @@ public:
 
     constexpr bool operator==(const RectTemplate &other) const;
 
+    // TODO: move outside of class definition
     static
     auto load(const VersionFileController &versionController, ReadableAbstract &reader)
         noexcept -> WPair<int, RectTemplate<T>>
     {
         RectTemplate<T> d;
         if (versionController.getVersionRectTemplate() != 0)
-            return {-1, RectTemplate<T>()};
+            return {-1, {}};
 
         {
             auto [res, point] = PointTemplate<T>::load (versionController, reader);
             if (res < 0)
-                return {-1, d};
+                return {-1, {}};
 
             d._topLeft = std::move(point);
         }
@@ -94,13 +95,14 @@ public:
         {
             auto [res, point] = PointTemplate<T>::load (versionController, reader);
             if (res < 0)
-                return {-1, d};
+                return {-1, {}};
 
             d._bottomRight = std::move(point);
         }
 
-        return {-1, d};
+        return {0, d};
     }
+
 
     /**
      * \return -1 in case of error

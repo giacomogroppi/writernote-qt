@@ -13,6 +13,7 @@
 #include "FileContainer/MemWritable.h"
 #include "FileContainer/MemReadable.h"
 #include "core/WPair.h"
+#include "WElement.h"
 
 
 // TODO: do some refactoring
@@ -21,13 +22,16 @@ template <class T>
 class WListFast
 {
 private:
+    static constexpr auto debug = true;
     void test() const;
 
-    T **_data;
-    int _size;
-    int _reserved;
+    using typeOfSize = int;
 
-    static constexpr int numberOfObjectReserved = 128;
+    T **_data;
+    typeOfSize _size;
+    typeOfSize _reserved;
+
+    static constexpr typeOfSize numberOfObjectReserved = 128;
 
     // this function remove the object from the list
     T *takeObject(int i);
@@ -302,34 +306,32 @@ inline auto WListFast<T>::load(
                     ReadableAbstract &readable)
                 > func) -> WPair<int, WListFast<T>>
 {
-    WPair<int, WListFast<T>> result (-1, WListFast<T>());
+    WListFast<T> result;
 
     switch (versionController.getVersionWListFast()) {
         case 0:
-            int i, element;
+            int element;
 
-            if (readable.read(&element, sizeof (element)) < 0) {
-                return result;
+            if (readable.read(element) < 0) {
+                return {-1, {}};
             }
 
-            result.second.reserve(element);
+            result.reserve(element);
 
-            for (i = 0; i < element; i++) {
+            for (int i = 0; i < element; i++) {
                 auto [res, data] = func (versionController, readable);
-                if (res < 0 ) {
-                    return {-1, WListFast<T>()};
-                }
+                if (res < 0)
+                    return {-1, {}};
 
-                result.second.append(
+                result.append(
                         std::move (data)
                 );
             }
-            result.first = 0;
-            return result;
+            return {0, result};
         default:
-            return {-1, WListFast<T>()};
+            return {-1, {}};
     }
-    return {-1, WListFast<T>()};
+    return {-1, {}};
 }
 
 template <class T>
@@ -341,7 +343,9 @@ inline auto WListFast<T>::write(
 {
     static_assert_type(list._size, int);
 
-    if (writable.write(&list._size, sizeof(list._size)) < 0) {
+    WDebug(true, "Saving: " << typeid(T).name() << list._size);
+
+    if (writable.write(list._size) < 0) {
         return -1;
     }
 
@@ -417,8 +421,9 @@ inline auto WListFast<T>::writeMultiThread(
                 [](WritableAbstract &writable, size_t item) {
                     return writable.write(&item, sizeof(item));
                 }) < 0
-            )
+            ) {
             return -1;
+        }
     }
 
     // we merge all the single writer in the main writer
@@ -463,8 +468,10 @@ inline auto WListFast<T>::loadMultiThread(
                 readable,
                 [](const VersionFileController &, ReadableAbstract &readable) -> WPair<int, size_t> {
                     size_t t;
-                    if (readable.read(&t, sizeof(t)))
+
+                    if (readable.read(t) < 0)
                         return {-1, 0};
+
                     return {0, t};
                 });
 
@@ -796,6 +803,8 @@ inline auto WListFast<T>::takeAt(int index) -> T
 template<class T>
 inline void WListFast<T>::reserve(int reserve)
 {
+    W_ASSERT(reserve >= 0);
+
     if (reserve) {
         this->_reserved += reserve;
         this->_data = (T**) realloc(_data, sizeof (T*)  * (_size + _reserved));

@@ -148,6 +148,12 @@ force_inline void WMemmove(void *to, const void *from, unsigned long size)
     memmove(to, from, size);
 }
 
+
+force_inline size_t WMemcmp(const void *mem1, const void *mem2, size_t size)
+{
+    return memcmp(mem1, mem2, size);
+}
+
 force_inline size_t WMemcpy(void *to, const void *from, size_t size)
 {
     W_ASSERT(from);

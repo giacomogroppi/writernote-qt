@@ -116,15 +116,15 @@ inline auto PointTemplate<T>::load(
     PointTemplate<T> result;
 
     if (versionController.getVersionPointTemplate() != 0)
-        return {-1, result};
+        return {-1, {}};
 
-    if (readable.read (&result._x, sizeof (T)) < 0)
-        return {-1, result};
+    if (readable.read (result._x) < 0)
+        return {-1, {}};
 
-    if (readable.read (&result._y, sizeof (T)) < 0)
-        return {-1, result};
+    if (readable.read (result._y) < 0)
+        return {-1, {}};
 
-    return {0, result};
+    return {0, std::move(result)};
 }
 
 template<typename T>

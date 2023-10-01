@@ -117,16 +117,16 @@ public:
 
     void force_pressure(pressure_t press);
 
-    std::unique_ptr<Stroke> makeNormal() const final;
+    UniquePtr<Stroke> makeNormal() const final;
 
-    StrokeNormal& operator=(const StrokeNormal &other);
-    bool operator==(const Stroke &other) const final;
-    bool operator!=(const Stroke &other) const final;
+    auto operator=(const StrokeNormal &other) -> StrokeNormal&;
+    auto operator==(const Stroke &other) const -> bool final;
+    auto operator!=(const Stroke &other) const -> bool final;
 
     template<class T>
-    static inline RectF getBiggerPointInStroke(T begin, T end);
+    static auto getBiggerPointInStroke(T begin, T end) -> RectF;
 
-    int type() const final;
+    auto type() const -> int final;
 
     /**
      * This method assume that the stroke to be load is StrokeNormal and

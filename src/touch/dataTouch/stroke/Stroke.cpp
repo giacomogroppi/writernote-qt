@@ -31,10 +31,32 @@ auto Stroke::loadPtr(const VersionFileController &versionController,
                      ReadableAbstract &readable) -> WPair<int, Stroke *>
 {
     WPair<int, Stroke*> r {-1, nullptr};
+    metadata_stroke metadata;
     int type;
+    typeOfFlag flag;
+    RectF biggerData;
 
-    if (readable.read (&type, sizeof (type))) {
+    if (readable.read (type)) {
         return {-1, nullptr};
+    }
+
+    {
+        auto [res, meta] = metadata_stroke::load (versionController, readable);
+        if (res < 0)
+            return {-1, nullptr};
+        metadata = std::move (meta);
+    }
+
+    if (readable.read(flag) < 0) {
+        return {-1, nullptr};
+    }
+
+    {
+        auto [res, rect] = RectF::load(versionController, readable);
+        if (res < 0) {
+            return {-1, nullptr};
+        }
+        biggerData = std::move (rect);
     }
 
     switch (versionController.getVersionStroke()) {
@@ -57,31 +79,14 @@ auto Stroke::loadPtr(const VersionFileController &versionController,
         }
     }
 
-    if (r.first < 0)
-        return {-1, nullptr};
-
-    {
-        auto [res, meta] = metadata_stroke::load (versionController, readable);
-        if (res < 0) {
-            delete r.second;
-            return {-1, nullptr};
-        }
-        r.second->_metadata = std::move (meta);
-    }
-
-    if (readable.read(&r.second->_flag, sizeof (r.second->_flag)) < 0) {
+    if (r.first < 0) {
         delete r.second;
         return {-1, nullptr};
     }
 
-    {
-        auto [res, rect] = RectF::load(versionController, readable);
-        if (res < 0) {
-            delete r.second;
-            return {-1, nullptr};
-        }
-        r.second->_biggerData = std::move (rect);
-    }
+    r.second->_biggerData = std::move(biggerData);
+    r.second->_metadata = metadata;
+    r.second->_flag = flag;
 
     return {0, r.second};
 }
@@ -211,11 +216,17 @@ int Stroke::save(WritableAbstract &file) const
 {
     const int t = type();
 
+    if (file.write(t))
+        return ERROR;
+
     if (metadata_stroke::write(file, this->_metadata) < 0)
         return ERROR;
 
-    if (file.write(&t, sizeof(t)))
-        return -1;
+    if (file.write(_flag) < 0)
+        return ERROR;
+
+    if (RectF::write(file, _biggerData) < 0)
+        return ERROR;
 
     static_assert(sizeof(t) == sizeof(int));
     return OK;

@@ -194,35 +194,38 @@ auto StrokeForPage::load(const VersionFileController &versionController,
     StrokeForPage result;
 
     if (versionController.getVersionStrokeForPage() != 0)
-        return {-1, std::move(result)};
+        return {-1, {}};
 
     {
-        auto [res, data] = SharedPtr<StrokeNormal>::load(versionController, readable);
+        auto [res, data] = SharedPtr<Stroke>::load(versionController, readable);
         if (res < 0)
-            return {-1, std::move(result)};
-        result._data = std::move(data);
+            return {-1, {}};
+        result._data = std::dynamic_pointer_cast<StrokeNormal>(data);
     }
 
     {
         auto [res, data] = WPixmap::load(versionController, readable);
         if (res < 0)
-            return {-1, std::move(result)};
+            return {-1, {}};
         result._pix = std::move(data);
     }
 
-    if (readable.read(&result._needToUpdate, sizeof(result._needToUpdate)) < 0)
-        return {-1, std::move(result)};
+    if (readable.read(result._needToUpdate) < 0)
+        return {-1, {}};
 
     return {0, std::move(result)};
 }
 
 auto StrokeForPage::write(WritableAbstract &writable, const StrokeForPage &strokeForPage) -> int
 {
-    if (SharedPtr<StrokeNormal>::write(writable, strokeForPage._data) < 0)
+    if (SharedPtr<Stroke>::write(writable, std::dynamic_pointer_cast<Stroke>(strokeForPage._data)) < 0)
         return -1;
+
     if (WPixmap::write(writable, strokeForPage._pix) < 0)
         return -1;
-    if (writable.write(&strokeForPage._needToUpdate, sizeof(strokeForPage._needToUpdate)) < 0)
+
+    if (writable.write(strokeForPage._needToUpdate) < 0)
         return -1;
+
     return 0;
 }

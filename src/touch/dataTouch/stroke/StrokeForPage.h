@@ -48,8 +48,6 @@ public:
 
     auto operator==(const StrokeForPage &other) const noexcept -> bool;
 
-
-
     friend class page_file;
     friend class Page;
 };

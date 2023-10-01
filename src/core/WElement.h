@@ -23,6 +23,11 @@ public:
     auto operator+(const WElement& v) const -> WElement { return WElement<T> (_value + v._value); };
     auto operator-(const WElement& v) const -> WElement { return WElement<T> (_value - v._value); };
 
+    // TODO: add template for disable this operator in bool
+    auto operator--() -> WElement& { _value --; }
+
+    auto operator>(const WElement<T>& element) { return _value > element._value; }
+
     operator T () const { return _value; }
 };
 

@@ -12,6 +12,8 @@
 
 class WByteArray: public QByteArray
 {
+private:
+    using TypeofSize = unsigned long;
 public:
     constexpr WByteArray() noexcept = default;
     WByteArray(const WByteArray &other) noexcept = default;

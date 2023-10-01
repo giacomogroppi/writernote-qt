@@ -1,5 +1,6 @@
 #pragma once
 
+// TODO: remove this defines
 #define ERROR 0
 #define OK 1
 #define ERROR_VERSION 2

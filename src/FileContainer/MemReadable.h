@@ -14,5 +14,9 @@ public:
 
     auto read (void *to, size_t size) const -> int final;
 
-    MemReadable &setData(const void *data, size_t max);
+    auto setData(const void *data, size_t max) -> MemReadable &;
+
+    auto isAtEnd() const noexcept -> bool;
+    auto getSeek() const noexcept -> size_t;
+    auto getMax() const noexcept -> size_t;
 };

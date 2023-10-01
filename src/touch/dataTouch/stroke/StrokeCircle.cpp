@@ -303,17 +303,21 @@ auto StrokeCircle::loadPtr(const VersionFileController &versionController,
 
     auto* d = new StrokeCircle;
 
-    if (readable.read(&d->_data.r, sizeof(d->_data.r)) < 0)
+    if (readable.read(d->_data.r) < 0)
         return {-1, nullptr};
 
-    if (readable.read(&d->_data.y, sizeof(d->_data.y)) < 0)
+    if (readable.read(d->_data.y) < 0)
         return {-1, nullptr};
 
-    if (readable.read(&d->_data.x, sizeof(d->_data.x)) < 0)
+    if (readable.read(d->_data.x) < 0)
         return {-1, nullptr};
 
-    if (readable.read(&d->_data.press, sizeof(d->_data.press)) < 0)
-        return {-1, nullptr};
+    {
+        const auto [result, data] = pressure_t::load(versionController, readable);
+        if (result < 0)
+            return {-1, nullptr};
+        d->_data.press = std::move(data);
+    }
 
     return {0, d};
 }

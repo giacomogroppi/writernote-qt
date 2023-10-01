@@ -34,16 +34,17 @@ auto WByteArray::load(
         ReadableAbstract &readable) -> WPair<int, WByteArray>
 {
     WByteArray result;
-    if (versionController.getVersionWByteArray() != 0)
-        return {-1, result};
 
-    unsigned long size;
-    if (readable.read(&size, sizeof(size)) < 0)
-        return {-1, result};
+    if (versionController.getVersionWByteArray() != 0)
+        return {-1, {}};
+
+    TypeofSize size;
+    if (readable.read(size) < 0)
+        return {-1, {}};
 
     char d[size];
     if (readable.read(d, size) < 0)
-        return {-1, result};
+        return {-1, {}};
 
     result = WByteArray(d, size);
 
@@ -52,9 +53,9 @@ auto WByteArray::load(
 
 auto WByteArray::write(WritableAbstract &writable, const WByteArray &object) -> int
 {
-    unsigned long size = object.size();
+    TypeofSize size = object.size();
 
-    if (writable.write(&size, sizeof(size_t)) < 0)
+    if (writable.write(size) < 0)
         return -1;
 
     if (writable.write(object.constData(), size) < 0)

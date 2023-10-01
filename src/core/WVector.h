@@ -195,7 +195,7 @@ public:
         const int size = list.size();
         static_assert_type(size, const int);
 
-        if (writable.write(&size, sizeof (size)) < 0) {
+        if (writable.write(size) < 0) {
             return -1;
         }
 
@@ -629,35 +629,32 @@ inline auto WVector<T>::load(
         ReadableAbstract &file
 ) -> WPair<int, WVector<T>>
 {
-    // TODO: adjust
-    WPair<int, WVector<T>> result(-1, WVector<T>());
+    WVector<T> result;
 
     switch (versionController.getVersionWListFast()) {
         case 0:
             int i, element;
 
             if (file.read(element) < 0) {
-                return result;
+                return {-1, {}};
             }
 
-            result.second.reserve(element);
+            result.reserve(element);
 
             for (i = 0; i < element; i++) {
                 const auto [res, object] = T::load (versionController, file);
 
                 if (res < 0)
-                    return result;
+                    return {-1, {}};
 
-                result.second.append(
+                result.append(
                         std::move (object)
                 );
             }
-            result.first = 0;
-            return result;
+            return {0, result};
     }
 
-    result.first = -1;
-    return result;
+    return {-1, {}};
 }
 
 template <class T>

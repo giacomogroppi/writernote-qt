@@ -25,24 +25,28 @@ public:
 
     SharedPtr(std::unique_ptr<T> && object) noexcept;
 
+    // TODO: remove from class definition
     static auto load (const VersionFileController &version, ReadableAbstract &readable) -> WPair<int, SharedPtr<T>>
     {
         SharedPtr<T> result;
         bool is_value_present;
 
         if (version.getVersionSharedPtr() != 0)
-            return {-1, result};
+            return {-1, {}};
 
-        if (readable.read(&is_value_present, sizeof (is_value_present)) < 0) {
-            return {-1, result};
+        if (readable.read(is_value_present) < 0) {
+            return {-1, {}};
         }
+
+        if (not is_value_present)
+            return {0, nullptr};
 
         auto [res, data] = T::loadPtr (version, readable);
 
         static_assert (std::is_pointer_v<decltype(data)>);
 
         if (res < 0)
-            return {-1, result};
+            return {-1, {}};
 
         result = std::move (data);
 
@@ -52,6 +56,8 @@ public:
     /**
      * @return &lt 0 in case Writable fail
      * */
+    // TODO: remove from class definition
+
     template <class Writable> requires(std::is_base_of_v<WritableAbstract, Writable>)
     static auto write (Writable &writable, const SharedPtr<T> &object) -> int
     {

@@ -572,23 +572,28 @@ inline auto Page::operator=(Page &&other) noexcept -> Page &
 inline auto Page::load(const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, Page>
 {
     Page result;
+    bool savedImage;
 
     if (versionController.getVersionPage() != 0)
         return {-1, result};
 
+    static_assert_type(savedImage, bool);
     static_assert_type(result._count, int);
     static_assert_type(result._isVisible, bool);
 
-    if (readable.read(&result._count, sizeof (&result._count)) < 0)
-        return {-1, result};
+    if (readable.read(savedImage) < 0)
+        return {-1, {}};
 
-    if (readable.read(&result._isVisible, sizeof (result._isVisible)) < 0)
-        return {-1, result};
+    if (readable.read(result._count) < 0)
+        return {-1, {}};
+
+    if (readable.read(result._isVisible) < 0)
+        return {-1, {}};
 
     {
         auto [res, list] = WListFast<SharedPtr<Stroke>>::load (versionController, readable);
         if (res < 0)
-            return {-1, result};
+            return {-1, {}};
 
         result._stroke = std::move (list);
     }
@@ -596,39 +601,43 @@ inline auto Page::load(const VersionFileController &versionController, ReadableA
     {
         auto [res, list] = WListFast<SharedPtr<Stroke>>::load (versionController, readable);
         if (res < 0)
-            return {-1, result};
+            return {-1, {}};
         result._strokeTmp = std::move (list);
     }
 
+    // fino a qua giusto
     {
         auto [res, str] = StrokeForPage::load (versionController, readable);
         if (res < 0)
-            return {-1, result};
+            return {-1, {}};
         result._stroke_writernote = std::move (str);
     }
 
-    {
+    if (savedImage) {
         auto [res, img] = WPixmap::load (versionController, readable);
         if (res < 0)
-            return {-1, result};
+            return {-1, {}};
         result._imgDraw = std::move (img);
     }
 
-    return {0, result};
+    return {0, std::move(result)};
 }
 
 // TODO: move into cpp file
-// TODO: add option to not write the image
 inline auto Page::write(WritableAbstract &writable, const Page &page, bool saveImage) -> int
 {
+    static_assert_type(saveImage, bool);
+    static_assert_type(page._count, int);
+    static_assert_type(page._isVisible, bool);
+
     if (writable.write(saveImage) < 0)
         return -1;
 
-    if (WListFast<SharedPtr<Stroke>>::write(writable, page._stroke) < 0)
+    if (writable.write(page._count) < 0)
         return -1;
 
-    if (writable.write(&page._count, sizeof(page._count)) < 0) return -1;
-    if (writable.write(&page._isVisible, sizeof(page._isVisible)) < 0) return -1;
+    if (writable.write(page._isVisible) < 0)
+        return -1;
 
     if (WListFast<SharedPtr<Stroke>>::write(writable, page._stroke) < 0)
         return -1;
@@ -639,7 +648,7 @@ inline auto Page::write(WritableAbstract &writable, const Page &page, bool saveI
     if (StrokeForPage::write(writable, page._stroke_writernote) < 0)
         return -1;
 
-    if (saveImage && WPixmap::write(writable, page._imgDraw) < 0)
+    if (saveImage and WPixmap::write(writable, page._imgDraw) < 0)
         return -1;
 
     return 0;

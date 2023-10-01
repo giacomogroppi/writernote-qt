@@ -13,6 +13,30 @@ private:
     std::vector<void *> _allocatedMemory;
 
     static constexpr size_t sizePage = 4096;
+
+    auto getData() -> char* {
+        const auto size = _allocatedMemory.size();
+        return static_cast<char*>(
+                    this->_allocatedMemory[size - 1]
+                );
+    } ;
+
+    /**
+     * \return The number of byte written
+     */
+    auto writeUntilEnd(const void *from, size_t size) -> size_t;
+
+    /**
+     * \brief It's required that the _internalStack is zero and there is already a
+     *  new memory allocated
+     * */
+    auto writeInDedicated(const void* from, size_t size) -> size_t;
+
+    /**
+     * \brief It's required that the _internalStack is zero and there is already a
+     *  new memory allocated
+     * */
+    auto writeFromZero(const void *from, size_t size) -> size_t;
 public:
     MemWritable();
     ~MemWritable();
@@ -32,5 +56,8 @@ public:
      *  This function has to return &lt 0 in case of error
      * \return &lt in case "append" return an error
      * */
+     // TODO: change to UnsignedLong
     auto merge (const Fn<int(const void *d, size_t size)>& append) -> int;
+
+    auto currentSize() -> size_t { return _size; }
 };

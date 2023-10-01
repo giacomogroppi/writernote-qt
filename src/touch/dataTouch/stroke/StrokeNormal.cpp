@@ -15,20 +15,6 @@ StrokeNormal::~StrokeNormal()
     this->_pressure.clear();
 }
 
-int StrokeNormal::save(WritableAbstract &file) const
-{
-    if (Stroke::save(file))
-        return ERROR;
-
-    if (WListFast<PointF>::write(file, this->_point) < 0)
-        return ERROR;
-
-    if (WListFast<pressure_t>::write(file, this->_pressure) < 0)
-        return ERROR;
-
-    return OK;
-}
-
 std::unique_ptr<Stroke> StrokeNormal::makeNormal() const
 {
     return nullptr;
@@ -364,24 +350,11 @@ bool StrokeNormal::operator==(const Stroke &_other) const
 
     const auto &other = dynamic_cast<const StrokeNormal &>(_other);
 
-    if (!WCommonScript::cmp_list(
-            this->_point,
-            other._point,
-            [](auto &p1, auto &p2){
-                return p1 == p2;
-            })) {
+    if (_point != other._point)
         return false;
-    }
 
-    if (!WCommonScript::cmp_list(
-            this->_pressure,
-            other._pressure,
-            [](auto p1, auto p2) {
-                return p1 == p2;
-            }
-            )){
+    if (_pressure != other._pressure)
         return false;
-    }
 
     return true;
 }
@@ -444,13 +417,37 @@ auto StrokeNormal::loadPtr(const VersionFileController &versionController,
         auto [res, d] = WListFast<pressure_t>::load(versionController, readable);
         if (res < 0)
             return {-1, nullptr};
-        result->_pressure = std::move(d);
+        result->_pressure = static_cast<const WListFast<pressure_t>&>(d);
     }
 
-    if (readable.read(&result->_flag, sizeof(result->_flag)) < 0)
+    int ciao;
+    readable.read(ciao);
+    W_ASSERT(ciao == 50);
+
+    if (readable.read(result->_flag) < 0)
         return {-1, nullptr};
 
     return {0, result.release()};
+}
+
+int StrokeNormal::save(WritableAbstract &file) const
+{
+    if (Stroke::save(file) != OK)
+        return ERROR;
+
+    if (WListFast<PointF>::write(file, this->_point) < 0)
+        return ERROR;
+
+    if (WListFast<pressure_t>::write(file, this->_pressure) < 0)
+        return ERROR;
+
+    int ciao = 50;
+    file.write(ciao);
+
+    if (file.write(_flag) < 0)
+        return ERROR;
+
+    return OK;
 }
 
 void StrokeNormal::append (WListFast<PointF> &&points, WListFast<pressure_t> &&pressures)
