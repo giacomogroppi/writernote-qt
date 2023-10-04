@@ -12,7 +12,7 @@ void style_struct::loadFromByte(const WByteArray &arr)
 
     len = arr.size() / sizeof(tmp);
 
-    for(i=0; i<len; ++i){
+    for( i=0; i < len; ++i ){
         memcpy(&tmp, arr.mid(i*sizeof(tmp), (i+1)*sizeof(tmp)).constData(), sizeof(tmp));
         this->style.append(tmp);
     }

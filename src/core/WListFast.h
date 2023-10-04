@@ -223,22 +223,17 @@ public:
     ) noexcept -> int;
 
     template<class T2 = T>
-    static
-    auto loadMultiThread (
-                            const VersionFileController &versionController,
-                            ReadableAbstract &readable,
-                            const Fn<WTask *(
-                                    Fn<void()>
-                            )> &startNewThread
+    static auto loadMultiThread (const VersionFileController &versionController,
+                                 ReadableAbstract &readable,
+                                 const Fn<WTask *(
+                                         Fn<void()>
+                                    )> &startNewThread
                         ) noexcept -> WPair<int, WListFast<T2>>;
 
     static auto load  (
                 const VersionFileController &versionController,
                 ReadableAbstract &readable,
-                Fn<WPair<int, T>(
-                            const VersionFileController &versionController,
-                            ReadableAbstract &readable
-                        )> func
+                Fn<WPair<int, T>(const VersionFileController &versionController, ReadableAbstract &readable )> func
             ) -> WPair<int, WListFast<T>>;
 
     /**
@@ -247,14 +242,8 @@ public:
      * */
     static auto load (const VersionFileController &versionController, ReadableAbstract &file) -> WPair<int, WListFast<T>>;
 
-    static auto write (
-                WritableAbstract &writable,
-                const WListFast<T> &list,
-                Fn<int(
-                        WritableAbstract &writable,
-                        const T&
-                )> save
-            ) -> int;
+    static auto write (WritableAbstract &writable, const WListFast<T> &list,
+                       Fn<int(WritableAbstract &writable, const T&)> save) -> int;
 };
 
 template <class T>
@@ -299,38 +288,13 @@ template <class T>
 inline auto WListFast<T>::load(
         const VersionFileController &versionController,
         ReadableAbstract &readable,
-        Fn<
-                WPair<int, T>(
-                    const VersionFileController &versionController,
-                    ReadableAbstract &readable)
-                > func) -> WPair<int, WListFast<T>>
+        Fn<WPair<int, T>(
+                const VersionFileController &versionController,
+                ReadableAbstract &readable)
+        > func
+    ) -> WPair<int, WListFast<T>>
 {
-    WListFast<T> result;
-
-    switch (versionController.getVersionWListFast()) {
-        case 0:
-            int element;
-
-            if (readable.read(element) < 0) {
-                return {-1, {}};
-            }
-
-            result.reserve(element);
-
-            for (int i = 0; i < element; i++) {
-                auto [res, data] = func (versionController, readable);
-                if (res < 0)
-                    return {-1, {}};
-
-                result.append(
-                        std::move (data)
-                );
-            }
-            return {0, result};
-        default:
-            return {-1, {}};
-    }
-    return {-1, {}};
+    return WAbstractList::load<WListFast, T>(versionController, readable, func);
 }
 
 template <class T>
@@ -340,28 +304,14 @@ inline auto WListFast<T>::write(
             Fn<int(WritableAbstract &writable, const T&)> save
         ) -> int
 {
-    static_assert_type(list._size, int);
-
-    WDebug(debug, "Saving: " << typeid(T).name() << list._size);
-
-    if (writable.write(list._size) < 0) {
-        return -1;
-    }
-
-    for (const auto &ref: std::as_const(list)) {
-        if (save(writable, ref) < 0)
-            return -1;
-    }
-    return 0;
+    return WAbstractList::write(writable, list, save);
 }
 
 template <class T>
 template <class T2>
 inline auto WListFast<T>::write(WritableAbstract &writable, const WListFast<T2> &list) -> int
 {
-    return WListFast<T2>::write(writable, list, [] (WritableAbstract &writable, const T2 &object) -> int {
-        return T2::write (writable, object);
-    });
+    return WAbstractList::write(writable, list);
 }
 
 template<class T>
@@ -374,70 +324,7 @@ inline auto WListFast<T>::writeMultiThread(
             )> &startNewThread
         ) noexcept -> int
 {
-    int i = 0;
-    static_assert_type(list._size, int);
-
-    WListFast<WTask*> threads;
-    MemWritable w[list._size];
-    volatile bool needToAbort = false;
-
-    threads.reserve(list.size());
-
-    // create threads with corresponding data
-    for (const auto &ref: std::as_const(list)) {
-        threads.append(startNewThread ([ref, &needToAbort, &w, i]() {
-                if (T2::write (w[i], ref) < 0)
-                    needToAbort = true;
-            }
-        ));
-        i++;
-    }
-
-    // join the threads
-    for (auto &thread: threads) {
-        thread->join();
-    }
-
-    // delete the threads
-    std::for_each(threads.begin(), threads.end(), [](WTask *t) { delete t; });
-
-    if (needToAbort)
-        return -1;
-
-    // write to writer the seek information
-    {
-        WListFast<size_t> seek(list.size());
-        size_t seekDelta = 0;
-
-        for (i = 0; i < list.size(); i++) {
-            seekDelta += w[i].getCurrentSize();
-            seek.append(seekDelta);
-        }
-
-        if (WListFast<size_t>::write(
-                writable,
-                seek,
-                [](WritableAbstract &writable, size_t item) {
-                    return writable.write(&item, sizeof(item));
-                }) < 0
-            ) {
-            return -1;
-        }
-    }
-
-    // we merge all the single writer in the main writer
-    for (MemWritable& singleWriter: w) {
-        if (singleWriter.merge(writable) < 0)
-            return -1;
-    }
-
-    for (i = 0; i < list.size(); i++) {
-        // TODO: optimize this copy
-        if (w[i].merge(writable) < 0)
-            return -1;
-    }
-
-    return 0;
+    return WAbstractList::writeMultiThread<WListFast, T2>(writable, list, startNewThread);
 }
 
 
@@ -451,84 +338,18 @@ inline auto WListFast<T>::loadMultiThread(
             )> &startNewThread
         ) noexcept -> WPair<int, WListFast<T2>>
 {
-    if (versionController.getVersionWListFast() != 0)
-        return {-1, {}};
+    auto reserveUnsafe = [] (WListFast<T2>& list, int numberOfElements) {
+        list._data = (T2**) malloc(sizeof(T*) * numberOfElements);
+        list._size = numberOfElements;
+        list._reserved = 0u;
+    };
 
-    int i;
-    WListFast<T2> result;
-    WListFast<WTask*> threads;
-    WListFast<size_t> seek;
-    volatile bool needToAbort = false;
+    auto insertUnsafe = [] (WListFast<T2>& list, T2 &&object, int index) {
+        list._data[index] = new T2(std::forward<T2>(object));
+    };
 
-    {
-        // load seek array
-        auto [tmp, seekLoad] = WListFast<size_t>::load(
-                versionController,
-                readable,
-                [](const VersionFileController &, ReadableAbstract &readable) -> WPair<int, size_t> {
-                    size_t t;
-
-                    if (readable.read(t) < 0)
-                        return {-1, 0};
-
-                    return {0, t};
-                });
-
-        if (tmp < 0)
-            return {-1, {}};
-
-        seek = std::move(seekLoad);
-    }
-
-    if (!seek.size()) {
-        return {0, {}};
-    }
-
-    MemReadable readers[seek.size()];
-
-    char rawData[seek.last()];
-    if (readable.read (rawData, seek.last()) < 0)
-        return {-1, {}};
-
-    for (i = 0; i < seek.size(); i++) {
-        readers[i]
-            .setData(
-                    rawData + ((i == 0) ? 0 : seek[i - 1]),
-                    seek[i]
-            );
-    }
-
-    result._data = (T**) malloc (sizeof (T*) * seek.size());
-    result._size = seek.size();
-    result._reserved = 0;
-
-    for (i = 0; i < seek.size(); i++) {
-        threads.append(
-                startNewThread (
-                        [&versionController, &needToAbort, &readers, i, &result]() {
-                            auto [res, data] = T2::load (versionController, readers[i]);
-
-                            if (res < 0) {
-                                needToAbort = true;
-                                return;
-                            }
-
-                            result._data[i] = new T (std::move (data));
-                        }
-                )
-        );
-    }
-
-    for (auto &thread: threads) {
-        thread->join();
-    }
-
-    if (needToAbort)
-        return {-1, {}};
-
-    std::for_each(threads.begin(), threads.end(), [](WTask *t) { delete t; });
-
-    return {0, result};
+    return WAbstractList::loadMultiThread<WListFast, T2>(versionController, readable, startNewThread,
+                                                         reserveUnsafe, insertUnsafe);
 }
 
 template<class T>

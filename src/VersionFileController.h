@@ -40,8 +40,10 @@ private:
     DEFINE_VERSION(ImageDrawable, 0);
     DEFINE_VERSION(WImage, 0);
     DEFINE_VERSION(WMap, 0);
+    DEFINE_VERSION(WAbstractList, 0);
+    DEFINE_VERSION(WElement, 0);
 
-    static constexpr auto numberOfElements = 22;
+    static constexpr auto numberOfElements = 24;
     static constexpr unsigned short versionVersionFileController = 0u;
 
     static
@@ -88,7 +90,9 @@ inline auto VersionFileController::getArray(VersionFileController &versionContro
         &versionController._versionWPixmap,
         &versionController._versionImageDrawable,
         &versionController._versionWImage,
-        &versionController._versionWMap
+        &versionController._versionWMap,
+        &versionController._versionWAbstractList,
+        &versionController._versionWElement
     };
     static_assert(sizeof (VersionFileController) == sizeof(unsigned short) * numberOfElements);
 

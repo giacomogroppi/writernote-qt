@@ -15,11 +15,12 @@ Scheduler::Scheduler()
         return t1->getEnd() >= t2->getEnd();
     })
 {
+    const auto nThreads = numberOfThread();
     W_ASSERT(instance == nullptr);
 
     instance = this;
 
-    _threads.reserve(numberOfThread());
+    _threads.reserve(nThreads);
     std::vector<std::thread> thread;
 
     const auto functionThread = [this]() {
@@ -44,7 +45,7 @@ Scheduler::Scheduler()
         }
     };
 
-    for (int i = 0; i < 8; i++) {
+    for (unsigned i = 0u; i < nThreads; i++) {
         _threads.append(std::thread(functionThread));
     }
 

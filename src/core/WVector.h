@@ -68,6 +68,7 @@ public:
     WVector(const WVector<T> &other) noexcept;
     WVector(WVector<T> &&other) noexcept;
     WVector(std::initializer_list<T> &&object) noexcept;
+    WVector(int reserve) noexcept;
     ~WVector();
 
     using const_iterator = typename std::vector<T>::const_iterator;
@@ -79,7 +80,7 @@ public:
     void append(const WVector<T> &other);
 
     void append(const T &item);
-    void append(T &&item);
+    WVector<T> & append(T &&item);
 
     const T& get(int i) const;
     int size() const;
@@ -188,78 +189,76 @@ public:
      *
      * \return -1 in case of error
      * */
-    template <class Writable, class T2 = T> requires (std::is_base_of_v<WritableAbstract, Writable>)
-    static
-    auto save(Writable &writable, const WVector<T2> &list) noexcept -> int
-    {
-        const int size = list.size();
-        static_assert_type(size, const int);
-
-        if (writable.write(size) < 0) {
-            return -1;
-        }
-
-        for (const auto &ref: std::as_const(list)) {
-            if (T2::write(writable, ref) < 0)
-                return -1;
-        }
-        return 0;
-    }
+    template <class T2 = T>
+    static auto write(WritableAbstract &writable, const WVector<T2> &list) noexcept -> int;
 
     template <class StartNewThreadFunction, class T2 = T>
+    static auto writeMultiThread (WritableAbstract &writable, const WVector<T2> &list,
+                           StartNewThreadFunction startNewThread) noexcept -> int;
+
+    template<class T2 = T>
     static
-    auto writeMultiThread (WritableAbstract &writable, const WVector<T2> &list, StartNewThreadFunction startNewThread) noexcept -> int
-    {
-        int i = 0;
-        static_assert_type(list._size, int);
-
-        WVector<WTask> threads;
-        MemWritable w[list._size];
-        volatile bool result = false;
-
-        threads.reserve(list.size());
-
-        for (const auto &ref: std::as_const(list)) {
-            threads.append(startNewThread ([ref, &result, &w, i]() {
-                                               if (T2::write (w[i], ref) < 0)
-                                                   result = true;
-                                           }
-            ));
-            i++;
-        }
-
-        for (auto &thread: threads) {
-            thread.join();
-        }
-
-        // implement write stack and write data to original writer
-        if (writable.write(list._size) < 0)
-            return -1;
-
-        for (i = 0; i < list.size(); i++) {
-            size_t s = w[i].getCurrentSize();
-            if (writable.write(&s, sizeof(s)) < 0)
-                return -1;
-        }
-
-        for (i = 0; i < list.size(); i++) {
-            // optimize this copy
-            if (w[i].merge(writable) < 0)
-                return -1;
-        }
-
-        return 0;
-    }
+    auto loadMultiThread (
+            const VersionFileController &versionController,
+            ReadableAbstract &readable,
+            const Fn<WTask *(
+                    Fn<void()>
+            )> &startNewThread
+    ) noexcept -> WPair<int, WVector<T2>>;
 };
 
+template <class T>
+inline WVector<T>::WVector(int reserve) noexcept
+{
+    this->reserve(reserve);
+}
+
+template <class T>
+template <class StartNewThreadFunction, class T2>
+inline auto WVector<T>::writeMultiThread(WritableAbstract &writable, const WVector<T2> &list,
+                                         StartNewThreadFunction startNewThread) noexcept -> int
+{
+    return WAbstractList::writeMultiThread<WVector, T2>(writable, list, startNewThread);
+}
+
+template <class T>
+template <class T2>
+inline auto WVector<T>::loadMultiThread(
+        const VersionFileController &versionController, ReadableAbstract &readable,
+        const Fn<WTask *(
+                    Fn<void()>
+                )> &startNewThread
+    ) noexcept -> WPair<int, WVector<T2>>
+{
+    const auto reserveUnsafe = [] (WVector<T2>& list, int size) {
+        // TODO: implement
+        W_ASSERT(0);
+    };
+
+    const auto insertUnsafe = [] (WVector<T2> &list, T2 &&object, int index) {
+        // TODO: implement
+        W_ASSERT(0);
+    };
+
+    return WAbstractList::loadMultiThread<WVector, T2>(versionController, readable, startNewThread,
+                                                       reserveUnsafe, insertUnsafe);
+}
+
+template <class T>
+template <class T2>
+inline auto WVector<T>::write(WritableAbstract &writable, const WVector<T2> &list) noexcept -> int
+{
+    return WAbstractList::write(writable, list);
+}
+
 template<class T>
-auto WVector<T>::contains(const T &value) const -> bool
+inline auto WVector<T>::contains(const T &value) const -> bool
 {
     return indexOf(value) != -1;
 }
 
 template<class T>
-auto WVector<T>::removeOrderHighToLow(
+inline auto WVector<T>::removeOrderHighToLow(
             const T &object,
             const Fn<bool(const T &, const T &)> &cmp
         ) noexcept -> bool
@@ -544,9 +543,10 @@ inline void WVector<T>::reserve(int numberOfElement)
 }
 
 template <class T>
-inline void WVector<T>::append(T &&item)
+inline auto WVector<T>::append(T &&item) -> WVector<T> &
 {
     _data.push_back(std::move(item));
+    return *this;
 }
 
 template <class T>

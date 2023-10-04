@@ -10,7 +10,6 @@
 #include "core/WSemaphore.h"
 #include "core/WList.h"
 #include <thread>
-#include "core/WVector.h"
 #include "core/WHeap.h"
 #include "WTimer.h"
 #include "core/WElement.h"

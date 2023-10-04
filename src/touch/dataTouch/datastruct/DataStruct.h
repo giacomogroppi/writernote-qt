@@ -654,7 +654,7 @@ inline auto DataStruct::write (WritableAbstract &writable, const DataStruct &sou
     if (writable.write (source._pageVisible) < 0)
         return -1;
 
-    if (WVector<Page>::save (writable, source._page) < 0)
+    if (WVector<Page>::write (writable, source._page) < 0)
         return -1;
 
     return 0;
