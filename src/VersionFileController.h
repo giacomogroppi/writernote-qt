@@ -41,6 +41,7 @@ private:
     DEFINE_VERSION(WMap, 0);
 
     static constexpr auto numberOfElements = 22;
+    static constexpr unsigned short versionVersionFileController = 0u;
 
     static
     auto getArray(VersionFileController &versionController) -> std::unique_ptr<unsigned short *>;
@@ -53,11 +54,13 @@ public:
     [[nodiscard]]
     static auto load (ReadableAbstract &readable) -> std::pair<int, VersionFileController>;
 
-    [[nodiscard]]
+    nd
     static auto write (WritableAbstract &writable) -> int;
     
     auto operator=(VersionFileController &&other) noexcept -> VersionFileController& = default;
     auto operator=(const VersionFileController &other) noexcept -> VersionFileController& = default;
+
+    auto operator==(const VersionFileController& other) const noexcept -> bool = default;
 };
 
 inline auto VersionFileController::getArray(VersionFileController &versionController) -> std::unique_ptr<unsigned short *>
@@ -94,15 +97,17 @@ inline auto VersionFileController::getArray(VersionFileController &versionContro
 inline auto VersionFileController::load(ReadableAbstract &readable) -> std::pair<int, VersionFileController>
 {
     VersionFileController result{};
-    short versionVersionFileController;
+    unsigned short version;
 
-    if (readable.read(versionVersionFileController) < 0)
+    if (readable.read(version) < 0)
         return {-1, result};
 
     std::unique_ptr<unsigned short*> d = getArray(result);
 
     for (int i = 0; i < numberOfElements; i++) {
-        if (readable.read (&(*d)[i], sizeof (unsigned short)) < 0)
+        unsigned short &value = (*d)[i];
+
+        if (readable.read (value) < 0)
             return {-1, result};
     }
 
@@ -114,8 +119,13 @@ inline auto VersionFileController::write(WritableAbstract& writable) -> int
     VersionFileController object{};
     auto array = getArray(object);
 
+    if (writable.write(versionVersionFileController) < 0)
+        return -1;
+
     for (int i = 0; i < VersionFileController::numberOfElements; ++i) {
-        if (writable.write(&(*array)[i], sizeof(unsigned short)) < 0)
+        unsigned short value = (*array)[i];
+
+        if (writable.write(value) < 0)
             return -1;
     }
 

@@ -12,9 +12,9 @@ private:
 public:
     constexpr RectTemplate() = default;
     constexpr RectTemplate(const RectTemplate<T> &other);
-    constexpr RectTemplate(const PointTemplate<T> &topLeft, const PointTemplate<T> &bottomRight);
+    constexpr RectTemplate(const PointTemplate<T> &pt1, const PointTemplate<T> &pt2);
     constexpr explicit RectTemplate(const WSizeTemplate<T> &size);
-    constexpr RectTemplate(T xTopLeft, T yTopLeft, T xBottomRight, T yBottomRight);
+    constexpr RectTemplate(T xTopLeft, T yTopLeft, T width, T height);
     constexpr RectTemplate(const PointTemplate<T>&point, const WSizeTemplate<T> &size);
 
     constexpr RectTemplate<T> addY(T y) const;
@@ -24,34 +24,34 @@ public:
     constexpr T left() const;
     constexpr T right() const;
 
-    const PointTemplate<T> &topLeft() const;
-    const PointTemplate<T> topRight() const;
-    const PointTemplate<T> bottomLeft() const;
-    const PointTemplate<T> &bottomRight() const;
+    auto topLeft() const -> const PointTemplate<T> &;
+    auto topRight() const -> const PointTemplate<T>;
+    auto bottomLeft() const -> const PointTemplate<T>;
+    auto bottomRight() const -> const PointTemplate<T> &;
 
-    constexpr RectTemplate<T> &left(T amount);
-    constexpr RectTemplate<T> &top(T amount);
-    constexpr RectTemplate<T> &bottom(T amount);
-    constexpr RectTemplate<T> &right(T amount);
+    constexpr auto left(T amount) -> RectTemplate<T> &;
+    constexpr auto top(T amount) -> RectTemplate<T> &;
+    constexpr auto bottom(T amount) -> RectTemplate<T> &;
+    constexpr auto right(T amount) -> RectTemplate<T> &;
 
-    RectTemplate<T> setHeight(T height);
-    RectTemplate<T> setWidth(T width);
+    auto setHeight(T height) -> RectTemplate<T>&;
+    auto setWidth(T width) -> RectTemplate<T>&;
 
     auto height() const -> T;
     auto width() const  -> T;
     
-    RectTemplate<T> setY(T y);
-    RectTemplate<T> setX(T x);
+    auto setY(T y) -> RectTemplate<T>&;
+    auto setX(T x) -> RectTemplate<T>&;
 
     void translate(const T &x, const T& y);
 
-    RectTemplate<T>& setTopLeft(const PointTemplate<T> &topLeft);
-    RectTemplate<T>& setTopRight(const PointTemplate<T> &topRight);
-    RectTemplate<T>& setBottomLeft(const PointTemplate<T> &bottomLeft);
-    RectTemplate<T>& setBottomRight(const PointTemplate<T> &bottomRight);
+    auto setTopLeft(const PointTemplate<T> &topLeft) -> RectTemplate<T>&;
+    auto setTopRight(const PointTemplate<T> &topRight) -> RectTemplate<T>&;
+    auto setBottomLeft(const PointTemplate<T> &bottomLeft) -> RectTemplate<T>&;
+    auto setBottomRight(const PointTemplate<T> &bottomRight) -> RectTemplate<T>&;
 
-    T y() const;
-    T x() const;
+    auto y() const -> T;
+    auto x() const -> T;
 
     template <typename Z>
     constexpr RectTemplate<Z> castTo() const;
@@ -59,9 +59,11 @@ public:
     bool intersects(const RectTemplate<T> &other) const;
     RectTemplate<T> intersected(const RectTemplate<T> &other) const;
 
-    constexpr bool contains(const PointTemplate<T> &point, T precision = T(0)) const;
+    constexpr auto contains(const PointTemplate<T> &point, T precision = T(0)) const -> bool;
+    constexpr auto containsAny(const std::initializer_list<PointTemplate<T>>& points, T precision = T(0)) const -> bool;
 
-    constexpr bool isNull() const;
+    nd
+    constexpr auto isNull() const -> bool;
 
     constexpr auto operator=(const RectTemplate<T> &other) -> RectTemplate<T>&;
     constexpr auto operator=(RectTemplate<T> &&other) -> RectTemplate<T>& = default;
@@ -139,16 +141,10 @@ inline RectTemplate<T> RectTemplate<T>::intersected(const RectTemplate<T> &other
 template<typename T>
 inline bool RectTemplate<T>::intersects(const RectTemplate<T> &other) const
 {
-    if (this->contains(other.topLeft()) ||
-        this->contains(other.topRight()) ||
-        this->contains(other.bottomRight()) ||
-        this->contains(other.bottomLeft()))
+    if (this->containsAny({other.topLeft(), other.topRight(), other.bottomRight(), other.bottomLeft()}))
         return true;
 
-    if (other.contains(this->topLeft()) ||
-        other.contains(this->topRight()) ||
-        other.contains(this->bottomRight()) ||
-        other.contains(this->bottomLeft()))
+    if (other.containsAny({topLeft(), topRight(), bottomRight(), bottomLeft()}))
         return true;
 
     return false;
@@ -161,6 +157,18 @@ inline constexpr bool RectTemplate<T>::contains(const PointTemplate<T> &point, T
             point.y() >= _topLeft.y() - precision &&
             point.x() <= _bottomRight.x() + precision &&
             point.y() <= _bottomRight.y() + precision;
+}
+
+template <class T>
+inline constexpr auto RectTemplate<T>::containsAny(const std::initializer_list<PointTemplate<T>> &points,
+                                                T precision) const -> bool
+{
+    for (const auto &ref: std::as_const(points)) {
+        if (contains(ref, precision))
+            return true;
+    }
+
+    return false;
 }
 
 template<typename T>
@@ -298,7 +306,7 @@ inline RectTemplate<T>& RectTemplate<T>::setTopLeft(const PointTemplate<T> &topL
 }
 
 template<typename T>
-inline RectTemplate<T> RectTemplate<T>::setX(T x)
+inline auto RectTemplate<T>::setX(T x) -> RectTemplate<T>&
 {
     const auto diff = _bottomRight.x() - _topLeft.x();
 
@@ -315,7 +323,7 @@ inline RectTemplate<T> RectTemplate<T>::setX(T x)
 }
 
 template<typename T>
-inline RectTemplate<T> RectTemplate<T>::setY(T y)
+inline auto RectTemplate<T>::setY(T y) -> RectTemplate<T>&
 {
     const auto diff = _bottomRight.y() - _topLeft.y();
 
@@ -380,7 +388,7 @@ inline constexpr RectTemplate<Z> RectTemplate<T>::castTo() const {
 }
 
 template<typename T>
-inline RectTemplate<T> RectTemplate<T>::setWidth(T width)
+inline auto RectTemplate<T>::setWidth(T width) -> RectTemplate<T>&
 {
     _bottomRight.setX(
         _topLeft.x() + width
@@ -389,7 +397,7 @@ inline RectTemplate<T> RectTemplate<T>::setWidth(T width)
 }
 
 template<typename T>
-inline RectTemplate<T> RectTemplate<T>::setHeight(T height)
+inline auto RectTemplate<T>::setHeight(T height) -> RectTemplate<T>&
 {
     _bottomRight.setY(
         _topLeft.y() + height
@@ -398,7 +406,7 @@ inline RectTemplate<T> RectTemplate<T>::setHeight(T height)
 }
 
 template<typename T>
-inline const PointTemplate<T> RectTemplate<T>::bottomLeft() const
+inline auto RectTemplate<T>::bottomLeft() const -> const PointTemplate<T>
 {
     return PointTemplate<T> {
         _topLeft.x(),
@@ -407,13 +415,13 @@ inline const PointTemplate<T> RectTemplate<T>::bottomLeft() const
 }
 
 template<typename T>
-inline const PointTemplate<T> &RectTemplate<T>::bottomRight() const
+inline auto RectTemplate<T>::bottomRight() const -> const PointTemplate<T> &
 {
     return _bottomRight;
 }
 
 template<typename T>
-inline RectTemplate<T>& RectTemplate<T>::setBottomLeft(const PointTemplate<T> &bottomLeft)
+inline auto RectTemplate<T>::setBottomLeft(const PointTemplate<T> &bottomLeft) -> RectTemplate<T>&
 {
     _topLeft.setX(
             bottomLeft.x()
@@ -426,7 +434,7 @@ inline RectTemplate<T>& RectTemplate<T>::setBottomLeft(const PointTemplate<T> &b
 }
 
 template<typename T>
-inline const PointTemplate<T> RectTemplate<T>::topRight() const
+inline auto RectTemplate<T>::topRight() const -> const PointTemplate<T>
 {
     return PointTemplate<T> {
         _bottomRight.x(),
@@ -446,8 +454,8 @@ inline constexpr RectTemplate<T> RectTemplate<T>::addY(T y) const
     return RectTemplate {
         _topLeft.x(),
         _topLeft.y() + y,
-        _bottomRight.x(),
-        _bottomRight.y() + y
+        width(),
+        height()
     };
 }
 
@@ -459,10 +467,12 @@ inline constexpr RectTemplate<T>::RectTemplate(const PointTemplate<T> &point, co
 }
 
 template<typename T>
-inline constexpr RectTemplate<T>::RectTemplate(T xTopLeft, T yTopLeft, T xBottomRight, T yBottomRight)
+inline constexpr RectTemplate<T>::RectTemplate(T xTopLeft, T yTopLeft, T width, T height)
     : _topLeft(xTopLeft, yTopLeft)
-    , _bottomRight(xBottomRight, yBottomRight)
+    , _bottomRight(xTopLeft + width, yTopLeft + height)
 {
+    W_ASSERT(width >= T(0));
+    W_ASSERT(height >= T(0));
 }
 
 template<typename T>
@@ -473,7 +483,10 @@ inline constexpr RectTemplate<T>::RectTemplate(const WSizeTemplate<T> &size)
 }
 
 template<typename T>
-inline constexpr RectTemplate<T>::RectTemplate(const PointTemplate<T> &pt1, const PointTemplate<T> &pt2)
+inline constexpr RectTemplate<T>::RectTemplate(
+            const PointTemplate<T> &pt1,
+            const PointTemplate<T> &pt2
+        )
     : _topLeft(
             WCommonScript::min(
                     pt1.x(),

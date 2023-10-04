@@ -18,6 +18,7 @@ FileManager::FileManager(WObject *parent, WPath basePath, bool createDir)
 
     if (_dir.isEmpty() and createDir) {
         Directory::createDir(_basePath / "Not classified");
+        _dir = FileManager::getAllDir(_basePath);
     }
 }
 
@@ -30,8 +31,13 @@ auto FileManager::getCurrentFiles() const -> const WListFast<WFile>&
 
 auto FileManager::getAllDir(const WPath &path) -> WListFast<Directory>
 {
+    std::error_code error;
     WListFast<Directory> ret = {};
-    auto entry = std::filesystem::directory_iterator(path);
+    auto entry = std::filesystem::directory_iterator(path, error);
+
+    if (error.value() != 0) {
+        return {};
+    }
 
     for (const auto& ref: std::as_const(entry)) {
         ret.append(Directory(WPath(ref.path())));
@@ -116,17 +122,22 @@ auto FileManager::createDirectory(const WString &name) -> int
 }
 
 // TODO: create proper file
-Extention::Extention(WString e)
-    : _extention(std::move(e))
+Extension::Extension(WString e)
+    : _extension(std::move(e))
 {
 }
 
-auto Extention::size() const -> int
+auto Extension::size() const -> int
 {
-    return this->_extention.size();
+    return this->_extension.size();
 }
 
-auto Extention::makeWriternote() -> Extention
+auto Extension::makeWriternote() -> Extension
 {
     return {"writernote"};
+}
+
+auto Extension::makeTxt() -> Extension
+{
+    return {"txt"};
 }

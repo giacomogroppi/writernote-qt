@@ -24,9 +24,9 @@ public:
     WFile (WFile &&file) noexcept;
 
     enum: int {
-        WFileReadOnly,
-        WFileWrite,
-        WFileAppend
+        ReadOnly,
+        Write,
+        Append
     };
 
     /**

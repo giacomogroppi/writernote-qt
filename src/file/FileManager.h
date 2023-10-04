@@ -7,20 +7,21 @@
 #include "core/WList.h"
 
 // TODO: create proper file
-class Extention {
+class Extension {
 private:
-    WString _extention;
+    WString _extension;
 
-    Extention (WString e);
+    Extension (WString e);
 public:
 
-    static auto makeWriternote() -> Extention;
+    static auto makeWriternote() -> Extension;
+    static auto makeTxt() -> Extension;
 
     [[nodiscard]]
     auto size() const -> int;
 
-    operator std::filesystem::path () const { return std::filesystem::path (_extention.toStdString()); }
-    operator WString () const { return _extention; }
+    operator std::filesystem::path () const { return std::filesystem::path (_extension.toStdString()); }
+    operator WString () const { return _extension; }
 };
 
 class FileManager final:
@@ -65,16 +66,14 @@ public:
 
     auto createDirectory (const WString& name) -> int;
 
-    template <class T>
-            requires (std::is_class<T>::value)
-    auto createFile (const WString& name, const T& file, const Extention& extension) -> int;
-
-    template <class T>
-            requires (std::is_class<T>::value)
-    nd auto openFile (const WString& name, const Extention& extension) -> WPair<int, T>;
+    template <class T> requires (std::is_class<T>::value)
+    auto createFile (const WString& name, const T& file, const Extension& extension) -> int;
 
     template <class T> requires (std::is_class<T>::value)
-    nd auto updateFile (const WString& name, const T& file, const Extention& extension) -> int;
+    nd auto openFile (const WString& name, const Extension& extension) -> WPair<int, T>;
+
+    template <class T> requires (std::is_class<T>::value)
+    nd auto updateFile (const WString& name, const T& file, const Extension& extension) -> int;
 
     W_EMITTABLE_0(onDirectoryListChanged);
     W_EMITTABLE_0(onCurrentDirectoryChanged);
@@ -83,22 +82,27 @@ public:
 
 // TODO: small refactor
 template <class T> requires (std::is_class<T>::value)
-inline auto FileManager::updateFile(const WString &name, const T &file, const Extention &extension) -> int
+inline auto FileManager::updateFile(const WString &name, const T &file, const Extension &extension) -> int
 {
     return createFile(name, file, extension);
 }
 
 template <class T> requires (std::is_class<T>::value)
-inline auto FileManager::createFile(const WString& name, const T &file, const Extention &extension) -> int
+inline auto FileManager::createFile(const WString& name, const T &file, const Extension &extension) -> int
 {
-    auto& dir = _dir[_selected];
     const WString nameWithExtension = (name.mid(name.size() - extension.size()) == ('.' + extension)) ?
                                        name : WString(name + '.' + extension);
-    const auto path = _basePath
-                        / dir.getFolderName()
-                        / nameWithExtension;
 
-    const auto result = _dir[_selected].addFiles(path, file);
+    const auto result = _dir[_selected].addFiles(nameWithExtension, [&](WritableAbstract& writable) {
+        if (VersionFileController::write(writable) < 0)
+            return -1;
+
+        if (T::write(writable, file) < 0)
+            return -1;
+
+        return 0;
+    });
+    //const auto result = _dir[_selected].addFiles(nameWithExtension, file);
 
     W_EMIT_0(onListFilesChanged);
 
@@ -107,13 +111,13 @@ inline auto FileManager::createFile(const WString& name, const T &file, const Ex
 
 template <class T>
     requires (std::is_class<T>::value)
-inline auto FileManager::openFile(const WString &name, const Extention &extension) -> WPair<int, T>
+inline auto FileManager::openFile(const WString &name, const Extension &extension) -> WPair<int, T>
 {
     const auto path = _basePath
             / _dir[_selected].getFolderName()
             / (name + '.' + extension);
 
-    WFile file (path, WFile::WFileReadOnly);
+    WFile file (path, WFile::ReadOnly);
 
     if (not file.isValid())
         return {-1, {}};
@@ -123,12 +127,12 @@ inline auto FileManager::openFile(const WString &name, const Extention &extensio
     if (result.first < 0)
         return {-1, {}};
 
-    const auto data = T::load (result.second, file);
+    const auto [r, data] = T::load (result.second, file);
 
-    if (data.first < 0)
+    if (r < 0)
         return {-1, {}};
 
-    return {0, {}};
+    return {0, std::move(data)};
 }
 
 inline auto FileManager::getDirectory() const -> const WListFast<Directory> &

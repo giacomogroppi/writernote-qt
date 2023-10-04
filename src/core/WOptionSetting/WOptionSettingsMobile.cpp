@@ -23,7 +23,7 @@ void WOptionSettings::setValue(const WByteArray &key, const WVariant &value)
 auto WOptionSettings::begin() -> bool
 {
     WFile file (WOptionSettings::getPathWritable() / WOptionSettings::nameFileConfiguration,
-                WFile::WFileReadOnly);
+                WFile::ReadOnly);
     
     if (not file.isValid())
         return false;
@@ -46,7 +46,7 @@ auto WOptionSettings::begin() -> bool
 auto WOptionSettings::save() const -> bool
 {
     WFile file (WOptionSettings::getPathWritable() / + WOptionSettings::nameFileConfiguration,
-                WFile::WFileWrite);
+                WFile::Write);
     
     if (not file.isValid())
         return false;

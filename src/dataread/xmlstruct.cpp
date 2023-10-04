@@ -19,7 +19,7 @@ size_t xmlstruct::get_size_file(const WPath &path)
     size_t size;
     WFile file(path);
 
-    if (!file.open(WFile::WFileReadOnly))
+    if (!file.open(WFile::ReadOnly))
         return 0;
 
     size = file.size();

@@ -14,7 +14,7 @@ FileContainer::FileContainer(WPath path)
     size_t offset = 0;
     int version;
 
-    if (!file.open(WFile::WFileReadOnly)) {
+    if (!file.open(WFile::ReadOnly)) {
         this->_isOk = false;
         return;
     }
@@ -40,7 +40,7 @@ bool FileContainer::close()
 {
     WFile file(this->_path);
 
-    if (not file.open(WFile::WFileWrite))
+    if (not file.open(WFile::Write))
         return false;
 
     if (WListFast<Pair>::write(file, this->_subFiles) < 0)

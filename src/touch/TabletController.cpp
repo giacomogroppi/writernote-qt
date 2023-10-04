@@ -313,7 +313,7 @@ auto TabletController::getFileManager() -> const SharedPtr<FileManager>&
 
 auto TabletController::openFile(const WString &name) -> int
 {
-    auto data = _fileManager->openFile<Document>(name, Extention::makeWriternote());
+    auto data = _fileManager->openFile<Document>(name, Extension::makeWriternote());
     const auto methodUpdate = [this] {
         W_EMIT_1(onNeedRefresh, UpdateEvent::makeAll());
     };
@@ -342,7 +342,7 @@ auto TabletController::getAudioRecorder() const -> AudioRecord &
 
 auto TabletController::closeCurrentFile() -> int
 {
-    const auto result = this->_fileManager->updateFile(_nameDoc, *_doc, Extention::makeWriternote());
+    const auto result = this->_fileManager->updateFile(_nameDoc, *_doc, Extension::makeWriternote());
 
     if (result < 0)
         return result;

@@ -57,7 +57,7 @@ bool log_ui::check_str(const WString &str) const
 
 void log_ui::write(const WString &stringa, log_ui::type_write var)
 {
-    WFile file(this->getCurrentPosition(), WFile::WFileWrite);
+    WFile file(this->getCurrentPosition(), WFile::Write);
     WString tmp;
 
     if(m_permi != permi::enable){
@@ -73,7 +73,7 @@ void log_ui::write(const WString &stringa, log_ui::type_write var)
 
     WMutexLocker _(mutex);
 
-    if (!file.open(WFile::WFileAppend)) {
+    if (!file.open(WFile::Append)) {
         m_permi = permi::error;
         return;
     }

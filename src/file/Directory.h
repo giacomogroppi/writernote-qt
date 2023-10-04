@@ -32,8 +32,7 @@ public:
      * */
     nd auto getFiles() const -> const WListFast<WFile>&;
 
-    template <class T> requires (std::is_class<T>::value)
-    auto addFiles(const WPath &position, const T& objectToWrite) -> int;
+    auto addFiles(const WString &nameFile, const Fn<int(WritableAbstract& readable)>& methodWrite) -> int;
 
     nd auto allDirsInFolder() const -> WListFast<WByteArray>;
 
@@ -66,21 +65,28 @@ inline bool Directory::operator !=(const Directory &other) const
     return !(*this == other);
 }
 
-template <class T>
-    requires (std::is_class<T>::value)
-inline auto Directory::addFiles(const WPath &position, const T& objectToWrite) -> int
+inline auto Directory::addFiles(const WString &nameFile, const Fn<int(WritableAbstract&)>& methodWrite) -> int
 {
-    const auto exists = WFile::exists(position);
+    const auto path = this->_path
+                      / nameFile;
 
-    WFile file (position, WFile::WFileWrite);
+    const auto exists = WFile::exists(path);
 
-    if (T::write (file, objectToWrite) < 0)
+    WFile file (path, WFile::Write);
+
+    if (not file.isValid())
         return -1;
+
+    if (methodWrite(file) < 0) {
+        file.close();
+        WFile::remove(path);
+        return -1;
+    }
 
     file.close();
 
     if (not exists)
-        this->_files.append(WFile(position));
+        this->_files.append(WFile(path));
 
     return 0;
 }

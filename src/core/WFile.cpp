@@ -8,14 +8,14 @@
 static auto convertToCanonical (char mode) -> const char *
 {
     switch (mode) {
-    case WFile::WFileAppend:
+    case WFile::Append:
         return "a";
-    case WFile::WFileReadOnly: {
+    case WFile::ReadOnly: {
         if constexpr (is_windows)
             return "rb";
         return "r";
     }
-    case WFile::WFileWrite: {
+    case WFile::Write: {
         if constexpr (is_windows)
             return "wb";
         return "w";
@@ -35,7 +35,8 @@ WFile::WFile(const WPath &path, char mode)
     , _path(path)
 {
     const auto *m = convertToCanonical(mode);
-    _fp = fopen (path.operator std::filesystem::path().c_str(), m);
+    const auto string = path.operator std::filesystem::path().string();
+    _fp = fopen (string.c_str(), m);
 }
 
 WFile::~WFile()
@@ -83,7 +84,7 @@ auto WFile::close() -> bool
 
 auto WFile::readFile(WByteArray &to, const WPath& pathFile) -> int
 {
-    WFile f (pathFile, WFile::WFileReadOnly);
+    WFile f (pathFile, WFile::ReadOnly);
 
     if(f.isValid())
         return -1;
