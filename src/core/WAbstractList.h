@@ -7,6 +7,7 @@
 #include "FileContainer/MemReadable.h"
 #include "FileContainer/MemWritable.h"
 #include "core/WPair.h"
+#include "WElement.h"
 
 namespace WAbstractList {
     template<class T>
@@ -254,23 +255,13 @@ namespace WAbstractList {
         int i;
         List<T> result;
         List<WTask*> threads;
-        List<size_t> seek;
+        List<UnsignedLong> seek;
         volatile bool needToAbort = false;
 
         {
             // load seek array
             // TODO: use UnsignedLong class
-            auto [tmp, seekLoad] = WAbstractList::load<List, size_t>(
-                    versionController,
-                    readable,
-                    [](const VersionFileController &, ReadableAbstract &readable) -> WPair<int, size_t> {
-                        size_t t;
-
-                        if (readable.read(t) < 0)
-                            return {-1, 0};
-
-                        return {0, t};
-                    });
+            auto [tmp, seekLoad] = WAbstractList::load<List, UnsignedLong>(versionController, readable);
 
             if (tmp < 0)
                 return {-1, {}};
@@ -284,7 +275,7 @@ namespace WAbstractList {
 
         MemReadable readers[seek.size()];
 
-        char rawData[seek.last()];
+        char rawData[seek.last().value()];
         if (readable.read (rawData, seek.last()) < 0)
             return {-1, {}};
 
@@ -367,23 +358,16 @@ namespace WAbstractList {
 
         // write to writer the seek information
         {
-            List<size_t> seek(list.size());
+            List<UnsignedLong> seek(list.size());
             size_t seekDelta = 0;
 
             for (i = 0; i < list.size(); i++) {
                 seekDelta += w[i].getCurrentSize();
-                seek.append(seekDelta);
+                seek.append(UnsignedLong(seekDelta));
             }
 
-            if (WAbstractList::write<List, size_t>(
-                    writable,
-                    seek,
-                    [](WritableAbstract &writable, size_t item) {
-                        return writable.write(&item, sizeof(item));
-                    }) < 0
-                    ) {
+            if (WAbstractList::write<List, UnsignedLong>(writable, seek) < 0)
                 return -1;
-            }
         }
 
         // we merge all the single writer in the main writer
