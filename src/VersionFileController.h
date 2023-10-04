@@ -7,12 +7,13 @@
 #include "Readable.h"
 #include "utils/WCommonScript.h"
 
-class VersionFileController {
+class VersionFileController
+{
 private:
 #   define DEFINE_VERSION(name, version)                                        \
     private:                                                                    \
     static constexpr unsigned short currentVersion##name = version;             \
-    unsigned short _version##name;                                              \
+    unsigned short _version##name = version;                                    \
     public:                                                                     \
     constexpr auto getVersion##name() const -> int { return _version##name; }   \
     private:
