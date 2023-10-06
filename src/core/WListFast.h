@@ -476,13 +476,7 @@ inline auto WListFast<T>::load(
                 ReadableAbstract &file
             ) -> WPair<int, WListFast<T>>
 {
-    return WListFast<T>::load(
-            versionController,
-            file,
-            [](const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, T> {
-                return T::load(versionController, readable);
-            }
-    );
+    return WAbstractList::load<WListFast, T>(versionController, file);
 }
 
 template<class T>

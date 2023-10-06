@@ -18,8 +18,7 @@ public:
     constexpr WElement(WElement &&other) noexcept = default;
     constexpr WElement(const WElement& other) noexcept = default;
 
-    template <class T2 = T>
-        requires (std::is_same<T2, T>::value)
+    template <class T2 = T> requires (std::is_same<T2, T>::value)
     constexpr explicit WElement(T2 object) noexcept : _value(std::move(object)) { }
 
     auto operator*(const WElement& v) const -> WElement { return WElement<T> (_value * v._value); } ;
@@ -44,6 +43,9 @@ public:
 
     operator T () const { return _value; }
     auto value () const -> T { return _value; }
+
+    auto operator=(const WElement& other) noexcept -> WElement& = default;
+    auto operator=(WElement&& other) noexcept -> WElement& = default;
 };
 
 template <class T> requires (std::is_arithmetic<T>::value)
@@ -55,7 +57,7 @@ inline auto WElement<T>::load(const VersionFileController &versionController,
     if (versionController.getVersionWElement() != 0)
         return {-1, {}};
 
-    if (readable.read(result) < 0)
+    if (readable.read(result._value) < 0)
         return {-1, {}};
 
     return {0, result};

@@ -198,9 +198,6 @@ namespace WAbstractList {
     }
 
     template <template <class T> class List, class T2>
-    auto load (const VersionFileController& version, ReadableAbstract& readable) -> WPair<int, List<T2>>;
-
-    template <template <class T> class List, class T2>
     static auto load  (
             const VersionFileController &versionController,
             ReadableAbstract &readable,
@@ -236,6 +233,18 @@ namespace WAbstractList {
                 return {-1, {}};
         }
         return {-1, {}};
+    }
+
+    template <template <class T> class List, class T2>
+    auto load (const VersionFileController& version, ReadableAbstract& readable) -> WPair<int, List<T2>>
+    {
+        return WAbstractList::load<List, T2>(
+                version,
+                readable,
+                [](const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, T2> {
+                    return T2::load(versionController, readable);
+                }
+        );
     }
 
     template <template <typename Ty> class List, class T>

@@ -12,86 +12,52 @@
 #include "core/WPair.h"
 
 
-/*
-
-template <class T>
-class WVectorIterator {
-private:
-    T *array;
-    int index;
-public:
-    explicit WVectorIterator(T *data) : array(data), index(0) {; };
-
-    T* operator->()         { return array[index]; };
-    T &operator*() const    { return array[index]; };
-    constexpr bool operator==(WVectorIterator i) const         { return index == i.index; }
-    constexpr bool operator!=(WVectorIterator i) const         { return index != i.index; }
-    WVectorIterator &operator++()                              { index ++; return *this; }
-    WVectorIterator operator++(int) { auto copy = *this; ++*this; return copy; }
-};
-
-template <class T>
-class WVectorConstIterator {
-private:
-    const T *array;
-    int index;
-public:
-    explicit WVectorConstIterator(const T *data) : array(data), index(0) {  };
-
-    const T* operator->() const   { return array[index]; };
-    const T &operator*() const    { return array[index]; };
-    constexpr bool operator==(WVectorConstIterator i) const         { return index == i.index; }
-    constexpr bool operator!=(WVectorConstIterator i) const         { return index != i.index; }
-    WVectorConstIterator &operator++()                              { index ++; return *this; }
-    WVectorConstIterator operator++(int) { auto copy = *this; ++*this; return copy; }
-};
-*/
 
 template <class T>
 class WVector
 {
 private:
-    /*
+
     T *_data;
     size_t _size;
     size_t _reserve;
 
     static constexpr const auto useReserve = false;
-    */
 
-    std::vector<T> _data;
+    /*std::vector<T> _data;*/
     static constexpr auto numberOfAllocation = 64;
 
     void test() const;
+
+    template <typename ...Args>
+    static void callConstructorOn(T* array, int index, Args&& ...args);
 public:
     WVector();
     WVector(const WVector<T> &other) noexcept;
     WVector(WVector<T> &&other) noexcept;
     WVector(std::initializer_list<T> &&object) noexcept;
-    WVector(int reserve) noexcept;
+    explicit WVector(int reserve) noexcept;
     ~WVector();
 
-    using const_iterator = typename std::vector<T>::const_iterator;
-    using iterator = typename std::vector<T>::iterator;
+    //using const_iterator = typename std::vector<T>::const_iterator;
+    //using iterator = typename std::vector<T>::iterator;
 
-    using riterator = typename std::vector<T>::reverse_iterator;
-    using rconst_iterator = typename std::vector<T>::const_reverse_iterator;
+    //using riterator = typename std::vector<T>::reverse_iterator;
+    //using rconst_iterator = typename std::vector<T>::const_reverse_iterator;
 
     void append(const WVector<T> &other);
 
     void append(const T &item);
-    WVector<T> & append(T &&item);
+    auto append(T &&item) -> WVector<T> &;
 
-    const T& get(int i) const;
-    int size() const;
-
-    template <class T2 = T>
-    bool isOrderLowToHigh() const;
+    auto get(int i) const -> const T&;
+    nd auto size() const -> int;
 
     template <class T2 = T>
-    bool isOrderHighToLow() const;
+    auto isOrderLowToHigh() const -> bool;
 
-
+    template <class T2 = T>
+    auto isOrderHighToLow() const -> bool;
 
     /**
      * Remove all the object [from, to)
@@ -100,13 +66,13 @@ public:
     void removeAt(int i);
     void move(int from, int to);
     void clear();
-    const T& at(int i) const;
+    auto at(int i) const -> const T&;
     void reserve(int numberOfElement);
-    T takeAt(int i);
+    auto takeAt(int i) -> T;
     auto last() const ->  const T&;
     auto first() const -> const T&;
     auto operator[](int index) -> T&;
-    auto isEmpty() const -> bool;
+    nd auto isEmpty() const -> bool;
 
     void insert(int index, T &&data);
     void insert(int index, const T& data);
@@ -156,27 +122,154 @@ public:
     auto operator==(const WVector<T> &other) const -> bool;
     auto operator!=(const WVector<T> &other) const -> bool;
 
-    iterator begin()    noexcept { return _data.begin(); }
-    iterator end()      noexcept { return _data.end(); }
+    auto operator[](int i) const -> const T&;
 
-    const_iterator constBegin()   const noexcept { return _data.cbegin(); }
-    const_iterator constEnd()     const noexcept { return _data.cend(); }
-    const_iterator begin()        const noexcept { return _data.cbegin(); }
-    const_iterator end()          const noexcept { return _data.cend(); }
-    /*
-    iterator begin() noexcept { test(); return iterator(this->_data); };
-    iterator end()   noexcept { test(); return iterator(nullptr);  };
+    class iterator
+    {
+    private:
+        T *array;
+        int index;
+    public:
+        using difference_type = std::ptrdiff_t;
+        using value_type = T;
+        using pointer = T*;
+        using reference = T&;
+        using iterator_category = std::random_access_iterator_tag;
 
-    const_iterator constBegin() const noexcept { test(); return const_iterator(this->_data); }
-    const_iterator constEnd()   const noexcept { test(); return const_iterator(nullptr); }
-    const_iterator cBegin() const noexcept { test(); return const_iterator(this->_data); }
-    const_iterator cEnd()   const noexcept { test(); return const_iterator(nullptr); }
-    const_iterator begin() const noexcept { test(); return const_iterator(this->_data); }
-    const_iterator end()   const noexcept { test(); return const_iterator(nullptr); }
-     */
+        explicit iterator(T *data, int index) : array(data), index(index) {  };
 
-    auto rbegin() -> riterator;
-    auto rend() -> riterator ;
+        iterator(const iterator& other) noexcept = default;
+        iterator(iterator&& other) noexcept = default;
+
+        auto operator->() const -> T* { return array[index]; };
+        auto operator*()  const -> T& { return array[index]; };
+
+        auto operator++() -> iterator & { index ++; return *this; }
+        auto operator--() -> iterator & { index --; return *this; }
+
+        iterator operator--(int) { auto copy = *this; --*this; return copy; }
+        iterator operator++(int) { auto copy = *this; ++*this; return copy; }
+
+        iterator operator+(int i) const { iterator tmp(*this); tmp.index = index + i; return tmp; }
+        iterator operator-(int i) const { iterator tmp(*this); tmp.index = index - i; return tmp; }
+
+        auto operator-(const iterator& other) const -> difference_type { return index - other.index; };
+        auto operator+(const iterator& other) const -> iterator { return index + other.index; };
+
+        auto operator+=(int value) -> iterator& { index += value; return *this; };
+        auto operator-=(int value) -> iterator& { index -= value; return *this; };
+
+        auto operator<(const iterator& other) const -> bool { return this->index < other.index; }
+        auto operator>(const iterator& other) const -> bool { return this->index > other.index; }
+        auto operator<=(const iterator& other) const -> bool { return this->index <= other.index; }
+        auto operator>=(const iterator& other) const -> bool { return this->index >= other.index; }
+        auto operator<=>(const iterator& other) const -> int
+        {
+            if (index < other.index)
+                return -1;
+            if (index > other.index)
+                return 1;
+            return 0;
+        }
+
+        auto operator[](int i) -> T& { return array[i]; };
+
+        /*
+        auto operator<(const class const_iterator& other) const -> bool;
+        auto operator>(const class const_iterator& other) const -> bool;
+        auto operator<=(const class const_iterator& other) const -> bool;
+        auto operator>=(const class const_iterator& other) const -> bool;
+        auto operator<=>(const class const_iterator& other) const -> int;
+        */
+
+        auto operator==(const iterator& iter) const -> bool = default;
+        auto operator!=(const iterator& iter) const -> bool = default;
+
+        auto operator=(const iterator& other) -> iterator& = default;
+        auto operator=(iterator&& other) -> iterator& = default;
+
+        explicit operator int() const { return index; };
+    };
+
+    class const_iterator
+    {
+    private:
+        const T *array;
+        int index;
+    public:
+        explicit const_iterator(const T *data, int index) : array(data), index(0) {};
+
+        auto operator->() const -> const T*  { return array[index]; };
+        auto operator*() const -> const T&   { return array[index]; };
+
+        auto operator++() -> const_iterator& { index ++; return *this; }
+        auto operator--() -> const_iterator& { index --; return *this; }
+
+        const_iterator operator--(int) { auto copy = *this; --*this; return copy; }
+        const_iterator operator++(int) { auto copy = *this; ++*this; return copy; }
+
+        const_iterator operator+(int i) { const_iterator tmp(*this); tmp.index = index + i; return tmp; }
+
+        const_iterator operator-(int i) { const_iterator tmp(*this); tmp.index = index - i; return tmp; }
+
+        auto operator-(const const_iterator& other) const -> const_iterator
+            { return const_iterator(array, index - other.index); }
+
+        auto operator+(const const_iterator& other) const -> const_iterator
+            { return const_iterator(array, index + other.index); }
+
+        auto operator<(const const_iterator& other) const -> bool { return this->index < other.index; }
+
+        auto operator+=(int value) -> const_iterator& { index += value; return *this; };
+        auto operator-=(int value) -> const_iterator& { index -= value; return *this; };
+
+        auto operator>(const const_iterator& other) const -> bool { return this->index > other.index; }
+        auto operator<=(const const_iterator& other) const -> bool { return this->index <= other.index; }
+        auto operator>=(const const_iterator& other) const -> bool { return this->index >= other.index; }
+        auto operator<=>(const const_iterator& other) const -> int
+        {
+            if (index < other.index)
+                return -1;
+            if (index > other.index)
+                return 1;
+            return 0;
+        }
+
+        /*
+        auto operator>(const iterator& other) const -> bool { return this->index > other.index; }
+        auto operator<=(const iterator& other) const -> bool { return this->index <= other.index; }
+        auto operator>=(const iterator& other) const -> bool { return this->index >= other.index; }
+        auto operator<=>(const iterator& other) const -> int
+        {
+            if (index < other.index)
+                return -1;
+            if (index > other.index)
+                return 1;
+            return 0;
+        }
+        */
+
+        auto operator==(const const_iterator& iter) const -> bool = default;
+        auto operator!=(const const_iterator& iter) const -> bool = default;
+
+        explicit operator int() const { return index; };
+    };
+
+    using reverse_iterator = std::reverse_iterator<iterator>;
+    using reverse_const_iterator = std::reverse_iterator<const_iterator>;
+
+    nd auto rbegin() noexcept -> reverse_iterator { return reverse_iterator(end()); }
+    nd auto rend() noexcept -> reverse_iterator { return reverse_iterator(begin()); }
+
+    nd auto begin() noexcept -> iterator { return iterator(this->_data, 0u); };
+    nd auto end()   noexcept -> iterator { return iterator(this->_data, size());  };
+
+    nd auto constBegin() const noexcept -> const_iterator { return const_iterator(_data, 0u); }
+    nd auto constEnd()   const noexcept -> const_iterator { return const_iterator(_data, size()); }
+    nd auto cBegin() const noexcept -> const_iterator { return const_iterator(_data, 0u); }
+    nd auto cEnd()   const noexcept -> const_iterator { return const_iterator(_data, size()); }
+    nd auto begin() const noexcept -> const_iterator { return const_iterator(_data, 0u); }
+    nd auto end()   const noexcept -> const_iterator { return const_iterator(_data, size()); }
 
     /**
      * \return < 0 if error
@@ -209,6 +302,7 @@ public:
 
 template <class T>
 inline WVector<T>::WVector(int reserve) noexcept
+    : WVector()
 {
     this->reserve(reserve);
 }
@@ -231,13 +325,13 @@ inline auto WVector<T>::loadMultiThread(
     ) noexcept -> WPair<int, WVector<T2>>
 {
     const auto reserveUnsafe = [] (WVector<T2>& list, int size) {
-        // TODO: implement
-        W_ASSERT(0);
+        list.reserve(size);
+        list._size = list._reserve;
+        list._reserve = 0;
     };
 
     const auto insertUnsafe = [] (WVector<T2> &list, T2 &&object, int index) {
-        // TODO: implement
-        W_ASSERT(0);
+        list.callConstructorOn(list._data, index, std::forward<T2>(object));
     };
 
     return WAbstractList::loadMultiThread<WVector, T2>(versionController, readable, startNewThread,
@@ -293,62 +387,90 @@ inline auto WVector<T>::removeOrderHighToLow(
 template <class T>
 auto WVector<T>::removeAll(int from, int to) -> void
 {
+    // TODO: optimize
+
     W_ASSERT(from >= 0 and from < to and to <= size());
-    _data.erase(begin() + from, begin() + to);
+
+    for (to --; to >= from ; to --)
+        removeAt(to);
 }
 
 template<class T>
-inline WVector<T> &WVector<T>::operator=(const WVector<T> &other)
+inline auto WVector<T>::operator=(const WVector<T> &other) -> WVector<T> &
 {
-    _data = other._data;
-    return *this;
+    for (unsigned i = 0; i < _size; i++)
+        _data[i].~T();
+
+    if (_size + _reserve < other.size()) {
+        reserve(other.size() - (_size + _reserve));
+
+        for (unsigned i = 0; i < other.size(); i++) {
+            callConstructorOn(_data, i, other[i]);
+        }
+
+        _reserve = 0;
+        _size = other.size();
+    } else {
+        free (_data);
+        _size = 0;
+        _reserve = 0;
+
+        reserve(other.size());
+
+        for (unsigned i = 0; i < other.size(); i++) {
+            callConstructorOn(_data, i, other[i]);
+        }
+    }
 }
 
 template <class T>
-auto WVector<T>::operator=(WVector<T> &&other) noexcept -> WVector<T> &
+inline auto WVector<T>::operator=(WVector<T> &&other) noexcept -> WVector<T> &
 {
-    _data = std::move(other._data);
+    for (unsigned i = 0; i < other.size(); i++)
+        _data[i].~T();
+    free(_data);
+
+    _data = other._data;
+    _size = other._size;
+    _reserve = other._reserve;
+
+    other._data = nullptr;
+    other._size = 0u;
+    other._reserve = 0u;
+
     return *this;
 }
 
 template<class T>
-auto WVector<T>::takeAt(int i) -> T
+inline auto WVector<T>::takeAt(int i) -> T
 {
     W_ASSERT(i >= 0 && i < size());
-    auto iterator = this->_data.begin() + i;
 
     T element = std::move(_data[i]);
 
-    _data.erase(iterator);
+    removeAt(i);
 
     return element;
 }
 
 template<class T>
-void WVector<T>::insert(int index, T &&data)
+inline void WVector<T>::insert(int index, T &&data)
 {
-    this->_data.insert(
-            _data.begin() + index,
-            std::move(data)
-    );
+    // TODO: implement
+    W_ASSERT(0);
 }
 
 template<class T>
-void WVector<T>::insert(int index, const T &data)
+inline void WVector<T>::insert(int index, const T &data)
 {
-    this->_data.insert(
-            _data.begin() + index,
-            data
-    );
+    T object = data;
+
+    return insert(index, std::forward<T>(object));
 }
 
 template<class T>
-auto WVector<T>::takeFirst() -> T
+inline auto WVector<T>::takeFirst() -> T
 {
-    T copy = std::move(_data.at(0));
-    _data.erase(_data.begin(), _data.begin() + 1);
-    return copy;
-    /*
     W_ASSERT(size() > 0);
 
     T item = std::move(at(0));
@@ -356,7 +478,7 @@ auto WVector<T>::takeFirst() -> T
     if (_reserve > 0) {
         // we "just" need to move the item
         for (int i = 0; i < _size - 1; i++) {
-            new (_data + sizeof(T) * i) T(_data[i]);
+            callConstructorOn(_data, i, std::forward<T>(_data[i]));
         }
 
         _reserve ++;
@@ -365,7 +487,7 @@ auto WVector<T>::takeFirst() -> T
         T *newMem = (T*) malloc(sizeof (T) * (_size - 1));
 
         for (int i = 0; i < _size - 1; i++) {
-            new (newMem + sizeof(T) * i) T(this->_data[i + 1]);
+            callConstructorOn(newMem, i, std::forward<T>(_data[i + 1]));
         }
 
         // dealloc last memory
@@ -379,7 +501,6 @@ auto WVector<T>::takeFirst() -> T
 
     _size --;
     return item;
-     */
 }
 
 template<class T>
@@ -403,12 +524,14 @@ auto WVector<T>::at(int i) const -> const T&
 template<class T>
 inline void WVector<T>::move(int from, int to)
 {
-    std::iter_swap(_data.begin() + from, _data.begin() + to);
-    /*
-    const auto &tmp = this->at(from);
-    this->_data[from] = _data[to];
-    this->_data[to] = tmp;
-     */
+    W_ASSERT(from >= 0 and from < size() && to >= 0 and to < size());
+
+    if (from == to)
+        return;
+
+    T tmp = std::forward<T>(_data[from]);
+    this->_data[from] = std::forward<T>(_data[to]);
+    this->_data[to] = std::forward<T>(tmp);
 }
 
 template<class T>
@@ -416,43 +539,46 @@ inline void WVector<T>::removeAt(int index)
 {
     W_ASSERT(index >= 0 && index < size());
 
-    this->_data.erase(_data.begin() + index, _data.begin() + index + 1);
+    _data[index].~T();
 
-    /*
-    // TODO: create a function removeAt that accept a vector of position
+    if (_reserve >= WVector::numberOfAllocation) {
+        T* newData = (T*) malloc (sizeof(T) * (_size - 1));
 
-    if (_reserve == 0 && !useReserve) {
-        auto *d = (T *) WMalloc(sizeof (T) * (_size - 1));
+        auto *now = _data;
+        _data = newData;
 
-        for (int i = 0; i < index; i++) {
-            d[i] = _data[i];
+        for (unsigned i = 0; i < index; i++) {
+            callConstructorOn(_data, i, std::forward<T>(now[i]));
         }
 
-        for (int i = index + 1; i < size(); i++) {
-            d[i - 1] = _data[i];
+        for (unsigned i = index + 1; i < _size; i++) {
+            callConstructorOn(_data, i, std::forward<T>(now[i + 1]));
         }
+
+        free(now);
+
+        _reserve = 0u;
     } else {
-        for (int i = index; i < size() - 1; i++) {
-            this->_data[i] = _data[i + 1];
+        // we just move
+        for (unsigned i = index + 1; i < _size; i++) {
+            this->move(i, i - 1);
         }
-
         _reserve ++;
     }
 
     _size --;
-     */
 }
 
 template<class T>
 inline void WVector<T>::clear()
 {
-    _data.clear();
-    /*
+    for (unsigned i = 0; i < _size; i++)
+        _data[i].~T();
+
     free(_data);
     _data = nullptr;
     _size = 0;
     _reserve = 0;
-     */
 }
 
 template<class T>
@@ -464,16 +590,16 @@ auto WVector<T>::isEmpty() const -> bool
 template<class T>
 inline auto WVector<T>::constData() const -> const T *
 {
-    return this->_data.data();
+    return this->_data;
 }
 
 template<class T>
 inline auto WVector<T>::indexOf(const T &object) const -> int
 {
-    const auto pos = std::find(_data.cbegin(), _data.cend(), object);
-    if (pos == _data.cend())
+    const auto pos = std::find(constBegin(), constEnd(), object);
+    if (pos == constEnd())
         return -1;
-    return pos - _data.cbegin();
+    return (pos - constBegin()).operator int();
 }
 
 template<class T>
@@ -503,7 +629,7 @@ inline auto WVector<T>::first() const -> const T &
 template<class T>
 inline auto WVector<T>::size() const -> int
 {
-    return _data.size();
+    return _size;
 }
 
 template<class T>
@@ -516,60 +642,57 @@ inline auto WVector<T>::get(int i) const -> const T &
 template<class T>
 inline WVector<T>::~WVector()
 {
-    /*
-    free(_data);
-    _data = nullptr;
-
-    _size = 0;
-    _reserve = 0;
-    */
+    clear();
 }
 
 template<class T>
 inline void WVector<T>::reserve(int numberOfElement)
 {
-    /*
     W_ASSERT(numberOfElement);
 
     auto *newData = (T *) malloc (sizeof (T) * (_size + _reserve + numberOfElement));
 
-    for (size_t i = 0; i < _size; i++) {
-        newData[i] = _data[i];
+    for (unsigned i = 0; i < _size; i++) {
+        newData[i] = std::forward<T>(_data[i]);
     }
 
     _reserve += numberOfElement;
-     */
-    _data.reserve(numberOfElement);
+
+    free (_data);
+    _data = newData;
 }
 
 template <class T>
 inline auto WVector<T>::append(T &&item) -> WVector<T> &
 {
-    _data.push_back(std::move(item));
+    if (_reserve == 0) {
+        reserve(WVector::numberOfAllocation);
+    }
+
+    this->callConstructorOn(_data, _size, std::forward<T>(item));
+
+    _size ++;
+    _reserve --;
+
     return *this;
 }
 
 template <class T>
 inline void WVector<T>::append(const T& item)
 {
-    /*
     if (_reserve > 0) {
-        new (_data + sizeof (T) * _size) T(item);
+        callConstructorOn(_data, _size, item);
         _reserve --;
         _size ++;
     } else {
-        this->reserve(32);
+        this->reserve(WVector::numberOfAllocation);
         return append(item);
     }
-     */
-
-    _data.push_back(item);
 }
 
 template<class T>
 inline void WVector<T>::append(const WVector<T> &other)
 {
-    /*
     if (_reserve - other.size() > 0) {
         for (auto &item: std::as_const(other)) {
             this->append(item);
@@ -578,33 +701,44 @@ inline void WVector<T>::append(const WVector<T> &other)
         reserve(other.size() - _reserve);
         return append(other);
     }
-    */
-    _data.insert(_data.end(), other._data.cbegin(), other._data.cend());
 }
 
 template<class T>
 inline WVector<T>::WVector()
-    : _data()
+    : _data(nullptr)
+    , _size(0)
+    , _reserve(0)
 {
 
 }
 
 template <class T>
 inline WVector<T>::WVector(const WVector<T> &other) noexcept
-    : _data(other._data)
-{}
+    : WVector(other.size())
+{
+    for (const auto& ref: std::as_const(other)) {
+        append(ref);
+    }
+}
 
 template <class T>
 WVector<T>::WVector(std::initializer_list<T> &&object) noexcept
-    : _data(std::move(object))
+    : WVector(object.size())
 {
-
+    for (const auto& ref: std::as_const(object)) {
+        append(ref);
+    }
 }
 
 template <class T>
 WVector<T>::WVector(WVector<T> &&other) noexcept
-    : _data(std::move(other._data))
+    : _data(other._data)
+    , _size(other._size)
+    , _reserve(other._reserve)
 {
+    other._data = nullptr;
+    other._size = 0;
+    other._reserve = 0;
 }
 
 #ifdef USE_QT
@@ -629,32 +763,7 @@ inline auto WVector<T>::load(
         ReadableAbstract &file
 ) -> WPair<int, WVector<T>>
 {
-    WVector<T> result;
-
-    switch (versionController.getVersionWListFast()) {
-        case 0:
-            int i, element;
-
-            if (file.read(element) < 0) {
-                return {-1, {}};
-            }
-
-            result.reserve(element);
-
-            for (i = 0; i < element; i++) {
-                const auto [res, object] = T::load (versionController, file);
-
-                if (res < 0)
-                    return {-1, {}};
-
-                result.append(
-                        std::move (object)
-                );
-            }
-            return {0, result};
-    }
-
-    return {-1, {}};
+    return WAbstractList::load<WVector, T>(versionController, file);
 }
 
 template <class T>
@@ -699,21 +808,15 @@ inline auto WVector<T>::removeOrderLowToHigh(
 }
 
 template <class T>
-auto WVector<T>::rend() -> riterator
+inline auto WVector<T>::remove(const T &object) -> int
 {
-    return this->_data.rend();
-}
+    // TODO: optimize
+    int value = indexOf(object);
+    while (value != -1) {
+        removeAt(value);
 
-template <class T>
-auto WVector<T>::rbegin() -> riterator
-{
-    return this->_data.rbegin();
-}
-
-template <class T>
-auto WVector<T>::remove(const T &object) -> int
-{
-    return std::erase_if(_data, [&](const T& item) { return item == object; }) != 0;
+        value = indexOf(object);
+    }
 }
 
 template <class T>
@@ -737,4 +840,18 @@ inline std::ostream& operator<<(std::ostream& os, const WVector<T>& dt)
         os << ref;
     }
     return os;
+}
+
+template <class T>
+template <typename... Args>
+inline void WVector<T>::callConstructorOn(T* array, int index, Args&& ...args)
+{
+    new (&array [index]) T (std::forward<Args>(args)...);
+}
+
+template <class T>
+inline auto WVector<T>::operator[](int i) const -> const T &
+{
+    W_ASSERT(i >= 0 and i < size());
+    return this->_data[i];
 }
