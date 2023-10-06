@@ -401,29 +401,12 @@ inline auto WVector<T>::operator=(const WVector<T> &other) -> WVector<T> &
     if (this == &other)
         return *this;
 
-    for (size_t i = 0; i < _size; i++)
-        _data[i].~T();
+    clear();
 
-    if (_size + _reserve < other.size()) {
-        reserve(other.size() - (_size + _reserve));
+    reserve(other.size());
 
-        for (unsigned i = 0; i < other.size(); i++) {
-            callConstructorOn(_data, i, other[i]);
-        }
-
-        _reserve = 0;
-        _size = other.size();
-    } else {
-        free (_data);
-        _size = 0;
-        _reserve = 0;
-
-        reserve(other.size());
-
-        for (unsigned i = 0; i < other.size(); i++) {
-            callConstructorOn(_data, i, other[i]);
-        }
-    }
+    for (const auto& ref: std::as_const(other))
+        append(ref);
 }
 
 template <class T>
