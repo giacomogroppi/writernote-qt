@@ -197,7 +197,7 @@ public:
         const T *array;
         int index;
     public:
-        explicit const_iterator(const T *data, int index) : array(data), index(0) {};
+        explicit const_iterator(const T *data, int index) : array(data), index(index) {};
 
         auto operator->() const -> const T*  { return array[index]; };
         auto operator*() const -> const T&   { return array[index]; };
@@ -398,7 +398,10 @@ auto WVector<T>::removeAll(int from, int to) -> void
 template<class T>
 inline auto WVector<T>::operator=(const WVector<T> &other) -> WVector<T> &
 {
-    for (unsigned i = 0; i < _size; i++)
+    if (this == &other)
+        return *this;
+
+    for (size_t i = 0; i < _size; i++)
         _data[i].~T();
 
     if (_size + _reserve < other.size()) {
@@ -426,8 +429,12 @@ inline auto WVector<T>::operator=(const WVector<T> &other) -> WVector<T> &
 template <class T>
 inline auto WVector<T>::operator=(WVector<T> &&other) noexcept -> WVector<T> &
 {
-    for (unsigned i = 0; i < other.size(); i++)
+    if (this == &other)
+        return *this;
+
+    for (auto i = 0; i < size(); i++)
         _data[i].~T();
+
     free(_data);
 
     _data = other._data;
@@ -596,22 +603,40 @@ inline auto WVector<T>::constData() const -> const T *
 template<class T>
 inline auto WVector<T>::indexOf(const T &object) const -> int
 {
-    const auto pos = std::find(constBegin(), constEnd(), object);
-    if (pos == constEnd())
+    auto b = begin();
+
+    for (; b != end(); b++)
+        if (*b == object)
+            break;
+
+    if (b == end())
         return -1;
-    return (pos - constBegin()).operator int();
+
+    return (b - begin()).operator int();
 }
 
 template<class T>
 inline auto WVector<T>::operator==(const WVector<T> &other) const -> bool
 {
-    return this->_data == other._data;
+    if (size() != other.size())
+        return false;
+
+    auto b1 = begin();
+    auto b2 = other.begin();
+    auto e1 = end();
+
+    for (; b1 != e1; b1++, b2 ++) {
+        if (*b1 != *b2)
+            return false;
+    }
+
+    return true;
 }
 
 template<class T>
 inline auto WVector<T>::operator!=(const WVector<T> &other) const -> bool
 {
-    return this->_data != other._data;
+    return not (*this == other);
 }
 
 template<class T>
@@ -648,7 +673,9 @@ inline WVector<T>::~WVector()
 template<class T>
 inline void WVector<T>::reserve(int numberOfElement)
 {
-    W_ASSERT(numberOfElement);
+    W_ASSERT(numberOfElement >= 0);
+    if (numberOfElement == 0)
+        return;
 
     auto *newData = (T *) malloc (sizeof (T) * (_size + _reserve + numberOfElement));
 
@@ -811,12 +838,17 @@ template <class T>
 inline auto WVector<T>::remove(const T &object) -> int
 {
     // TODO: optimize
+    int numberOfElementsRemoved = 0;
     int value = indexOf(object);
+
     while (value != -1) {
         removeAt(value);
+        numberOfElementsRemoved ++;
 
         value = indexOf(object);
     }
+
+    return numberOfElementsRemoved;
 }
 
 template <class T>

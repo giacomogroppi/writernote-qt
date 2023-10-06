@@ -101,14 +101,14 @@ public:
     auto first() const -> const T&;
 
     void clear();
-    void move(int, int);
-    void reserve(int);
-    T takeAt(int i);
-    const T& last() const;
-    int indexOf(const T& value) const;
-    int lastIndexOf(const T& object) const;
+    void move(int from, int to);
+    void reserve(int reserve);
+    auto takeAt(int i) -> T;
+    auto last() const -> const T&;
+    auto indexOf(const T& value) const -> int;
+    auto lastIndexOf(const T& object) const -> int;
     void insert(int index, const T& object);
-    T takeFirst();
+    auto takeFirst() -> T;
 
     void forAll(Fn<void(const T&)> method) const;
     void forAll(Fn<void(T&)> method);
@@ -505,6 +505,7 @@ inline auto WListFast<T>::operator=(const WListFast<T> &other) -> WListFast<T> &
     for (int i = 0; i < size(); i++) {
         delete _data[i];
     }
+
     free(this->_data);
     this->_data = nullptr;
 
@@ -616,12 +617,12 @@ inline auto WListFast<T>::takeAt(int index) -> T
 }
 
 template<class T>
-inline void WListFast<T>::reserve(int reserve)
+inline void WListFast<T>::reserve(int numberOfObjects)
 {
-    W_ASSERT(reserve >= 0);
+    W_ASSERT(numberOfObjects >= 0);
 
-    if (reserve) {
-        this->_reserved += reserve;
+    if (numberOfObjects) {
+        this->_reserved += numberOfObjects;
         this->_data = (T**) realloc(_data, sizeof (T*)  * (_size + _reserved));
     }
 

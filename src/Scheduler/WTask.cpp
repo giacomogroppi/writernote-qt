@@ -9,7 +9,7 @@ WTask::WTask(WObject *parent, bool deleteLater)
     , _deleteLater(deleteLater)
     , _hasFinish(false)
 {
-    WDebug(true, "Create object" << static_cast<void*>(this));
+    WDebug(false, "Create object" << static_cast<void*>(this));
 }
 
 void WTask::releaseJoiner() noexcept

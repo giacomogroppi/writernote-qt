@@ -20,7 +20,7 @@ Scheduler::Scheduler()
 
     instance = this;
 
-    _threads.reserve(nThreads);
+    _threads.reserve(nThreads + 1);
     std::vector<std::thread> thread;
 
     const auto functionThread = [this]() {
