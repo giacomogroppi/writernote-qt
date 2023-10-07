@@ -10,8 +10,7 @@
 #include "FileContainer/MemWritable.h"
 #include "Scheduler/WTask.h"
 #include "core/WPair.h"
-
-
+#include "core/Index.h"
 
 template <class T>
 class WVector
@@ -50,8 +49,7 @@ public:
     void append(WVector<T> &&other);
     void append(const WVector<T> &other);
 
-    auto append(T object) -> WVector<T>&;
-    void append(const T &item);
+    auto append(const T &item) -> WVector<T>&;
     auto append(T &&item) -> WVector<T>&;
 
     auto get(int i) const -> const T&;
@@ -66,21 +64,21 @@ public:
     /**
      * Remove all the object [from, to)
      * */
-    void removeAll(int from, int to);
-    void removeAt(int i);
-    void move(int from, int to);
+    void removeAll(Index from, Index to);
+    void removeAt(Index i);
+    void move(Index from, Index to);
     void clear();
-    auto at(int i) const -> const T&;
+    auto at(Index i) const -> const T&;
     void reserve(int numberOfElement);
-    auto takeAt(int i) -> T;
+    auto takeAt(Index i) -> T;
     auto last() const ->  const T&;
     auto first() const -> const T&;
     auto operator[](int index) -> T&;
     nd auto isEmpty() const -> bool;
 
-    void insert(int index, WVector<T> &&vector);
-    void insert(int index, T &&data);
-    void insert(int index, const T& data);
+    void insert(Index index, WVector<T> &&vector);
+    void insert(Index index, T &&data);
+    void insert(Index index, const T& data);
 
     auto takeFirst() -> T;
 
@@ -92,7 +90,7 @@ public:
     /**
      * \return The index of the object, -1 in case there is no object equals to object
      * */
-    auto indexOf(const T &object) const -> int;
+    auto indexOf(const T &object) const -> Index;
 
     /**
      * \brief This method remove all the occurrences of object in the array
@@ -300,7 +298,7 @@ inline auto WVector<T>::write(WritableAbstract &writable, const WVector<T2> &lis
 template<class T>
 inline auto WVector<T>::contains(const T &value) const -> bool
 {
-    return indexOf(value) != -1;
+    return indexOf(value).isValid();
 }
 
 template<class T>
@@ -337,11 +335,10 @@ inline auto WVector<T>::removeOrderHighToLow(
 }
 
 template <class T>
-auto WVector<T>::removeAll(int from, int to) -> void
+auto WVector<T>::removeAll(Index from, Index to) -> void
 {
     // TODO: optimize
-
-    W_ASSERT(from >= 0 and from < to and to <= size());
+    W_ASSERT(from.isValid() and to.isValid() and from < to and to.value() <= size());
 
     for (to --; to >= from ; to --)
         removeAt(to);
@@ -359,6 +356,8 @@ inline auto WVector<T>::operator=(const WVector<T> &other) -> WVector<T> &
 
     for (const auto& ref: std::as_const(other))
         append(ref);
+
+    return *this;
 }
 
 template <class T>
@@ -367,7 +366,7 @@ inline auto WVector<T>::operator=(WVector<T> &&other) noexcept -> WVector<T> &
     if (this == &other)
         return *this;
 
-    for (auto i = 0; i < size(); i++)
+    for (Size i = 0; i < size(); i++)
         _data[i].~T();
 
     free(_data);
@@ -384,9 +383,9 @@ inline auto WVector<T>::operator=(WVector<T> &&other) noexcept -> WVector<T> &
 }
 
 template<class T>
-inline auto WVector<T>::takeAt(int i) -> T
+inline auto WVector<T>::takeAt(Index i) -> T
 {
-    W_ASSERT(i >= 0 && i < size());
+    W_ASSERT(i < size());
 
     T element = std::move(_data[i]);
 
@@ -396,18 +395,25 @@ inline auto WVector<T>::takeAt(int i) -> T
 }
 
 template <class T>
-inline void WVector<T>::insert(int index, WVector<T> &&vector)
+inline void WVector<T>::insert(Index index, WVector<T> &&vector)
 {
     if (_reserve < vector.size()) {
         T* newData = (T*) malloc (sizeof(T) * (_size + vector.size()));
 
-        for (size_t i = 0; i < index; i++)
+        for (size_t i = 0; i < index.value(); i++)
             callConstructorOn(newData, i, std::forward<T>(_data[i]));
 
-        for (size_t i = index; i < index + vector.size(); i++)
-            callConstructorOn(newData, i, std::forward<T>(vector._data[i - index]));
+        for (size_t i = index.value(); i < index.value() + vector.size(); i++){
+            callConstructorOn(
+                    newData,
+                    i,
+                    std::forward<T>(
+                            vector._data[i - index.value()]
+                    )
+            );
+        }
 
-        for (size_t i = index + vector.size(); i < _size + vector.size(); i++)
+        for (size_t i = index.value() + vector.size(); i < _size + vector.size(); i++)
             callConstructorOn(newData, i, std::forward<T>(_data[i - vector.size()]));
 
         free(_data);
@@ -417,12 +423,16 @@ inline void WVector<T>::insert(int index, WVector<T> &&vector)
     } else {
         // we have enough memory
         // move memory
-        for (size_t i = _size - 1 + vector.size(); i >= index + vector.size(); i--)
-            callConstructorOn(_data, i, _data[i - vector.size()]);
+        for (size_t i = _size - 1 + vector.size();
+                    i >= index.value() + vector.size();
+                    i--
+                ) {
+            callConstructorOn(_data, i, std::forward<T>(_data[i - vector.size()]));
+        }
 
         // we copy the memory from the other WVector
-        for (size_t i = index; i < vector.size() + index; i++)
-            callConstructorOn(_data, i, vector._data[i - index]);
+        for (size_t i = index.value(); i < vector.size() + index.value(); i++)
+            callConstructorOn(_data, i, std::forward<T>(vector._data[i - index.value()]));
 
         _reserve -= vector.size();
         _size += vector.size();
@@ -435,7 +445,7 @@ inline void WVector<T>::insert(int index, WVector<T> &&vector)
 }
 
 template<class T>
-inline void WVector<T>::insert(int index, T &&data)
+inline void WVector<T>::insert(Index index, T &&data)
 {
     WVector<T> tmp(1);
     tmp.append(std::forward<T>(data));
@@ -443,7 +453,7 @@ inline void WVector<T>::insert(int index, T &&data)
 }
 
 template<class T>
-inline void WVector<T>::insert(int index, const T &data)
+inline void WVector<T>::insert(Index index, const T &data)
 {
     T object = data;
 
@@ -455,7 +465,7 @@ inline auto WVector<T>::takeFirst() -> T
 {
     W_ASSERT(size() > 0);
 
-    T item = std::move(at(0));
+    T item(std::move(_data[0]));
 
     if (_reserve > 0) {
         // we "just" need to move the item
@@ -498,30 +508,30 @@ inline auto WVector<T>::operator[](int index) -> T &
 }
 
 template<class T>
-auto WVector<T>::at(int i) const -> const T&
+auto WVector<T>::at(Index i) const -> const T&
 {
-    return _data[i];
+    return _data[i.value()];
 }
 
 template<class T>
-inline void WVector<T>::move(int from, int to)
+inline void WVector<T>::move(Index from, Index to)
 {
-    W_ASSERT(from >= 0 and from < size() && to >= 0 and to < size());
+    W_ASSERT(from.value() < size() and to.value() < size());
 
     if (from == to)
         return;
 
-    T tmp = std::forward<T>(_data[from]);
-    this->_data[from] = std::forward<T>(_data[to]);
-    this->_data[to] = std::forward<T>(tmp);
+    T tmp = std::forward<T>(_data[from.value()]);
+    this->_data[from.value()] = std::forward<T>(_data[to.value()]);
+    this->_data[to.value()] = std::forward<T>(tmp);
 }
 
 template<class T>
-inline void WVector<T>::removeAt(int index)
+inline void WVector<T>::removeAt(Index index)
 {
-    W_ASSERT(index >= 0 && index < size());
+    W_ASSERT(index.value() < size());
 
-    _data[index].~T();
+    _data[index.value()].~T();
 
     if (_reserve >= WVector::numberOfAllocation) {
         T* newData = (T*) malloc (sizeof(T) * (_size - 1));
@@ -529,11 +539,11 @@ inline void WVector<T>::removeAt(int index)
         auto *now = _data;
         _data = newData;
 
-        for (unsigned i = 0; i < index; i++) {
+        for (unsigned i = 0; i < index.value(); i++) {
             callConstructorOn(_data, i, std::forward<T>(now[i]));
         }
 
-        for (unsigned i = index + 1; i < _size; i++) {
+        for (unsigned i = index.value() + 1; i < _size; i++) {
             callConstructorOn(_data, i, std::forward<T>(now[i + 1]));
         }
 
@@ -542,8 +552,8 @@ inline void WVector<T>::removeAt(int index)
         _reserve = 0u;
     } else {
         // we just move
-        for (unsigned i = index + 1; i < _size; i++) {
-            this->move(i, i - 1);
+        for (unsigned i = index.value() + 1; i < _size; i++) {
+            this->move(Index(i), Index(i - 1));
         }
         _reserve ++;
     }
@@ -576,18 +586,18 @@ inline auto WVector<T>::constData() const -> const T *
 }
 
 template<class T>
-inline auto WVector<T>::indexOf(const T &object) const -> int
+inline auto WVector<T>::indexOf(const T &object) const -> Index
 {
-    auto b = begin();
+    auto i = begin();
 
-    for (; b != end(); b++)
-        if (*b == object)
+    for (; i != end(); i++)
+        if (*i == object)
             break;
 
-    if (b == end())
-        return -1;
+    if (i == end())
+        return Index::makeInvalid();
 
-    return b - begin();
+    return Index(i - begin());
 }
 
 template<class T>
@@ -623,7 +633,7 @@ inline auto WVector<T>::last() const -> const T &
 template<class T>
 inline auto WVector<T>::first() const -> const T &
 {
-    return at(0);
+    return at(Index(0));
 }
 
 template<class T>
@@ -665,12 +675,6 @@ inline void WVector<T>::reserve(int numberOfElement)
 }
 
 template <class T>
-inline auto WVector<T>::append(T item) -> WVector<T>&
-{
-    return append(std::forward<T>(item));
-}
-
-template <class T>
 inline auto WVector<T>::append(T &&item) -> WVector<T> &
 {
     if (_reserve == 0)
@@ -685,7 +689,7 @@ inline auto WVector<T>::append(T &&item) -> WVector<T> &
 }
 
 template <class T>
-inline void WVector<T>::append(const T& item)
+inline auto WVector<T>::append(const T& item) -> WVector<T>&
 {
     T object = item;
     return append(std::forward<T>(object));
@@ -834,9 +838,9 @@ inline auto WVector<T>::remove(const T &object) -> int
 {
     // TODO: optimize
     int numberOfElementsRemoved = 0;
-    int value = indexOf(object);
+    auto value = indexOf(object);
 
-    while (value != -1) {
+    while (value.isValid()) {
         removeAt(value);
         numberOfElementsRemoved ++;
 

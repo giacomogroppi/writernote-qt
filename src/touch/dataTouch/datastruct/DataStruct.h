@@ -117,24 +117,26 @@ public:
     void decreaseAlfa(const WVector<int> &pos, int page);
     void removePage(int page);
 
-    __fast [[nodiscard]] const Page & at(int page) const;
-    __fast Page &           at_mod(cint page);
+    [[deprecated]]
+    nd
+    auto at(int page) const -> const Page &;
+    auto at_mod(int page) -> Page &;
 
     [[deprecated]] [[nodiscard]]
-    WPoint at_draw_page(cint indexPoint, const Page &Page) const;
-
-    __fast [[nodiscard]] const Page &     lastPage() const;
+    auto at_draw_page(cint indexPoint, const Page &Page) const -> WPoint;
 
     [[nodiscard]]
-    int lengthPage() const{ return _page.size(); }
+    auto lastPage() const -> const Page &;
+
+    [[nodiscard]]
+    auto lengthPage() const -> int { return _page.size(); }
     void newPage(n_style style);
 
     [[nodiscard]]
-    PointF get_size_page() const{ return {Page::getWidth(), Page::getHeight()}; }
+    auto get_size_page() const -> PointF { return {Page::getWidth(), Page::getHeight()}; }
 
-    __fast [[nodiscard]] RectF getSizeArea(const WVector<int> &pos, int page) const;
-    __fast [[nodiscard]] RectF get_size_area(const WListFast<WVector<int>> &pos, int base) const;
-    //__slow RectF getSizeArea(const WListFast<int> & id) const;
+    nd auto getSizeArea(const WVector<int> &pos, int page) const -> RectF;
+    nd auto get_size_area(const WListFast<WVector<int>> &pos, int base) const -> RectF;
 
     auto getFirstPageVisible() const -> int;
 
@@ -146,7 +148,7 @@ public:
     auto getLastPageVisible() const -> int;
     void newViewAudio(int newTime);
 
-    [[nodiscard]] int get_range_visible() const;
+    nd auto get_range_visible() const -> int;
     void insertPage(const Page &Page, int index);
 
     auto operator=(const DataStruct &other) noexcept -> DataStruct &;
@@ -236,7 +238,7 @@ force_inline bool DataStruct::needToCreateNewSheet() const
 
 inline const Page & DataStruct::at(int page) const
 {
-    return _page.at(page);
+    return _page.at(Index(page));
 }
 
 inline Page &DataStruct::at_mod(cint page)
@@ -476,7 +478,7 @@ inline void DataStruct::append(const WListFast<SharedPtr<Stroke>> &stroke, int m
 
 inline void DataStruct::removeAt(int indexPage){
     int index = indexPage, len;
-    this->_page.removeAt(indexPage);
+    this->_page.removeAt(Index(indexPage));
 
     W_ASSERT(indexPage < this->lengthPage());
 

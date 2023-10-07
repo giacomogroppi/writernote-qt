@@ -589,7 +589,7 @@ Page::Page()
 RectF Page::get_size_area(const WVector<int> &pos) const
 {
     RectF result, tmp;
-    int len = pos.size();
+    auto len = pos.size();
 
     if(un(!len)){
         return {};

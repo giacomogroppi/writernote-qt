@@ -218,8 +218,8 @@ redo:
         W_ASSERT(stroke_mod_stroke.size() == stroke_mod_point.size());
 
         for (i-- ; i >= 0; i --) {
-            cint indexStroke    = stroke_mod_stroke.at(i);
-            cint indexPoint     = stroke_mod_point.at(i);
+            cint indexStroke = stroke_mod_stroke.at(i);
+            cint indexPoint  = stroke_mod_point.at(i);
 
             _datastruct->changeIdThreadSave(indexPoint, _page->atStrokeMod(indexStroke), *_page);
         }
