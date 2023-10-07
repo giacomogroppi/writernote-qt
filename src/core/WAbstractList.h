@@ -106,7 +106,7 @@ namespace WAbstractList {
         ) -> Iterator
     {
         long long left = 0;
-        long long right = end - begin;
+        long long right = end - begin - 1;
 
         Iterator result = end;
 

@@ -124,11 +124,15 @@ public:
 
     auto operator[](int i) const -> const T&;
 
-    class iterator
+    template <class T2>
+    class AbstractIterator
     {
     private:
         T *array;
         int index;
+#ifdef DEBUGINFO
+        int max;
+#endif // DEBUGINFO
     public:
         using difference_type = std::ptrdiff_t;
         using value_type = T;
@@ -136,34 +140,38 @@ public:
         using reference = T&;
         using iterator_category = std::random_access_iterator_tag;
 
-        explicit iterator(T *data, int index) : array(data), index(index) {  };
+#if !defined(DEBUGINFO)
+        explicit AbstractIterator(T *data, int index, int max) : array(data), index(index) { unused(max); };
+#else
+        explicit AbstractIterator(T* data, int index, int max): array(data), index(index), max(max) {};
+#endif // DEBUGINFO
 
-        iterator(const iterator& other) noexcept = default;
-        iterator(iterator&& other) noexcept = default;
+        AbstractIterator(const AbstractIterator& other) noexcept = default;
+        AbstractIterator(AbstractIterator&& other) noexcept = default;
 
-        auto operator->() const -> T* { return array[index]; };
-        auto operator*()  const -> T& { return array[index]; };
+        auto operator->() const -> T* { W_ASSERT(index >= 0 and index < max); return array[index]; };
+        auto operator*()  const -> T& { W_ASSERT(index >= 0 and index < max); return array[index]; };
 
-        auto operator++() -> iterator & { index ++; return *this; }
-        auto operator--() -> iterator & { index --; return *this; }
+        auto operator++() -> AbstractIterator & { index ++; return *this; }
+        auto operator--() -> AbstractIterator & { index --; return *this; }
 
-        iterator operator--(int) { auto copy = *this; --*this; return copy; }
-        iterator operator++(int) { auto copy = *this; ++*this; return copy; }
+        auto operator--(int) -> AbstractIterator { auto copy = *this; --*this; return copy; }
+        auto operator++(int) -> AbstractIterator { auto copy = *this; ++*this; return copy; }
 
-        iterator operator+(int i) const { iterator tmp(*this); tmp.index = index + i; return tmp; }
-        iterator operator-(int i) const { iterator tmp(*this); tmp.index = index - i; return tmp; }
+        auto operator+(int i) const -> AbstractIterator { AbstractIterator tmp(*this); tmp.index = index + i; return tmp; }
+        auto operator-(int i) const -> AbstractIterator { AbstractIterator tmp(*this); tmp.index = index - i; return tmp; }
 
-        auto operator-(const iterator& other) const -> difference_type { return index - other.index; };
-        auto operator+(const iterator& other) const -> iterator { return index + other.index; };
+        auto operator-(const AbstractIterator& other) const -> difference_type { return index - other.index; };
+        auto operator+(const AbstractIterator& other) const -> AbstractIterator { return index + other.index; };
 
-        auto operator+=(int value) -> iterator& { index += value; return *this; };
-        auto operator-=(int value) -> iterator& { index -= value; return *this; };
+        auto operator+=(int value) -> AbstractIterator& { index += value; return *this; };
+        auto operator-=(int value) -> AbstractIterator& { index -= value; return *this; };
 
-        auto operator<(const iterator& other) const -> bool { return this->index < other.index; }
-        auto operator>(const iterator& other) const -> bool { return this->index > other.index; }
-        auto operator<=(const iterator& other) const -> bool { return this->index <= other.index; }
-        auto operator>=(const iterator& other) const -> bool { return this->index >= other.index; }
-        auto operator<=>(const iterator& other) const -> int
+        auto operator<(const AbstractIterator& other) const -> bool { return this->index < other.index; }
+        auto operator>(const AbstractIterator& other) const -> bool { return this->index > other.index; }
+        auto operator<=(const AbstractIterator& other) const -> bool { return this->index <= other.index; }
+        auto operator>=(const AbstractIterator& other) const -> bool { return this->index >= other.index; }
+        auto operator<=>(const AbstractIterator& other) const -> int
         {
             if (index < other.index)
                 return -1;
@@ -172,7 +180,7 @@ public:
             return 0;
         }
 
-        auto operator[](int i) -> T& { return array[i]; };
+        auto operator[](int i) -> T& { W_ASSERT(i >= 0 and i < max); return array[i]; };
 
         /*
         auto operator<(const class const_iterator& other) const -> bool;
@@ -182,78 +190,17 @@ public:
         auto operator<=>(const class const_iterator& other) const -> int;
         */
 
-        auto operator==(const iterator& iter) const -> bool = default;
-        auto operator!=(const iterator& iter) const -> bool = default;
+        auto operator==(const AbstractIterator& iter) const -> bool = default;
+        auto operator!=(const AbstractIterator& iter) const -> bool = default;
 
-        auto operator=(const iterator& other) -> iterator& = default;
-        auto operator=(iterator&& other) -> iterator& = default;
-
-        explicit operator int() const { return index; };
-    };
-
-    class const_iterator
-    {
-    private:
-        const T *array;
-        int index;
-    public:
-        explicit const_iterator(const T *data, int index) : array(data), index(index) {};
-
-        auto operator->() const -> const T*  { return array[index]; };
-        auto operator*() const -> const T&   { return array[index]; };
-
-        auto operator++() -> const_iterator& { index ++; return *this; }
-        auto operator--() -> const_iterator& { index --; return *this; }
-
-        const_iterator operator--(int) { auto copy = *this; --*this; return copy; }
-        const_iterator operator++(int) { auto copy = *this; ++*this; return copy; }
-
-        const_iterator operator+(int i) { const_iterator tmp(*this); tmp.index = index + i; return tmp; }
-
-        const_iterator operator-(int i) { const_iterator tmp(*this); tmp.index = index - i; return tmp; }
-
-        auto operator-(const const_iterator& other) const -> const_iterator
-            { return const_iterator(array, index - other.index); }
-
-        auto operator+(const const_iterator& other) const -> const_iterator
-            { return const_iterator(array, index + other.index); }
-
-        auto operator<(const const_iterator& other) const -> bool { return this->index < other.index; }
-
-        auto operator+=(int value) -> const_iterator& { index += value; return *this; };
-        auto operator-=(int value) -> const_iterator& { index -= value; return *this; };
-
-        auto operator>(const const_iterator& other) const -> bool { return this->index > other.index; }
-        auto operator<=(const const_iterator& other) const -> bool { return this->index <= other.index; }
-        auto operator>=(const const_iterator& other) const -> bool { return this->index >= other.index; }
-        auto operator<=>(const const_iterator& other) const -> int
-        {
-            if (index < other.index)
-                return -1;
-            if (index > other.index)
-                return 1;
-            return 0;
-        }
-
-        /*
-        auto operator>(const iterator& other) const -> bool { return this->index > other.index; }
-        auto operator<=(const iterator& other) const -> bool { return this->index <= other.index; }
-        auto operator>=(const iterator& other) const -> bool { return this->index >= other.index; }
-        auto operator<=>(const iterator& other) const -> int
-        {
-            if (index < other.index)
-                return -1;
-            if (index > other.index)
-                return 1;
-            return 0;
-        }
-        */
-
-        auto operator==(const const_iterator& iter) const -> bool = default;
-        auto operator!=(const const_iterator& iter) const -> bool = default;
+        auto operator=(const AbstractIterator& other) -> AbstractIterator& = default;
+        auto operator=(AbstractIterator&& other) -> AbstractIterator& = default;
 
         explicit operator int() const { return index; };
     };
+
+    using iterator = AbstractIterator<T>;
+    using const_iterator = AbstractIterator<const T>;
 
     using reverse_iterator = std::reverse_iterator<iterator>;
     using reverse_const_iterator = std::reverse_iterator<const_iterator>;
@@ -261,15 +208,15 @@ public:
     nd auto rbegin() noexcept -> reverse_iterator { return reverse_iterator(end()); }
     nd auto rend() noexcept -> reverse_iterator { return reverse_iterator(begin()); }
 
-    nd auto begin() noexcept -> iterator { return iterator(this->_data, 0u); };
-    nd auto end()   noexcept -> iterator { return iterator(this->_data, size());  };
+    nd auto begin() noexcept -> iterator { return iterator(this->_data, 0u, _size); };
+    nd auto end()   noexcept -> iterator { return iterator(this->_data, size(), _size);  };
 
-    nd auto constBegin() const noexcept -> const_iterator { return const_iterator(_data, 0u); }
-    nd auto constEnd()   const noexcept -> const_iterator { return const_iterator(_data, size()); }
-    nd auto cBegin() const noexcept -> const_iterator { return const_iterator(_data, 0u); }
-    nd auto cEnd()   const noexcept -> const_iterator { return const_iterator(_data, size()); }
-    nd auto begin() const noexcept -> const_iterator { return const_iterator(_data, 0u); }
-    nd auto end()   const noexcept -> const_iterator { return const_iterator(_data, size()); }
+    nd auto constBegin() const noexcept -> const_iterator { return const_iterator(_data, 0u, _size); }
+    nd auto constEnd()   const noexcept -> const_iterator { return const_iterator(_data, size(), _size); }
+    nd auto cBegin() const noexcept -> const_iterator { return const_iterator(_data, 0u, _size); }
+    nd auto cEnd()   const noexcept -> const_iterator { return const_iterator(_data, size(), _size); }
+    nd auto begin() const noexcept -> const_iterator { return const_iterator(_data, 0u, _size); }
+    nd auto end()   const noexcept -> const_iterator { return const_iterator(_data, size(), _size); }
 
     /**
      * \return < 0 if error
@@ -595,7 +542,7 @@ inline auto WVector<T>::indexOf(const T &object) const -> int
     if (b == end())
         return -1;
 
-    return (b - begin()).operator int();
+    return b - begin();
 }
 
 template<class T>
