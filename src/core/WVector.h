@@ -18,9 +18,11 @@ class WVector
 {
 private:
 
+    using Size = size_t;
+
     T *_data;
-    size_t _size;
-    size_t _reserve;
+    Size _size;
+    Size _reserve;
 
     static constexpr const auto useReserve = false;
 
@@ -45,13 +47,15 @@ public:
     //using riterator = typename std::vector<T>::reverse_iterator;
     //using rconst_iterator = typename std::vector<T>::const_reverse_iterator;
 
+    void append(WVector<T> &&other);
     void append(const WVector<T> &other);
 
+    auto append(T object) -> WVector<T>&;
     void append(const T &item);
-    auto append(T &&item) -> WVector<T> &;
+    auto append(T &&item) -> WVector<T>&;
 
     auto get(int i) const -> const T&;
-    nd auto size() const -> int;
+    nd auto size() const -> Size;
 
     template <class T2 = T>
     auto isOrderLowToHigh() const -> bool;
@@ -74,6 +78,7 @@ public:
     auto operator[](int index) -> T&;
     nd auto isEmpty() const -> bool;
 
+    void insert(int index, WVector<T> &&vector);
     void insert(int index, T &&data);
     void insert(int index, const T& data);
 
@@ -390,11 +395,51 @@ inline auto WVector<T>::takeAt(int i) -> T
     return element;
 }
 
+template <class T>
+inline void WVector<T>::insert(int index, WVector<T> &&vector)
+{
+    if (_reserve < vector.size()) {
+        T* newData = (T*) malloc (sizeof(T) * (_size + vector.size()));
+
+        for (size_t i = 0; i < index; i++)
+            callConstructorOn(newData, i, std::forward<T>(_data[i]));
+
+        for (size_t i = index; i < index + vector.size(); i++)
+            callConstructorOn(newData, i, std::forward<T>(vector._data[i - index]));
+
+        for (size_t i = index + vector.size(); i < _size + vector.size(); i++)
+            callConstructorOn(newData, i, std::forward<T>(_data[i - vector.size()]));
+
+        free(_data);
+        _data = newData;
+        _size = vector.size() + _size;
+        _reserve = 0u;
+    } else {
+        // we have enough memory
+        // move memory
+        for (size_t i = _size - 1 + vector.size(); i >= index + vector.size(); i--)
+            callConstructorOn(_data, i, _data[i - vector.size()]);
+
+        // we copy the memory from the other WVector
+        for (size_t i = index; i < vector.size() + index; i++)
+            callConstructorOn(_data, i, vector._data[i - index]);
+
+        _reserve -= vector.size();
+        _size += vector.size();
+    }
+
+    free(vector._data);
+    vector._data = nullptr;
+    vector._size = 0;
+    vector._reserve = 0;
+}
+
 template<class T>
 inline void WVector<T>::insert(int index, T &&data)
 {
-    // TODO: implement
-    W_ASSERT(0);
+    WVector<T> tmp(1);
+    tmp.append(std::forward<T>(data));
+    this->insert(index, std::move(tmp));
 }
 
 template<class T>
@@ -582,7 +627,7 @@ inline auto WVector<T>::first() const -> const T &
 }
 
 template<class T>
-inline auto WVector<T>::size() const -> int
+inline auto WVector<T>::size() const -> Size
 {
     return _size;
 }
@@ -620,11 +665,16 @@ inline void WVector<T>::reserve(int numberOfElement)
 }
 
 template <class T>
+inline auto WVector<T>::append(T item) -> WVector<T>&
+{
+    return append(std::forward<T>(item));
+}
+
+template <class T>
 inline auto WVector<T>::append(T &&item) -> WVector<T> &
 {
-    if (_reserve == 0) {
+    if (_reserve == 0)
         reserve(WVector::numberOfAllocation);
-    }
 
     this->callConstructorOn(_data, _size, std::forward<T>(item));
 
@@ -637,14 +687,29 @@ inline auto WVector<T>::append(T &&item) -> WVector<T> &
 template <class T>
 inline void WVector<T>::append(const T& item)
 {
-    if (_reserve > 0) {
-        callConstructorOn(_data, _size, item);
-        _reserve --;
-        _size ++;
-    } else {
-        this->reserve(WVector::numberOfAllocation);
-        return append(item);
+    T object = item;
+    return append(std::forward<T>(object));
+}
+
+template <class T>
+inline void WVector<T>::append(WVector<T> &&item)
+{
+    if (_reserve >= item.size())
+        reserve(item.size() > WVector::numberOfAllocation
+                    ? item.size()
+                    : WVector::numberOfAllocation);
+
+    for (Size i = 0; i < item.size(); i++) {
+        callConstructorOn(_data, i + _size, std::forward<T>(item._data[i]));
     }
+
+    _size += item.size();
+    _reserve -= item.size();
+
+    free(item._data);
+    item._data = nullptr;
+    item._size = 0u;
+    item._reserve = 0u;
 }
 
 template<class T>
