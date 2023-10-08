@@ -79,7 +79,7 @@ inline constexpr auto Index::operator ++() noexcept -> Index&
 
 inline constexpr auto Index::operator --() noexcept -> Index&
 {
-    W_ASSERT(_index > 0);
+    W_ASSERT(_index >= 0);
     _index --;
     return *this;
 }
@@ -87,7 +87,7 @@ inline constexpr auto Index::operator --() noexcept -> Index&
 inline constexpr auto Index::operator--(int) -> Index
 {
     Index tmp(*this);
-    W_ASSERT(_index > 0);
+    W_ASSERT(_index >= 0);
     _index --;
     return tmp;
 }

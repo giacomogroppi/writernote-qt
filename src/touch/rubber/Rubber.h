@@ -22,6 +22,10 @@ public:
 
     W_EMITTABLE_0(onRubberChange);
 
+    Rubber (Rubber&& other) = delete;
+    Rubber (const Rubber& other) = delete;
+
+
 private:
     int _size_gomma = DEFAULT_GOMMA_SIZE;
     RubberMethod::type_rubber _type_gomma = RubberMethod::total;

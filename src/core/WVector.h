@@ -23,7 +23,7 @@ private:
     Size _size;
     Size _reserve;
 
-    static constexpr const auto useReserve = false;
+    static constexpr const auto useReserve = true;
 
     /*std::vector<T> _data;*/
     static constexpr auto numberOfAllocation = 64;
@@ -390,7 +390,9 @@ template <class T>
 inline void WVector<T>::insert(Index index, WVector<T> &&vector)
 {
     if (_reserve < vector.size()) {
-        T* newData = (T*) malloc (sizeof(T) * (_size + vector.size()));
+        T* newData = (T*) malloc (sizeof(T) *
+                (_size + vector.size() + WVector::numberOfAllocation)
+        );
 
         for (size_t i = 0; i < index.value(); i++)
             callConstructorOn(newData, i, std::forward<T>(_data[i]));
@@ -411,11 +413,11 @@ inline void WVector<T>::insert(Index index, WVector<T> &&vector)
         free(_data);
         _data = newData;
         _size = vector.size() + _size;
-        _reserve = 0u;
+        _reserve = WVector::numberOfAllocation;
     } else {
         // we have enough memory
         // move memory
-        for (size_t i = _size - 1 + vector.size();
+        for (Size i = _size - 1 + vector.size();
                     i >= index.value() + vector.size();
                     i--
                 ) {
@@ -423,7 +425,7 @@ inline void WVector<T>::insert(Index index, WVector<T> &&vector)
         }
 
         // we copy the memory from the other WVector
-        for (size_t i = index.value(); i < vector.size() + index.value(); i++)
+        for (Size i = index.value(); i < vector.size() + index.value(); i++)
             callConstructorOn(_data, i, std::forward<T>(vector._data[i - index.value()]));
 
         _reserve -= vector.size();
@@ -457,9 +459,9 @@ inline auto WVector<T>::takeFirst() -> T
 {
     W_ASSERT(size() > 0);
 
-    T item(std::move(_data[0]));
+    const T item(std::move(_data[0]));
 
-    if (_reserve > 0) {
+    if (_reserve < WVector::numberOfAllocation and WVector::useReserve) {
         // we "just" need to move the item
         for (int i = 0; i < _size - 1; i++) {
             callConstructorOn(_data, i, std::forward<T>(_data[i + 1]));
@@ -528,18 +530,16 @@ inline void WVector<T>::removeAt(Index index)
     if (_reserve >= WVector::numberOfAllocation) {
         T* newData = (T*) malloc (sizeof(T) * (_size - 1));
 
-        auto *now = _data;
+        for (Size i = 0; i < index.value(); i++) {
+            callConstructorOn(newData, i, std::forward<T>(_data[i]));
+        }
+
+        for (Size i = index.value() + 1; i < _size; i++) {
+            callConstructorOn(newData, i - 1, std::forward<T>(_data[i]));
+        }
+
+        free(_data);
         _data = newData;
-
-        for (unsigned i = 0; i < index.value(); i++) {
-            callConstructorOn(_data, i, std::forward<T>(now[i]));
-        }
-
-        for (unsigned i = index.value() + 1; i < _size; i++) {
-            callConstructorOn(_data, i, std::forward<T>(now[i + 1]));
-        }
-
-        free(now);
 
         _reserve = 0u;
     } else {

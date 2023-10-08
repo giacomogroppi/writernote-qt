@@ -442,11 +442,11 @@ bool WLineTemplate<Precision>::intersect(
     const WLineTemplate<Precision> line2Up      = line2.top(precision)      .growLeft(precision).growRight(precision);
     const WLineTemplate<Precision> line2Down    = line2.bottom(precision)   .growLeft(precision).growRight(precision);
 
-    W_ASSERT(line1Up._m == line1._m);
-    W_ASSERT(line2Up._m == line2._m);
+    W_ASSERT(WCommonScript::is_near(line1Up._m, line1._m, 1e-05));
+    W_ASSERT(WCommonScript::is_near(line2Up._m, line2._m, 1e-05));
 
-    W_ASSERT(line1Up._m == line1Down._m);
-    W_ASSERT(line2Up._m == line2Down._m);
+    W_ASSERT(WCommonScript::is_near(line1Up._m, line1Down._m, 1e-05));
+    W_ASSERT(WCommonScript::is_near(line2Up._m, line2Down._m, 1e-05));
 
     if (isTouch(line1Up, line2Up))
         return true;
