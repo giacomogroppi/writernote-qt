@@ -11,10 +11,12 @@ Scheduler::Scheduler()
     , _semMain(0)
     , _need_to_sort(false)
     , _needToDie(false)
-    , _timersWaiting([](const WTimer *t1, const WTimer *t2)-> bool {
-        return t1->getEnd() >= t2->getEnd();
+    , _timersWaiting([](const WTimer *t1, const WTimer *t2) -> bool {
+        return t1->getEnd() > t2->getEnd();
     })
 {
+    WDebug(debug and false, "Call constructor");
+
     const auto nThreads = numberOfThread();
     W_ASSERT(instance == nullptr);
 
@@ -54,25 +56,37 @@ Scheduler::Scheduler()
         using namespace std;
         using namespace chrono;
 
+        using namespace std::chrono;
+        std::unique_lock<std::mutex> lk (this->_muxTimers);
+
         for (;;) {
-            using namespace std::chrono;
-            std::unique_lock<std::mutex> lk (this->_muxTimers);
+            constexpr int minWait = 10;
+            const chrono::duration shouldWaitFor = (_timersWaiting.isEmpty()
+                    ? chrono::milliseconds (100'000)
+                    : chrono::milliseconds(
+                                this->_timersWaiting.getFirst()->getEnd() -
+                                WTimer::now()
+                            ));
 
-            const auto shouldWaitFor = (_timersWaiting.isEmpty()
-                    ? std::chrono::milliseconds (100'000).count()
-                    : this->_timersWaiting.getFirst()->getDuration());
-
-            const auto lastValueEnd = _timersWaiting.isEmpty()
-                    ? std::chrono::milliseconds (100'000).count()
+            const unsigned long lastValueEnd = _timersWaiting.isEmpty()
+                    ? (0x2ul << 60)
                     : _timersWaiting.getFirst()->getEnd();
 
-            this->_c.wait_for(lk, std::chrono::milliseconds (shouldWaitFor), [&lastValueEnd, this]{
-                // if the list has been modified we need to reschedule the
-                // timer for std::condition_value, or we need to die
-                return needToDie() || (
-                        _timersWaiting.size() != 0 &&
-                        _timersWaiting.getFirst()->getEnd() != lastValueEnd);
-            });
+            if (shouldWaitFor.count() > minWait) {
+                this->_c.wait_for(lk, shouldWaitFor, [&lastValueEnd, this] {
+                    // if the list has been modified we need to reschedule the
+                    // timer for std::condition_value, or we need to die
+                    if (needToDie())
+                        return true;
+
+                    if (_timersWaiting.isEmpty())
+                        return false;
+
+                    if (_timersWaiting.getFirst()->getEnd() < lastValueEnd)
+                        return true;
+                    return false;
+                });
+            }
 
             if (needToDie())
                 return;
@@ -80,38 +94,47 @@ Scheduler::Scheduler()
             if (_timersWaiting.isEmpty())
                 continue;
 
-            WDebug(true, "Wake up!" << _timersWaiting.getFirst()->getDuration() << _timersWaiting.getFirst()->getEnd() << "size: " << _timersWaiting.size());
+            WDebug(debug, "Wake up!" << _timersWaiting.getFirst()->getDuration()
+                    << _timersWaiting.getFirst()->getEnd() << "size: " << _timersWaiting.size());
 
-            if (_timersWaiting.getFirst()->getEnd() < WTimer::now()) {
-
-            } else if (_timersWaiting.getFirst()->getEnd() < lastValueEnd) {
-                // we need to wait
+            if (_timersWaiting.getFirst()->getEnd() + minWait > WTimer::now()) {
+                // if the current less timer starts within minWait ms we simply execute it now
+                WDebug(debug, "Timer bigger than 50ms");
                 continue;
             }
 
             auto *timer = _timersWaiting.takeFirst();
 
+            WDebug(debug, "Execute" << timer->getDuration());
+
+            timer->_lock.lock();
+
+            auto *task = new WTaskFunction(nullptr, [timer] {
+                timer->trigger();
+            }, true);
+
             // mutex is already locked
             if (timer->isExecutionMainThread()) {
-                Scheduler::addTaskMainThread(new WTaskFunction(nullptr, [timer] {
-                    timer->trigger();
-                }, true));
+                Scheduler::addTaskMainThread(task);
             } else {
-                Scheduler::addTaskGeneric(new WTaskFunction(nullptr, [timer] {
-                    timer->trigger();
-                }, true));
+                Scheduler::addTaskGeneric(task);
             }
 
             if (not timer->isSingleShot()) {
-                Scheduler::getInstance().addTimerUnsafe(timer);
+                Scheduler::addTaskGeneric(new WTaskFunction(nullptr, [timer]() {
+                    timer->start();
+                }, true));
             }
+            timer->_lock.unlock();
         }
     }));
+
+    WDebug(debug and false, "finish constructor");
 }
 
 void Scheduler::manageExecution(WTask *task)
 {
-    WDebug(false, "Execute object" << static_cast<void*>(task));
+    WDebug(debug and false, "Execute object" << static_cast<void*>(task));
 
     const auto needToDeleteLater = task->isDeleteLater();
 
@@ -125,6 +148,7 @@ void Scheduler::manageExecution(WTask *task)
 
 Scheduler::~Scheduler()
 {
+    WDebug(debug and false, "Call destructor");
     _needToDieLock.lock();
     this->_needToDie = true;
 
@@ -132,7 +156,10 @@ Scheduler::~Scheduler()
     this->_semGeneral.release(_threads.size());
 
     _needToDieLock.unlock();
+
+    _muxTimers.lock();
     _c.notify_all();
+    _muxTimers.unlock();
 
     for (auto &ref: _threads)
         ref.join();
@@ -144,6 +171,8 @@ Scheduler::~Scheduler()
         t->releaseJoiner();
 
     instance = nullptr;
+
+    WDebug(debug and false, "finish destructor");
 }
 
 void Scheduler::createHeap()
@@ -197,6 +226,9 @@ auto Scheduler::addTimer(WTimer *timer) -> void
     
     WMutexLocker _(this->_muxTimers);
     this->addTimerUnsafe(timer);
+
+    WDebug(debug, "Add timer with end in " << timer->getEnd()
+            << "and duration: " << timer->getDuration() << "current minor: " << _timersWaiting.getFirst()->getEnd());
 }
 
 auto Scheduler::removeTimer(WTimer *timer) -> void

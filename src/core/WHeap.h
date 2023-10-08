@@ -16,18 +16,22 @@ private:
     WVector<T> _d;
 
     /**
-     * \return true iff v1 >= v2
+     * \return true iff v1 > v2
      * */
     Fn<bool(const T& v1, const T& v2)> _cmpOriginal;
 
+    /**
+     * \return true iff the public invariant is correct
+     * */
+    nd auto rep () const -> bool;
 
     /**
      * It will create a heap
      * */
-    auto createHeap() -> void;
+    auto createHeap() noexcept -> void;
 public:
     /**
-     * \param cmp Function that return true iff v1 >= v2
+     * \param cmp Function that return true iff v1 > v2
      * */
     WHeap(Fn<bool(const T& v1, const T& v2)> cmp) noexcept;
 
@@ -49,14 +53,14 @@ public:
      * \return The smallest element in the datastruct if lowToHigh is true, otherwise it's return the biggest element
      * in the data structure
      * */
-    auto takeFirst() -> T;
+    auto takeFirst() noexcept -> T;
 
     /**
      * This method does not remove the element that is return
      * \return The smallest element in the datastruct if lowToHigh is true, otherwise it's return the biggest element
      * in the data structure
      * */
-    auto getFirst() -> const T&;
+    auto getFirst() noexcept -> const T&;
 
     auto size() const -> int;
 
@@ -88,26 +92,52 @@ auto WHeap<T, lowToHigh>::isEmpty() const noexcept -> bool
 template <class T, bool lowToHigh>
 inline auto WHeap<T, lowToHigh>::removeIfPresent(const T &value) noexcept -> bool
 {
-    return _d.remove(value);
+    bool shouldCreateHeap = false;
+
+    if (value == _d.first())
+        shouldCreateHeap = true;
+
+    const auto result = _d.remove(value);
+
+    if (shouldCreateHeap)
+        createHeap();
+
+    W_ASSERT(rep());
+
+    return result;
 }
 
 template <class T, bool lowToHigh>
 inline auto WHeap<T, lowToHigh>::removeIfPresentSingle(const T &value) noexcept -> bool
 {
-    return _d.removeSingle(value);
+    bool shouldMakeHeap = false;
+
+    if (value == _d.first())
+        shouldMakeHeap = true;
+
+    const auto result = _d.removeSingle(value);
+
+    if (shouldMakeHeap)
+        createHeap();
+
+    W_ASSERT(rep());
+
+    return result;
 }
 
 template<class T, bool lowToHigh>
-auto WHeap<T, lowToHigh>::getFirst() -> const T &
+auto WHeap<T, lowToHigh>::getFirst() noexcept -> const T &
 {
     return _d.first();
 }
 
 template<class T, bool lowToHigh>
-auto WHeap<T, lowToHigh>::takeFirst() -> T
+auto WHeap<T, lowToHigh>::takeFirst() noexcept -> T
 {
-    T returnValue = this->_d.takeFirst();
+    T returnValue = std::forward<T>(this->_d.takeFirst());
     createHeap();
+
+    W_ASSERT(rep());
 
     return returnValue;
 }
@@ -117,6 +147,7 @@ auto WHeap<T, lowToHigh>::add(T &&data) -> void
 {
     _d.append(std::move(data));
     createHeap();
+    W_ASSERT(rep());
 }
 
 template<class T, bool lowToHigh>
@@ -124,19 +155,22 @@ auto WHeap<T, lowToHigh>::add(const T &data) -> void
 {
     _d.append(data);
     createHeap();
+    W_ASSERT(rep());
 }
 
 template <class T, bool lowToHigh>
-auto WHeap<T, lowToHigh>::createHeap() -> void
+auto WHeap<T, lowToHigh>::createHeap() noexcept -> void
 {
     const auto cmp = [this] (const T& v1, const T& v2) {
         return !_cmpOriginal(v1, v2);
     };
 
     if constexpr (lowToHigh)
-        std::make_heap(_d.rbegin(), _d.rend(), cmp);
+        std::make_heap(_d.begin(), _d.end(), _cmpOriginal);
     else
         std::make_heap(_d.begin(), _d.end(), cmp);
+
+    W_ASSERT(rep());
 }
 
 template <class T, bool lowToHigh>
@@ -145,9 +179,10 @@ template <class T2>
 inline WHeap<T, lowToHigh>::WHeap() noexcept
     : _d()
     , _cmpOriginal ([](const T& v1, const T& v2) {
-        return *(v1) >= *(v2);
+        return *(v1) > *(v2);
     })
 {
+    W_ASSERT(rep());
 }
 
 template <class T, bool lowToHigh>
@@ -156,9 +191,10 @@ template <class T2>
 WHeap<T, lowToHigh>::WHeap() noexcept
     : _d()
     , _cmpOriginal ([](const T& v1, const T& v2) {
-        return v1 >= v2;
+        return v1 > v2;
     })
 {
+    W_ASSERT(rep());
 }
 
 template <class T, bool lowToHigh>
@@ -166,11 +202,33 @@ WHeap<T, lowToHigh>::WHeap(Fn<bool(const T &, const T &)> cmp) noexcept
     : _d()
     , _cmpOriginal(std::move(cmp))
 {
-
+    W_ASSERT(rep());
 }
 
 template <class T, bool lowToHigh>
 auto WHeap<T, lowToHigh>::size() const -> int
 {
     return this->_d.size();
+}
+
+template <class T, bool lowToHigh>
+auto WHeap<T, lowToHigh>::rep() const -> bool
+{
+    for (int i = 1; i < _d.size(); i++) {
+        const auto first = _d.first();
+        const auto current = _d[i];
+        if constexpr (lowToHigh) {
+            if (_cmpOriginal(first, current)) {
+                WDebug(true, first << "is lower than" << current << "... Array:" << _d);
+                return false;
+            }
+        } else {
+            if (!_cmpOriginal(first, current)) {
+                WDebug(true, _d);
+                return false;
+            }
+        }
+    }
+
+    return true;
 }

@@ -17,6 +17,7 @@
 class Scheduler final: public WObject
 {
 private:
+    static constexpr auto debug = false;
     WList<WTask *> _task_Main;
     WList<WTask *> _task_General;
 

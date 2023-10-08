@@ -20,7 +20,7 @@ private:
     Fn<void()> _function;
 public:
     WTimer(WObject *parent, Fn<void()> function, int millisecond, bool onMainThread = true);
-    ~WTimer() override = default;
+    ~WTimer() override;
 
     bool isActive() const;
     void stop();
@@ -56,3 +56,17 @@ inline auto WTimer::isExecutionMainThread() const -> bool
 {
     return this->_executionMainThread;
 }
+
+#ifdef USE_QT
+template <class T>
+inline Q_CORE_EXPORT QDebug operator<<(QDebug d, const WTimer *p)
+{
+    d.nospace() << "WTimer(";
+
+    d.nospace() << p->getEnd();
+
+    d.nospace() << ")";
+
+    return d.space();
+}
+#endif // USE_QT

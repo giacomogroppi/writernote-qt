@@ -470,7 +470,7 @@ inline auto WVector<T>::takeFirst() -> T
     if (_reserve > 0) {
         // we "just" need to move the item
         for (int i = 0; i < _size - 1; i++) {
-            callConstructorOn(_data, i, std::forward<T>(_data[i]));
+            callConstructorOn(_data, i, std::forward<T>(_data[i + 1]));
         }
 
         _reserve ++;

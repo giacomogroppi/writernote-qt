@@ -15,11 +15,13 @@ WTimer::WTimer(WObject *parent, Fn<void()> function, int millisecond, bool onMai
 
 }
 
+WTimer::~WTimer() = default;
+
+
 void WTimer::start(int millisecond)
 {
     using namespace std::chrono;
 
-    // TODO: enable timer
     if (millisecond != -1)
         this->_millisecond = millisecond;
 
@@ -64,11 +66,13 @@ auto WTimer::getDuration() const -> unsigned long
 
 auto WTimer::trigger() -> void
 {
+    WMutexLocker _(_lock);
     this->_function();
 }
 
 auto WTimer::getEnd() const -> unsigned long
 {
+    WMutexLocker _(_lock);
     return this->_millisecond + this->_timeStart;
 }
 
