@@ -452,13 +452,8 @@ force_inline void WListFast<T>::test() const
     W_ASSERT(this->_size >= 0);
     W_ASSERT(this->_reserved >= 0);
     if (_size > 0) {
-        return;
         for (int i = 0; i < size(); i++) {
-            for (int j = 0; j < size(); j++) {
-                if (i != j) {
-                    W_ASSERT(_data[i] != _data[j]);
-                }
-            }
+            W_ASSERT(_data[i] != nullptr);
         }
     } else {
         if (_reserved) {
@@ -666,15 +661,17 @@ template<class T>
 inline void WListFast<T>::remove(int from, int to)
 {
     W_ASSERT(from <= to);
-    W_ASSERT(from >= 0 && to < size());
+    W_ASSERT(from >= 0 && to <= size());
 
     for (int i = from; i < to; i++) {
         delete this->_data[i];
     }
 
-    for (int i = from; i < size(); i++) {
-        this->_data[i] = this->_data[i + to - from];
-    }
+#ifdef DEBUGINFO
+    WCommonScript::WMemset(&_data[from], 0, sizeof(T*) * (to - from));
+#endif
+
+    WCommonScript::WMemmove(&_data[from], &_data[to], sizeof(T*) * (_size - to));
 
     if (this->_reserved == 0) {
         this->_data = (T **) realloc(this->_data, (this->_size - (to - from)) * sizeof(T *));

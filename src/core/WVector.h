@@ -52,7 +52,7 @@ public:
     auto append(const T &item) -> WVector<T>&;
     auto append(T &&item) -> WVector<T>&;
 
-    auto get(int i) const -> const T&;
+    auto get(Index i) const -> const T&;
     nd auto size() const -> Size;
 
     template <class T2 = T>
@@ -69,7 +69,7 @@ public:
     void move(Index from, Index to);
     void clear();
     auto at(Index i) const -> const T&;
-    void reserve(int numberOfElement);
+    void reserve(long numberOfElement);
     auto takeAt(Index i) -> T;
     auto last() const ->  const T&;
     auto first() const -> const T&;
@@ -132,9 +132,9 @@ public:
     {
     private:
         T *array;
-        int index;
+        long index;
 #ifdef DEBUGINFO
-        int max;
+        long max;
 #endif // DEBUGINFO
     public:
         using difference_type = std::ptrdiff_t;
@@ -146,7 +146,7 @@ public:
 #if !defined(DEBUGINFO)
         explicit AbstractIterator(T *data, int index, int max) : array(data), index(index) { unused(max); };
 #else
-        explicit AbstractIterator(T* data, int index, int max): array(data), index(index), max(max) {};
+        explicit AbstractIterator(T* data, long index, long max): array(data), index(index), max(max) {};
 #endif // DEBUGINFO
 
         AbstractIterator(const AbstractIterator& other) noexcept = default;
@@ -183,15 +183,7 @@ public:
             return 0;
         }
 
-        auto operator[](int i) -> T& { W_ASSERT(i >= 0 and i < max); return array[i]; };
-
-        /*
-        auto operator<(const class const_iterator& other) const -> bool;
-        auto operator>(const class const_iterator& other) const -> bool;
-        auto operator<=(const class const_iterator& other) const -> bool;
-        auto operator>=(const class const_iterator& other) const -> bool;
-        auto operator<=>(const class const_iterator& other) const -> int;
-        */
+        auto operator[](long i) -> T& { W_ASSERT(i >= 0 and i < max); return array[i]; };
 
         auto operator==(const AbstractIterator& iter) const -> bool = default;
         auto operator!=(const AbstractIterator& iter) const -> bool = default;
@@ -214,12 +206,12 @@ public:
     nd auto begin() noexcept -> iterator { return iterator(this->_data, 0u, _size); };
     nd auto end()   noexcept -> iterator { return iterator(this->_data, size(), _size);  };
 
-    nd auto constBegin() const noexcept -> const_iterator { return const_iterator(_data, 0u, _size); }
-    nd auto constEnd()   const noexcept -> const_iterator { return const_iterator(_data, size(), _size); }
-    nd auto cBegin() const noexcept -> const_iterator { return const_iterator(_data, 0u, _size); }
-    nd auto cEnd()   const noexcept -> const_iterator { return const_iterator(_data, size(), _size); }
-    nd auto begin() const noexcept -> const_iterator { return const_iterator(_data, 0u, _size); }
-    nd auto end()   const noexcept -> const_iterator { return const_iterator(_data, size(), _size); }
+    nd auto constBegin() const noexcept { return const_iterator(_data, 0u, _size); }
+    nd auto constEnd()   const noexcept { return const_iterator(_data, size(), _size); }
+    nd auto cBegin() const noexcept { return const_iterator(_data, 0u, _size); }
+    nd auto cEnd()   const noexcept { return const_iterator(_data, size(), _size); }
+    nd auto begin() const noexcept { return const_iterator(_data, 0u, _size); }
+    nd auto end()   const noexcept { return const_iterator(_data, size(), _size); }
 
     /**
      * \return < 0 if error
@@ -633,7 +625,7 @@ inline auto WVector<T>::last() const -> const T &
 template<class T>
 inline auto WVector<T>::first() const -> const T &
 {
-    return at(Index(0));
+    return at(0);
 }
 
 template<class T>
@@ -643,10 +635,10 @@ inline auto WVector<T>::size() const -> Size
 }
 
 template<class T>
-inline auto WVector<T>::get(int i) const -> const T &
+inline auto WVector<T>::get(Index i) const -> const T &
 {
-    W_ASSERT(i >= 0 && i < size());
-    return this->_data[i];
+    W_ASSERT(i.value() < size());
+    return this->_data[i.value()];
 }
 
 template<class T>
@@ -656,7 +648,7 @@ inline WVector<T>::~WVector()
 }
 
 template<class T>
-inline void WVector<T>::reserve(int numberOfElement)
+inline void WVector<T>::reserve(long numberOfElement)
 {
     W_ASSERT(numberOfElement >= 0);
     if (numberOfElement == 0)
@@ -664,7 +656,7 @@ inline void WVector<T>::reserve(int numberOfElement)
 
     auto *newData = (T *) malloc (sizeof (T) * (_size + _reserve + numberOfElement));
 
-    for (unsigned i = 0; i < _size; i++) {
+    for (Size i = 0; i < _size; i++) {
         newData[i] = std::forward<T>(_data[i]);
     }
 

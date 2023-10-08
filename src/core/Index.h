@@ -13,15 +13,15 @@ public:
     /**
      * \param value It's need to be > 0
      * */
-    constexpr Index (long value) noexcept;
+    constexpr Index (unsigned long value) noexcept;
     static auto constexpr makeInvalid() noexcept -> Index;
 
     nd constexpr auto isValid() const noexcept -> bool;
     nd constexpr auto isInvalid() const noexcept -> bool;
 
-    constexpr explicit operator long() const;
+    constexpr explicit operator unsigned long() const;
 
-    constexpr auto value() const noexcept -> long;
+    constexpr auto value() const noexcept -> unsigned long;
 
     constexpr auto operator ++() noexcept -> Index&;
     constexpr auto operator --() noexcept -> Index&;
@@ -37,9 +37,9 @@ public:
     constexpr auto operator!=(const Index& other) const -> bool = default;
 };
 
-inline constexpr auto Index::value() const noexcept -> long
+inline constexpr auto Index::value() const noexcept -> unsigned long
 {
-    return this->_index;
+    return static_cast<unsigned long>(_index);
 }
 
 inline auto constexpr Index::makeInvalid() noexcept -> Index
@@ -49,10 +49,10 @@ inline auto constexpr Index::makeInvalid() noexcept -> Index
     return index;
 }
 
-inline constexpr Index::operator long() const
+inline constexpr Index::operator unsigned long() const
 {
     W_ASSERT(isValid());
-    return _index;
+    return static_cast<unsigned long>(_index);
 }
 
 inline auto constexpr Index::isValid() const noexcept -> bool
@@ -65,10 +65,10 @@ inline auto constexpr Index::isInvalid() const noexcept -> bool
     return not isValid();
 }
 
-inline constexpr Index::Index(long value) noexcept
-        : _index(value)
+inline constexpr Index::Index(unsigned long value) noexcept
+        : _index(static_cast<long>(value))
 {
-
+    W_ASSERT(value <= INT64_MAX);
 }
 
 inline constexpr auto Index::operator ++() noexcept -> Index&
@@ -79,6 +79,7 @@ inline constexpr auto Index::operator ++() noexcept -> Index&
 
 inline constexpr auto Index::operator --() noexcept -> Index&
 {
+    W_ASSERT(_index > 0);
     _index --;
     return *this;
 }
@@ -86,6 +87,7 @@ inline constexpr auto Index::operator --() noexcept -> Index&
 inline constexpr auto Index::operator--(int) -> Index
 {
     Index tmp(*this);
+    W_ASSERT(_index > 0);
     _index --;
     return tmp;
 }
