@@ -97,7 +97,9 @@ inline auto WHeap<T, lowToHigh>::removeIfPresent(const T &value) noexcept -> boo
     if (value == _d.first())
         shouldCreateHeap = true;
 
-    const auto result = _d.remove(value);
+    const auto result = _d.removeIf([&value](const T& tmp) {
+        return tmp == value;
+    });
 
     if (shouldCreateHeap)
         createHeap();

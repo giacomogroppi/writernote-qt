@@ -128,7 +128,7 @@ auto FileContainer::remove(const WString &path) -> bool
     if (index == -1)
         return false;
 
-    _subFiles.remove(index);
+    _subFiles.removeAt(index);
     return true;
 }
 

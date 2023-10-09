@@ -98,7 +98,7 @@ auto Directory::removeFile(const WString& name) -> int
     if (not error.operator bool()) {
         for (int i = 0; i < _files.size(); i++)
             if (_files[i].getName() == name) {
-                _files.remove(i);
+                _files.removeAt(i);
                 break;
             }
     }

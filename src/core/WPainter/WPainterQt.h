@@ -101,7 +101,9 @@ inline void WPainter::begin(WImage *image)
 
 inline bool WPainter::begin(WPixmap *pixmap)
 {
-    return _painter->begin(pixmap);
+    const auto result = _painter->begin(pixmap);
+    W_ASSERT(result == true);
+    return result;
 }
 
 inline void WPainter::drawLine(const PointF &p1, const PointF &p2)

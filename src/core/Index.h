@@ -27,6 +27,7 @@ public:
     constexpr auto operator --() noexcept -> Index&;
 
     constexpr auto operator--(int) -> Index;
+    constexpr auto operator++(int) -> Index;
 
     constexpr auto operator>(Index other) const noexcept -> bool;
     constexpr auto operator>=(Index other) const noexcept -> bool;
@@ -110,4 +111,11 @@ inline constexpr auto Index::operator<(Index other) const noexcept -> bool
 inline constexpr auto Index::operator<=(Index other) const noexcept -> bool
 {
     return this->_index <= other._index;
+}
+
+inline constexpr auto Index::operator++(int) -> Index
+{
+    Index copy(*this);
+    ++*this;
+    return copy;
 }

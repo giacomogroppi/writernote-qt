@@ -33,27 +33,21 @@ private:
     template <typename ...Args>
     static void callConstructorOn(T* array, int index, Args&& ...args);
 public:
-    WVector();
+    WVector() noexcept;
     WVector(const WVector<T> &other) noexcept;
     WVector(WVector<T> &&other) noexcept;
     WVector(std::initializer_list<T> &&object) noexcept;
     explicit WVector(int reserve) noexcept;
     ~WVector();
 
-    //using const_iterator = typename std::vector<T>::const_iterator;
-    //using iterator = typename std::vector<T>::iterator;
+    void append(WVector<T> &&other) noexcept;
+    void append(const WVector<T> &other) noexcept;
 
-    //using riterator = typename std::vector<T>::reverse_iterator;
-    //using rconst_iterator = typename std::vector<T>::const_reverse_iterator;
+    auto append(const T &item) noexcept -> WVector<T>&;
+    auto append(T &&item) noexcept -> WVector<T>&;
 
-    void append(WVector<T> &&other);
-    void append(const WVector<T> &other);
-
-    auto append(const T &item) -> WVector<T>&;
-    auto append(T &&item) -> WVector<T>&;
-
-    auto get(Index i) const -> const T&;
-    nd auto size() const -> Size;
+    auto get(Index i) const noexcept -> const T&;
+    nd auto size() const noexcept -> Size;
 
     template <class T2 = T>
     auto isOrderLowToHigh() const -> bool;
@@ -64,43 +58,55 @@ public:
     /**
      * Remove all the object [from, to)
      * */
-    void removeAll(Index from, Index to);
-    void removeAt(Index i);
-    void move(Index from, Index to);
-    void clear();
-    auto at(Index i) const -> const T&;
-    void reserve(long numberOfElement);
-    auto takeAt(Index i) -> T;
-    auto last() const ->  const T&;
-    auto first() const -> const T&;
+    void removeAll(Index from, Index to) noexcept;
+    void removeAt(Index i) noexcept;
+    void move(Index from, Index to) noexcept;
+    void clear() noexcept;
+    auto at(Index i) const noexcept -> const T&;
+    void reserve(long numberOfElement) noexcept;
+    auto takeAt(Index i) noexcept -> T;
+    auto last() const noexcept ->  const T&;
+    auto first() const noexcept -> const T&;
     auto operator[](int index) -> T&;
-    nd auto isEmpty() const -> bool;
+    auto operator[](Index index) -> T&;
+    auto operator[](Index index) const -> T&;
 
-    void insert(Index index, WVector<T> &&vector);
-    void insert(Index index, T &&data);
-    void insert(Index index, const T& data);
+    nd auto isEmpty() const noexcept -> bool;
 
-    auto takeFirst() -> T;
+    void insert(Index index, WVector<T> &&vector) noexcept;
+    void insert(Index index, T &&data) noexcept;
+    void insert(Index index, const T& data) noexcept;
+
+    auto takeFirst() noexcept -> T;
 
     [[deprecated]]
-    auto constData() const -> const T*;
+    auto constData() const noexcept -> const T*;
 
-    auto contains(const T& value) const -> bool;
+    auto contains(const T& value) const noexcept -> bool;
 
     /**
      * \return The index of the object, -1 in case there is no object equals to object
      * */
-    auto indexOf(const T &object) const -> Index;
+    nd auto indexOf(const T &object) const noexcept -> Index;
 
     /**
-     * \brief This method remove all the occurrences of object in the array
+     * \brief This method removeObjects all the occurrences of object in the array
      * \param object The object to be removed from the array
      * \return The number of object removed
-     * */
-    auto remove(const T& object) -> int;
+     */
+     // we want to disable this method if T is (int, unsigned, long, ...)
+    template <class T2 = T> requires (std::is_convertible<T2, T>::value and not std::is_arithmetic<T2>::value)
+    auto removeObjects(const T2& object) noexcept -> int;
 
     /**
-     * \brief This method remove the first occurrence of the object in the array
+     * \param index The lists of the positions to remove (need to be sorted from low index to high index)
+     * */
+    void removeAt(const WVector<Index> &index) noexcept;
+
+    auto removeIf(Fn<bool(const T& object)> method) noexcept -> int;
+
+    /**
+     * \brief This method removeObjects the first occurrence of the object in the array
      * \param object The object to be removed from the array
      * \return True iff the function removed the object from the data structure
      */
@@ -108,7 +114,7 @@ public:
 
     /**
      * This method requires that the list is order in ascending order [crescente]
-     * \return True iff we have remove the object passed
+     * \return True iff we have removeObjects the object passed
      * \param cmp return true iff v1 >= v2
      */
     auto removeOrderLowToHigh(const T& object, const Fn<bool(const T &, const T &)> &cmp) noexcept -> bool;
@@ -116,7 +122,7 @@ public:
     /**
      * This method requires that the list is order in descending order
      * \param cmp return true iff v1 >= v2
-     * \return true iff we have remove the object passed
+     * \return true iff we have removeObjects the object passed
      * */
     auto removeOrderHighToLow(const T& object, const Fn<bool(const T &, const T &)> &cmp) noexcept -> bool;
 
@@ -242,6 +248,18 @@ public:
     ) noexcept -> WPair<int, WVector<T2>>;
 };
 
+template<class T>
+void WVector<T>::removeAt(const WVector<Index> &index) noexcept
+{
+    // TODO: optimize
+    if (index.isEmpty())
+        return;
+
+    for (Index i = index.size() - 1; i >= 0; i--) {
+        removeAt(index[i]);
+    }
+}
+
 template <class T>
 inline WVector<T>::WVector(int reserve) noexcept
     : WVector()
@@ -288,7 +306,7 @@ inline auto WVector<T>::write(WritableAbstract &writable, const WVector<T2> &lis
 }
 
 template<class T>
-inline auto WVector<T>::contains(const T &value) const -> bool
+inline auto WVector<T>::contains(const T &value) const noexcept -> bool
 {
     return indexOf(value).isValid();
 }
@@ -327,7 +345,7 @@ inline auto WVector<T>::removeOrderHighToLow(
 }
 
 template <class T>
-auto WVector<T>::removeAll(Index from, Index to) -> void
+auto WVector<T>::removeAll(Index from, Index to) noexcept -> void
 {
     // TODO: optimize
     W_ASSERT(from.isValid() and to.isValid() and from < to and to.value() <= size());
@@ -375,7 +393,7 @@ inline auto WVector<T>::operator=(WVector<T> &&other) noexcept -> WVector<T> &
 }
 
 template<class T>
-inline auto WVector<T>::takeAt(Index i) -> T
+inline auto WVector<T>::takeAt(Index i) noexcept -> T
 {
     W_ASSERT(i < size());
 
@@ -387,8 +405,7 @@ inline auto WVector<T>::takeAt(Index i) -> T
 }
 
 template <class T>
-inline void WVector<T>::insert(Index index, WVector<T> &&vector)
-{
+inline void WVector<T>::insert(Index index, WVector<T> &&vector) noexcept {
     if (_reserve < vector.size()) {
         T* newData = (T*) malloc (sizeof(T) *
                 (_size + vector.size() + WVector::numberOfAllocation)
@@ -439,23 +456,21 @@ inline void WVector<T>::insert(Index index, WVector<T> &&vector)
 }
 
 template<class T>
-inline void WVector<T>::insert(Index index, T &&data)
-{
+inline void WVector<T>::insert(Index index, T &&data) noexcept {
     WVector<T> tmp(1);
     tmp.append(std::forward<T>(data));
     this->insert(index, std::move(tmp));
 }
 
 template<class T>
-inline void WVector<T>::insert(Index index, const T &data)
-{
+inline void WVector<T>::insert(Index index, const T &data) noexcept {
     T object = data;
 
     return insert(index, std::forward<T>(object));
 }
 
 template<class T>
-inline auto WVector<T>::takeFirst() -> T
+inline auto WVector<T>::takeFirst() noexcept -> T
 {
     W_ASSERT(size() > 0);
 
@@ -502,14 +517,13 @@ inline auto WVector<T>::operator[](int index) -> T &
 }
 
 template<class T>
-auto WVector<T>::at(Index i) const -> const T&
+auto WVector<T>::at(Index i) const noexcept -> const T&
 {
     return _data[i.value()];
 }
 
 template<class T>
-inline void WVector<T>::move(Index from, Index to)
-{
+inline void WVector<T>::move(Index from, Index to) noexcept {
     W_ASSERT(from.value() < size() and to.value() < size());
 
     if (from == to)
@@ -521,8 +535,7 @@ inline void WVector<T>::move(Index from, Index to)
 }
 
 template<class T>
-inline void WVector<T>::removeAt(Index index)
-{
+inline void WVector<T>::removeAt(Index index) noexcept {
     W_ASSERT(index.value() < size());
 
     _data[index.value()].~T();
@@ -554,8 +567,7 @@ inline void WVector<T>::removeAt(Index index)
 }
 
 template<class T>
-inline void WVector<T>::clear()
-{
+inline void WVector<T>::clear() noexcept {
     for (unsigned i = 0; i < _size; i++)
         _data[i].~T();
 
@@ -566,19 +578,19 @@ inline void WVector<T>::clear()
 }
 
 template<class T>
-auto WVector<T>::isEmpty() const -> bool
+auto WVector<T>::isEmpty() const noexcept -> bool
 {
     return size() == 0;
 }
 
 template<class T>
-inline auto WVector<T>::constData() const -> const T *
+inline auto WVector<T>::constData() const noexcept -> const T *
 {
     return this->_data;
 }
 
 template<class T>
-inline auto WVector<T>::indexOf(const T &object) const -> Index
+inline auto WVector<T>::indexOf(const T &object) const noexcept -> Index
 {
     auto i = begin();
 
@@ -617,25 +629,25 @@ inline auto WVector<T>::operator!=(const WVector<T> &other) const -> bool
 }
 
 template<class T>
-inline auto WVector<T>::last() const -> const T &
+inline auto WVector<T>::last() const noexcept -> const T &
 {
     return get(size() - 1);
 }
 
 template<class T>
-inline auto WVector<T>::first() const -> const T &
+inline auto WVector<T>::first() const noexcept -> const T &
 {
     return at(0);
 }
 
 template<class T>
-inline auto WVector<T>::size() const -> Size
+inline auto WVector<T>::size() const noexcept -> Size
 {
     return _size;
 }
 
 template<class T>
-inline auto WVector<T>::get(Index i) const -> const T &
+inline auto WVector<T>::get(Index i) const noexcept -> const T &
 {
     W_ASSERT(i.value() < size());
     return this->_data[i.value()];
@@ -648,8 +660,7 @@ inline WVector<T>::~WVector()
 }
 
 template<class T>
-inline void WVector<T>::reserve(long numberOfElement)
-{
+inline void WVector<T>::reserve(long numberOfElement) noexcept {
     W_ASSERT(numberOfElement >= 0);
     if (numberOfElement == 0)
         return;
@@ -657,7 +668,7 @@ inline void WVector<T>::reserve(long numberOfElement)
     auto *newData = (T *) malloc (sizeof (T) * (_size + _reserve + numberOfElement));
 
     for (Size i = 0; i < _size; i++) {
-        newData[i] = std::forward<T>(_data[i]);
+        callConstructorOn(newData, i, std::forward<T>(_data[i]));
     }
 
     _reserve += numberOfElement;
@@ -667,7 +678,7 @@ inline void WVector<T>::reserve(long numberOfElement)
 }
 
 template <class T>
-inline auto WVector<T>::append(T &&item) -> WVector<T> &
+inline auto WVector<T>::append(T &&item) noexcept -> WVector<T> &
 {
     if (_reserve == 0)
         reserve(WVector::numberOfAllocation);
@@ -681,15 +692,14 @@ inline auto WVector<T>::append(T &&item) -> WVector<T> &
 }
 
 template <class T>
-inline auto WVector<T>::append(const T& item) -> WVector<T>&
+inline auto WVector<T>::append(const T& item) noexcept -> WVector<T>&
 {
     T object = item;
     return append(std::forward<T>(object));
 }
 
 template <class T>
-inline void WVector<T>::append(WVector<T> &&item)
-{
+inline void WVector<T>::append(WVector<T> &&item) noexcept {
     if (_reserve >= item.size())
         reserve(item.size() > WVector::numberOfAllocation
                     ? item.size()
@@ -709,8 +719,7 @@ inline void WVector<T>::append(WVector<T> &&item)
 }
 
 template<class T>
-inline void WVector<T>::append(const WVector<T> &other)
-{
+inline void WVector<T>::append(const WVector<T> &other) noexcept {
     if (_reserve - other.size() > 0) {
         for (auto &item: std::as_const(other)) {
             this->append(item);
@@ -722,8 +731,8 @@ inline void WVector<T>::append(const WVector<T> &other)
 }
 
 template<class T>
-inline WVector<T>::WVector()
-    : _data(nullptr)
+inline WVector<T>::WVector() noexcept
+        : _data(nullptr)
     , _size(0)
     , _reserve(0)
 {
@@ -826,7 +835,23 @@ inline auto WVector<T>::removeOrderLowToHigh(
 }
 
 template <class T>
-inline auto WVector<T>::remove(const T &object) -> int
+inline auto WVector<T>::removeIf(Fn<bool(const T &)> method) noexcept -> int
+{
+    WVector<Index> positions;
+
+    for (Size i = 0; i < size(); i++) {
+        if (method(at(i)))
+            positions.append(i);
+    }
+
+    removeAt(positions);
+
+    return positions.size();
+}
+
+template <class T>
+template <class T2> requires (std::is_convertible<T2, T>::value and not std::is_arithmetic<T2>::value)
+inline auto WVector<T>::removeObjects(const T2 &object) noexcept -> int
 {
     // TODO: optimize
     int numberOfElementsRemoved = 0;
@@ -877,4 +902,16 @@ inline auto WVector<T>::operator[](int i) const -> const T &
 {
     W_ASSERT(i >= 0 and i < size());
     return this->_data[i];
+}
+
+template <class T>
+inline auto WVector<T>::operator[](Index index) -> T &
+{
+    return _data[index.value()];
+}
+
+template <class T>
+inline auto WVector<T>::operator[](Index index) const -> T &
+{
+    return _data[index.value()];
 }

@@ -368,7 +368,8 @@ void Page::drawEngine(
 inline void Page::draw(
     WPainter    &painter,
     int         m_pos_ris,
-    bool        all) noexcept {
+    bool        all) noexcept
+{
     W_ASSERT(painter.isActive());
 
     if(un(all) and _stroke.size()){
@@ -384,7 +385,8 @@ inline void Page::draw(
     this->mergeList();
 }
 
-void Page::mergeList() noexcept {
+void Page::mergeList() noexcept
+{
     for(auto &s : _strokeTmp) {
         W_ASSERT(!s->isEmpty());
         _stroke.append(s);

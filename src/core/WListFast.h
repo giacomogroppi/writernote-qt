@@ -87,9 +87,9 @@ public:
     auto append(T &&object) -> WListFast<T>&;
     void append(const WListFast<T> &other);
 
-    void remove(int index);
+    void removeAt(int index) noexcept;
     void remove(int from, int to);
-    void remove(const T &item);
+    void removeObjects(const T &item);
 
     [[nodiscard]] constexpr
     auto isEmpty() const -> bool;
@@ -376,11 +376,11 @@ inline auto WListFast<T>::operator=(WListFast<T> &&other) noexcept -> WListFast<
 }
 
 template<class T>
-inline void WListFast<T>::remove(const T &item)
+inline void WListFast<T>::removeObjects(const T &item)
 {
     const auto index = indexOf(item);
     if (index >= 0) {
-        remove(index);
+        removeAt(index);
     }
 }
 
@@ -685,7 +685,7 @@ inline void WListFast<T>::remove(int from, int to)
 }
 
 template<class T>
-inline void WListFast<T>::remove(int index)
+inline void WListFast<T>::removeAt(int index) noexcept 
 {
     delete this->takeObject(index);
     test();

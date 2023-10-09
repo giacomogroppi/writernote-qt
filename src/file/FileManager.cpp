@@ -65,7 +65,7 @@ auto FileManager::removeDirectory (int index) -> int
     if (Directory::removeDir(_basePath / _dir.at(index).getFolderName()) < 0)
         return -1;
 
-    _dir.remove(index);
+    _dir.removeAt(index);
 
     W_EMIT_0(onDirectoryListChanged);
 

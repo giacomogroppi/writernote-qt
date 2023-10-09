@@ -10,7 +10,7 @@ void removeNotWriternote::exe(WListFast<WString> &ref)
 
     for(i = 0; i < ref.size(); i++){
         if(ref.at(i).indexOf(ext) == -1){
-            ref.remove(i);
+            ref.removeAt(i);
             i--;
         }
     }
