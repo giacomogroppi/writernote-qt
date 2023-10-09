@@ -1,6 +1,10 @@
 #include "WTask.h"
 #include "Scheduler/WObject.h"
 #include "core/WMutexLocker.h"
+#include "core/WVector.h"
+
+static WMutex mutex;
+static WVector<WTask*> items;
 
 WTask::WTask(WObject *parent, bool deleteLater)
     : WObject(parent)
@@ -10,6 +14,8 @@ WTask::WTask(WObject *parent, bool deleteLater)
     , _hasFinish(false)
 {
     WDebug(false, "Create object" << static_cast<void*>(this));
+    WMutexLocker _(mutex);
+    items.append(this);
 }
 
 void WTask::releaseJoiner() noexcept
@@ -20,8 +26,18 @@ void WTask::releaseJoiner() noexcept
     _hasFinish = true;
 }
 
+WTask::~WTask()
+{
+    WDebug(false, "Delete object" << static_cast<void*>(this));
+
+    WMutexLocker __(mutex);
+    W_ASSERT(items.contains(this));
+    items.removeObjects(this);
+}
+
 void WTask::join()
 {
+    W_ASSERT(not isDeleteLater());
     {
         WMutexLocker _(this->_waiterLock);
 

@@ -18,15 +18,12 @@ class Scheduler final: public WObject
 {
 private:
     static constexpr auto debug = false;
-    WList<WTask *> _task_Main;
     WList<WTask *> _task_General;
 
     WVector<std::thread> _threads;
 
     mutable WSemaphore _semGeneral;
-    mutable WSemaphore _semMain;
 
-    mutable WMutex _lockMain;
     mutable WMutex _lockGeneric;
 
     void createHeap();

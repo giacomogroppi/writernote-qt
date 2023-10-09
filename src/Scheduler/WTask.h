@@ -37,13 +37,8 @@ public:
     /**
      * @ensures task == this
      * */
-    W_EMITTABLE_1(finished, WTask*, task)
+    W_EMITTABLE_1(finished, WTask*, task);
 };
-
-inline WTask::~WTask()
-{
-    WDebug(false, "Delete object" << static_cast<void*>(this));
-}
 
 inline auto WTask::isDeleteLater() const -> bool
 {
@@ -55,7 +50,8 @@ inline constexpr void WTask::setDestroyLater(bool needToDestroy)
     this->_deleteLater = needToDestroy;
 }
 
-class WTaskFunction final: public WTask{
+class WTaskFunction: public WTask
+{
 private:
     Fn<void()> _method;
 public:
@@ -63,7 +59,7 @@ public:
         : WTask(parent, destroyLater)
         , _method(std::move(method))
         {};
-    ~WTaskFunction() final = default;
+    ~WTaskFunction() override = default;
 
     void run () final
     {

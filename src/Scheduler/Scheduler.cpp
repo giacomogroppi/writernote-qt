@@ -8,7 +8,6 @@ Scheduler::Scheduler()
     : WObject(nullptr)
     , _threads()
     , _semGeneral(0)
-    , _semMain(0)
     , _need_to_sort(false)
     , _needToDie(false)
     , _timersWaiting([](const WTimer *t1, const WTimer *t2) -> bool {
@@ -120,12 +119,18 @@ Scheduler::Scheduler()
                 Scheduler::addTaskGeneric(task);
             }
 
+            WTask *taskToExecute = nullptr;
+
             if (not timer->isSingleShot()) {
-                Scheduler::addTaskGeneric(new WTaskFunction(nullptr, [timer]() {
+                taskToExecute = new WTaskFunction(nullptr, [timer]() {
                     timer->start();
-                }, true));
+                }, true);
             }
+
             timer->_lock.unlock();
+
+            if (taskToExecute != nullptr)
+                Scheduler::addTaskGeneric(taskToExecute);
         }
     }));
 
@@ -152,7 +157,6 @@ Scheduler::~Scheduler()
     _needToDieLock.lock();
     this->_needToDie = true;
 
-    this->_semMain.release(1);
     this->_semGeneral.release(_threads.size());
 
     _needToDieLock.unlock();
@@ -164,11 +168,14 @@ Scheduler::~Scheduler()
     for (auto &ref: _threads)
         ref.join();
 
-    for (auto *t: this->_task_General)
+    _lockGeneric.lock();
+    for (auto *t: this->_task_General) {
         t->releaseJoiner();
 
-    for (auto *t: this->_task_Main)
-        t->releaseJoiner();
+        if (t->isDeleteLater())
+            delete t;
+    }
+    _lockGeneric.unlock();
 
     instance = nullptr;
 

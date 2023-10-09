@@ -24,18 +24,12 @@ public:
     WList(const WList<T> &l) noexcept;
     ~WList() noexcept;
 
-    template <typename U = T, typename = std::enable_if_t<std::is_copy_constructible_v<U>>>
     void append(const T &data) noexcept;
     void append(T &&data) noexcept;
 
     void clear() noexcept;
     bool equal(const WList<T> &l1, const WList<T> &l2) noexcept;
 
-    /**
-     * This function remove and return the first object of the list
-     * @return First object in the list
-    */
-    T get_first() noexcept;
     [[nodiscard]] bool isEmpty() const noexcept;
     [[nodiscard]] constexpr int size() const noexcept;
     const T& last() const;
@@ -43,6 +37,10 @@ public:
     constexpr int indexOf(const T& index) const;
     constexpr bool isOrder() const;
 
+    /**
+     * This function remove and return the first object of the list
+     * @return First object in the list
+    */
     T takeFirst() noexcept;
 
     class iterator{
@@ -124,8 +122,10 @@ template<class T>
 inline T WList<T>::takeFirst() noexcept
 {
     W_ASSERT(size() > 0);
-    T res = std::move (*this->_first->data);
-    WListPrivate<T> *nextFirst = _first->next;
+
+    T res(std::forward<T>(*this->_first->data));
+
+    auto *nextFirst = _first->next;
 
     delete _first->data;
     delete _first;
@@ -147,10 +147,10 @@ inline bool WList<T>::operator==(const WList<T> &other)
 
 template<class T>
 inline WList<T>::WList() noexcept
+    : _first(nullptr)
+    , _last(nullptr)
+    , _size(0)
 {
-    _first = nullptr;
-    _last = nullptr;
-    _size = 0;
 }
 
 template<class T>
@@ -173,26 +173,17 @@ inline WList<T>::~WList() noexcept
 template <class T>
 inline void WList<T>::append(T &&data) noexcept
 {
-    struct WListPrivate<T> *tmp;
+    auto *newNode = new struct WListPrivate<T>();
+    newNode->data = new T(std::move(data));
+    newNode->next = nullptr;
 
-    test();
-
-    tmp = new struct WListPrivate<T>();
-    tmp->data = new T(std::move(data));
-
-    if (un(this->_first == nullptr)) {
-        W_ASSERT(this->_last == nullptr);
-        W_ASSERT(_size == 0);
-
-        this->_first = tmp;
+    if (isEmpty()) {
+        this->_first = newNode;
         this->_first->next = nullptr;
         this->_last = this->_first;
     } else {
-        W_ASSERT(this->_last->next == nullptr);
-
-        this->_last->next = tmp;
-        this->_last = tmp;
-        this->_last->next = nullptr;
+        this->_last->next = newNode;
+        this->_last = _last->next;
     }
 
     _size ++;
@@ -201,64 +192,32 @@ inline void WList<T>::append(T &&data) noexcept
 }
 
 template <class T>
-template <typename U, typename>
 inline void WList<T>::append(const T &data) noexcept
 {
-    struct WListPrivate<T> *tmp;
+    auto *newNode = new struct WListPrivate<T>();
 
-    test();
+    newNode->data = new T(data);
+    newNode->next = nullptr;
 
-    tmp = new struct WListPrivate<T>();
-    tmp->data = new T(data);
-
-    if (un(this->_first == nullptr)) {
-        W_ASSERT(this->_last == nullptr);
-        W_ASSERT(_size == 0);
-
-        this->_first = tmp;
-        this->_first->next = nullptr;
+    if (isEmpty()) {
+        this->_first = newNode;
         this->_last = this->_first;
     } else {
-        W_ASSERT(this->_last->next == nullptr);
-
-        this->_last->next = tmp;
-        this->_last = tmp;
-        this->_last->next = nullptr;
+        this->_last->next = newNode;
+        this->_last = _last->next;
     }
 
     _size ++;
 
     test();
-}
-
-template <class T>
-inline T WList<T>::get_first() noexcept
-{
-    test();
-    T ret = std::move(*this->_first->data);
-    struct WListPrivate<T> *next = this->_first->next;
-
-    if(_first->next == nullptr)
-        _last = _first->next;
-
-    delete this->_first->data;
-    delete this->_first;
-    this->_first = next;
-
-    _size --;
-
-    test();
-
-    return std::move(ret);
 }
 
 template<class T>
 inline WList<T>::WList(const WList<T> &l) noexcept
+    : _size(0)
+    , _first(nullptr)
+    , _last(nullptr)
 {
-    _size   = 0;
-    _first  = nullptr;
-    _last   = nullptr;
-    test();
     *this = l;
     test();
 }
@@ -266,8 +225,7 @@ inline WList<T>::WList(const WList<T> &l) noexcept
 template<class T>
 inline void WList<T>::clear() noexcept
 {
-    test();
-    while(_first){
+    while (_first) {
         auto *next = _first->next;
         delete _first->data;
         delete _first;
@@ -340,9 +298,11 @@ inline const T &WList<T>::first() const
 template<class T>
 WList<T> &WList<T>::operator=(const WList<T> &other)
 {
+    if (this == &other)
+        return *this;
+
     WListPrivate<T> *tmp, *curr;
 
-    test();
     other.test();
 
     tmp = other._first;

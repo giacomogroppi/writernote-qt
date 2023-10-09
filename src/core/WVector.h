@@ -376,10 +376,7 @@ inline auto WVector<T>::operator=(WVector<T> &&other) noexcept -> WVector<T> &
     if (this == &other)
         return *this;
 
-    for (Size i = 0; i < size(); i++)
-        _data[i].~T();
-
-    free(_data);
+    clear();
 
     _data = other._data;
     _size = other._size;

@@ -317,12 +317,11 @@ namespace WAbstractList {
 
         for (auto &thread: threads) {
             thread->join();
+            delete thread;
         }
 
         if (needToAbort)
             return {-1, {}};
-
-        std::for_each(threads.begin(), threads.end(), [](WTask *t) { delete t; });
 
         return {0, result};
     };
