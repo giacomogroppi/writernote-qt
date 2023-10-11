@@ -13,6 +13,8 @@
 #include "core/WHeap.h"
 #include "WTimer.h"
 #include "core/WElement.h"
+#include "core/WMap.h"
+#include "core/pointer/SharedPtrThreadSafe.h"
 
 class Scheduler final: public WObject
 {
@@ -35,8 +37,10 @@ private:
     mutable WMutex _needToDieLock;
     volatile bool _needToDie;
 
+    WMutex _lockTaskFinish;
+    WVector<WPair<WTask*, unsigned long>> _taskFinished;
+
     WHeap<WTimer*, true> _timersWaiting;
-    //WSemaphore _semTimers;
     std::mutex _muxTimers;
     std::condition_variable _c;
 
@@ -54,7 +58,7 @@ public:
     static void addTaskMainThread(WTask *task);
 
     static
-    Scheduler &getInstance();
+    auto getInstance() -> Scheduler &;
 
     /**
      * This function is used to create a new task within the scheduler with "needToDeleteLater"
@@ -78,11 +82,21 @@ public:
     auto removeTimer (WTimer *timer) -> void;
 
 private:
-
     /**
      * This method is NOT thread save
-     * */
+     */
     auto addTimerUnsafe (WTimer *timer) -> void;
+
+    static void joinThread(WTask *task, unsigned long identifier);
+
+    friend class WTask;
+
+    static bool isExecutionSchedulerThread() ;
+
+    /**
+     * \return true iff we need to die
+     * */
+    bool execute();
 };
 
 inline void Scheduler::addTaskGeneric(WTask *task)

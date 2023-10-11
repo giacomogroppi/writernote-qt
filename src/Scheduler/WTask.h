@@ -13,8 +13,10 @@ private:
     WMutex _waiterLock;
     int _waiter;
     WSemaphore _sem;
-    bool _deleteLater : 1;
-    bool _hasFinish : 1;
+    bool _deleteLater;
+    bool _hasFinish;
+    unsigned long _identifier;
+    unsigned long _threadsCreated;
 public:
     explicit WTask(WObject *parent = nullptr, bool destroyLater = false);
     ~WTask() override;
@@ -25,6 +27,8 @@ public:
     void releaseJoiner() noexcept;
 
     constexpr void setDestroyLater(bool needToDestroy);
+
+    constexpr auto getIdentifier() const noexcept -> unsigned long;
 
     /**
      * \return True iff you should delete this task after call "run"
@@ -38,6 +42,8 @@ public:
      * @ensures task == this
      * */
     W_EMITTABLE_1(finished, WTask*, task);
+
+    friend class Scheduler;
 };
 
 inline auto WTask::isDeleteLater() const -> bool
@@ -48,6 +54,11 @@ inline auto WTask::isDeleteLater() const -> bool
 inline constexpr void WTask::setDestroyLater(bool needToDestroy)
 {
     this->_deleteLater = needToDestroy;
+}
+
+constexpr auto WTask::getIdentifier() const noexcept -> unsigned long
+{
+    return _identifier;
 }
 
 class WTaskFunction: public WTask

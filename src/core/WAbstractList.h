@@ -345,7 +345,7 @@ namespace WAbstractList {
 
         // create threads with corresponding data
         for (const auto &ref: std::as_const(list)) {
-            threads.push_back(startNewThread ([ref, &needToAbort, &w, i]() {
+            threads.push_back(startNewThread ([ref, &needToAbort, &w, i] {
                                                if (T2::write (w[i], ref) < 0)
                                                    needToAbort = true;
                                            }

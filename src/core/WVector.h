@@ -110,6 +110,7 @@ public:
      * \param object The object to be removed from the array
      * \return True iff the function removed the object from the data structure
      */
+     // TODO: rename to removeObjectSingle
     auto removeSingle(const T& object) -> bool;
 
     /**

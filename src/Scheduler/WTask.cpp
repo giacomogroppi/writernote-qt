@@ -2,9 +2,9 @@
 #include "Scheduler/WObject.h"
 #include "core/WMutexLocker.h"
 #include "core/WVector.h"
+#include "Scheduler.h"
 
-static WMutex mutex;
-static WVector<WTask*> items;
+std::atomic<unsigned long> identifier;
 
 WTask::WTask(WObject *parent, bool deleteLater)
     : WObject(parent)
@@ -12,10 +12,9 @@ WTask::WTask(WObject *parent, bool deleteLater)
     , _waiter(0)
     , _deleteLater(deleteLater)
     , _hasFinish(false)
+    , _identifier(identifier++)
 {
     WDebug(false, "Create object" << static_cast<void*>(this));
-    WMutexLocker _(mutex);
-    items.append(this);
 }
 
 void WTask::releaseJoiner() noexcept
@@ -26,14 +25,7 @@ void WTask::releaseJoiner() noexcept
     _hasFinish = true;
 }
 
-WTask::~WTask()
-{
-    WDebug(false, "Delete object" << static_cast<void*>(this));
-
-    WMutexLocker __(mutex);
-    W_ASSERT(items.contains(this));
-    items.removeObjects(this);
-}
+WTask::~WTask() = default;
 
 void WTask::join()
 {
@@ -46,5 +38,8 @@ void WTask::join()
 
         _waiter ++;
     }
+
+    Scheduler::joinThread(this, identifier);
+
     this->_sem.acquire();
 }

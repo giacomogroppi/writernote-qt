@@ -12,7 +12,7 @@ public:
     explicit WPair() = default;
 
     template <class K2 = K, class T2 = T>
-    explicit WPair(const K2 &key, const T2 &value);
+    WPair(const K2 &key, const T2 &value);
 
     template <class K2 = K, class T2 = T>
     WPair(K2 &&key, T2 &&value) noexcept;

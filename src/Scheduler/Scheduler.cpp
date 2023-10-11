@@ -25,24 +25,9 @@ Scheduler::Scheduler()
     std::vector<std::thread> thread;
 
     const auto functionThread = [this]() {
-        WSemaphore *sem =           &this->_semGeneral;
-        WMutex *mux =               &this->_lockGeneric;
-        WList<WTask *> *tasksHeap = &this->_task_General;
-
-        // loop
         for (;;) {
-            WTask *task;
-            sem->acquire();
-
-            if (this->needToDie())
+            if (this->execute())
                 return;
-
-            {
-                WMutexLocker _(*mux);
-                task = tasksHeap->takeFirst();
-            }
-
-            this->manageExecution(task);
         }
     };
 
@@ -61,7 +46,7 @@ Scheduler::Scheduler()
         for (;;) {
             constexpr int minWait = 10;
             const chrono::duration shouldWaitFor = (_timersWaiting.isEmpty()
-                    ? chrono::milliseconds (100'000)
+                    ? 160s
                     : chrono::milliseconds(
                                 this->_timersWaiting.getFirst()->getEnd() -
                                 WTimer::now()
@@ -104,37 +89,97 @@ Scheduler::Scheduler()
 
             auto *timer = _timersWaiting.takeFirst();
 
-            WDebug(debug, "Execute" << timer->getDuration());
-
             timer->_lock.lock();
 
-            auto *task = new WTaskFunction(nullptr, [timer] {
+            WDebug(debug, "Execute" << timer->getDuration());
+
+            const auto isExecutionMainThread = timer->isExecutionMainThread();
+            const auto isSingleShot = timer->isSingleShot();
+
+            auto *task = new WTaskFunction(nullptr, [timer, isSingleShot] {
                 timer->trigger();
+
+                if (not isSingleShot)
+                    timer->start();
             }, true);
 
+            timer->_lock.unlock();
+
             // mutex is already locked
-            if (timer->isExecutionMainThread()) {
+            if (isExecutionMainThread) {
                 Scheduler::addTaskMainThread(task);
             } else {
                 Scheduler::addTaskGeneric(task);
             }
-
-            WTask *taskToExecute = nullptr;
-
-            if (not timer->isSingleShot()) {
-                taskToExecute = new WTaskFunction(nullptr, [timer]() {
-                    timer->start();
-                }, true);
-            }
-
-            timer->_lock.unlock();
-
-            if (taskToExecute != nullptr)
-                Scheduler::addTaskGeneric(taskToExecute);
         }
     }));
 
     WDebug(debug and false, "finish constructor");
+}
+
+auto Scheduler::isExecutionSchedulerThread() -> bool
+{
+    const auto id = std::this_thread::get_id();
+
+    WMutexLocker _(instance->_lockGeneric);
+
+    for (const auto& thread: std::as_const(instance->_threads)) {
+        std::cout << thread.get_id() << std::endl;
+        std::cout.flush();
+
+        if (thread.get_id() == id) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void Scheduler::joinThread(WTask *task, unsigned long identifier)
+{
+    // if we are on a thread of the Scheduler we need to create another thread that is
+    // executing another task in generic lists
+    if (isExecutionSchedulerThread()) {
+        WMutexLocker _(instance->_lockGeneric);
+        WMutexLocker __(instance->_lockTaskFinish);
+        task->_threadsCreated ++;
+
+        instance->_threads.append(
+                std::thread([task, identifier] {
+                    for (;;) {
+                        {
+                            WMutexLocker guard(instance->_lockTaskFinish);
+                            if (instance->_taskFinished.contains({task, identifier}) > 0) {
+                                instance->_taskFinished.removeSingle({task, identifier});
+
+                                return;
+                            }
+                        }
+
+                        instance->execute();
+                    }
+                }
+            )
+        );
+    }
+}
+
+auto Scheduler::execute() -> bool
+{
+    WTask *task;
+    _semGeneral.acquire();
+
+    if (this->needToDie())
+        return true;
+
+    {
+        WMutexLocker _(_lockGeneric);
+        task = _task_General.takeFirst();
+    }
+
+    Scheduler::manageExecution(task);
+
+    return false;
 }
 
 void Scheduler::manageExecution(WTask *task)
@@ -144,6 +189,14 @@ void Scheduler::manageExecution(WTask *task)
     const auto needToDeleteLater = task->isDeleteLater();
 
     task->run();
+
+    {
+        WMutexLocker _(instance->_lockTaskFinish);
+        for (unsigned long i = 0; i < task->_threadsCreated; i++) {
+            instance->_taskFinished.append({task, task->getIdentifier()});
+        }
+    }
+
     task->releaseJoiner();
 
     if (needToDeleteLater) {
@@ -184,38 +237,21 @@ Scheduler::~Scheduler()
 
 void Scheduler::createHeap()
 {
-    /*
-    std::make_heap(_task_General.begin(),
-                   _task_General.end(),
-                   [](WTask *a, WTask *b) {
-        return a->getPriority() < b->getPriority();
-    });
-     */
     W_ASSERT(this->isHeap());
 }
 
-bool Scheduler::isHeap() const
+auto Scheduler::isHeap() const -> bool
 {
     return true;
-    /*
-    WMutexLocker _(this->_pool_active_locker);
-    const auto r = this->_task_General.at(0)->getPriority();
-
-    for (int i = 1; i < (int)this->_task_General.size(); i++) {
-        if (r < this->_task_General.at(i)->getPriority())
-            return false;
-    }
-    return true;
-*/
 }
 
-bool Scheduler::needToDie() const noexcept
+auto Scheduler::needToDie() const noexcept -> bool
 {
     WMutexLocker locker (this->_needToDieLock);
     return this->_needToDie;
 }
 
-Scheduler &Scheduler::getInstance()
+auto Scheduler::getInstance() -> Scheduler &
 {
     W_ASSERT(instance != nullptr);
     return *instance;

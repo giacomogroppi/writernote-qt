@@ -214,9 +214,9 @@ inline void WList<T>::append(const T &data) noexcept
 
 template<class T>
 inline WList<T>::WList(const WList<T> &l) noexcept
-    : _size(0)
-    , _first(nullptr)
+    :_first(nullptr)
     , _last(nullptr)
+    , _size(0u)
 {
     *this = l;
     test();
