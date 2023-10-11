@@ -8,6 +8,7 @@
 #include "FileContainer/MemWritable.h"
 #include "core/WPair.h"
 #include "WElement.h"
+#include "core/pointer/SharedPtrThreadSafe.h"
 
 namespace WAbstractList {
     template<class T>
@@ -251,7 +252,7 @@ namespace WAbstractList {
     auto loadMultiThread(
             const VersionFileController &versionController,
             ReadableAbstract &readable,
-            const Fn<WTask *(
+            const Fn<SharedPtrThreadSafe<WTask> (
                     Fn<void()>
             )> &startNewThread,
             const Fn<void(List<T>& list, int numberOfElement)> &reserveUnsafe,
@@ -263,7 +264,7 @@ namespace WAbstractList {
 
         int i;
         List<T> result;
-        List<WTask*> threads;
+        List<SharedPtrThreadSafe<WTask>> threads;
         List<UnsignedLong> seek;
         volatile bool needToAbort = false;
 
@@ -317,7 +318,10 @@ namespace WAbstractList {
 
         for (auto &thread: threads) {
             thread->join();
-            delete thread;
+
+            // TODO: enable
+
+            //delete thread;
         }
 
         if (needToAbort)
@@ -330,14 +334,14 @@ namespace WAbstractList {
     auto writeMultiThread(
             WritableAbstract &writable,
             const List<T2> &list,
-            const Fn<WTask *(
+            const Fn<SharedPtrThreadSafe<WTask>(
                     Fn<void()>
             )> &startNewThread
     ) noexcept -> int
     {
         int i = 0;
 
-        std::vector<WTask*> threads;
+        std::vector<SharedPtrThreadSafe<WTask>> threads;
         MemWritable w[list.size()];
         volatile bool needToAbort = false;
 
@@ -359,7 +363,8 @@ namespace WAbstractList {
         }
 
         // delete the threads
-        std::for_each(threads.begin(), threads.end(), [](WTask *t) { delete t; });
+        // TODO: enable
+        //std::for_each(threads.begin(), threads.end(), [](WTask *t) { delete t; });
 
         if (needToAbort)
             return -1;

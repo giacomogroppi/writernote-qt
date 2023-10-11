@@ -20,7 +20,7 @@ class Scheduler final: public WObject
 {
 private:
     static constexpr auto debug = false;
-    WList<WTask *> _task_General;
+    WList<SharedPtrThreadSafe<WTask>> _task_General;
 
     WVector<std::thread> _threads;
 
@@ -38,13 +38,13 @@ private:
     volatile bool _needToDie;
 
     WMutex _lockTaskFinish;
-    WVector<WPair<WTask*, unsigned long>> _taskFinished;
+    WVector<unsigned long> _taskFinished;
 
     WHeap<WTimer*, true> _timersWaiting;
     std::mutex _muxTimers;
     std::condition_variable _c;
 
-    static void manageExecution (WTask *task);
+    static void manageExecution (SharedPtrThreadSafe<WTask> task);
 
     static auto numberOfThread () -> Unsigned;
 
@@ -54,8 +54,8 @@ public:
 
     bool needToDie() const noexcept;
 
-    static void addTaskGeneric(WTask *task);
-    static void addTaskMainThread(WTask *task);
+    static void addTaskGeneric(SharedPtrThreadSafe<WTask> task);
+    static void addTaskMainThread(SharedPtrThreadSafe<WTask> task);
 
     static
     auto getInstance() -> Scheduler &;
@@ -65,8 +65,8 @@ public:
      * set to false, so it is up to whoever receives the task to destroy it.
      * The function pass will be executed in a generic thread
      * */
-    static constexpr auto startNewTask = [] (Fn<void()> function) -> WTask * {
-        WTask *task = new WTaskFunction(nullptr, std::move(function));
+    static constexpr auto startNewTask = [] (Fn<void()> function) -> SharedPtrThreadSafe<WTask> {
+        SharedPtrThreadSafe<WTask> task(new WTaskFunction(nullptr, std::move(function)));
 
         task->setDestroyLater(false);
 
@@ -87,7 +87,7 @@ private:
      */
     auto addTimerUnsafe (WTimer *timer) -> void;
 
-    static void joinThread(WTask *task, unsigned long identifier);
+    static void joinThread(unsigned long& numberOfThreadCreated, unsigned long identifier);
 
     friend class WTask;
 
@@ -99,7 +99,7 @@ private:
     bool execute();
 };
 
-inline void Scheduler::addTaskGeneric(WTask *task)
+inline void Scheduler::addTaskGeneric(SharedPtrThreadSafe<WTask> task)
 {
     auto &sched = Scheduler::getInstance();
     WMutexLocker _(sched._lockGeneric);

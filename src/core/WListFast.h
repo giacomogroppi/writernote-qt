@@ -217,7 +217,7 @@ public:
     auto writeMultiThread (
             WritableAbstract &writable,
             const WListFast<T2> &list,
-            const Fn<WTask *(
+            const Fn<SharedPtrThreadSafe<WTask> (
                 Fn<void()>
             )> &startNewThread
     ) noexcept -> int;
@@ -225,7 +225,7 @@ public:
     template<class T2 = T>
     static auto loadMultiThread (const VersionFileController &versionController,
                                  ReadableAbstract &readable,
-                                 const Fn<WTask *(
+                                 const Fn<SharedPtrThreadSafe<WTask>(
                                          Fn<void()>
                                     )> &startNewThread
                         ) noexcept -> WPair<int, WListFast<T2>>;
@@ -319,7 +319,7 @@ template<class T2>
 inline auto WListFast<T>::writeMultiThread(
             WritableAbstract &writable,
             const WListFast<T2> &list,
-            const Fn<WTask *(
+            const Fn<SharedPtrThreadSafe<WTask>(
                     Fn<void()>
             )> &startNewThread
         ) noexcept -> int
@@ -333,7 +333,7 @@ template<class T2>
 inline auto WListFast<T>::loadMultiThread(
             const VersionFileController &versionController,
             ReadableAbstract &readable,
-            const Fn<WTask *(
+            const Fn<SharedPtrThreadSafe<WTask> (
                     Fn<void()>
             )> &startNewThread
         ) noexcept -> WPair<int, WListFast<T2>>

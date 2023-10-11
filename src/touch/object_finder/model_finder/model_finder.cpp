@@ -89,14 +89,14 @@ auto model::find(const WListFast<PointF> &points, const WListFast<pressure_t> &p
     WListFast<WTask *> tasks;
 
     for (int i = 0; i < THREAD_FINDER; i++) {
-        WTask *task = new WTaskFunction(nullptr, [=]() {
+        auto task = SharedPtrThreadSafe<WTask>(new WTaskFunction(nullptr, [=]() {
             auto function = functions[i];
 
             finder.is[i] = function(points, pressures, area);
 
             WDebug(debug_model, "index: " << i << finder.is[i]);
-        });
-        Scheduler::getInstance().addTaskGeneric(task);
+        }));
+        Scheduler::getInstance().addTaskGeneric(std::move(task));
     }
 
     tasks.forAll([](WTask* task) { task->join(); });

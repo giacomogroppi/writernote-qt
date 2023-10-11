@@ -5,7 +5,7 @@
 #include <QTimer>
 #include <QThread>
 
-auto Scheduler::addTaskMainThread(WTask *task) -> void
+auto Scheduler::addTaskMainThread(SharedPtrThreadSafe<WTask> task) -> void
 {
     // TODO: use qt scheduler
     W_ASSERT(task);
