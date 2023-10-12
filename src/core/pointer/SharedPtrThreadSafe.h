@@ -156,9 +156,9 @@ SharedPtrThreadSafe<T>::SharedPtrThreadSafe(T *object)
 
 template <class T>
 SharedPtrThreadSafe<T>::SharedPtrThreadSafe()
-    : _count(new int(0))
+    : _count(nullptr)
     , _object(nullptr)
-    , _lock(new WMutex)
+    , _lock(nullptr)
 {
 
 }

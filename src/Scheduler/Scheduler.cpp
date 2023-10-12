@@ -87,7 +87,7 @@ Scheduler::Scheduler()
                 continue;
             }
 
-            auto *timer = _timersWaiting.takeFirst();
+            auto timer = _timersWaiting.takeFirst();
 
             timer->_lock.lock();
 
@@ -144,23 +144,20 @@ void Scheduler::joinThread(unsigned long& numberOfThreadCreated, unsigned long i
         WMutexLocker __(instance->_lockTaskFinish);
         numberOfThreadCreated ++;
 
-        instance->_threads.append(
-                std::thread([identifier] {
-                    for (;;) {
-                        {
-                            WMutexLocker guard(instance->_lockTaskFinish);
-                            if (instance->_taskFinished.contains(identifier) > 0) {
-                                instance->_taskFinished.removeSingle(identifier);
+        std::thread([identifier] {
+            for (;;) {
+                {
+                    WMutexLocker guard(instance->_lockTaskFinish);
+                    if (instance->_taskFinished.contains(identifier) > 0) {
+                        instance->_taskFinished.removeSingle(identifier);
 
-                                return;
-                            }
-                        }
-
-                        instance->execute();
+                        return;
                     }
                 }
-            )
-        );
+
+                instance->execute();
+            }
+        }).detach();
     }
 }
 
@@ -194,7 +191,7 @@ void Scheduler::manageExecution(SharedPtrThreadSafe<WTask> task)
     {
         WMutexLocker _(instance->_lockTaskFinish);
         for (unsigned long i = 0; i < task->_threadsCreated; i++) {
-            instance->_taskFinished.append({task, task->getIdentifier()});
+            instance->_taskFinished.append(task->getIdentifier());
         }
     }
 
@@ -205,7 +202,7 @@ void Scheduler::manageExecution(SharedPtrThreadSafe<WTask> task)
         //delete task;
     }
 }
-
+#include <QThread>
 Scheduler::~Scheduler()
 {
     WDebug(debug and false, "Call destructor");
@@ -225,6 +222,14 @@ Scheduler::~Scheduler()
 
     _lockGeneric.lock();
     for (auto &t: this->_task_General) {
+        {
+            WMutexLocker _(instance->_lockTaskFinish);
+            for (unsigned long i = 0; i < t->_threadsCreated; i++) {
+                instance->_taskFinished.append(t->getIdentifier());
+                _semGeneral.release();
+            }
+        }
+
         t->releaseJoiner();
 
         if (t->isDeleteLater())
@@ -234,9 +239,17 @@ Scheduler::~Scheduler()
     }
     _lockGeneric.unlock();
 
+    WDebug(true, "finish destructor" << _taskFinished.size());
+
+
+    while (_taskFinished.size())
+        ;
+
     instance = nullptr;
 
-    WDebug(debug and false, "finish destructor");
+    //QThread::sleep(1);
+
+    WDebug(true, "finish destructor" << _taskFinished.size());
 }
 
 void Scheduler::createHeap()

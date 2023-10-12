@@ -13,6 +13,7 @@ WTask::WTask(WObject *parent, bool deleteLater)
     , _deleteLater(deleteLater)
     , _hasFinish(false)
     , _identifier(identifier++)
+    , _threadsCreated(0)
 {
     WDebug(false, "Create object" << static_cast<void*>(this));
 }

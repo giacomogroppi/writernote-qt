@@ -34,7 +34,7 @@ public:
     constexpr auto operator<(Index other) const noexcept -> bool;
     constexpr auto operator<=(Index other) const noexcept -> bool;
 
-    constexpr auto operator==(const Index& other) const -> bool= default;
+    constexpr auto operator==(const Index& other) const -> bool = default;
     constexpr auto operator!=(const Index& other) const -> bool = default;
 };
 
