@@ -15,7 +15,7 @@ WTask::WTask(WObject *parent, bool deleteLater)
     , _identifier(identifier++)
     , _threadsCreated(0)
 {
-    WDebug(false, "Create object" << static_cast<void*>(this));
+    WDebug(false, "Create object" << identifier);
 }
 
 void WTask::releaseJoiner() noexcept
@@ -38,9 +38,9 @@ void WTask::join()
             return;
 
         _waiter ++;
-    }
 
-    Scheduler::joinThread(this->_threadsCreated, identifier);
+        Scheduler::joinThread(this->_threadsCreated, identifier);
+    }
 
     this->_sem.acquire();
 }

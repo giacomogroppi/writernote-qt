@@ -15,8 +15,8 @@ private:
     WSemaphore _sem;
     bool _deleteLater;
     bool _hasFinish;
-    unsigned long _identifier;
-    unsigned long _threadsCreated;
+    const unsigned long _identifier;
+    std::atomic<int> _threadsCreated;
 public:
     explicit WTask(WObject *parent = nullptr, bool destroyLater = false);
     ~WTask() override;

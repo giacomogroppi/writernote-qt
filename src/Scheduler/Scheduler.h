@@ -15,6 +15,7 @@
 #include "core/WElement.h"
 #include "core/WMap.h"
 #include "core/pointer/SharedPtrThreadSafe.h"
+#include <shared_mutex>
 
 class Scheduler final: public WObject
 {
@@ -23,21 +24,19 @@ private:
     WList<SharedPtrThreadSafe<WTask>> _task_General;
 
     WVector<std::thread> _threads;
+    WVector<std::thread::id> _idThreads;
 
     mutable WSemaphore _semGeneral;
-
     mutable WMutex _lockGeneric;
 
     void createHeap();
 
     bool isHeap() const;
 
-    AtomicSafe<bool> _need_to_sort;
-
     mutable WMutex _needToDieLock;
     volatile bool _needToDie;
 
-    WMutex _lockTaskFinish;
+    std::shared_mutex _lockTaskFinished;
     WVector<unsigned long> _taskFinished;
 
     WHeap<WTimer*, true> _timersWaiting;
@@ -87,7 +86,7 @@ private:
      */
     auto addTimerUnsafe (WTimer *timer) -> void;
 
-    static void joinThread(unsigned long& numberOfThreadCreated, unsigned long identifier);
+    static void joinThread(std::atomic<int>& numberOfThreadCreated, unsigned long identifier);
 
     friend class WTask;
 
@@ -106,6 +105,4 @@ inline void Scheduler::addTaskGeneric(SharedPtrThreadSafe<WTask> task)
     sched._task_General.append(task);
 
     sched._semGeneral.release();
-
-    sched._need_to_sort = true;
 }
