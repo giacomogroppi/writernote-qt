@@ -24,7 +24,6 @@ private:
     WList<SharedPtrThreadSafe<WTask>> _task_General;
 
     WVector<std::thread> _threads;
-    WVector<std::thread::id> _idThreads;
 
     mutable WSemaphore _semGeneral;
     mutable WMutex _lockGeneric;
@@ -35,9 +34,6 @@ private:
 
     mutable WMutex _needToDieLock;
     volatile bool _needToDie;
-
-    std::shared_mutex _lockTaskFinished;
-    WVector<unsigned long> _taskFinished;
 
     WHeap<WTimer*, true> _timersWaiting;
     std::mutex _muxTimers;
@@ -86,7 +82,7 @@ private:
      */
     auto addTimerUnsafe (WTimer *timer) -> void;
 
-    static void joinThread(std::atomic<int>& numberOfThreadCreated, unsigned long identifier);
+    static void joinThread(volatile bool &hasFinish);
 
     friend class WTask;
 
@@ -95,6 +91,7 @@ private:
     /**
      * \return true iff we need to die
      * */
+    template <int timeWait = -1>
     bool execute();
 };
 

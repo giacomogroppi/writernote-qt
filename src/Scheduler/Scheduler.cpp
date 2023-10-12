@@ -4,6 +4,14 @@
 
 static Scheduler *instance;
 
+static WMutex printDebug;
+#define print(messages) \
+    do {                \
+        WMutexLocker __guard(printDebug);       \
+        std::cout << messages;                  \
+        std::cout.flush();                      \
+    } while (0)
+
 Scheduler::Scheduler()
     : WObject(nullptr)
     , _threads()
@@ -26,8 +34,6 @@ Scheduler::Scheduler()
     const auto functionThread = [this]() {
         for (;;) {
             if (this->execute()) {
-                WMutexLocker _(_lockGeneric);
-                this->_idThreads.removeSingle(std::this_thread::get_id());
                 return;
             }
         }
@@ -35,7 +41,6 @@ Scheduler::Scheduler()
 
     for (unsigned i = 0u; i < nThreads; i++) {
         _threads.append(std::thread(functionThread));
-        _idThreads.append(_threads.last().get_id());
     }
 
     // start a new threads for timers
@@ -75,12 +80,8 @@ Scheduler::Scheduler()
                 });
             }
 
-            if (needToDie()) {
-                WMutexLocker _(_lockGeneric);
-                this->_idThreads.removeSingle(std::this_thread::get_id());
-
+            if (needToDie())
                 return;
-            }
 
             if (_timersWaiting.isEmpty())
                 continue;
@@ -120,7 +121,6 @@ Scheduler::Scheduler()
             }
         }
     }));
-    _idThreads.append(_threads.last().get_id());
 
     WDebug(debug and false, "finish constructor");
 }
@@ -129,55 +129,40 @@ auto Scheduler::isExecutionSchedulerThread() -> bool
 {
     const auto id = std::this_thread::get_id();
 
-    WMutexLocker _(instance->_lockGeneric);
+    //instance->_threads.any
+    for (const auto &thread: instance->_threads)
+        if (thread.get_id() == id)
+            return true;
 
-    return instance->_idThreads.contains(id);
+    return false;
 }
 
-void Scheduler::joinThread(std::atomic<int>& numberOfThreadCreated, unsigned long identifier)
+void Scheduler::joinThread(volatile bool &hasFinish)
 {
     // if we are on a thread of the Scheduler we need to create another thread that is
     // executing another task in generic lists
     if (isExecutionSchedulerThread()) {
-        WMutexLocker _(instance->_lockGeneric);
-        numberOfThreadCreated ++;
-
-        std::thread([identifier] {
+        for (;;) {
             {
-                WMutexLocker _(instance->_lockGeneric);
-                instance->_idThreads.append(std::this_thread::get_id());
+                if (hasFinish)
+                    return;
             }
 
-            for (;;) {
-                {
-                    instance->_lockTaskFinished.lock_shared();
-                    WDebug(true, "Task finish: " << instance->_taskFinished.size()
-                                    << "thread size:" << instance->_idThreads.size()
-                                    << "waiting for: " << identifier
-                                    << "array task finish:" << instance->_taskFinished
-                    );
+            print("Didn't finish yet " << std::this_thread::get_id() << std::endl);
 
-                    if (instance->_taskFinished.contains(identifier)) {
-                        WDebug(true, "Contains");
-                        instance->_taskFinished.removeSingle(identifier);
-
-                        instance->_idThreads.removeSingle(std::this_thread::get_id());
-
-                        return;
-                    }
-
-                    instance->_lockTaskFinished.unlock_shared();
-                }
-
-                instance->execute();
-            }
-        }).detach();
+            instance->execute<50>();
+        }
     }
 }
 
+template <int timeWait>
 auto Scheduler::execute() -> bool
 {
-    _semGeneral.acquire();
+    if constexpr (timeWait == -1)
+        _semGeneral.acquire();
+    else
+        if (not _semGeneral.acquireWithTime(timeWait))
+            return false;
 
     if (this->needToDie())
         return true;
@@ -188,6 +173,8 @@ auto Scheduler::execute() -> bool
         WMutexLocker _(_lockGeneric);
         task = _task_General.takeFirst();
     }
+
+    print("Start execution in thread " << std::this_thread::get_id() << std::endl);
 
     Scheduler::manageExecution(std::move(task));
 
@@ -202,13 +189,6 @@ void Scheduler::manageExecution(SharedPtrThreadSafe<WTask> task)
 
     task->run();
 
-    {
-        WMutexLocker _(instance->_lockTaskFinished);
-        for (unsigned long i = 0; i < task->_threadsCreated; i++) {
-            instance->_taskFinished.append(task->getIdentifier());
-        }
-    }
-
     task->releaseJoiner();
 
     if (needToDeleteLater) {
@@ -216,7 +196,7 @@ void Scheduler::manageExecution(SharedPtrThreadSafe<WTask> task)
         //delete task;
     }
 }
-#include <QThread>
+
 Scheduler::~Scheduler()
 {
     WDebug(debug and false, "Call destructor");
@@ -235,15 +215,7 @@ Scheduler::~Scheduler()
         ref.join();
 
     _lockGeneric.lock();
-    _lockTaskFinished.lock();
     for (auto &t: this->_task_General) {
-        {
-            for (unsigned long i = 0; i < t->_threadsCreated; i++) {
-                instance->_taskFinished.append(t->getIdentifier());
-                _semGeneral.release();
-            }
-        }
-
         t->releaseJoiner();
 
         if (t->isDeleteLater())
@@ -251,20 +223,9 @@ Scheduler::~Scheduler()
             //TODO: remove this comment and the above
             //delete t;
     }
-    _lockTaskFinished.unlock();
     _lockGeneric.unlock();
 
-    WDebug(true, "finish destructor" << _taskFinished.size());
-
-
-    while (_idThreads.size())
-        ;
-
     instance = nullptr;
-
-    //QThread::sleep(1);
-
-    WDebug(true, "finish destructor" << _taskFinished.size());
 }
 
 void Scheduler::createHeap()
@@ -314,5 +275,3 @@ auto Scheduler::removeTimer(WTimer *timer) -> void
     if (_timersWaiting.removeIfPresent(timer))
         this->_c.notify_all();
 }
-
-

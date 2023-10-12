@@ -28,6 +28,11 @@ public:
     void acquire();
     void release();
     void release(int n);
+
+    /**
+     * \return true if we acquire
+     * */
+    bool acquireWithTime(int milliseconds) noexcept;
 };
 
 inline WSemaphore::WSemaphore(int init_value)
@@ -82,4 +87,25 @@ inline void WSemaphore::release(int n)
 {
     for (int i = 0; i < n; i++)
         this->release();
+}
+
+inline bool WSemaphore::acquireWithTime(int milliseconds) noexcept
+{
+#if __cplusplus > 201703L && USE_NEW_SEMAPHORE
+# error "not defined"
+#else
+    std::unique_lock<decltype(mutex_)> lock(mutex_);
+    if (count_) {
+        count_ --;
+        return true;
+    }
+
+    condition_.wait_for(lock, std::chrono::milliseconds(milliseconds));
+
+    if (count_ == 0)
+        return false;
+
+    --count_;
+    return true;
+#endif
 }

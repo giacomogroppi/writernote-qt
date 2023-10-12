@@ -38,9 +38,9 @@ void WTask::join()
             return;
 
         _waiter ++;
-
-        Scheduler::joinThread(this->_threadsCreated, identifier);
     }
+
+    Scheduler::joinThread(_hasFinish);
 
     this->_sem.acquire();
 }
