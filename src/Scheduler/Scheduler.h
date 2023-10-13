@@ -24,6 +24,7 @@ private:
     WList<SharedPtrThreadSafe<WTask>> _task_General;
 
     WVector<std::thread> _threads;
+    WVector<std::thread::id> _idThreads;
 
     mutable WSemaphore _semGeneral;
     mutable WMutex _lockGeneric;
@@ -40,7 +41,6 @@ private:
     std::condition_variable _c;
 
     static void manageExecution (SharedPtrThreadSafe<WTask> task);
-
     static auto numberOfThread () -> Unsigned;
 
 public:
@@ -49,7 +49,27 @@ public:
 
     bool needToDie() const noexcept;
 
-    static void addTaskGeneric(SharedPtrThreadSafe<WTask> task);
+    /**
+     * \brief Mutex lock and free by tasks are allowed since if a task start the execution (lock the resource)
+     *  sooner or later it will release it.
+     *
+     *  A semaphore that is released by a task can bring to a deadlock because if all tasks are waiting
+     *  there are not thread available for executing that particular task.
+     *
+     * It's important that a task does not lock on resource that is released only
+     *  by one task managed by the scheduler.
+     *
+     *  The order of execution is not guaranteed
+     * \param task A task that need to be executed in a async thread.
+     * */
+    static void addTaskGeneric(const SharedPtrThreadSafe<WTask>& task);
+
+    /**
+     * \brief The implementation of this method depends on the framework used by writernote.
+     *  In any case this method adheres to a FIFO execution order,
+     *  ensuring that the task that arrives first will be executed first.
+     * \param task The task that need to be executed in the main thead
+     * */
     static void addTaskMainThread(SharedPtrThreadSafe<WTask> task);
 
     static
@@ -95,7 +115,7 @@ private:
     bool execute();
 };
 
-inline void Scheduler::addTaskGeneric(SharedPtrThreadSafe<WTask> task)
+inline void Scheduler::addTaskGeneric(const SharedPtrThreadSafe<WTask>& task)
 {
     auto &sched = Scheduler::getInstance();
     WMutexLocker _(sched._lockGeneric);
@@ -103,3 +123,4 @@ inline void Scheduler::addTaskGeneric(SharedPtrThreadSafe<WTask> task)
 
     sched._semGeneral.release();
 }
+

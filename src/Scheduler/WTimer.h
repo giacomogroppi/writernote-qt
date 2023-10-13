@@ -50,7 +50,14 @@ protected:
      * This method is call when the scheduler decide
      * */
     auto trigger() -> void;
+
+    auto setActive(bool active) -> void;
 };
+
+inline auto WTimer::setActive(bool active) -> void
+{
+    this->_isActive = active;
+}
 
 inline auto WTimer::isExecutionMainThread() const -> bool
 {

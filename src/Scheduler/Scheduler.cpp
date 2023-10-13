@@ -29,7 +29,7 @@ Scheduler::Scheduler()
     instance = this;
 
     _threads.reserve(nThreads + 1);
-    //std::vector<std::thread> thread;
+    _idThreads.reserve(nThreads);
 
     const auto functionThread = [this]() {
         for (;;) {
@@ -41,6 +41,7 @@ Scheduler::Scheduler()
 
     for (unsigned i = 0u; i < nThreads; i++) {
         _threads.append(std::thread(functionThread));
+        _idThreads.append(_threads[i].get_id());
     }
 
     // start a new threads for timers
@@ -52,7 +53,7 @@ Scheduler::Scheduler()
         std::unique_lock<std::mutex> lk (this->_muxTimers);
 
         for (;;) {
-            constexpr int minWait = 10;
+            constexpr int minWait = 5;
             const chrono::duration shouldWaitFor = (_timersWaiting.isEmpty()
                     ? 160s
                     : chrono::milliseconds(
@@ -107,7 +108,9 @@ Scheduler::Scheduler()
             auto task = SharedPtrThreadSafe<WTask>(new WTaskFunction(nullptr, [timer, isSingleShot] {
                 timer->trigger();
 
-                if (not isSingleShot)
+                if (isSingleShot)
+                    timer->setActive(false);
+                else
                     timer->start();
             }, true));
 
@@ -122,6 +125,8 @@ Scheduler::Scheduler()
         }
     }));
 
+    WAbstractList::sort(_idThreads.begin(), _idThreads.end());
+
     WDebug(debug and false, "finish constructor");
 }
 
@@ -129,12 +134,26 @@ auto Scheduler::isExecutionSchedulerThread() -> bool
 {
     const auto id = std::this_thread::get_id();
 
-    //instance->_threads.any
+    /*
+    for (const auto& i: instance->_idThreads)
+        if (i == id)
+            return true;
+    return false;
+    */
+
+    return WAbstractList::binary_search(
+            instance->_idThreads.constBegin(),
+            instance->_idThreads.constEnd(),
+            id
+    ) != instance->_idThreads.constEnd();
+
+    /*
     for (const auto &thread: instance->_threads)
         if (thread.get_id() == id)
             return true;
 
     return false;
+    */
 }
 
 void Scheduler::joinThread(volatile bool &hasFinish)
@@ -148,7 +167,7 @@ void Scheduler::joinThread(volatile bool &hasFinish)
                     return;
             }
 
-            print("Didn't finish yet " << std::this_thread::get_id() << std::endl);
+            //print("Didn't finish yet " << std::this_thread::get_id() << std::endl);
 
             instance->execute<50>();
         }
@@ -174,7 +193,7 @@ auto Scheduler::execute() -> bool
         task = _task_General.takeFirst();
     }
 
-    print("Start execution in thread " << std::this_thread::get_id() << std::endl);
+    //print("Start execution in thread " << std::this_thread::get_id() << std::endl);
 
     Scheduler::manageExecution(std::move(task));
 
@@ -275,3 +294,4 @@ auto Scheduler::removeTimer(WTimer *timer) -> void
     if (_timersWaiting.removeIfPresent(timer))
         this->_c.notify_all();
 }
+

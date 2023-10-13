@@ -96,7 +96,7 @@ namespace WAbstractList {
      * \param cmp needs to return true in case v1 >= v2
      * \tparam lowToHigh true if the list if ascending [ordine crescente]
      * */
-    template <class Iterator, class T, bool lowToHigh>
+    template <class Iterator, class T, bool lowToHigh = true>
     auto binary_search(
             Iterator begin,
             Iterator end,

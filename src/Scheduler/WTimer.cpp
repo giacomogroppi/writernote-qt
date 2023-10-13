@@ -12,14 +12,18 @@ WTimer::WTimer(WObject *parent, Fn<void()> function, int millisecond, bool onMai
     , _timeStart(0)
     , _function(std::move(function))
 {
-
 }
 
-WTimer::~WTimer() = default;
+WTimer::~WTimer()
+{
+    WDebug(false, static_cast<void*>(this) << "Call destructor");
+}
 
 
 void WTimer::start(int millisecond)
 {
+    WDebug(false, static_cast<void*>(this) << "Call start");
+
     using namespace std::chrono;
 
     if (millisecond != -1)
@@ -57,7 +61,7 @@ void WTimer::stop()
 
 /**
  * TODO: move into .h file
- * */
+ */
 auto WTimer::getDuration() const -> unsigned long
 {
     WMutexLocker _(this->_lock);
@@ -66,6 +70,8 @@ auto WTimer::getDuration() const -> unsigned long
 
 auto WTimer::trigger() -> void
 {
+    WDebug(false, static_cast<void*>(this) << "Call trigger");
+
     WMutexLocker _(_lock);
     this->_function();
 }

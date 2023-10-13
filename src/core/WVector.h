@@ -215,12 +215,12 @@ public:
     nd auto begin() noexcept -> iterator { return iterator(this->_data, 0u, _size); };
     nd auto end()   noexcept -> iterator { return iterator(this->_data, size(), _size);  };
 
-    nd auto constBegin() const noexcept { return const_iterator(_data, 0u, _size); }
-    nd auto constEnd()   const noexcept { return const_iterator(_data, size(), _size); }
-    nd auto cBegin() const noexcept { return const_iterator(_data, 0u, _size); }
-    nd auto cEnd()   const noexcept { return const_iterator(_data, size(), _size); }
-    nd auto begin() const noexcept { return const_iterator(_data, 0u, _size); }
-    nd auto end()   const noexcept { return const_iterator(_data, size(), _size); }
+    nd auto constBegin() const noexcept -> const_iterator  { return const_iterator(_data, 0u, _size); }
+    nd auto constEnd()   const noexcept -> const_iterator { return const_iterator(_data, size(), _size); }
+    nd auto cBegin() const noexcept -> const_iterator { return const_iterator(_data, 0u, _size); }
+    nd auto cEnd()   const noexcept -> const_iterator { return const_iterator(_data, size(), _size); }
+    nd auto begin() const noexcept -> const_iterator { return const_iterator(_data, 0u, _size); }
+    nd auto end()   const noexcept -> const_iterator { return const_iterator(_data, size(), _size); }
 
     /**
      * \return < 0 if error
