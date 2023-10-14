@@ -5,13 +5,13 @@
 #include <QTimer>
 #include <QThread>
 
-auto Scheduler::addTaskMainThread(SharedPtrThreadSafe<WTask> task) -> void
+auto Scheduler::addTaskMainThread(Ptr<WTask> task) -> void
 {
     // TODO: use qt scheduler
     W_ASSERT(task);
 
-    QTimer::singleShot(0, [task] {
-        manageExecution(task);
+    QTimer::singleShot(0, [task = std::move(task)] () mutable {
+        manageExecution(std::move(task));
     });
 }
 

@@ -59,15 +59,6 @@ void WTimer::stop()
     Scheduler::getInstance().removeTimer(this);
 }
 
-/**
- * TODO: move into .h file
- */
-auto WTimer::getDuration() const -> unsigned long
-{
-    WMutexLocker _(this->_lock);
-    return this->_millisecond;
-}
-
 auto WTimer::trigger() -> void
 {
     WDebug(false, static_cast<void*>(this) << "Call trigger");

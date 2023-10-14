@@ -16,12 +16,16 @@
 #include "core/WMap.h"
 #include "core/pointer/SharedPtrThreadSafe.h"
 #include <shared_mutex>
+#include "core/pointer/Pointer.h"
 
 class Scheduler final: public WObject
 {
+public:
+    template <class P>
+    using Ptr = Pointer<P>;
 private:
     static constexpr auto debug = false;
-    WList<SharedPtrThreadSafe<WTask>> _task_General;
+    WList<Ptr<WTask>> _task_General;
 
     WVector<std::thread> _threads;
     WVector<std::thread::id> _idThreads;
@@ -40,7 +44,7 @@ private:
     std::mutex _muxTimers;
     std::condition_variable _c;
 
-    static void manageExecution (SharedPtrThreadSafe<WTask> task);
+    static void manageExecution (Ptr<WTask> task);
     static auto numberOfThread () -> Unsigned;
 
 public:
@@ -62,7 +66,7 @@ public:
      *  The order of execution is not guaranteed
      * \param task A task that need to be executed in a async thread.
      * */
-    static void addTaskGeneric(const SharedPtrThreadSafe<WTask>& task);
+    static void addTaskGeneric(Ptr<WTask> task);
 
     /**
      * \brief The implementation of this method depends on the framework used by writernote.
@@ -70,7 +74,7 @@ public:
      *  ensuring that the task that arrives first will be executed first.
      * \param task The task that need to be executed in the main thead
      * */
-    static void addTaskMainThread(SharedPtrThreadSafe<WTask> task);
+    static void addTaskMainThread(Ptr<WTask> task);
 
     static
     auto getInstance() -> Scheduler &;
@@ -80,8 +84,8 @@ public:
      * set to false, so it is up to whoever receives the task to destroy it.
      * The function pass will be executed in a generic thread
      * */
-    static constexpr auto startNewTask = [] (Fn<void()> function) -> SharedPtrThreadSafe<WTask> {
-        SharedPtrThreadSafe<WTask> task(new WTaskFunction(nullptr, std::move(function)));
+    static constexpr auto startNewTask = [] (Fn<void()> function) -> Ptr<WTask> {
+        Ptr<WTask> task(new WTaskFunction(nullptr, std::move(function)));
 
         task->setDestroyLater(false);
 
@@ -95,7 +99,6 @@ public:
     auto addTimer (WTimer *timer) -> void;
 
     auto removeTimer (WTimer *timer) -> void;
-
 private:
     /**
      * This method is NOT thread save
@@ -106,7 +109,7 @@ private:
 
     friend class WTask;
 
-    static bool isExecutionSchedulerThread() ;
+    static bool isExecutionSchedulerThread();
 
     /**
      * \return true iff we need to die
@@ -115,11 +118,11 @@ private:
     bool execute();
 };
 
-inline void Scheduler::addTaskGeneric(const SharedPtrThreadSafe<WTask>& task)
+inline void Scheduler::addTaskGeneric(Ptr<WTask> task)
 {
     auto &sched = Scheduler::getInstance();
     WMutexLocker _(sched._lockGeneric);
-    sched._task_General.append(task);
+    sched._task_General.append(std::move(task));
 
     sched._semGeneral.release();
 }

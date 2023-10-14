@@ -127,15 +127,8 @@ public:
     template <class T2 = T>
     T2 average () const;
 
-    // TODO: move outside declaration
     template <typename Func>
-    [[nodiscard]] bool anyMatch(Func func) const {
-        for (const auto &value: *this) {
-            if (func(value))
-                return true;
-        }
-        return false;
-    }
+    nd bool anyMatch(Func func) const;
 
     class iterator
     {
@@ -217,7 +210,7 @@ public:
     auto writeMultiThread (
             WritableAbstract &writable,
             const WListFast<T2> &list,
-            const Fn<SharedPtrThreadSafe<WTask> (
+            const Fn<Pointer<WTask> (
                 Fn<void()>
             )> &startNewThread
     ) noexcept -> int;
@@ -225,7 +218,7 @@ public:
     template<class T2 = T>
     static auto loadMultiThread (const VersionFileController &versionController,
                                  ReadableAbstract &readable,
-                                 const Fn<SharedPtrThreadSafe<WTask>(
+                                 const Fn<Pointer<WTask>(
                                          Fn<void()>
                                     )> &startNewThread
                         ) noexcept -> WPair<int, WListFast<T2>>;
@@ -319,7 +312,7 @@ template<class T2>
 inline auto WListFast<T>::writeMultiThread(
             WritableAbstract &writable,
             const WListFast<T2> &list,
-            const Fn<SharedPtrThreadSafe<WTask>(
+            const Fn<Pointer<WTask>(
                     Fn<void()>
             )> &startNewThread
         ) noexcept -> int
@@ -333,7 +326,7 @@ template<class T2>
 inline auto WListFast<T>::loadMultiThread(
             const VersionFileController &versionController,
             ReadableAbstract &readable,
-            const Fn<SharedPtrThreadSafe<WTask> (
+            const Fn<Pointer<WTask> (
                     Fn<void()>
             )> &startNewThread
         ) noexcept -> WPair<int, WListFast<T2>>
@@ -798,4 +791,15 @@ inline std::ostream& operator<<(std::ostream& os, const WListFast<T>& dt)
         os << ref;
     }
     return os;
+}
+
+template <class T>
+template <class Func>
+inline auto WListFast<T>::anyMatch(Func func) const -> bool
+{
+    for (const auto &value: *this) {
+        if (func(value))
+            return true;
+    }
+    return false;
 }

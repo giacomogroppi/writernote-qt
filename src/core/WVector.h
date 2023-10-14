@@ -245,7 +245,7 @@ public:
     auto loadMultiThread (
             const VersionFileController &versionController,
             ReadableAbstract &readable,
-            const Fn<SharedPtrThreadSafe<WTask>(
+            const Fn<Pointer<WTask>(
                     Fn<void()>
             )> &startNewThread
     ) noexcept -> WPair<int, WVector<T2>>;
@@ -282,7 +282,7 @@ template <class T>
 template <class T2>
 inline auto WVector<T>::loadMultiThread(
         const VersionFileController &versionController, ReadableAbstract &readable,
-        const Fn<SharedPtrThreadSafe<WTask>(
+        const Fn<Pointer<WTask>(
                     Fn<void()>
                 )> &startNewThread
     ) noexcept -> WPair<int, WVector<T2>>

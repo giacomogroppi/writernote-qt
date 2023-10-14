@@ -89,7 +89,7 @@ auto model::find(const WListFast<PointF> &points, const WListFast<pressure_t> &p
     WListFast<WTask *> tasks;
 
     for (int i = 0; i < THREAD_FINDER; i++) {
-        auto task = SharedPtrThreadSafe<WTask>(new WTaskFunction(nullptr, [=]() {
+        auto task = Scheduler::Ptr<WTask>(new WTaskFunction(nullptr, [=]() {
             auto function = functions[i];
 
             finder.is[i] = function(points, pressures, area);

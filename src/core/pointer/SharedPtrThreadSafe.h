@@ -20,6 +20,9 @@ public:
     SharedPtrThreadSafe(const SharedPtrThreadSafe& other);
     SharedPtrThreadSafe(SharedPtrThreadSafe&& other);
 
+    auto isUnique() const -> bool;
+    auto get() const -> T*;
+
     auto operator->() const -> const T*;
     auto operator->() -> T*;
     auto operator*() const -> const T&;
@@ -146,7 +149,7 @@ inline SharedPtrThreadSafe<T>::SharedPtrThreadSafe(const SharedPtrThreadSafe &ot
 }
 
 template <class T>
-SharedPtrThreadSafe<T>::SharedPtrThreadSafe(T *object)
+inline SharedPtrThreadSafe<T>::SharedPtrThreadSafe(T *object)
     : _count(new int(1))
     , _lock(new WMutex)
     , _object(object)
@@ -155,7 +158,7 @@ SharedPtrThreadSafe<T>::SharedPtrThreadSafe(T *object)
 }
 
 template <class T>
-SharedPtrThreadSafe<T>::SharedPtrThreadSafe()
+inline SharedPtrThreadSafe<T>::SharedPtrThreadSafe()
     : _count(nullptr)
     , _object(nullptr)
     , _lock(nullptr)
@@ -164,7 +167,28 @@ SharedPtrThreadSafe<T>::SharedPtrThreadSafe()
 }
 
 template <class T>
-SharedPtrThreadSafe<T>::~SharedPtrThreadSafe()
+inline SharedPtrThreadSafe<T>::~SharedPtrThreadSafe()
 {
     destroy();
+}
+
+template <class T>
+inline auto SharedPtrThreadSafe<T>::isUnique() const -> bool
+{
+    if (_count == nullptr)
+        return false;
+
+    WMutexLocker guard(*_lock);
+    WDebug(true, *_count);
+    if (*_count == 1) {
+        return true;
+    }
+
+    return false;
+}
+
+template <class T>
+inline auto SharedPtrThreadSafe<T>::get() const -> T *
+{
+    return _object;
 }

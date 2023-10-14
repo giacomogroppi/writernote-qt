@@ -77,3 +77,9 @@ inline Q_CORE_EXPORT QDebug operator<<(QDebug d, const WTimer *p)
     return d.space();
 }
 #endif // USE_QT
+
+inline auto WTimer::getDuration() const -> unsigned long
+{
+    WMutexLocker _(this->_lock);
+    return this->_millisecond;
+}

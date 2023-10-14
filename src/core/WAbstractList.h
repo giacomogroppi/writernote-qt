@@ -9,6 +9,7 @@
 #include "core/WPair.h"
 #include "WElement.h"
 #include "core/pointer/SharedPtrThreadSafe.h"
+#include "core/pointer/Pointer.h"
 
 namespace WAbstractList {
     template<class T>
@@ -252,7 +253,7 @@ namespace WAbstractList {
     auto loadMultiThread(
             const VersionFileController &versionController,
             ReadableAbstract &readable,
-            const Fn<SharedPtrThreadSafe<WTask> (
+            const Fn<Pointer<WTask> (
                     Fn<void()>
             )> &startNewThread,
             const Fn<void(List<T>& list, int numberOfElement)> &reserveUnsafe,
@@ -264,13 +265,12 @@ namespace WAbstractList {
 
         int i;
         List<T> result;
-        List<SharedPtrThreadSafe<WTask>> threads;
+        List<Pointer<WTask>> threads;
         List<UnsignedLong> seek;
         volatile bool needToAbort = false;
 
         {
             // load seek array
-            // TODO: use UnsignedLong class
             auto [tmp, seekLoad] = WAbstractList::load<List, UnsignedLong>(versionController, readable);
 
             if (tmp < 0)
@@ -319,9 +319,7 @@ namespace WAbstractList {
         for (auto &thread: threads) {
             thread->join();
 
-            // TODO: enable
-
-            //delete thread;
+            thread.release();
         }
 
         if (needToAbort)
@@ -334,14 +332,14 @@ namespace WAbstractList {
     auto writeMultiThread(
             WritableAbstract &writable,
             const List<T2> &list,
-            const Fn<SharedPtrThreadSafe<WTask>(
+            const Fn<Pointer<WTask>(
                     Fn<void()>
             )> &startNewThread
     ) noexcept -> int
     {
         int i = 0;
 
-        std::vector<SharedPtrThreadSafe<WTask>> threads;
+        std::vector<Pointer<WTask>> threads;
         MemWritable w[list.size()];
         volatile bool needToAbort = false;
 
@@ -360,11 +358,8 @@ namespace WAbstractList {
         // join the threads
         for (auto &thread: threads) {
             thread->join();
+            thread.release();
         }
-
-        // delete the threads
-        // TODO: enable
-        //std::for_each(threads.begin(), threads.end(), [](WTask *t) { delete t; });
 
         if (needToAbort)
             return -1;

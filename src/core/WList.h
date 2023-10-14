@@ -174,7 +174,7 @@ template <class T>
 inline void WList<T>::append(T &&data) noexcept
 {
     auto *newNode = new struct WListPrivate<T>();
-    newNode->data = new T(std::move(data));
+    newNode->data = new T(std::forward<T>(data));
     newNode->next = nullptr;
 
     if (isEmpty()) {

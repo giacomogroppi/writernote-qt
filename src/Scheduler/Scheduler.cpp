@@ -23,7 +23,7 @@ Scheduler::Scheduler()
 {
     WDebug(debug and false, "Call constructor");
 
-    const auto nThreads = numberOfThread();
+    const auto nThreads = 1;//numberOfThread();
     W_ASSERT(instance == nullptr);
 
     instance = this;
@@ -105,7 +105,7 @@ Scheduler::Scheduler()
             const auto isExecutionMainThread = timer->isExecutionMainThread();
             const auto isSingleShot = timer->isSingleShot();
 
-            auto task = SharedPtrThreadSafe<WTask>(new WTaskFunction(nullptr, [timer, isSingleShot] {
+            auto task = Scheduler::Ptr<WTask>(new WTaskFunction(nullptr, [timer, isSingleShot] {
                 timer->trigger();
 
                 if (isSingleShot)
@@ -186,7 +186,7 @@ auto Scheduler::execute() -> bool
     if (this->needToDie())
         return true;
 
-    SharedPtrThreadSafe<WTask> task;
+    Scheduler::Ptr<WTask> task;
 
     {
         WMutexLocker _(_lockGeneric);
@@ -200,7 +200,7 @@ auto Scheduler::execute() -> bool
     return false;
 }
 
-void Scheduler::manageExecution(SharedPtrThreadSafe<WTask> task)
+void Scheduler::manageExecution(Ptr<WTask> task)
 {
     WDebug(debug and false, "Execute object" << static_cast<const void*>(&(*task)));
 
@@ -211,8 +211,7 @@ void Scheduler::manageExecution(SharedPtrThreadSafe<WTask> task)
     task->releaseJoiner();
 
     if (needToDeleteLater) {
-        //TODO: remove this comment and the above
-        //delete task;
+        task.release();
     }
 }
 
@@ -238,9 +237,7 @@ Scheduler::~Scheduler()
         t->releaseJoiner();
 
         if (t->isDeleteLater())
-            ;
-            //TODO: remove this comment and the above
-            //delete t;
+            t.release();
     }
     _lockGeneric.unlock();
 

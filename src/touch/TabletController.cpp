@@ -325,7 +325,7 @@ auto TabletController::openFile(const WString &name) -> int
     this->_nameDoc = name;
 
     // we need to give the ui the time to switch
-    Scheduler::addTaskMainThread(SharedPtrThreadSafe<WTask>(new WTaskFunction(nullptr, methodUpdate, true)));
+    Scheduler::addTaskMainThread(Scheduler::Ptr<WTask>(new WTaskFunction(nullptr, methodUpdate, true)));
 
     return 0;
 }
