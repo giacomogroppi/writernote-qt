@@ -7,6 +7,7 @@ class WMutexLocker
 {
 private:
     T &_m;
+    static_assert(!std::is_pointer<T>::value);
 public:
     WMutexLocker(T &mutex);
     ~WMutexLocker();

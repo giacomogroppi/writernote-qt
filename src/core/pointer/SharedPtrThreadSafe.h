@@ -2,12 +2,14 @@
 
 #include "core/WMutex.h"
 #include "core/WMutexLocker.h"
+#include "core/WRecursiveLock.h"
+#include <concepts>
 
 template <class T>
 class SharedPtrThreadSafe
 {
     mutable int *_count;
-    mutable WMutex *_lock;
+    mutable WRecursiveLock *_lock;
     T* _object;
 
     void destroy();
@@ -23,18 +25,38 @@ public:
     auto isUnique() const -> bool;
     auto get() const -> T*;
 
+    template <class Func>
+    auto atomically(T func) -> void;
+
     auto operator->() const -> const T*;
     auto operator->() -> T*;
     auto operator*() const -> const T&;
     auto operator*() -> T&;
 
-    operator bool() const;
+    explicit operator bool() const;
 
     void doAndUnref (auto method);
+
+    void release() noexcept;
 
     auto operator=(const SharedPtrThreadSafe& other) -> SharedPtrThreadSafe&;
     auto operator=(SharedPtrThreadSafe&& other) -> SharedPtrThreadSafe&;
 };
+
+template <class T>
+template <class Func>
+auto SharedPtrThreadSafe<T>::atomically(T func) -> void
+{
+    W_ASSERT(_lock);
+    WMutexLocker guard(*_lock);
+    func();
+}
+
+template <class T>
+void SharedPtrThreadSafe<T>::release() noexcept
+{
+    *this = SharedPtrThreadSafe<T>(nullptr);
+}
 
 template <class T>
 void SharedPtrThreadSafe<T>::doAndUnref(auto method)

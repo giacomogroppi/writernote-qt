@@ -829,9 +829,9 @@ inline void WListFast<T>::removeAt(Iter begin, Iter end) noexcept
     W_ASSERT(*begin >= 0);
 
     const Size diff = end - begin;
-    const auto hasRealloc = true; (_reserved + diff > WListFast::numberOfObjectReserved);
+    const auto hasRealloc = (_reserved + diff > WListFast::numberOfObjectReserved);
     T** to = hasRealloc
-                ? (T**) calloc (0ul, sizeof(T*) * (_size + 50000 - diff + WListFast::numberOfObjectReserved))
+                ? (T**) malloc (sizeof(T*) * (_size - diff + WListFast::numberOfObjectReserved))
                 : _data;
 
     Size i = *begin;
@@ -843,18 +843,8 @@ inline void WListFast<T>::removeAt(Iter begin, Iter end) noexcept
 
     if (hasRealloc) {
         const Size s = *begin * sizeof(T*);
-        memmove(to, _data,s);
+        memmove(to, static_cast<const void*>(_data), s);
         W_ASSERT(memcmp(to, _data,  s) == 0);
-    }
-
-    if (hasRealloc) {
-        for (Size j = 0; j < *begin; j++) {
-            if (to[j] != _data[j])
-                WDebug(true, i << to[j] << _data[j]);
-            W_ASSERT(to[j] == _data[j]);
-            to[j] = _data[j];
-            WDebug(true, "Write" << j);
-        }
     }
 
     for (;;) {

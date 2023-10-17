@@ -124,9 +124,11 @@ force_inline constexpr not_used int debug_enable()
 template <typename T>
 force_inline void swap(T &t1, T &t2)
 {
-    const T tmp = t1;
-    t1 = t2;
-    t2 = tmp;
+    static_assert(std::is_move_constructible<T>::value);
+
+    T tmp(std::forward<T>(t1));
+    t1 = std::forward<T>(t2);
+    t2 = std::forward<T>(tmp);
 }
 
 #define IS_ORDER_WITH_FUNCTION(list, function) \

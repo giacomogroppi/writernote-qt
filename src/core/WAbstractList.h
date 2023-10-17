@@ -12,6 +12,9 @@
 #include "core/pointer/Pointer.h"
 
 namespace WAbstractList {
+    template <class T>
+    using Ptr = Pointer<T>;
+
     template <class Iter>
     auto isSorted(Iter begin, Iter end) noexcept -> bool
     {
@@ -288,7 +291,7 @@ namespace WAbstractList {
     auto loadMultiThread(
             const VersionFileController &versionController,
             ReadableAbstract &readable,
-            const Fn<Pointer<WTask> (
+            const Fn<Ptr<WTask> (
                     Fn<void()>
             )> &startNewThread,
             const Fn<void(List<T>& list, int numberOfElement)> &reserveUnsafe,
@@ -300,7 +303,7 @@ namespace WAbstractList {
 
         int i;
         List<T> result;
-        List<Pointer<WTask>> threads;
+        List<Ptr<WTask>> threads;
         List<UnsignedLong> seek;
         volatile bool needToAbort = false;
 
@@ -367,14 +370,14 @@ namespace WAbstractList {
     auto writeMultiThread(
             WritableAbstract &writable,
             const List<T2> &list,
-            const Fn<Pointer<WTask>(
+            const Fn<Ptr<WTask>(
                     Fn<void()>
             )> &startNewThread
     ) noexcept -> int
     {
         int i = 0;
 
-        std::vector<Pointer<WTask>> threads;
+        std::vector<Ptr < WTask>> threads;
         MemWritable w[list.size()];
         volatile bool needToAbort = false;
 
