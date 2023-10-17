@@ -30,9 +30,33 @@ public:
 
     operator bool() const;
 
+    void doAndUnref (auto method);
+
     auto operator=(const SharedPtrThreadSafe& other) -> SharedPtrThreadSafe&;
     auto operator=(SharedPtrThreadSafe&& other) -> SharedPtrThreadSafe&;
 };
+
+template <class T>
+void SharedPtrThreadSafe<T>::doAndUnref(auto method)
+{
+    W_ASSERT(_count);
+    _lock->lock();
+    method(*_object);
+    *_count -= 1;
+
+    if (*_count == 0) {
+        _lock->unlock();
+        delete _object;
+        delete _count;
+        delete _lock;
+    } else {
+        _lock->unlock();
+    }
+
+    _lock = nullptr;
+    _object = nullptr;
+    _count = nullptr;
+}
 
 template<class T>
 inline auto SharedPtrThreadSafe<T>::operator->() const -> const T*
@@ -179,7 +203,6 @@ inline auto SharedPtrThreadSafe<T>::isUnique() const -> bool
         return false;
 
     WMutexLocker guard(*_lock);
-    WDebug(true, *_count);
     if (*_count == 1) {
         return true;
     }

@@ -21,7 +21,8 @@ WTask::WTask(WObject *parent, bool deleteLater)
 void WTask::releaseJoiner() noexcept
 {
     WMutexLocker _(this->_waiterLock);
-    this->_sem.release(_waiter);
+
+    _sem.release(_waiter);
     _waiter = 0;
     _hasFinish = true;
 }

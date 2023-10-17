@@ -12,6 +12,21 @@
 #include "core/pointer/Pointer.h"
 
 namespace WAbstractList {
+    template <class Iter>
+    auto isSorted(Iter begin, Iter end) noexcept -> bool
+    {
+        auto before = begin;
+        begin ++;
+        for (; begin != end; ) {
+            if (*before > *begin)
+                return false;
+            before ++;
+            begin ++;
+        }
+
+        return true;
+    };
+
     template<class T>
     auto isSorted(const T& list) -> bool
     {
@@ -148,6 +163,26 @@ namespace WAbstractList {
             }
         }
     }
+
+    template <class List>
+    class Reverse
+    {
+        List &_list;
+    public:
+        explicit Reverse(List& list) : _list(list) {};
+
+        auto rbegin() const { return _list.begin(); };
+        auto rend() const { return _list.end(); };
+
+        auto rbegin() { return _list.begin(); };
+        auto rend() { return _list.end(); };
+
+        auto begin() { return _list.rbegin(); }
+        auto end() { return _list.rend(); }
+
+        auto begin() const { return _list.rbegin(); }
+        auto end() const { return _list.rend(); }
+    };
 
     /**
      * \tparam Iterator iterator for the list
@@ -358,6 +393,10 @@ namespace WAbstractList {
         // join the threads
         for (auto &thread: threads) {
             thread->join();
+            thread.release();
+        }
+
+        for (auto& thread: threads) {
             thread.release();
         }
 

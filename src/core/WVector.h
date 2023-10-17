@@ -212,6 +212,9 @@ public:
     nd auto rbegin() noexcept -> reverse_iterator { return reverse_iterator(end()); }
     nd auto rend() noexcept -> reverse_iterator { return reverse_iterator(begin()); }
 
+    nd auto rbegin() const noexcept { return reverse_const_iterator(end()); }
+    nd auto rend() const noexcept { return reverse_const_iterator(begin()); }
+
     nd auto begin() noexcept -> iterator { return iterator(this->_data, 0u, _size); };
     nd auto end()   noexcept -> iterator { return iterator(this->_data, size(), _size);  };
 

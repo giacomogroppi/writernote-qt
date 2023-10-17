@@ -211,19 +211,6 @@ auto Page::swap(int index, const SharedPtr<Stroke>& newData) -> SharedPtr<Stroke
     return res;
 }
 
-/* the list should be order */
-void Page::removeAt(const WVector<int> &pos)
-{
-    int i;
-
-    W_ASSERT(WAbstractList::isSorted(pos));
-
-    i = pos.size();
-    for (i--; i >= 0; i--) {
-        this->removeAt(i);
-    }
-}
-
 void Page::append(const WList<SharedPtr<Stroke>> &stroke)
 {
     reserve(stroke.size());
@@ -236,13 +223,14 @@ void Page::drawStroke(
         WPainter        &painter,
         const Stroke    &stroke,
         WPen            &pen,
-        const WColor    &color) const noexcept {
-    cbool isRubber = (color == COLOR_NULL);
-    cbool isHigh = stroke.getAlfa() < 255;
+        const WColor    &color) const noexcept
+{
+    const auto isRubber = (color == COLOR_NULL);
+    const auto isHigh = stroke.getAlfa() < 255;
     const auto last_comp_mode = painter.compositionMode();
     constexpr not_used bool measureTime = false;
     constexpr not_used bool debColor = false;
-    cint page = _count - 1;
+    const int page = _count - 1;
 
     pen.setColor(color);
 
@@ -588,20 +576,15 @@ Page::Page()
     this->_count = -1;
 }
 
-RectF Page::get_size_area(const WVector<int> &pos) const
+auto Page::get_size_area(const WVector<int> &pos) const -> RectF
 {
-    RectF result, tmp;
-    auto len = pos.size();
-
-    if(un(!len)){
+    if (pos.isEmpty())
         return {};
-    }
 
-    len --;
-    result = atStroke(pos.first()).getBiggerPointInStroke();
+    RectF result(this->operator[](pos.first())->getBiggerPointInStroke());
 
-    for(; len >= 0; len --){
-        tmp = atStroke(pos.at(len)).getBiggerPointInStroke();
+    for (const auto& index: std::as_const(pos)) {
+        const auto &tmp = this->operator[](index)->getBiggerPointInStroke();
         result = DataStruct::joinRect(result, tmp);
     }
 
@@ -610,18 +593,17 @@ RectF Page::get_size_area(const WVector<int> &pos) const
 
 void Page::setCount(int newCount)
 {
-    int i = this->lengthStroke();
     int delta = newCount - this->_count;
     cdouble deltaY = Page::getHeight() * delta;
 
-    if(un(this->_count < 0)){
+    if (this->_count < 0) {
         _count = newCount;
         return;
     }
 
-    for(i --; i >= 0; i--){
-        this->atStrokeMod(i).scale(PointF(0., deltaY));
-    }
+    this->_stroke.forAll([deltaY](SharedPtr<Stroke> &stroke) {
+        stroke->scale({0., deltaY});
+    });
 
     this->_stroke_writernote.scale(PointF(0., deltaY));
 

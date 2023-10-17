@@ -23,7 +23,7 @@ Scheduler::Scheduler()
 {
     WDebug(debug and false, "Call constructor");
 
-    const auto nThreads = 1;//numberOfThread();
+    const auto nThreads = numberOfThread();
     W_ASSERT(instance == nullptr);
 
     instance = this;
@@ -208,10 +208,13 @@ void Scheduler::manageExecution(Ptr<WTask> task)
 
     task->run();
 
-    task->releaseJoiner();
-
     if (needToDeleteLater) {
+        task->releaseJoiner();
         task.release();
+    } else {
+        task.doAndUnref([](WTask& t) {
+            t.releaseJoiner();
+        });
     }
 }
 

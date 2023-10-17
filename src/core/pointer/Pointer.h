@@ -32,8 +32,18 @@ public:
     auto operator->() -> T*;
     auto operator*() -> T&;
 
+    void doAndUnref (auto method);
+
     explicit operator bool() const;
 };
+
+template <class T>
+void Pointer<T>::doAndUnref(auto method)
+{
+    W_ASSERT(_pointer.operator bool());
+
+    this->_pointer.doAndUnref(method);
+}
 
 template <class T>
 inline Pointer<T>::operator bool() const

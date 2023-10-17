@@ -89,6 +89,9 @@ private:
     static auto at_translation(const PointF &point, cint page) -> PointF;
     static auto get_size_area(const WListFast<SharedPtr<Stroke>> & item, int from, int to) -> RectF;
 
+    auto operator[](int index) { return this->_stroke[index]; }
+    auto operator[](int index) const { return this->_stroke[index]; }
+
 public:
     const WPixmap &getImg() const;
 
@@ -164,6 +167,7 @@ public:
     void drawIfInside(int m_pos_ris, const RectF &area);
     void decreaseAlfa(const WVector<int> &pos, int decrease);
 
+    // TODO: rename to getSizeArea
     auto get_size_area(const WVector<int> &pos) const -> RectF;
 
     // block for appending
@@ -430,9 +434,17 @@ force_inline bool Page::isVisible() const
 
 force_inline void Page::removeAt(int i)
 {
-    W_ASSERT(!(i < 0 || i >= _stroke.size()));
+    return removeAt(WVector<int>{i});
+}
 
-    (void)this->_stroke.takeAt(i);
+/* the list should be order */
+inline void Page::removeAt(const WVector<int> &pos)
+{
+    int i;
+
+    W_ASSERT(WAbstractList::isSorted(pos));
+
+    _stroke.removeAt(pos.begin(), pos.end());
 }
 
 force_inline const Stroke &Page::last() const

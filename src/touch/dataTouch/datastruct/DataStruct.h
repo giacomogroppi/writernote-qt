@@ -117,9 +117,11 @@ public:
     void decreaseAlfa(const WVector<int> &pos, int page);
     void removePage(int page);
 
-    [[deprecated]]
+    [[deprecated ("Use operator []")]]
     nd
     auto at(int page) const -> const Page &;
+
+    [[deprecated ("Use operator []")]]
     auto at_mod(int page) -> Page &;
 
     [[deprecated]] [[nodiscard]]
@@ -147,6 +149,9 @@ public:
 
     auto getLastPageVisible() const -> int;
     void newViewAudio(int newTime);
+
+    auto operator[](unsigned long index) -> Page& { return this->_page[index]; }
+    auto operator[](unsigned long index) const -> const Page& { return this->_page[index]; }
 
     nd auto get_range_visible() const -> int;
     void insertPage(const Page &Page, int index);
@@ -599,7 +604,7 @@ force_inline void DataStruct::setVisible(int from, int to)
 
 inline void DataStruct::decreaseAlfa(const WVector<int> &pos, int index)
 {
-    at_mod(index).decreaseAlfa(pos, 4);
+    this->operator[](index).decreaseAlfa(pos, 4);
 }
 
 inline auto DataStruct::load(

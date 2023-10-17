@@ -14,6 +14,8 @@
 #include "FileContainer/MemReadable.h"
 #include "core/WPair.h"
 #include "WElement.h"
+#include "Index.h"
+#include <algorithm>
 
 // TODO: do some refactoring
 // this list if O(1) in index access
@@ -24,16 +26,18 @@ private:
     static constexpr auto debug = false;
     void test() const;
 
-    using typeOfSize = int;
+    static_assert(std::is_move_constructible<T>::value);
+
+    using Size = int;
 
     T **_data;
-    typeOfSize _size;
-    typeOfSize _reserved;
+    Size _size;
+    Size _reserved;
 
-    static constexpr typeOfSize numberOfObjectReserved = 128;
+    static constexpr Size numberOfObjectReserved = 128;
 
     // this function remove the object from the list
-    T *takeObject(int i);
+    T *takeObject(int i) noexcept;
 
 public:
     constexpr WListFast() noexcept;
@@ -41,7 +45,7 @@ public:
     /**
      * \param reserve The reserve number of element
      * */
-    explicit WListFast(int reserve);
+    explicit WListFast(int reserve) noexcept;
 
     /**
      * \brief Copy constructor
@@ -52,7 +56,7 @@ public:
      * \brief Copy constructor
      * \param args The items to add to the list
      * */
-    WListFast(std::initializer_list<T> args);
+    WListFast(std::initializer_list<T> args) noexcept;
 
     /**
      * \brief Move constructor.
@@ -68,7 +72,7 @@ public:
      * \return The item in position "i"
      * */
     [[nodiscard]]
-    auto at(int i) const -> const T&;
+    auto at(int i) const noexcept -> const T&;
 
     /**
      * \brief Append the element to the list with a copy
@@ -76,7 +80,7 @@ public:
      * \param element The element to append
      * \return The reference to the list
      * */
-    auto append(const T& element) -> WListFast<T>&;
+    auto append(const T& element) noexcept -> WListFast<T>&;
 
     /**
      * \brief Append the element to the list with a copy
@@ -84,51 +88,56 @@ public:
      * \param object The element to append
      * \return The reference to the list
      * */
-    auto append(T &&object) -> WListFast<T>&;
-    void append(const WListFast<T> &other);
+    auto append(T &&object) noexcept -> WListFast<T>&;
+    void append(const WListFast<T> &other) noexcept;
 
+    template <class Iter>
+    void removeAt(Iter begin, Iter end) noexcept;
     void removeAt(int index) noexcept;
-    void remove(int from, int to);
-    void removeObjects(const T &item);
+    void remove(int from, int to) noexcept;
+    void removeObjects(const T &item) noexcept;
 
-    [[nodiscard]] constexpr
-    auto isEmpty() const -> bool;
+    nd constexpr
+    auto isEmpty() const noexcept -> bool;
 
-    [[nodiscard]] constexpr
-    auto size() const -> int;
+    nd constexpr
+    auto size() const noexcept -> int;
 
-    [[nodiscard]]
-    auto first() const -> const T&;
-
-    void clear();
-    void move(int from, int to);
-    void reserve(int reserve);
-    auto takeAt(int i) -> T;
-    auto last() const -> const T&;
-    auto indexOf(const T& value) const -> int;
-    auto lastIndexOf(const T& object) const -> int;
-    void insert(int index, const T& object);
-    auto takeFirst() -> T;
-
-    void forAll(Fn<void(const T&)> method) const;
-    void forAll(Fn<void(T&)> method);
+    nd constexpr
+    auto inBound(long index) const noexcept -> bool;
 
     [[nodiscard]]
-    auto mid(int from, int to) const -> WListFast<T>;
+    auto first() const noexcept -> const T&;
 
-    auto operator[](int i) -> T&;
-    auto operator[](int i) const -> const T&;
+    void clear() noexcept;
+    void move(int from, int to) noexcept;
+    void reserve(int reserve) noexcept;
+    auto takeAt(int i) noexcept -> T;
+    auto last() const noexcept -> const T&;
+    auto indexOf(const T& value) const noexcept -> int;
+    auto lastIndexOf(const T& object) const noexcept -> int;
+    void insert(int index, const T& object) noexcept;
+    auto takeFirst() noexcept -> T;
 
-    auto operator==(const WListFast<T> &other) const -> bool;
+    void forAll(Fn<void(const T&)> method) const noexcept;
+    void forAll(Fn<void(T&)> method) noexcept;
 
-    auto operator=(const WListFast<T> &other) -> WListFast<T>&;
+    [[nodiscard]]
+    auto mid(int from, int to) const noexcept -> WListFast<T>;
+
+    auto operator[](int i) noexcept -> T&;
+    auto operator[](int i) const noexcept -> const T&;
+
+    auto operator==(const WListFast<T> &other) const noexcept -> bool;
+
+    auto operator=(const WListFast<T> &other) noexcept -> WListFast<T>&;
     auto operator=(WListFast<T> &&other) noexcept -> WListFast<T>&;
 
     template <class T2 = T>
-    T2 average () const;
+    T2 average () const noexcept;
 
     template <typename Func>
-    nd bool anyMatch(Func func) const;
+    nd bool anyMatch(Func func) const noexcept;
 
     class iterator
     {
@@ -196,7 +205,7 @@ public:
      * */
     template <class T2 = T>
     static
-    auto write(WritableAbstract &writable, const WListFast<T2> &list) -> int;
+    auto write(WritableAbstract &writable, const WListFast<T2> &list) noexcept -> int;
 
     /**
      * To load the data save with this method it's required to call WListFast::loadMultiThread
@@ -210,38 +219,35 @@ public:
     auto writeMultiThread (
             WritableAbstract &writable,
             const WListFast<T2> &list,
-            const Fn<Pointer<WTask> (
-                Fn<void()>
-            )> &startNewThread
+            const auto &startNewThread
     ) noexcept -> int;
 
     template<class T2 = T>
     static auto loadMultiThread (const VersionFileController &versionController,
                                  ReadableAbstract &readable,
-                                 const Fn<Pointer<WTask>(
-                                         Fn<void()>
-                                    )> &startNewThread
+                                 const auto &startNewThread
                         ) noexcept -> WPair<int, WListFast<T2>>;
 
     static auto load  (
                 const VersionFileController &versionController,
                 ReadableAbstract &readable,
                 Fn<WPair<int, T>(const VersionFileController &versionController, ReadableAbstract &readable )> func
-            ) -> WPair<int, WListFast<T>>;
+            ) noexcept -> WPair<int, WListFast<T>>;
 
     /**
      * You can use this method only if <T> has the method load
      * \return < 0 if error
      * */
-    static auto load (const VersionFileController &versionController, ReadableAbstract &file) -> WPair<int, WListFast<T>>;
+    static auto load (const VersionFileController &versionController,
+                      ReadableAbstract &file) noexcept -> WPair<int, WListFast<T>>;
 
     static auto write (WritableAbstract &writable, const WListFast<T> &list,
-                       Fn<int(WritableAbstract &writable, const T&)> save) -> int;
+                       Fn<int(WritableAbstract &writable, const T&)> save) noexcept-> int;
 };
 
 template <class T>
 template <class T2>
-inline T2 WListFast<T>::average () const
+inline T2 WListFast<T>::average () const noexcept
 {
     T2 result = T2(0);
 
@@ -253,7 +259,7 @@ inline T2 WListFast<T>::average () const
 }
 
 template<class T>
-inline WListFast<T>::WListFast(int reserve)
+inline WListFast<T>::WListFast(int reserve) noexcept
     : _data(nullptr)
     , _size(0)
     , _reserved(0)
@@ -262,7 +268,7 @@ inline WListFast<T>::WListFast(int reserve)
 }
 
 template <class T>
-inline void WListFast<T>::forAll(Fn<void(const T &)> method) const
+inline void WListFast<T>::forAll(Fn<void(const T &)> method) const noexcept
 {
     for (const auto &ref: std::as_const(*this)) {
         method(ref);
@@ -270,7 +276,7 @@ inline void WListFast<T>::forAll(Fn<void(const T &)> method) const
 }
 
 template <class T>
-inline void WListFast<T>::forAll(Fn<void(T &)> method)
+inline void WListFast<T>::forAll(Fn<void(T &)> method) noexcept
 {
     for (auto &ref: *this) {
         method(ref);
@@ -285,7 +291,7 @@ inline auto WListFast<T>::load(
                 const VersionFileController &versionController,
                 ReadableAbstract &readable)
         > func
-    ) -> WPair<int, WListFast<T>>
+    ) noexcept -> WPair<int, WListFast<T>>
 {
     return WAbstractList::load<WListFast, T>(versionController, readable, func);
 }
@@ -295,14 +301,14 @@ inline auto WListFast<T>::write(
             WritableAbstract &writable,
             const WListFast<T> &list,
             Fn<int(WritableAbstract &writable, const T&)> save
-        ) -> int
+        ) noexcept -> int
 {
     return WAbstractList::write(writable, list, save);
 }
 
 template <class T>
 template <class T2>
-inline auto WListFast<T>::write(WritableAbstract &writable, const WListFast<T2> &list) -> int
+inline auto WListFast<T>::write(WritableAbstract &writable, const WListFast<T2> &list) noexcept -> int
 {
     return WAbstractList::write(writable, list);
 }
@@ -312,9 +318,7 @@ template<class T2>
 inline auto WListFast<T>::writeMultiThread(
             WritableAbstract &writable,
             const WListFast<T2> &list,
-            const Fn<Pointer<WTask>(
-                    Fn<void()>
-            )> &startNewThread
+            const auto &startNewThread
         ) noexcept -> int
 {
     return WAbstractList::writeMultiThread<WListFast, T2>(writable, list, startNewThread);
@@ -326,9 +330,7 @@ template<class T2>
 inline auto WListFast<T>::loadMultiThread(
             const VersionFileController &versionController,
             ReadableAbstract &readable,
-            const Fn<Pointer<WTask> (
-                    Fn<void()>
-            )> &startNewThread
+            const auto &startNewThread
         ) noexcept -> WPair<int, WListFast<T2>>
 {
     auto reserveUnsafe = [] (WListFast<T2>& list, int numberOfElements) {
@@ -369,7 +371,7 @@ inline auto WListFast<T>::operator=(WListFast<T> &&other) noexcept -> WListFast<
 }
 
 template<class T>
-inline void WListFast<T>::removeObjects(const T &item)
+inline void WListFast<T>::removeObjects(const T &item) noexcept
 {
     const auto index = indexOf(item);
     if (index >= 0) {
@@ -388,7 +390,7 @@ inline WListFast<T>::WListFast(const WListFast<T> &other) noexcept
 }
 
 template<class T>
-inline auto WListFast<T>::mid(int from, int to) const -> WListFast<T>
+inline auto WListFast<T>::mid(int from, int to) const noexcept -> WListFast<T>
 {
     W_ASSERT(from >= 0 && to <= size());
     W_ASSERT(from <= to);
@@ -404,7 +406,7 @@ inline auto WListFast<T>::mid(int from, int to) const -> WListFast<T>
 }
 
 template<class T>
-inline auto WListFast<T>::indexOf(const T &value) const -> int
+inline auto WListFast<T>::indexOf(const T &value) const noexcept -> int
 {
     for (int i = 0; i < size(); ++i) {
         if (at(i) == value)
@@ -415,7 +417,7 @@ inline auto WListFast<T>::indexOf(const T &value) const -> int
 }
 
 template<class T>
-inline void WListFast<T>::insert(int index, const T &object)
+inline void WListFast<T>::insert(int index, const T &object) noexcept
 {
     W_ASSERT(index >= 0 && index <= size());
 
@@ -444,10 +446,10 @@ force_inline void WListFast<T>::test() const
 #ifdef DEBUGINFO
     W_ASSERT(this->_size >= 0);
     W_ASSERT(this->_reserved >= 0);
+
     if (_size > 0) {
-        for (int i = 0; i < size(); i++) {
+        for (int i = 0; i < size(); i++)
             W_ASSERT(_data[i] != nullptr);
-        }
     } else {
         if (_reserved) {
             W_ASSERT(_data != nullptr);
@@ -462,13 +464,13 @@ template <class T>
 inline auto WListFast<T>::load(
                 const VersionFileController &versionController,
                 ReadableAbstract &file
-            ) -> WPair<int, WListFast<T>>
+            ) noexcept -> WPair<int, WListFast<T>>
 {
     return WAbstractList::load<WListFast, T>(versionController, file);
 }
 
 template<class T>
-inline void WListFast<T>::move(int from, int to)
+void WListFast<T>::move(int from, int to) noexcept
 {
     W_ASSERT(from >= 0 and from < size());
     W_ASSERT(to >= 0 and to < size());
@@ -484,7 +486,7 @@ inline void WListFast<T>::move(int from, int to)
 }
 
 template<class T>
-inline auto WListFast<T>::operator=(const WListFast<T> &other) -> WListFast<T> &
+auto WListFast<T>::operator=(const WListFast<T> &other) noexcept -> WListFast<T> &
 {
     if (this == &other)
         return *this;
@@ -514,7 +516,7 @@ inline auto WListFast<T>::operator=(const WListFast<T> &other) -> WListFast<T> &
 }
 
 template<class T>
-inline bool WListFast<T>::operator==(const WListFast<T> &other) const
+inline bool WListFast<T>::operator==(const WListFast<T> &other) const noexcept
 {
     if (size() != other.size())
         return false;
@@ -530,25 +532,25 @@ inline bool WListFast<T>::operator==(const WListFast<T> &other) const
 }
 
 template<class T>
-inline T &WListFast<T>::operator[](int i)
+inline T &WListFast<T>::operator[](int i) noexcept
 {
     return *this->_data[i];
 }
 
 template <class T>
-inline auto WListFast<T>::operator[](int i) const -> const T&
+inline auto WListFast<T>::operator[](int i) const noexcept -> const T&
 {
     return *this->_data[i];
 }
 
 template<class T>
-inline T WListFast<T>::takeFirst()
+inline T WListFast<T>::takeFirst() noexcept
 {
     return takeAt(0);
 }
 
 template<class T>
-inline int WListFast<T>::lastIndexOf(const T &object) const
+inline int WListFast<T>::lastIndexOf(const T &object) const noexcept
 {
     for (int i = size() - 1; i >= 0; i--) {
         if (at(i) == object)
@@ -559,14 +561,14 @@ inline int WListFast<T>::lastIndexOf(const T &object) const
 }
 
 template<class T>
-inline const T &WListFast<T>::last() const
+inline const T &WListFast<T>::last() const noexcept
 {
     W_ASSERT(size() != 0);
     return at(size() - 1);
 }
 
 template <class T>
-inline T*WListFast<T>::takeObject(int index)
+inline T* WListFast<T>::takeObject(int index) noexcept
 {
     W_ASSERT(index >= 0 && index < size());
     T* object = this->_data[index];
@@ -592,7 +594,7 @@ inline T*WListFast<T>::takeObject(int index)
 }
 
 template<class T>
-inline auto WListFast<T>::takeAt(int index) -> T
+inline auto WListFast<T>::takeAt(int index) noexcept -> T
 {
     W_ASSERT(index >= 0 && index < size());
     T* p = takeObject(index);
@@ -605,7 +607,7 @@ inline auto WListFast<T>::takeAt(int index) -> T
 }
 
 template<class T>
-inline void WListFast<T>::reserve(int numberOfObjects)
+inline void WListFast<T>::reserve(int numberOfObjects) noexcept
 {
     W_ASSERT(numberOfObjects >= 0);
 
@@ -618,7 +620,7 @@ inline void WListFast<T>::reserve(int numberOfObjects)
 }
 
 template<class T>
-inline void WListFast<T>::clear()
+inline void WListFast<T>::clear() noexcept
 {
     for (int i = 0; i < this->_size; i++) {
         delete _data[i];
@@ -633,25 +635,25 @@ inline void WListFast<T>::clear()
 }
 
 template<class T>
-inline auto WListFast<T>::first() const -> const T &
+inline auto WListFast<T>::first() const noexcept -> const T &
 {
     return *this->_data[0];
 }
 
 template<class T>
-constexpr inline auto WListFast<T>::size() const -> int
+constexpr inline auto WListFast<T>::size() const noexcept -> int
 {
     return _size;
 }
 
 template<class T>
-constexpr inline bool WListFast<T>::isEmpty() const
+constexpr inline bool WListFast<T>::isEmpty() const noexcept
 {
     return _size == 0;
 }
 
 template<class T>
-inline void WListFast<T>::remove(int from, int to)
+inline void WListFast<T>::remove(int from, int to) noexcept
 {
     W_ASSERT(from <= to);
     W_ASSERT(from >= 0 && to <= size());
@@ -685,7 +687,7 @@ inline void WListFast<T>::removeAt(int index) noexcept
 }
 
 template<class T>
-inline void WListFast<T>::append(const WListFast<T> &other)
+inline void WListFast<T>::append(const WListFast<T> &other) noexcept
 {
     this->reserve(other.size());
 
@@ -697,7 +699,7 @@ inline void WListFast<T>::append(const WListFast<T> &other)
 }
 
 template<class T>
-inline auto WListFast<T>::append(const T &element) -> WListFast<T>&
+inline auto WListFast<T>::append(const T &element) noexcept -> WListFast<T>&
 {
     if (_reserved == 0)
         reserve(WListFast::numberOfObjectReserved);
@@ -711,7 +713,7 @@ inline auto WListFast<T>::append(const T &element) -> WListFast<T>&
 }
 
 template <class T>
-inline auto WListFast<T>::append(T &&object) -> WListFast<T>&
+inline auto WListFast<T>::append(T &&object) noexcept -> WListFast<T>&
 {
     if (_reserved == 0)
         reserve(WListFast::numberOfObjectReserved);
@@ -724,14 +726,14 @@ inline auto WListFast<T>::append(T &&object) -> WListFast<T>&
 }
 
 template<class T>
-inline const T &WListFast<T>::at(int i) const
+inline const T &WListFast<T>::at(int i) const noexcept
 {
     W_ASSERT(i >= 0 && i < this->size());
     return *this->_data[i];
 }
 
 template<class T>
-inline WListFast<T>::WListFast(std::initializer_list<T> args)
+inline WListFast<T>::WListFast(std::initializer_list<T> args) noexcept
     : _data(nullptr)
     , _size(0)
     , _reserved(0)
@@ -770,8 +772,13 @@ inline Q_CORE_EXPORT QDebug operator<<(QDebug d, const WListFast<T> &p)
 {
     d.nospace() << "ListFast(";
 
-    for (const auto &item: std::as_const(p)) {
-        d.space() << item << ",";
+    auto begin = p.begin();
+    auto end = p.end();
+
+    for (; begin != end; begin++) {
+        d.nospace() << *begin;
+        if ((begin + 1) != end)
+            d.nospace() << ", ";
     }
 
     return d.space() << " )";
@@ -795,11 +802,97 @@ inline std::ostream& operator<<(std::ostream& os, const WListFast<T>& dt)
 
 template <class T>
 template <class Func>
-inline auto WListFast<T>::anyMatch(Func func) const -> bool
+inline auto WListFast<T>::anyMatch(Func func) const noexcept -> bool
 {
     for (const auto &value: *this) {
         if (func(value))
             return true;
     }
     return false;
+}
+
+template <class T>
+constexpr inline auto WListFast<T>::inBound(long index) const noexcept -> bool
+{
+    return index >= 0 and index < size();
+}
+
+template <class T>
+template <class Iter>
+inline void WListFast<T>::removeAt(Iter begin, Iter end) noexcept
+{
+    if (begin == end)
+        return;
+
+    W_ASSERT(WAbstractList::isSorted(begin, end));
+    W_ASSERT(*(end - 1) < size());
+    W_ASSERT(*begin >= 0);
+
+    const Size diff = end - begin;
+    const auto hasRealloc = true; (_reserved + diff > WListFast::numberOfObjectReserved);
+    T** to = hasRealloc
+                ? (T**) calloc (0ul, sizeof(T*) * (_size + 50000 - diff + WListFast::numberOfObjectReserved))
+                : _data;
+
+    Size i = *begin;
+
+    /**
+     * number of elements that is already deleted from the original data structure
+     * */
+    Size numberOfDeletion = 0u;
+
+    if (hasRealloc) {
+        const Size s = *begin * sizeof(T*);
+        memmove(to, _data,s);
+        W_ASSERT(memcmp(to, _data,  s) == 0);
+    }
+
+    if (hasRealloc) {
+        for (Size j = 0; j < *begin; j++) {
+            if (to[j] != _data[j])
+                WDebug(true, i << to[j] << _data[j]);
+            W_ASSERT(to[j] == _data[j]);
+            to[j] = _data[j];
+            WDebug(true, "Write" << j);
+        }
+    }
+
+    for (;;) {
+        const auto isAtEnd = (begin + 1) == end;
+
+        WDebug(true, "Current is:" << *begin
+                << "Deliting object" << i
+                << "next is: " << (((begin + 1) >= end) ? -1 : *(begin + 1))
+        );
+
+        numberOfDeletion ++;
+        delete _data[i];
+        _data[i] = nullptr;
+
+        const Size s = isAtEnd ? size() : *(begin + 1);
+
+        // TODO: use memcopy
+        for (i++; i < s; i++) {
+            W_ASSERT(i < size());
+            W_ASSERT(i - numberOfDeletion < size() - diff);
+            WDebug(true, "Move" << i << "to" << i - numberOfDeletion);
+            to[i - numberOfDeletion] = _data[i];
+        }
+
+        if (isAtEnd)
+            break;
+
+        begin++;
+    }
+
+    if (hasRealloc) {
+        _reserved = WListFast::numberOfObjectReserved;
+        free(_data);
+        _data = to;
+    } else {
+        _reserved += diff;
+    }
+    _size -= diff;
+
+    test();
 }
