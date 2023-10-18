@@ -65,7 +65,7 @@ static void *xmlstruct_thread_load(void *_data)
     WZipReaderSingle &reader = *data->_reader;
     auto [res, page] = Page::load(data->_versionController, *data->_reader);
 
-    if (res < 0)
+    if (res)
         return (void *)1UL;
 
     *data->_page = std::move(page);

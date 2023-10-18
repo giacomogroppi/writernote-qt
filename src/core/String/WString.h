@@ -24,38 +24,38 @@ struct WStringHash {
 };
 
 // TODO: move all this in a cpp file
-inline auto WString::load (const VersionFileController& versionController, ReadableAbstract &readable) -> WPair<int, WString>
+inline auto WString::load (
+    const VersionFileController& versionController,
+    ReadableAbstract &readable) -> WPair<Error, WString>
 {
-    WString result;
-
     if (versionController.getVersionWString() != 0)
-        return {-1, result};
+        return {Error::makeErrVersion(), {}};
 
-    result = WString();
-
+    WString result;
     int size;
 
-    if (readable.read(&size, sizeof (size)) < 0)
-        return {-1, result};
+    if (auto err = readable.read(&size, sizeof (size)))
+        return {err, result};
+
     result.reserve(size);
 
     char d[size];
 
-    if (readable.read (d, size) < 0)
-        return {-1, result};
+    if (auto err = readable.read (d, size))
+        return {err, result};
 
     result.append(d, size);
-    return {0, result};
+    return {Error::makeOk(), result};
 }
 
-inline auto WString::write (WritableAbstract &writable, const WString &str) -> int
+inline auto WString::write (WritableAbstract &writable, const WString &str) -> Error
 {
     int size = static_cast<int>(str.size());
 
-    if (writable.write(&size, sizeof (size)) < 0)
-        return -1;
+    if (auto err = writable.write(&size, sizeof (size)))
+        return err;
 
-    if (writable.write(str.toUtf8().constData(), size) < 0)
-        return -1;
-    return 0;
+    if (auto err = writable.write(str.toUtf8().constData(), size))
+        return err;
+    return Error::makeOk();
 }

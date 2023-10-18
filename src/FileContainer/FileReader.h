@@ -18,16 +18,16 @@ public:
     [[nodiscard]]
     bool isOk() const;
 
-    auto read(void *to, size_t size) const -> int final;
+    auto read(void *to, size_t size) const -> Error final;
 };
 
-inline auto FileReader::read(void *to, size_t size) const -> int
+inline auto FileReader::read(void *to, size_t size) const -> Error
 {
     if (_delta + size > static_cast<unsigned long>(_data->size()))
-        return -1;
+        return Error::makeErrInternal();
 
     WCommonScript::WMemcpy(to, _data->constData() + _delta, size);
     _delta += size;
 
-    return 0;
+    return Error::makeOk();
 }

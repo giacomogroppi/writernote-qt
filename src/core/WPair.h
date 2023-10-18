@@ -44,38 +44,39 @@ public:
      * \return value &lt 0 iff it fail
      * */
     template <class K2 = K, class T2 = T>
-    static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, WPair<K2, T2>>
+    static auto load (const VersionFileController &versionController,
+                      ReadableAbstract &readable) -> WPair<Error, WPair<K2, T2>>
     {
-        WPair<K2, T2> result;
-
         if (versionController.getVersionWPair() != 0)
-            return {-1, result};
+            return {Error::makeErrVersion(), WPair<K2, T2>{}};
+
+        WPair<K2, T2> result;
 
         {
             auto [k, data] = K2::load (versionController, readable);
-            if (k < 0)
-                return {-1, result};
-            result.first = std::move (data);
+            if (k)
+                return {k, result};
+            result.first = std::forward<K2>(data);
         }
 
         {
             auto [k, data] = T2::load(versionController, readable);
-            if (k < 0)
-                return {-1, result};
-            result.second = std::move (data);
+            if (k)
+                return {k, result};
+            result.second = std::forward<T2> (data);
         }
 
-        return {0, result};
+        return {Error::makeOk(), result};
     }
 
     template <class K2, class T2>
-    static auto write (WritableAbstract &writable, const WPair<K2, T2> &object)
+    static auto write (WritableAbstract &writable, const WPair<K2, T2> &object) -> Error
     {
-        if (K2::write(writable, object.first) < 0)
-            return -1;
-        if (T2::write(writable, object.second) < 0)
-            return -1;
-        return 0;
+        if (auto err = K2::write(writable, object.first))
+            return err;
+        if (auto err = T2::write(writable, object.second))
+            return err;
+        return Error::makeOk();
     }
 
     template <class K2 = K, class T2 = T>

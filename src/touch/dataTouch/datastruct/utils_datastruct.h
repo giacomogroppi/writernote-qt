@@ -60,35 +60,36 @@ public:
     auto operator ()() const -> double { return static_cast<double>(_d); }
 
     static
-    auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, pressure_t>;
+    auto load (const VersionFileController &versionController,
+               ReadableAbstract &readable) -> WPair<Error, pressure_t>;
 
     // TODO: rename this method in write
     static
-    auto write (WritableAbstract &writable, const pressure_t &pressure) -> int;
+    auto write (WritableAbstract &writable, const pressure_t &pressure) -> Error;
 
     operator float() const { return _d; }
     operator double() const { return _d; }
 };
 
 inline auto pressure_t::load(const VersionFileController &versionController,
-                      ReadableAbstract &readable) -> WPair<int, pressure_t>
+                      ReadableAbstract &readable) -> WPair<Error, pressure_t>
 {
     if (versionController.getVersionPressure() != 0)
-        return {-1, 0.};
+        return {Error::makeErrVersion(), 0.};
 
     pressure_t result{};
 
-    if (readable.read(result._d) < 0)
-        return {-1, {}};
+    if (auto err = readable.read(result._d))
+        return {err, {}};
 
-    return {0, result};
+    return {Error::makeOk(), result};
 }
 
-inline int pressure_t::write(WritableAbstract &writable, const pressure_t &pressure)
+inline auto pressure_t::write(WritableAbstract &writable, const pressure_t &pressure) -> Error
 {
-    if (writable.write(pressure._d) < 0)
-        return -1;
-    return 0;
+    if (auto err = writable.write(pressure._d))
+        return err;
+    return Error::makeOk();
 }
 
 inline float operator+(float one, const pressure_t &two)

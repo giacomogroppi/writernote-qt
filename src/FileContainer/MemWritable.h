@@ -41,7 +41,7 @@ public:
     MemWritable();
     ~MemWritable();
 
-    auto write (const void *data, size_t size) -> int final;
+    auto write (const void *data, size_t size) -> Error final;
 
     [[nodiscard]]
     auto getCurrentSize() const -> size_t;
@@ -49,7 +49,7 @@ public:
     /**
      * \return &lt 0 in case of errors otherwise it return 0
      */
-    auto merge (WritableAbstract &writable) -> int;
+    auto merge (WritableAbstract &writable) -> Error;
 
     /**
      * \param append Function for append data to a custom object.
@@ -57,7 +57,7 @@ public:
      * \return &lt in case "append" return an error
      * */
      // TODO: change to UnsignedLong
-    auto merge (const Fn<int(const void *d, size_t size)>& append) -> int;
+    auto merge (const Fn<Error(const void *d, size_t size)>& append) -> Error;
 
     auto currentSize() -> size_t { return _size; }
 };

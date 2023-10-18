@@ -10,8 +10,9 @@ public:
     PointF i;
     PointF f;
 
-    static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, ImageDrawable>;
-    static auto write (WritableAbstract &writable, const ImageDrawable &source) noexcept -> int;
+    static auto load (const VersionFileController &versionController,
+                      ReadableAbstract &readable) -> WPair<Error, ImageDrawable>;
+    static auto write (WritableAbstract &writable, const ImageDrawable &source) noexcept -> Error;
 
 };
 

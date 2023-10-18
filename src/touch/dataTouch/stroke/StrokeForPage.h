@@ -32,9 +32,10 @@ public:
     void setPressure(pressure_t press);
 
     static
-    auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, StrokeForPage>;
+    auto load (const VersionFileController &versionController,
+                     ReadableAbstract &readable) -> WPair<Error, StrokeForPage>;
 
-    static auto write (WritableAbstract &writable, const StrokeForPage &strokeForPage) -> int;
+    static auto write (WritableAbstract &writable, const StrokeForPage &strokeForPage) -> Error;
 
     size_t getSizeInFile() const;
 

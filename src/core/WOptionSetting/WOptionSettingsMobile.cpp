@@ -55,7 +55,7 @@ auto WOptionSettings::save() const -> bool
     
     if (res < 0) return false;
     
-    if (WMap<WString, WByteArray, WStringHash>::write (file, _map) < 0)
+    if (WMap<WString, WByteArray, WStringHash>::write (file, _map))
         return false;
     
     return true;

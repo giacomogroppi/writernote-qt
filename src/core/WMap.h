@@ -22,8 +22,8 @@ public:
     auto set (const Key& key, Value &&value) -> void;
     auto set (Key &&key, const Value& value) -> void;
 
-    static auto load (const VersionFileController &version, ReadableAbstract &readable) -> WPair<int, WMap<Key, Value, Hasher>>;
-    static auto write (WritableAbstract &writable, const WMap &object) -> int;
+    static auto load (const VersionFileController &version, ReadableAbstract &readable) -> WPair<Error, WMap<Key, Value, Hasher>>;
+    static auto write (WritableAbstract &writable, const WMap &object) -> Error;
 
     auto isPresent(const Key &key) const noexcept -> bool;
 };
@@ -92,46 +92,48 @@ template <class Key, class Value, class Hasher>
 inline auto WMap<Key, Value, Hasher>::load (
             const VersionFileController &version,
             ReadableAbstract &readable
-        ) -> WPair<int, WMap<Key, Value, Hasher>>
+        ) -> WPair<Error, WMap<Key, Value, Hasher>>
 {
     if (version.getVersionWMap() > 0)
-        return {-1, {}};
+        return {Error::makeErrVersion(), {}};
 
     int size;
     WMap<Key, Value, Hasher> result;
 
-    if (readable.read(size) < 0)
-        return {-1, {}};
+    if (auto err = readable.read(size))
+        return {err, {}};
 
     for (int i = 0; i < size; i++) {
         auto [res1, key] = Key::load (version, readable);
-        if (res1 < 0) return {-1, {}};
+        if (res1) 
+            return {res1, {}};
 
         auto [res2, value] = Value::load (version, readable);
-        if (res2 < 0) return {-1, {}};
+        if (res2) 
+            return {res2, {}};
 
         result.set(std::move(key), std::move(value));
     }
 
-    return {0, result};
+    return {Error::makeOk(), result};
 }
 
 template <class Key, class Value, class Hasher>
 inline auto WMap<Key, Value, Hasher>::write (
         WritableAbstract &writable,
         const WMap &object
-    ) -> int
+    ) -> Error
 {
     const int size = object._d.size();
-    if (writable.write(size) < 0)
-        return -1;
+    if (auto err = writable.write(size))
+        return err;
 
     for (const auto &[key, item]: std::as_const(object._d)) {
-        if (Key::write (writable, key) < 0)
-            return -1;
-        if (Value::write (writable, item) < 0)
-            return -1;
+        if (auto err = Key::write (writable, key))
+            return err;
+        if (auto err = Value::write (writable, item))
+            return err;
     }
 
-    return 0;
+    return Error::makeOk();
 }

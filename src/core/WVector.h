@@ -228,7 +228,8 @@ public:
     /**
      * \return < 0 if error
      * */
-    static auto load (const VersionFileController &versionController, ReadableAbstract &file) -> WPair<int, WVector<T>>;
+    static auto load (const VersionFileController &versionController,
+                      ReadableAbstract &file) -> WPair<Error, WVector<T>>;
 
     /**
      * \param writable needs to have write(const void *data, size_t size) and it needs to return < 0 in case
@@ -237,11 +238,11 @@ public:
      * \return -1 in case of error
      * */
     template <class T2 = T>
-    static auto write(WritableAbstract &writable, const WVector<T2> &list) noexcept -> int;
+    static auto write(WritableAbstract &writable, const WVector<T2> &list) noexcept -> Error;
 
     template <class StartNewThreadFunction, class T2 = T>
     static auto writeMultiThread (WritableAbstract &writable, const WVector<T2> &list,
-                           StartNewThreadFunction startNewThread) noexcept -> int;
+                           StartNewThreadFunction startNewThread) noexcept -> Error;
 
     template<class T2 = T>
     static
@@ -251,7 +252,7 @@ public:
             const Fn<Pointer<WTask>(
                     Fn<void()>
             )> &startNewThread
-    ) noexcept -> WPair<int, WVector<T2>>;
+    ) noexcept -> WPair<Error, WVector<T2>>;
 };
 
 template<class T>
@@ -276,7 +277,7 @@ inline WVector<T>::WVector(int reserve) noexcept
 template <class T>
 template <class StartNewThreadFunction, class T2>
 inline auto WVector<T>::writeMultiThread(WritableAbstract &writable, const WVector<T2> &list,
-                                         StartNewThreadFunction startNewThread) noexcept -> int
+                                         StartNewThreadFunction startNewThread) noexcept -> Error
 {
     return WAbstractList::writeMultiThread<WVector, T2>(writable, list, startNewThread);
 }
@@ -288,7 +289,7 @@ inline auto WVector<T>::loadMultiThread(
         const Fn<Pointer<WTask>(
                     Fn<void()>
                 )> &startNewThread
-    ) noexcept -> WPair<int, WVector<T2>>
+    ) noexcept -> WPair<Error, WVector<T2>>
 {
     const auto reserveUnsafe = [] (WVector<T2>& list, int size) {
         list.reserve(size);
@@ -306,19 +307,19 @@ inline auto WVector<T>::loadMultiThread(
 
 template <class T>
 template <class T2>
-inline auto WVector<T>::write(WritableAbstract &writable, const WVector<T2> &list) noexcept -> int
+auto WVector<T>::write(WritableAbstract &writable, const WVector<T2> &list) noexcept -> Error
 {
     return WAbstractList::write(writable, list);
 }
 
 template<class T>
-inline auto WVector<T>::contains(const T &value) const noexcept -> bool
+auto WVector<T>::contains(const T &value) const noexcept -> bool
 {
     return indexOf(value).isValid();
 }
 
 template<class T>
-inline auto WVector<T>::removeOrderHighToLow(
+auto WVector<T>::removeOrderHighToLow(
             const T &object,
             const Fn<bool(const T &, const T &)> &cmp
         ) noexcept -> bool
@@ -361,7 +362,7 @@ auto WVector<T>::removeAll(Index from, Index to) noexcept -> void
 }
 
 template<class T>
-inline auto WVector<T>::operator=(const WVector<T> &other) -> WVector<T> &
+auto WVector<T>::operator=(const WVector<T> &other) -> WVector<T> &
 {
     if (this == &other)
         return *this;
@@ -377,7 +378,7 @@ inline auto WVector<T>::operator=(const WVector<T> &other) -> WVector<T> &
 }
 
 template <class T>
-inline auto WVector<T>::operator=(WVector<T> &&other) noexcept -> WVector<T> &
+auto WVector<T>::operator=(WVector<T> &&other) noexcept -> WVector<T> &
 {
     if (this == &other)
         return *this;
@@ -396,7 +397,7 @@ inline auto WVector<T>::operator=(WVector<T> &&other) noexcept -> WVector<T> &
 }
 
 template<class T>
-inline auto WVector<T>::takeAt(Index i) noexcept -> T
+auto WVector<T>::takeAt(Index i) noexcept -> T
 {
     W_ASSERT(i < size());
 
@@ -408,7 +409,7 @@ inline auto WVector<T>::takeAt(Index i) noexcept -> T
 }
 
 template <class T>
-inline void WVector<T>::insert(Index index, WVector<T> &&vector) noexcept {
+void WVector<T>::insert(Index index, WVector<T> &&vector) noexcept {
     if (_reserve < vector.size()) {
         T* newData = (T*) malloc (sizeof(T) *
                 (_size + vector.size() + WVector::numberOfAllocation)
@@ -465,21 +466,21 @@ inline void WVector<T>::insert(Index index, WVector<T> &&vector) noexcept {
 }
 
 template<class T>
-inline void WVector<T>::insert(Index index, T &&data) noexcept {
+void WVector<T>::insert(Index index, T &&data) noexcept {
     WVector<T> tmp(1);
     tmp.append(std::forward<T>(data));
     this->insert(index, std::move(tmp));
 }
 
 template<class T>
-inline void WVector<T>::insert(Index index, const T &data) noexcept {
+void WVector<T>::insert(Index index, const T &data) noexcept {
     T object = data;
 
     return insert(index, std::forward<T>(object));
 }
 
 template<class T>
-inline auto WVector<T>::takeFirst() noexcept -> T
+auto WVector<T>::takeFirst() noexcept -> T
 {
     W_ASSERT(size() > 0);
 
@@ -514,13 +515,13 @@ inline auto WVector<T>::takeFirst() noexcept -> T
 }
 
 template<class T>
-inline void WVector<T>::test() const
+void WVector<T>::test() const
 {
 
 }
 
 template<class T>
-inline auto WVector<T>::operator[](int index) -> T &
+auto WVector<T>::operator[](int index) -> T &
 {
     return _data[index];
 }
@@ -532,7 +533,7 @@ auto WVector<T>::at(Index i) const noexcept -> const T&
 }
 
 template<class T>
-inline void WVector<T>::move(Index from, Index to) noexcept
+void WVector<T>::move(Index from, Index to) noexcept
 {
     W_ASSERT(from.value() < size() and to.value() < size());
 
@@ -806,7 +807,7 @@ template <class T>
 inline auto WVector<T>::load(
         const VersionFileController &versionController,
         ReadableAbstract &file
-) -> WPair<int, WVector<T>>
+) -> WPair<Error, WVector<T>>
 {
     return WAbstractList::load<WVector, T>(versionController, file);
 }

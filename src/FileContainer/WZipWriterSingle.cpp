@@ -35,15 +35,14 @@ int WZipWriterSingle::commit_change(const WByteArray &zipName, const WByteArray 
     return 0;
 }
 
-auto WZipWriterSingle::write(const void *from, size_t size_object) -> int
+auto WZipWriterSingle::write(const void *from, size_t size_object) -> Error
 {
     W_ASSERT(this->_offset + size_object <= this->_max);
     W_ASSERT(size_object);
     W_ASSERT(from);
 
     void *to = this->_data + this->_offset;
-    memcpy(to, from, size_object);
-    //WMemcpy(to, from, size_object);
+    WCommonScript::WMemcpy(to, from, size_object);
 #ifdef DEBUGINFO
     for(size_t i = 0; i < size_object; i++){
         const char *d1 = (const char *) to;
@@ -53,7 +52,7 @@ auto WZipWriterSingle::write(const void *from, size_t size_object) -> int
 #endif
     this->_offset += size_object;
 
-    return 0;
+    return Error::makeOk();
 }
 
 

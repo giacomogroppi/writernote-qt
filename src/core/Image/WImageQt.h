@@ -41,8 +41,8 @@ public:
 
     bool isNull() const;
 
-    static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, WImage>;
-    static auto write (WritableAbstract &writable, const WImage &source) -> int;
+    static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<Error, WImage>;
+    static auto write (WritableAbstract &writable, const WImage &source) -> Error;
 
     auto operator==(const WImage &other) const -> bool;
     auto operator=(WImage &&other) noexcept -> WImage &;

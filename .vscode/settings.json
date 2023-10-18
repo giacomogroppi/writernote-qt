@@ -66,7 +66,8 @@
         "atomic": "cpp",
         "*.def": "cpp",
         "vector": "cpp",
-        "optional": "cpp"
+        "optional": "cpp",
+        "__locale": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled",
     "cmake.configureOnOpen": true,

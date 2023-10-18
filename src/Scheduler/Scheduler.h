@@ -22,7 +22,7 @@ class Scheduler final: public WObject
 {
 public:
     template <class P>
-    using Ptr = SharedPtrThreadSafe<P>;
+    using Ptr = Pointer<P>;
 private:
     static constexpr auto debug = false;
     WList<Ptr<WTask>> _task_General;

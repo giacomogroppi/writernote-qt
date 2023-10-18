@@ -37,9 +37,9 @@ public:
     auto operator==(const WElement<T>& element) const -> bool = default;
 
     static auto load (const VersionFileController& versionController,
-                      ReadableAbstract& readableAbstract) -> WPair<int, WElement<T>>;
+                      ReadableAbstract& readableAbstract) -> WPair<Error, WElement<T>>;
 
-    static auto write (WritableAbstract& writable, const WElement<T>& element) -> int;
+    static auto write (WritableAbstract& writable, const WElement<T>& element) -> Error;
 
     operator T () const { return _value; }
     auto value () const -> T { return _value; }
@@ -50,25 +50,25 @@ public:
 
 template <class T> requires (std::is_arithmetic<T>::value)
 inline auto WElement<T>::load(const VersionFileController &versionController,
-                              ReadableAbstract &readable) -> WPair<int, WElement<T>>
+                              ReadableAbstract &readable) -> WPair<Error, WElement<T>>
 {
     WElement<T> result;
 
     if (versionController.getVersionWElement() != 0)
-        return {-1, {}};
+        return {Error::makeErrVersion(), {}};
 
-    if (readable.read(result._value) < 0)
-        return {-1, {}};
+    if (auto err = readable.read(result._value))
+        return {err, {}};
 
-    return {0, result};
+    return {Error::makeOk(), result};
 }
 
 template <class T> requires (std::is_arithmetic<T>::value)
-inline auto WElement<T>::write(WritableAbstract &writable, const WElement<T> &element) -> int
+inline auto WElement<T>::write(WritableAbstract &writable, const WElement<T> &element) -> Error
 {
-    if (writable.write(element._value) < 0)
-        return -1;
-    return 0;
+    if (auto err = writable.write(element._value))
+        return err;
+    return Error::makeOk();
 }
 
 using Int = WElement<int>;

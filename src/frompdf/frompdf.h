@@ -11,8 +11,6 @@ public:
     PdfContainerDrawable(PdfContainerDrawable &&other) noexcept = default;
     PdfContainerDrawable(const PdfContainerDrawable &other) noexcept = default;
 
-
-
     auto length_pdf() const noexcept -> int
     {
         return 0;
@@ -23,21 +21,22 @@ public:
 
 protected:
     template <class Readable> requires (std::is_base_of_v<ReadableAbstract, Readable>)
-    static auto load (const VersionFileController &versionController, Readable &readable) -> WPair<int, PdfContainerDrawable>
+    static auto load (const VersionFileController &versionController, 
+                        Readable &readable) -> WPair<Error, PdfContainerDrawable>
     {
         // TODO: implement
         unused(versionController);
         unused(readable);
-        return {0, PdfContainerDrawable()};
+        return {Error::makeOk(), PdfContainerDrawable()};
     };
 
     template <class Writable> requires (std::is_base_of_v<WritableAbstract, Writable>)
-    static auto write (Writable &writable, const PdfContainerDrawable &source) -> int
+    static auto write (Writable &writable, const PdfContainerDrawable &source) -> Error
     {
         // TODO: implement
         unused(writable);
         unused(source);
-        return 0;
+        return Error::makeOk();
     };
 };
 #else

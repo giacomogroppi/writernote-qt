@@ -16,7 +16,7 @@ private:
     WVariant() = default;
 
     template <class T>
-    auto loadFromClass() -> WPair<int, T>;
+    auto loadFromClass() -> WPair<Error, T>;
 
 public:
     WVariant (const WVariant &other) = default;
@@ -83,16 +83,16 @@ inline auto WVariant::toWList() -> WList<T>
 }
 
 template<class T>
-inline auto WVariant::loadFromClass() -> WPair<int, T>
+inline auto WVariant::loadFromClass() -> WPair<Error, T>
 {
     MemReadable reader;
     reader.setData(_data.constData(), _data.size());
     const auto [r, d] = T::load (_version, reader);
 
-    if (r < 0)
+    if (r)
         return {r, {}};
 
-    return {0, d};
+    return {Error::makeOk(), d};
 }
 
 #else

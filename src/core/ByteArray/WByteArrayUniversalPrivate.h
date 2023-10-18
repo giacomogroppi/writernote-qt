@@ -56,10 +56,13 @@ public:
     /**
      * \return &lt 0 iff an error occurs
      * */
-    static auto load  (const VersionFileController& versionController, ReadableAbstract &readable) -> WPair<int, WByteArray>;
-    static auto write (WritableAbstract &writable, const WByteArray &data) -> int;
+    static auto load  (const VersionFileController& versionController, 
+                        ReadableAbstract &readable) -> WPair<Error, WByteArray>;
+    
+    static auto write (WritableAbstract &writable, const WByteArray &data) -> Error;
 
-    static auto loadPtr (const VersionFileController &versionFile, ReadableAbstract &readableAbstract) -> WPair<int, WByteArray*>;
+    static auto loadPtr (const VersionFileController &versionFile, 
+                            ReadableAbstract &readableAbstract) -> WPair<Error, WByteArray*>;
 
     class iterator{
     private:

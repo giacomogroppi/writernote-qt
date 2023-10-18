@@ -191,29 +191,29 @@ auto Document::recordStatus() const -> Document::AudioRecordStatus
     return this->_audioRecordStatus;
 }
 
-auto Document::load(const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, Document>
+auto Document::load(const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<Error, Document>
 {
     Document doc;
     {
         auto [res, data] = DataStruct::load (versionController, readable);
-        if (res < 0)
-            return {-1, {}};
-        static_cast<DataStruct&>(doc) = std::move (data);
+        if (res)
+            return {res, {}};
+        static_cast<DataStruct&>(doc) = std::forward<DataStruct> (data);
     }
 
     {
         auto [res, data] = ImageContainerDrawable::load (versionController, readable);
-        if (res < 0)
-            return {-1, {}};
-        static_cast<ImageContainerDrawable&>(doc) = std::move (data);
+        if (res)
+            return {res, {}};
+        static_cast<ImageContainerDrawable&>(doc) = std::forward<ImageContainerDrawable> (data);
     }
 
     {
         auto [res, data] = PdfContainerDrawable::load (versionController, readable);
-        if (res < 0)
-            return {-1, {}};
-        static_cast<PdfContainerDrawable&>(doc) = std::move (data);
+        if (res)
+            return {res, {}};
+        static_cast<PdfContainerDrawable&>(doc) = std::forward<PdfContainerDrawable> (data);
     }
 
-    return {0, doc};
+    return {Error::makeOk(), doc};
 }

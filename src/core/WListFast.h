@@ -205,7 +205,7 @@ public:
      * */
     template <class T2 = T>
     static
-    auto write(WritableAbstract &writable, const WListFast<T2> &list) noexcept -> int;
+    auto write(WritableAbstract &writable, const WListFast<T2> &list) noexcept -> Error;
 
     /**
      * To load the data save with this method it's required to call WListFast::loadMultiThread
@@ -220,29 +220,29 @@ public:
             WritableAbstract &writable,
             const WListFast<T2> &list,
             const auto &startNewThread
-    ) noexcept -> int;
+    ) noexcept -> Error;
 
     template<class T2 = T>
     static auto loadMultiThread (const VersionFileController &versionController,
                                  ReadableAbstract &readable,
                                  const auto &startNewThread
-                        ) noexcept -> WPair<int, WListFast<T2>>;
+                        ) noexcept -> WPair<Error, WListFast<T2>>;
 
     static auto load  (
                 const VersionFileController &versionController,
                 ReadableAbstract &readable,
-                Fn<WPair<int, T>(const VersionFileController &versionController, ReadableAbstract &readable )> func
-            ) noexcept -> WPair<int, WListFast<T>>;
+                Fn<WPair<Error, T>(const VersionFileController &versionController, ReadableAbstract &readable )> func
+            ) noexcept -> WPair<Error, WListFast<T>>;
 
     /**
      * You can use this method only if <T> has the method load
      * \return < 0 if error
      * */
-    static auto load (const VersionFileController &versionController,
-                      ReadableAbstract &file) noexcept -> WPair<int, WListFast<T>>;
+    static auto load(const VersionFileController &versionController,
+                      ReadableAbstract &file) noexcept -> WPair<Error, WListFast<T>>;
 
     static auto write (WritableAbstract &writable, const WListFast<T> &list,
-                       Fn<int(WritableAbstract &writable, const T&)> save) noexcept-> int;
+                       Fn<Error(WritableAbstract &writable, const T&)> save) noexcept-> Error;
 };
 
 template <class T>
@@ -287,11 +287,11 @@ template <class T>
 inline auto WListFast<T>::load(
         const VersionFileController &versionController,
         ReadableAbstract &readable,
-        Fn<WPair<int, T>(
+        Fn<WPair<Error, T>(
                 const VersionFileController &versionController,
                 ReadableAbstract &readable)
         > func
-    ) noexcept -> WPair<int, WListFast<T>>
+    ) noexcept -> WPair<Error, WListFast<T>>
 {
     return WAbstractList::load<WListFast, T>(versionController, readable, func);
 }
@@ -300,15 +300,15 @@ template <class T>
 inline auto WListFast<T>::write(
             WritableAbstract &writable,
             const WListFast<T> &list,
-            Fn<int(WritableAbstract &writable, const T&)> save
-        ) noexcept -> int
+            Fn<Error(WritableAbstract &writable, const T&)> save
+        ) noexcept -> Error
 {
     return WAbstractList::write(writable, list, save);
 }
 
 template <class T>
 template <class T2>
-inline auto WListFast<T>::write(WritableAbstract &writable, const WListFast<T2> &list) noexcept -> int
+inline auto WListFast<T>::write(WritableAbstract &writable, const WListFast<T2> &list) noexcept -> Error
 {
     return WAbstractList::write(writable, list);
 }
@@ -319,7 +319,7 @@ inline auto WListFast<T>::writeMultiThread(
             WritableAbstract &writable,
             const WListFast<T2> &list,
             const auto &startNewThread
-        ) noexcept -> int
+        ) noexcept -> Error
 {
     return WAbstractList::writeMultiThread<WListFast, T2>(writable, list, startNewThread);
 }
@@ -331,7 +331,7 @@ inline auto WListFast<T>::loadMultiThread(
             const VersionFileController &versionController,
             ReadableAbstract &readable,
             const auto &startNewThread
-        ) noexcept -> WPair<int, WListFast<T2>>
+        ) noexcept -> WPair<Error, WListFast<T2>>
 {
     auto reserveUnsafe = [] (WListFast<T2>& list, int numberOfElements) {
         list._data = (T2**) malloc(sizeof(T*) * numberOfElements);
@@ -464,7 +464,7 @@ template <class T>
 inline auto WListFast<T>::load(
                 const VersionFileController &versionController,
                 ReadableAbstract &file
-            ) noexcept -> WPair<int, WListFast<T>>
+            ) noexcept -> WPair<Error, WListFast<T>>
 {
     return WAbstractList::load<WListFast, T>(versionController, file);
 }
@@ -841,16 +841,13 @@ inline void WListFast<T>::removeAt(Iter begin, Iter end) noexcept
      * */
     Size numberOfDeletion = 0u;
 
-    if (hasRealloc) {
-        const Size s = *begin * sizeof(T*);
-        memmove(to, static_cast<const void*>(_data), s);
-        W_ASSERT(memcmp(to, _data,  s) == 0);
-    }
+    if (hasRealloc)
+        memmove(to, static_cast<const void*>(_data), (*begin) * sizeof(T*));
 
     for (;;) {
         const auto isAtEnd = (begin + 1) == end;
 
-        WDebug(true, "Current is:" << *begin
+        WDebug(false, "Current is:" << *begin
                 << "Deliting object" << i
                 << "next is: " << (((begin + 1) >= end) ? -1 : *(begin + 1))
         );
@@ -865,7 +862,7 @@ inline void WListFast<T>::removeAt(Iter begin, Iter end) noexcept
         for (i++; i < s; i++) {
             W_ASSERT(i < size());
             W_ASSERT(i - numberOfDeletion < size() - diff);
-            WDebug(true, "Move" << i << "to" << i - numberOfDeletion);
+            WDebug(false, "Move" << i << "to" << i - numberOfDeletion);
             to[i - numberOfDeletion] = _data[i];
         }
 

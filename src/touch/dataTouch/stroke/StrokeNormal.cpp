@@ -399,35 +399,31 @@ StrokeNormal::StrokeNormal(StrokeNormal &&other) noexcept
 }
 
 auto StrokeNormal::loadPtr(const VersionFileController &versionController,
-                           ReadableAbstract &readable) -> WPair<int, StrokeNormal *>
+                           ReadableAbstract &readable) -> WPair<Error, StrokeNormal *>
 {
     if (versionController.getVersionStrokeNormal() != 0)
-        return {-1, nullptr};
+        return {Error::makeErrVersion(), nullptr};
 
     std::unique_ptr<StrokeNormal> result(new StrokeNormal());
 
     {
         auto [res, d] = WListFast<PointF>::load(versionController, readable);
-        if (res < 0)
-            return {-1, nullptr};
+        if (res)
+            return {res, nullptr};
         result->_point = std::move(d);
     }
 
     {
         auto [res, d] = WListFast<pressure_t>::load(versionController, readable);
-        if (res < 0)
-            return {-1, nullptr};
+        if (res)
+            return {res, nullptr};
         result->_pressure = static_cast<const WListFast<pressure_t>&>(d);
     }
 
-    int ciao;
-    readable.read(ciao);
-    W_ASSERT(ciao == 50);
+    if (auto err = readable.read(result->_flag))
+        return {err, nullptr};
 
-    if (readable.read(result->_flag) < 0)
-        return {-1, nullptr};
-
-    return {0, result.release()};
+    return {Error::makeOk(), result.release()};
 }
 
 int StrokeNormal::save(WritableAbstract &file) const
@@ -435,16 +431,13 @@ int StrokeNormal::save(WritableAbstract &file) const
     if (Stroke::save(file) != OK)
         return ERROR;
 
-    if (WListFast<PointF>::write(file, this->_point) < 0)
+    if (auto err = WListFast<PointF>::write(file, this->_point))
         return ERROR;
 
-    if (WListFast<pressure_t>::write(file, this->_pressure) < 0)
+    if (auto err = WListFast<pressure_t>::write(file, this->_pressure))
         return ERROR;
 
-    int ciao = 50;
-    file.write(ciao);
-
-    if (file.write(_flag) < 0)
+    if (auto err = file.write(_flag))
         return ERROR;
 
     return OK;

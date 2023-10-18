@@ -99,7 +99,7 @@ n_error_cloud::e_error_cloud cloud_controll::registerUser(struct struct_user *us
     return n_error_cloud::ok;
 }
 
-bool cloud_controll::write(WByteArray &array, n_request::e_request r){
+bool cloud_controll::write(WByteArray &array, n_request::e_request r) {
     this->m_socket->write(array);
 
     if(!this->m_socket->waitForBytesWritten(TIME_WRITE))

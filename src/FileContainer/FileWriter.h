@@ -18,10 +18,10 @@ public:
 
     WDISABILE_COPY(FileWriter);
 
-    int write (const void *data, size_t size) final;
+    auto write (const void *data, size_t size) -> Error final;
 
-    auto getName() const noexcept -> const WString &;
-    auto getData() const noexcept -> const WByteArray &;
+    nd auto getName() const noexcept -> const WString &;
+    nd auto getData() const noexcept -> const WByteArray &;
 
     void destroy() noexcept;
 

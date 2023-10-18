@@ -257,13 +257,13 @@ int StrokeCircle::save(WritableAbstract &writer) const
     if(res != OK)
         return res;
 
-    if (writer.write(this->_data.r) < 0)
+    if (auto err = writer.write(this->_data.r))
         return ERROR;
-    if (writer.write(this->_data.y) < 0)
+    if (auto err = writer.write(this->_data.y))
         return ERROR;
-    if (writer.write(this->_data.x) < 0)
+    if (auto err = writer.write(this->_data.x))
         return ERROR;
-    if (pressure_t::write(writer, this->_data.press) < 0)
+    if (auto err = pressure_t::write(writer, this->_data.press))
         return ERROR;
 
     static_assert_type(_data.r, double);
@@ -296,30 +296,30 @@ size_t StrokeCircle::createControl() const
 }
 
 auto StrokeCircle::loadPtr(const VersionFileController &versionController,
-                           ReadableAbstract &readable) -> WPair<int, StrokeCircle *>
+                           ReadableAbstract &readable) -> WPair<Error, StrokeCircle *>
 {
     if (versionController.getVersionStrokeCircle() != 0)
-        return {-1, nullptr};
+        return {Error::makeErrVersion(), nullptr};
 
     auto* d = new StrokeCircle;
 
-    if (readable.read(d->_data.r) < 0)
-        return {-1, nullptr};
+    if (auto err = readable.read(d->_data.r))
+        return {err, nullptr};
 
-    if (readable.read(d->_data.y) < 0)
-        return {-1, nullptr};
+    if (auto err = readable.read(d->_data.y))
+        return {err, nullptr};
 
-    if (readable.read(d->_data.x) < 0)
-        return {-1, nullptr};
+    if (auto err = readable.read(d->_data.x))
+        return {err, nullptr};
 
     {
         const auto [result, data] = pressure_t::load(versionController, readable);
-        if (result < 0)
-            return {-1, nullptr};
+        if (result)
+            return {result, nullptr};
         d->_data.press = std::move(data);
     }
 
-    return {0, d};
+    return {Error::makeOk(), d};
 }
 
 void StrokeCircle::append (WListFast<PointF> &&points, WListFast<pressure_t> &&pressures)

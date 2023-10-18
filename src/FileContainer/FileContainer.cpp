@@ -43,29 +43,29 @@ bool FileContainer::close()
     if (not file.open(WFile::Write))
         return false;
 
-    if (WListFast<Pair>::write(file, this->_subFiles) < 0)
+    if (auto err = WListFast<Pair>::write(file, this->_subFiles))
         return false;
 
     return true;
 }
 
-int FileContainer::load_ver_0(WFile &file, size_t size) noexcept
+auto FileContainer::load_ver_0(WFile &file, size_t size) noexcept -> Error
 {
     size_t stack = 0;
 
     const auto [result, versionFileController] = VersionFileController::load(file);
 
-    if (result < 0)
-        return -1;
+    if (result)
+        return result;
 
     {
         auto [res, data] = WListFast<Pair>::load (versionFileController, file);
-        if (res < 0)
-            return -1;
+        if (res)
+            return res;
         _subFiles = std::move (data);
     }
 
-    return 0;
+    return Error::makeOk();
 }
 
 FileReader FileContainer::getFileReader(const WString &nameFile) const noexcept
@@ -82,17 +82,17 @@ FileReader FileContainer::getFileReader(const WString &nameFile) const noexcept
     return {};
 }
 
-auto FileContainer::addFile(FileWriter &&file) -> int
+auto FileContainer::addFile(FileWriter &&file) -> Error
 {
     return this->addFile(file.getName(), std::move(file._data));
 }
 
-auto FileContainer::addFile(const FileWriter &file) -> int
+auto FileContainer::addFile(const FileWriter &file) -> Error
 {
     return this->addFile(file.getName(), file.getData());
 }
 
-auto FileContainer::addFile(WString name, WByteArray data) -> int
+auto FileContainer::addFile(WString name, WByteArray data) -> Error
 {
     for (auto &ref: _subFiles) {
         if (ref.getKey() == name) {
@@ -101,7 +101,7 @@ auto FileContainer::addFile(WString name, WByteArray data) -> int
                             new WByteArray(std::move (data))
                     )
             );
-            return 0;
+            return Error::makeOk();
         }
     }
 
@@ -112,7 +112,7 @@ auto FileContainer::addFile(WString name, WByteArray data) -> int
             )
     );
 
-    return 0;
+    return Error::makeOk();
 }
 
 auto FileContainer::remove(const WString &path) -> bool

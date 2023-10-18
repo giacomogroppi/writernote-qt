@@ -26,31 +26,31 @@ public:
     SharedPtr(std::unique_ptr<T> && object) noexcept;
 
     // TODO: remove from class definition
-    static auto load (const VersionFileController &version, ReadableAbstract &readable) -> WPair<int, SharedPtr<T>>
+    static auto load (const VersionFileController &version, ReadableAbstract &readable) -> WPair<Error, SharedPtr<T>>
     {
         SharedPtr<T> result;
         bool is_value_present;
 
         if (version.getVersionSharedPtr() != 0)
-            return {-1, {}};
+            return {Error::makeErrVersion(), {}};
 
-        if (readable.read(is_value_present) < 0) {
-            return {-1, {}};
+        if (auto err = readable.read(is_value_present)) {
+            return {err, {}};
         }
 
         if (not is_value_present)
-            return {0, nullptr};
+            return {Error::makeOk(), nullptr};
 
         auto [res, data] = T::loadPtr (version, readable);
 
         static_assert (std::is_pointer_v<decltype(data)>);
 
-        if (res < 0)
-            return {-1, {}};
+        if (res)
+            return {res, {}};
 
         result = std::move (data);
 
-        return {0, result};
+        return {Error::makeOk(), result};
     }
 
     /**
@@ -59,19 +59,20 @@ public:
     // TODO: remove from class definition
 
     template <class Writable> requires(std::is_base_of_v<WritableAbstract, Writable>)
-    static auto write (Writable &writable, const SharedPtr<T> &object) -> int
+    static auto write (Writable &writable, const SharedPtr<T> &object) -> Error
     {
         const bool is_present = object.get() != nullptr;
         const T& ref = *object.get();
 
-        if (writable.write(&is_present, sizeof (is_present)) < 0)
-            return -1;
+        if (auto err = writable.write(&is_present, sizeof (is_present)))
+            return err;
 
-        if (is_present and T::write (writable, ref) < 0) {
-            return -1;
+        if (is_present) {
+            if (auto err = T::write (writable, ref))
+                return err;
         }
 
-        return 0;
+        return Error::makeOk();
     }
 
     auto operator=(const SharedPtr<T> &other) noexcept -> SharedPtr<T> &;

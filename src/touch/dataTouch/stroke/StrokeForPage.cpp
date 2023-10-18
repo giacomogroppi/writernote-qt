@@ -191,43 +191,43 @@ auto StrokeForPage::operator==(const StrokeForPage &other) const noexcept -> boo
 }
 
 auto StrokeForPage::load(const VersionFileController &versionController,
-                         ReadableAbstract &readable) -> WPair<int, StrokeForPage>
+                         ReadableAbstract &readable) -> WPair<Error, StrokeForPage>
 {
     StrokeForPage result;
 
     if (versionController.getVersionStrokeForPage() != 0)
-        return {-1, {}};
+        return {Error::makeErrVersion(), {}};
 
     {
         auto [res, data] = SharedPtr<Stroke>::load(versionController, readable);
-        if (res < 0)
-            return {-1, {}};
+        if (res)
+            return {res, {}};
         result._data = std::dynamic_pointer_cast<StrokeNormal>(data);
     }
 
     {
         auto [res, data] = WPixmap::load(versionController, readable);
-        if (res < 0)
-            return {-1, {}};
+        if (res)
+            return {res, {}};
         result._pix = std::move(data);
     }
 
-    if (readable.read(result._needToUpdate) < 0)
-        return {-1, {}};
+    if (auto err = readable.read(result._needToUpdate))
+        return {err, {}};
 
-    return {0, std::move(result)};
+    return {Error::makeOk(), std::move(result)};
 }
 
-auto StrokeForPage::write(WritableAbstract &writable, const StrokeForPage &strokeForPage) -> int
+auto StrokeForPage::write(WritableAbstract &writable, const StrokeForPage &strokeForPage) -> Error
 {
-    if (SharedPtr<Stroke>::write(writable, std::dynamic_pointer_cast<Stroke>(strokeForPage._data)) < 0)
-        return -1;
+    if (auto err = SharedPtr<Stroke>::write(writable, std::dynamic_pointer_cast<Stroke>(strokeForPage._data)))
+        return err;
 
-    if (WPixmap::write(writable, strokeForPage._pix) < 0)
-        return -1;
+    if (auto err = WPixmap::write(writable, strokeForPage._pix))
+        return err;
 
-    if (writable.write(strokeForPage._needToUpdate) < 0)
-        return -1;
+    if (auto err = writable.write(strokeForPage._needToUpdate))
+        return err;
 
-    return 0;
+    return Error::makeOk();
 }

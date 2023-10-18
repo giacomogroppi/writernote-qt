@@ -112,12 +112,12 @@ int xmlstruct::loadfile(cbool LoadPdf, cbool LoadImg)
 
     auto [res, versionController] = VersionFileController::load(fileReader);
 
-    if (res < 0)
+    if (res)
         return ERROR;
 
     auto [r, doc] = Document::load(versionController, fileReader);
 
-    if (r < 0)
+    if (r)
         return ERROR;
 
     *_doc = std::move(doc);

@@ -66,8 +66,8 @@ public:
     auto operator[](int i) -> char &;
     auto operator[](int i) const -> char;
 
-    static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, WString>;
-    static auto write (WritableAbstract &writable, const WString &data) -> int;
+    static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<Error, WString>;
+    static auto write (WritableAbstract &writable, const WString &data) -> Error;
 
     using Iterator = WByteArray::iterator;
     using ConstIterator = WByteArray::const_iterator;

@@ -62,7 +62,7 @@ public:
     int type() const final;
 
     static
-    auto loadPtr(const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, StrokeLine*>;
+    auto loadPtr(const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<Error, StrokeLine*>;
 
     friend class StrokeLineGenerator;
     friend class Stroke;

@@ -34,14 +34,14 @@ public:
      * */
     auto open (int openMode) -> bool;
 
-    [[nodiscard]]
+    nd
     auto isValid() const -> bool;
 
     /**
      * @return integer &lt 0 in case of error
      * */
-    [[nodiscard]]
-    auto write(const void *data, size_t size) -> int override;
+    nd
+    auto write(const void *data, size_t size) -> Error override;
 
     /**
      * @return integer &lt 0 in case of error
@@ -53,7 +53,7 @@ public:
     /**
      * \return < 0 in case of error
      * */
-    auto read (void *to, size_t size) const -> int final;
+    auto read (void *to, size_t size) const -> Error final;
 
     auto close() -> bool;
     auto size() const -> size_t;

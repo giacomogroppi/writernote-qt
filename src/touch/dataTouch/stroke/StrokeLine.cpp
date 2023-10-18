@@ -212,13 +212,13 @@ auto StrokeLine::save(WritableAbstract &writer) const -> int
     if(res != OK)
         return res;
 
-    if (PointF::write(writer, _data.pt1) < 0)
+    if (auto err = PointF::write(writer, _data.pt1))
         return ERROR;
 
-    if (PointF::write(writer, _data.pt2) < 0)
+    if (auto err = PointF::write(writer, _data.pt2))
         return ERROR;
 
-    if (pressure_t::write(writer, _data.press) < 0)
+    if (auto err = pressure_t::write(writer, _data.press))
         return ERROR;
 
     return OK;
@@ -286,33 +286,33 @@ size_t StrokeLine::getSizeInFile() const
 }
 
 auto StrokeLine::loadPtr(const VersionFileController &versionController,
-                         ReadableAbstract &readable) -> WPair<int, StrokeLine *>
+                         ReadableAbstract &readable) -> WPair<Error, StrokeLine *>
 {
     std::unique_ptr<StrokeLine> d(new StrokeLine);
     if (versionController.getVersionStrokeLine() != 0)
-        return {-1, nullptr};
+        return {Error::makeErrVersion(), nullptr};
     {
         auto [res, point] = PointF::load(versionController, readable);
-        if (res < 0)
-            return {-1, nullptr};
+        if (res)
+            return {res, nullptr};
         d->_data.pt1 = std::move(point);
     }
 
     {
         auto [res, point] = PointF::load(versionController, readable);
-        if (res < 0)
-            return {-1, nullptr};
+        if (res)
+            return {res, nullptr};
         d->_data.pt2 = std::move(point);
     }
 
     {
         auto [res, pressure] = pressure_t::load(versionController, readable);
-        if (res < 0)
-            return {-1, nullptr};
+        if (res)
+            return {res, nullptr};
         d->_data.press = std::move(pressure);
     }
 
-    return {0, d.release()};
+    return {Error::makeOk(), d.release()};
 }
 
 void StrokeLine::append (WListFast<PointF> &&points, WListFast<pressure_t> &&pressures)

@@ -42,34 +42,34 @@ struct metadata_stroke{
 
     static
     auto load (const VersionFileController &versionController, ReadableAbstract &reader)
-        -> WPair<int, metadata_stroke>
+        -> WPair<Error, metadata_stroke>
     {
         metadata_stroke result;
 
         if (versionController.getVersionMetadataStroke() != 0)
-            return {-1, result};
+            return {Error::makeErrVersion(), result};
 
-        if (reader.read(result.posizione_audio) < 0)
-            return {-1, result};
+        if (auto err = reader.read(result.posizione_audio))
+            return {err, result};
 
         auto [res, color] = WColor::load (versionController, reader);
-        if (res < 0)
-            return {-1, result};
+        if (res)
+            return {res, result};
 
         result.color = std::move (color);
 
-        return {0, result};
+        return {Error::makeOk(), result};
     }
 
     static
-    auto write (WritableAbstract &writable, const metadata_stroke &metadata) -> int
+    auto write (WritableAbstract &writable, const metadata_stroke &metadata) -> Error
     {
-        if (writable.write(&metadata.posizione_audio, sizeof(metadata.posizione_audio)) < 0)
-            return -1;
-        if (WColor::write(writable, metadata.color) < 0)
-            return -1;
+        if (auto err = writable.write(&metadata.posizione_audio, sizeof(metadata.posizione_audio)))
+            return err;
+        if (auto err = WColor::write(writable, metadata.color))
+            return err;
 
-        return 0;
+        return Error::makeOk();
     }
 
     bool operator!=(const metadata_stroke &other) const;
@@ -177,8 +177,8 @@ public:
 #endif // DEBUGINFO
 
     // new way
-    static auto loadPtr (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, Stroke*>;
-    static auto write (WritableAbstract &writable, const Stroke &stroke) -> int;
+    static auto loadPtr (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<Error, Stroke*>;
+    static auto write (WritableAbstract &writable, const Stroke &stroke) -> Error;
 
     /** all stroke derivated class needs to implements this method to recognize yourself */
     virtual int type() const = 0;
@@ -292,9 +292,10 @@ inline Stroke::Stroke(Stroke &&other) noexcept
 
 }
 
-inline auto Stroke::write(WritableAbstract &writable, const Stroke &stroke) -> int
+inline auto Stroke::write(WritableAbstract &writable, const Stroke &stroke) -> Error
 {
-    return stroke.save(writable) == ERROR ? -1 : 0;
+    // TODO: adjust stroke.save to return Error class
+    return stroke.save(writable) == ERROR ? Error::makeCorruption() : Error::makeOk();
 }
 
 inline bool metadata_stroke::operator!=(const metadata_stroke &other) const

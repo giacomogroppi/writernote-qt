@@ -240,22 +240,23 @@ ImageContainerDrawable::ImageContainerDrawable(ImageContainerDrawable &&other) n
 }
 
 auto ImageContainerDrawable::load(const VersionFileController &versionController,
-                                  ReadableAbstract &readable) -> WPair<int, ImageContainerDrawable>
+                                  ReadableAbstract &readable) -> WPair<Error, ImageContainerDrawable>
 {
     ImageContainerDrawable result;
 
     auto [res, d] = WListFast<ImageDrawable>::load(versionController, readable);
-    if (res < 0)
-        return {-1, result};
+    if (res)
+        return {res, result};
 
     result.m_img = std::move(d);
 
-    return {0, result};
+    return {Error::makeOk(), result};
 }
 
-auto ImageContainerDrawable::write(WritableAbstract &writable, const ImageContainerDrawable &source) -> int
+auto ImageContainerDrawable::write(WritableAbstract &writable, 
+                                const ImageContainerDrawable &source) -> Error
 {
-    if (WListFast<ImageDrawable>::write(writable, source.m_img) < 0)
-        return -1;
-    return 0;
+    if (auto res = WListFast<ImageDrawable>::write(writable, source.m_img))
+        return res;
+    return Error::makeOk();
 }

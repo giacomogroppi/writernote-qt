@@ -13,7 +13,7 @@ public:
     WZipReaderSingle(WZip *zip, size_t offset);
     ~WZipReaderSingle() = default;
 
-    int read (void *to, size_t size) const;
+    Error read (void *to, size_t size) const;
     [[nodiscard]] const void* read(size_t size) const;
     [[nodiscard]] int readString(WString &str);
     [[nodiscard]] int readBySize(void *to, size_t size);
@@ -108,13 +108,15 @@ inline int WZipReaderSingle::readString(WString &str)
     return 0;
 }
 
-inline int WZipReaderSingle::read(void *to, size_t size) const
+inline Error WZipReaderSingle::read(void *to, size_t size) const
 {
     const auto *data = this->read (size);
+
     if (!size) {
-        return -1;
+        return Error::makeErrInternal();
     }
+
     WCommonScript::WMemcpy(to, data, size);
-    return 0;
+    return Error::makeOk();
 }
 

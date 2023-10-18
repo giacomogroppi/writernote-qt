@@ -197,7 +197,7 @@ inline SharedPtrThreadSafe<T>::SharedPtrThreadSafe(const SharedPtrThreadSafe &ot
 template <class T>
 inline SharedPtrThreadSafe<T>::SharedPtrThreadSafe(T *object)
     : _count(new int(1))
-    , _lock(new WMutex)
+    , _lock(new WRecursiveLock)
     , _object(object)
 {
 

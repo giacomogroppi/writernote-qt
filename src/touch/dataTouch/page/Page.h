@@ -176,8 +176,8 @@ public:
 
     void setCount(int count);
 
-    static auto write (WritableAbstract &writable, const Page &page, bool saveImage = true) -> int;
-    static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, Page>;
+    static auto write (WritableAbstract &writable, const Page &page, bool saveImage = true) -> Error;
+    static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<Error, Page>;
 
     //static void copy(const Page &src, Page &dest);
     constexpr static double getProportion();
@@ -603,87 +603,89 @@ inline auto Page::operator=(Page &&other) noexcept -> Page &
     return *this;
 }
 
-inline auto Page::load(const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, Page>
+inline auto Page::load(const VersionFileController &versionController,
+                       ReadableAbstract &readable) -> WPair<Error, Page>
 {
     Page result;
     bool savedImage;
 
     if (versionController.getVersionPage() != 0)
-        return {-1, result};
+        return {Error::makeErrVersion(), result};
 
     static_assert_type(savedImage, bool);
     static_assert_type(result._count, int);
     static_assert_type(result._isVisible, bool);
 
-    if (readable.read(savedImage) < 0)
-        return {-1, {}};
+    if (auto err = readable.read(savedImage))
+        return {err, {}};
 
-    if (readable.read(result._count) < 0)
-        return {-1, {}};
+    if (auto err = readable.read(result._count))
+        return {err, {}};
 
-    if (readable.read(result._isVisible) < 0)
-        return {-1, {}};
+    if (auto err = readable.read(result._isVisible))
+        return {err, {}};
 
     {
         auto [res, list] = WListFast<SharedPtr<Stroke>>::load (versionController, readable);
-        if (res < 0)
-            return {-1, {}};
+        if (res)
+            return {res, {}};
 
         result._stroke = std::move (list);
     }
 
     {
         auto [res, list] = WListFast<SharedPtr<Stroke>>::load (versionController, readable);
-        if (res < 0)
-            return {-1, {}};
+        if (res)
+            return {res, {}};
         result._strokeTmp = std::move (list);
     }
 
     // fino a qua giusto
     {
         auto [res, str] = StrokeForPage::load (versionController, readable);
-        if (res < 0)
-            return {-1, {}};
+        if (res)
+            return {res, {}};
         result._stroke_writernote = std::move (str);
     }
 
     if (savedImage) {
         auto [res, img] = WPixmap::load (versionController, readable);
-        if (res < 0)
-            return {-1, {}};
+        if (res)
+            return {res, {}};
         result._imgDraw = std::move (img);
     }
 
-    return {0, std::move(result)};
+    return {Error::makeOk(), std::move(result)};
 }
 
 // TODO: move into cpp file
-inline auto Page::write(WritableAbstract &writable, const Page &page, bool saveImage) -> int
+inline auto Page::write(WritableAbstract &writable, const Page &page, bool saveImage) -> Error
 {
     static_assert_type(saveImage, bool);
     static_assert_type(page._count, int);
     static_assert_type(page._isVisible, bool);
 
-    if (writable.write(saveImage) < 0)
-        return -1;
+    if (auto err = writable.write(saveImage))
+        return err;
 
-    if (writable.write(page._count) < 0)
-        return -1;
+    if (auto err = writable.write(page._count))
+        return err;
 
-    if (writable.write(page._isVisible) < 0)
-        return -1;
+    if (auto err = writable.write(page._isVisible))
+        return err;
 
-    if (WListFast<SharedPtr<Stroke>>::write(writable, page._stroke) < 0)
-        return -1;
+    if (auto err = WListFast<SharedPtr<Stroke>>::write(writable, page._stroke))
+        return err;
 
-    if (WListFast<SharedPtr<Stroke>>::write(writable, page._strokeTmp) < 0)
-        return -1;
+    if (auto err = WListFast<SharedPtr<Stroke>>::write(writable, page._strokeTmp))
+        return err;
 
-    if (StrokeForPage::write(writable, page._stroke_writernote) < 0)
-        return -1;
+    if (auto err = StrokeForPage::write(writable, page._stroke_writernote))
+        return err;
 
-    if (saveImage and WPixmap::write(writable, page._imgDraw) < 0)
-        return -1;
+    if (saveImage)
+        if (auto err = WPixmap::write(writable, page._imgDraw))
+            return err;
 
-    return 0;
+    return Error::makeOk();
 }

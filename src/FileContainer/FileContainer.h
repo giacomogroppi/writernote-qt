@@ -41,19 +41,19 @@ public:
      * \param file File to be added
      * \return &lt 0 in case of error
      * */
-    auto addFile(const FileWriter &file) -> int;
+    auto addFile(const FileWriter &file) -> Error;
 
     /**
      * \param file File to be added
      * \return &lt 0 in case of error
      * */
-    auto addFile(FileWriter &&file) -> int;
+    auto addFile(FileWriter &&file) -> Error;
 
     /**
      * \param file File to be added
      * \return &lt 0 in case of error
      * */
-    auto addFile(WString name, WByteArray data) -> int;
+    auto addFile(WString name, WByteArray data) -> Error;
 
     auto closeFileReader (FileReader &file) const -> void;
 
@@ -75,7 +75,7 @@ public:
 
     auto remove(const WString &path) -> bool;
 
-    auto load_ver_0(WFile &file, size_t size) noexcept -> int;
+    auto load_ver_0(WFile &file, size_t size) noexcept -> Error;
 };
 
 inline auto FileContainer::closeFileReader(FileReader &file) const -> void

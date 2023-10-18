@@ -47,10 +47,11 @@ public:
     auto rotate (const PointTemplate<T> &cir, T angle) const -> PointTemplate<T>;
 
     static
-    auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, PointTemplate<T>>;
+    auto load (const VersionFileController &versionController,
+               ReadableAbstract &readable) -> WPair<Error, PointTemplate<T>>;
 
     static
-    auto write (WritableAbstract &writable, const PointTemplate<T> &src) -> int;
+    auto write (WritableAbstract &writable, const PointTemplate<T> &src) -> Error;
 
     auto operator=(const PointTemplate<T> &other) -> PointTemplate<T>&;
     auto operator=(PointTemplate<T> &&other) noexcept -> PointTemplate<T>& = default;
@@ -86,13 +87,13 @@ template<typename T>
 inline auto PointTemplate<T>::write(
         WritableAbstract &writable,
         const PointTemplate<T> &src
-    ) -> int
+    ) -> Error
 {
-    if (writable.write (&src._x, sizeof (T)) < 0)
-        return -1;
-    if (writable.write (&src._y, sizeof (T)) < 0)
-        return -1;
-    return 0;
+    if (auto err = writable.write (&src._x, sizeof (T)))
+        return err;
+    if (auto err = writable.write (&src._y, sizeof (T)))
+        return err;
+    return Error::makeOk();
 }
 
 template <typename T>
@@ -111,20 +112,20 @@ template<typename T>
 inline auto PointTemplate<T>::load(
             const VersionFileController &versionController,
             ReadableAbstract &readable
-        ) -> WPair<int, PointTemplate<T>>
+        ) -> WPair<Error, PointTemplate<T>>
 {
     PointTemplate<T> result;
 
     if (versionController.getVersionPointTemplate() != 0)
-        return {-1, {}};
+        return {Error::makeErrVersion(), {}};
 
-    if (readable.read (result._x) < 0)
-        return {-1, {}};
+    if (auto err = readable.read (result._x))
+        return {err, {}};
 
-    if (readable.read (result._y) < 0)
-        return {-1, {}};
+    if (auto err = readable.read (result._y))
+        return {err, {}};
 
-    return {0, std::move(result)};
+    return {Error::makeOk(), std::move(result)};
 }
 
 template<typename T>

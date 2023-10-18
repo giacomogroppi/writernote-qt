@@ -28,36 +28,36 @@ std::shared_ptr<Stroke> Stroke::load_ver_1(WZipReaderSingle &reader, int *ok)
 }
 
 auto Stroke::loadPtr(const VersionFileController &versionController,
-                     ReadableAbstract &readable) -> WPair<int, Stroke *>
+                     ReadableAbstract &readable) -> WPair<Error, Stroke *>
 {
-    WPair<int, Stroke*> r {-1, nullptr};
-    metadata_stroke metadata;
+    metadata_stroke metadata {};
     int type;
     typeOfFlag flag;
     RectF biggerData;
 
-    if (readable.read (type)) {
-        return {-1, nullptr};
+    if (auto err = readable.read (type)) {
+        return {err, nullptr};
     }
 
     {
         auto [res, meta] = metadata_stroke::load (versionController, readable);
-        if (res < 0)
-            return {-1, nullptr};
+        if (res)
+            return {res, nullptr};
         metadata = std::move (meta);
     }
 
-    if (readable.read(flag) < 0) {
-        return {-1, nullptr};
+    if (auto err = readable.read(flag)) {
+        return {err, nullptr};
     }
 
     {
         auto [res, rect] = RectF::load(versionController, readable);
-        if (res < 0) {
-            return {-1, nullptr};
-        }
+        if (res)
+            return {res, nullptr};
         biggerData = std::move (rect);
     }
+
+    WPair<Error, Stroke*> r {Error::makeCorruption(), nullptr};
 
     switch (versionController.getVersionStroke()) {
         case 0: {
@@ -74,24 +74,24 @@ auto Stroke::loadPtr(const VersionFileController &versionController,
                 case COMPLEX_RECT:
                     r = StrokeRect::loadPtr   (versionController, readable);
                     break;
-                default: return {-1, nullptr};
+                default: return {Error::makeErrVersion(), nullptr};
             }
         }
     }
 
-    if (r.first < 0) {
+    if (r.first) {
         delete r.second;
-        return {-1, nullptr};
+        return {r.first, nullptr};
     }
 
     r.second->_biggerData = std::move(biggerData);
     r.second->_metadata = metadata;
     r.second->_flag = flag;
 
-    return {0, r.second};
+    return {Error::makeOk(), r.second};
 }
 
-std::shared_ptr<Stroke> Stroke::load_ver_2(WZipReaderSingle &reader, int *ok)
+auto Stroke::load_ver_2(WZipReaderSingle &reader, int *ok) -> std::shared_ptr<Stroke>
 {
 #define ver_2_manage_error(contr)   \
     do {                            \
@@ -219,13 +219,13 @@ int Stroke::save(WritableAbstract &file) const
     if (file.write(t))
         return ERROR;
 
-    if (metadata_stroke::write(file, this->_metadata) < 0)
+    if (auto err = metadata_stroke::write(file, this->_metadata))
         return ERROR;
 
-    if (file.write(_flag) < 0)
+    if (auto err = file.write(_flag))
         return ERROR;
 
-    if (RectF::write(file, _biggerData) < 0)
+    if (auto err = RectF::write(file, _biggerData))
         return ERROR;
 
     static_assert(sizeof(t) == sizeof(int));

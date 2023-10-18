@@ -67,7 +67,7 @@ public:
     int type() const final;
 
     static
-    auto loadPtr (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, StrokeCircle*>;
+    auto loadPtr (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<Error, StrokeCircle*>;
 
     friend class StrokeCircleGenerator;
     friend class Stroke;

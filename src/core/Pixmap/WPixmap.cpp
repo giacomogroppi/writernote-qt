@@ -124,25 +124,26 @@ WPixmap &WPixmap::operator=(WPixmap &&other) noexcept
     return *this;
 }
 
-auto WPixmap::load(const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, WPixmap>
+auto WPixmap::load(const VersionFileController &versionController,
+                   ReadableAbstract &readable) -> WPair<Error, WPixmap>
 {
     if (versionController.getVersionWPixmap() != 0)
-        return {-1, {}};
+        return {Error::makeErrVersion(), {}};
 
     WPixmap result;
 
     auto [res, data] = WByteArray::load(versionController, readable);
 
-    if (res < 0)
-        return {-1, {}};
+    if (res)
+        return {res, {}};
 
     if (data.isEmpty())
-        return {0, WPixmap()};
+        return {Error::makeOk(), WPixmap()};
 
     if (not result.loadFromData(data, "PNG"))
-        return {-1, {}};
+        return {Error::makeCorruption(), {}};
 
-    return {0, result};
+    return {Error::makeOk(), result};
 }
 
 auto WPixmap::getRawDataPNG() const -> WByteArray
@@ -157,16 +158,16 @@ auto WPixmap::getRawDataPNG() const -> WByteArray
     return arr;
 }
 
-auto WPixmap::write(WritableAbstract &writable, const WPixmap &pixmap) -> int
+auto WPixmap::write(WritableAbstract &writable, const WPixmap &pixmap) -> Error
 {
     const auto raw = pixmap.getRawDataPNG();
 
     WDebug(true, raw.size());
 
-    if (WByteArray::write(writable, raw) < 0)
-        return -1;
+    if (auto err = WByteArray::write(writable, raw))
+        return err;
 
-    return 0;
+    return Error::makeOk();
 }
 
 #endif // USE_QT

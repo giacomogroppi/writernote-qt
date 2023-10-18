@@ -53,25 +53,29 @@ auto WFile::open(int openMode) -> bool
     return _fp != nullptr;
 }
 
-auto WFile::write(const void *data, size_t size) -> int
+auto WFile::write(const void *data, size_t size) -> Error
 {
     W_ASSERT(this->_fp);
     if (size == 0)
-        return 0;
+        return Error::makeOk();
 
     const auto res = fwrite(data, size, 1, this->_fp);
 
-    if (res != 1)
-        return -1;
+    // TODO: find the error
+    if (res != 1) {
+        return Error::makeCorruption();
+    }
 
-    return 0;
+    return Error::makeOk();
 }
 
-auto WFile::read(void *to, size_t size) const -> int
+auto WFile::read(void *to, size_t size) const -> Error
 {
     W_ASSERT(_fp != nullptr);
     const auto res = fread(to, size, 1, this->_fp);
-    return res < 1;
+    if (res < 1)
+        return Error::makeCorruption();
+    return Error::makeOk();
 }
 
 auto WFile::close() -> bool
@@ -93,7 +97,7 @@ auto WFile::readFile(WByteArray &to, const WPath& pathFile) -> int
 
     char data[size];
 
-    if (f.read(data, size) < 0) {
+    if (auto err = f.read(data, size)) {
         return -1;
     }
 
@@ -109,7 +113,7 @@ auto WFile::saveArrIntoFile(const WByteArray &arr, const WPath &path) -> int
     if(!file.isValid())
         return -1;
 
-    if(file.write(arr.constData(), arr.size()) < 0)
+    if(file.write(arr.constData(), arr.size()))
         return -2;
 
     return 0;

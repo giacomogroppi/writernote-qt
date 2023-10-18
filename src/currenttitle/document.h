@@ -29,11 +29,12 @@ public:
     [[nodiscard]]
     auto isEmpty() const -> bool;
 
-    static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, Document>;
+    static auto load (const VersionFileController &versionController, 
+                        ReadableAbstract &readable) -> WPair<Error, Document>;
 
     template <class Writable>
             requires (std::is_base_of<WritableAbstract, Writable>::value)
-    static auto write (Writable &writable, const Document &doc) -> int;
+    static auto write (Writable &writable, const Document &doc) -> Error;
 
     enum AudioRecordStatus{
         not_record,
@@ -57,8 +58,8 @@ public:
     void scala_all(const PointF& delta, double heightView) override;
     void repositioning();
 
-    Document &operator=(const Document &other) noexcept;
-    Document &operator=(Document &&other) noexcept;
+    auto operator=(const Document &other) noexcept -> Document &;
+    auto operator=(Document &&other) noexcept -> Document &;
 
     void setAudioPath(const WString &path) noexcept;
 
@@ -78,15 +79,15 @@ force_inline bool Document::isEmpty() const
 }
 
 template<class Writable> requires (std::is_base_of<WritableAbstract, Writable>::value)
-auto Document::write(Writable &writable, const Document &doc) -> int
+auto Document::write(Writable &writable, const Document &doc) -> Error
 {
-    if (DataStruct::write (writable, doc) < 0)
-        return -1;
-    if (ImageContainerDrawable::write (writable, doc) < 0)
-        return -1;
-    if (PdfContainerDrawable::write (writable, doc) < 0)
-        return -1;
-    return 0;
+    if (auto err = DataStruct::write (writable, doc))
+        return err;
+    if (auto err = ImageContainerDrawable::write (writable, doc))
+        return err;
+    if (auto err = PdfContainerDrawable::write (writable, doc))
+        return err;
+    return Error::makeOk();
 }
 
 inline auto Document::getAudioPath() const -> const WString &

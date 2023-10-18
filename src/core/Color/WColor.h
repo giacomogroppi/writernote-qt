@@ -53,10 +53,11 @@ public:
     static WColor fromRgb(unsigned char u1, unsigned char u2, unsigned char u3, unsigned char u4 = 255);
 
     static
-    auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, WColor>;
+    auto load (const VersionFileController &versionController,
+                     ReadableAbstract &readable) -> WPair<Error, WColor>;
 
     static
-    auto write (WritableAbstract &writable, const WColor &color) -> int;
+    auto write (WritableAbstract &writable, const WColor &color) -> Error;
 
 #ifndef USE_QT
     # define color_red         WColor(255, 0, 0, 255)
@@ -204,33 +205,34 @@ inline WColor &WColor::operator=(const WColor &other) = default;
 inline WColor::WColor(WColor &&other) noexcept = default;
 
 inline auto
-WColor::load(const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, WColor>
+WColor::load(const VersionFileController &versionController,
+             ReadableAbstract &readable) -> WPair<Error, WColor>
 {
     WColor result{};
     if (versionController.getVersionWColor() != 0)
-        return {-1, result};
+        return {Error::makeErrVersion(), result};
 
-    if (readable.read(result.red) < 0)
-        return {-1, {}};
-    if (readable.read(result.green) < 0)
-        return {-1, {}};
-    if (readable.read(result.blue) < 0)
-        return {-1, {}};
-    if (readable.read(result.alpha) < 0)
-        return {-1, {}};
+    if (auto err = readable.read(result.red))
+        return {err, {}};
+    if (auto err = readable.read(result.green))
+        return {err, {}};
+    if (auto err = readable.read(result.blue))
+        return {err, {}};
+    if (auto err = readable.read(result.alpha))
+        return {err, {}};
 
-    return {0, result};
+    return {Error::makeOk(), result};
 }
 
-inline auto WColor::write(WritableAbstract &writable, const WColor &color) -> int
+inline auto WColor::write(WritableAbstract &writable, const WColor &color) -> Error
 {
-    if (writable.write(color.red) < 0)
-        return -1;
-    if (writable.write(color.green) < 0)
-        return -1;
-    if (writable.write(color.blue) < 0)
-        return -1;
-    if (writable.write(color.alpha) < 0)
-        return -1;
-    return 0;
+    if (auto err = writable.write(color.red))
+        return err;
+    if (auto err = writable.write(color.green))
+        return err;
+    if (auto err = writable.write(color.blue))
+        return err;
+    if (auto err = writable.write(color.alpha))
+        return err;
+    return Error::makeOk();
 }

@@ -70,7 +70,7 @@ public:
     auto createFile (const WString& name, const T& file, const Extension& extension) -> int;
 
     template <class T> requires (std::is_class<T>::value)
-    nd auto openFile (const WString& name, const Extension& extension) -> WPair<int, T>;
+    nd auto openFile (const WString& name, const Extension& extension) -> WPair<Error, T>;
 
     template <class T> requires (std::is_class<T>::value)
     nd auto updateFile (const WString& name, const T& file, const Extension& extension) -> int;
@@ -94,13 +94,13 @@ inline auto FileManager::createFile(const WString& name, const T &file, const Ex
                                        name : WString(name + '.' + extension);
 
     const auto result = _dir[_selected].addFiles(nameWithExtension, [&](WritableAbstract& writable) {
-        if (VersionFileController::write(writable) < 0)
-            return -1;
+        if (auto err = VersionFileController::write(writable))
+            return err;
 
-        if (T::write(writable, file) < 0)
-            return -1;
+        if (auto err = T::write(writable, file))
+            return err;
 
-        return 0;
+        return Error::makeOk();
     });
     //const auto result = _dir[_selected].addFiles(nameWithExtension, file);
 
@@ -111,7 +111,7 @@ inline auto FileManager::createFile(const WString& name, const T &file, const Ex
 
 template <class T>
     requires (std::is_class<T>::value)
-inline auto FileManager::openFile(const WString &name, const Extension &extension) -> WPair<int, T>
+inline auto FileManager::openFile(const WString &name, const Extension &extension) -> WPair<Error, T>
 {
     const auto path = _basePath
             / _dir[_selected].getFolderName()
@@ -120,19 +120,19 @@ inline auto FileManager::openFile(const WString &name, const Extension &extensio
     WFile file (path, WFile::ReadOnly);
 
     if (not file.isValid())
-        return {-1, {}};
+        return {Error::makeErrFileNotExist(), {}};
 
     const auto result = VersionFileController::load (file);
 
-    if (result.first < 0)
-        return {-1, {}};
+    if (result.first)
+        return {result.first, {}};
 
     const auto [r, data] = T::load (result.second, file);
 
-    if (r < 0)
-        return {-1, {}};
+    if (r)
+        return {r, {}};
 
-    return {0, std::move(data)};
+    return {Error::makeOk(), std::move(data)};
 }
 
 inline auto FileManager::getDirectory() const -> const WListFast<Directory> &

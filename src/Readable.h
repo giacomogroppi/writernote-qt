@@ -2,6 +2,7 @@
 
 #include <type_traits>
 #include <cstddef>
+#include "core/Error.h"
 
 class ReadableAbstract {
 public:
@@ -10,7 +11,7 @@ public:
      * \param size The size of the load
      * \return &lt 0 in case of error
      * */
-    virtual int read (void *to, size_t size) const = 0;
+    virtual Error read (void *to, size_t size) const = 0;
 
     template <class T>
             requires (std::is_arithmetic_v<T> 

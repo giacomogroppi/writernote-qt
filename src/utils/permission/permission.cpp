@@ -20,7 +20,6 @@ bool permission::open(const char *file, e_permission request)
         return true;
     }
 
-
     if (request == e_permission::writeOnly) {
         if (!file_temp.open(WFile::Write))
             return false;

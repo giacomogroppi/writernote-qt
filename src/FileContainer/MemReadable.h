@@ -12,7 +12,7 @@ public:
     MemReadable();
     explicit MemReadable(const void *data, size_t max);
 
-    auto read (void *to, size_t size) const -> int final;
+    auto read (void *to, size_t size) const -> Error final;
 
     auto setData(const void *data, size_t max) -> MemReadable &;
 

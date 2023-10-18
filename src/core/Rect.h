@@ -80,29 +80,29 @@ public:
     // TODO: move outside of class definition
     static
     auto load(const VersionFileController &versionController, ReadableAbstract &reader)
-        noexcept -> WPair<int, RectTemplate<T>>
+        noexcept -> WPair<Error, RectTemplate<T>>
     {
         RectTemplate<T> d;
         if (versionController.getVersionRectTemplate() != 0)
-            return {-1, {}};
+            return {Error::makeErrVersion(), {}};
 
         {
             auto [res, point] = PointTemplate<T>::load (versionController, reader);
-            if (res < 0)
-                return {-1, {}};
+            if (res)
+                return {res, {}};
 
             d._topLeft = std::move(point);
         }
 
         {
             auto [res, point] = PointTemplate<T>::load (versionController, reader);
-            if (res < 0)
-                return {-1, {}};
+            if (res)
+                return {res, {}};
 
             d._bottomRight = std::move(point);
         }
 
-        return {0, d};
+        return {Error::makeOk(), d};
     }
 
 

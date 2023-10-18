@@ -83,8 +83,8 @@ public:
      * Il medoto lancia automaticamente i segnali per segnalare che è necessario ridisegnare.
      * \return &lt 0 in caso di errore nell'apertura del file
      * */
-     // TODO: make this method return WPair<int, WString> with a proper error message returned
-    auto openFile(const WString &name) -> int;
+     // TODO: make this method return WPair<Error, WString> with a proper error message returned
+    auto openFile(const WString &name) -> Error;
 
     /**
      * \param path A valid path

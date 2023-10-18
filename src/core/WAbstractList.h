@@ -10,6 +10,7 @@
 #include "WElement.h"
 #include "core/pointer/SharedPtrThreadSafe.h"
 #include "core/pointer/Pointer.h"
+#include "core/Error.h"
 
 namespace WAbstractList {
     template <class T>
@@ -208,31 +209,34 @@ namespace WAbstractList {
     static auto write (
             WritableAbstract &writable,
             const List<T2> &list,
-            Fn<int(
+            Fn<Error(
                     WritableAbstract &writable,
                     const T2&
             )> save
-    ) -> int
+    ) -> Error
     {
         unsigned size = list.size();
 
         WDebug(false, "Saving: " << typeid(T2).name() << size);
 
-        if (writable.write(size) < 0) {
-            return -1;
+        if (auto err = writable.write(size)) {
+            return err;
         }
 
         for (const auto &ref: std::as_const(list)) {
-            if (save(writable, ref) < 0)
-                return -1;
+            if (auto err = save(writable, ref))
+                return err;
         }
-        return 0;
+
+        return Error::makeOk();
     }
 
     template <template <class T> class List, class T2>
-    auto write (WritableAbstract& writable, const List<T2>& list) -> int
+    auto write (WritableAbstract& writable, const List<T2>& list) -> Error
     {
-        return WAbstractList::write<List, T2>(writable, list, [] (WritableAbstract &writable, const T2 &object) -> int {
+        return WAbstractList::write<List, T2>(writable,
+                                              list,
+                                              [] (WritableAbstract &writable, const T2 &object) -> Error {
             return T2::write (writable, object);
         });
     }
@@ -241,11 +245,11 @@ namespace WAbstractList {
     static auto load  (
             const VersionFileController &versionController,
             ReadableAbstract &readable,
-            Fn<WPair<int, T2>(
+            Fn<WPair<Error, T2>(
                     const VersionFileController &versionController,
                     ReadableAbstract &readable
             )> func
-    ) -> WPair<int, List<T2>>
+    ) -> WPair<Error, List<T2>>
     {
         List<T2> result;
 
@@ -253,35 +257,35 @@ namespace WAbstractList {
             case 0:
                 int element;
 
-                if (readable.read(element) < 0) {
-                    return {-1, {}};
+                if (auto err = readable.read(element)) {
+                    return {err, {}};
                 }
 
                 result.reserve(element);
 
                 for (int i = 0; i < element; i++) {
                     auto [res, data] = func (versionController, readable);
-                    if (res < 0)
-                        return {-1, {}};
+                    if (res)
+                        return {res, {}};
 
                     result.append(
                             std::move (data)
                     );
                 }
-                return {0, result};
+                return {Error::makeOk(), result};
             default:
-                return {-1, {}};
+                return {Error::makeErrVersion(), {}};
         }
-        return {-1, {}};
+        return {Error::makeErrVersion(), {}};
     }
 
     template <template <class T> class List, class T2>
-    auto load (const VersionFileController& version, ReadableAbstract& readable) -> WPair<int, List<T2>>
+    auto load (const VersionFileController& version, ReadableAbstract& readable) -> WPair<Error, List<T2>>
     {
         return WAbstractList::load<List, T2>(
                 version,
                 readable,
-                [](const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, T2> {
+                [](const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<Error, T2> {
                     return T2::load(versionController, readable);
                 }
         );
@@ -296,36 +300,36 @@ namespace WAbstractList {
             )> &startNewThread,
             const Fn<void(List<T>& list, int numberOfElement)> &reserveUnsafe,
             const Fn<void(List<T>& list, T&& object, int index)> &insertUnsafe
-    ) noexcept -> WPair<int, List<T>>
+    ) noexcept -> WPair<Error, List<T>>
     {
         if (versionController.getVersionWAbstractList() != 0)
-            return {-1, {}};
+            return {Error::makeErrVersion(), {}};
 
         int i;
         List<T> result;
         List<Ptr<WTask>> threads;
         List<UnsignedLong> seek;
-        volatile bool needToAbort = false;
+        auto needToAbort = Error::makeOk();
 
         {
             // load seek array
             auto [tmp, seekLoad] = WAbstractList::load<List, UnsignedLong>(versionController, readable);
 
-            if (tmp < 0)
-                return {-1, {}};
+            if (tmp)
+                return {tmp, {}};
 
             seek = std::move(seekLoad);
         }
 
         if (!seek.size()) {
-            return {0, {}};
+            return {Error::makeOk(), {}};
         }
 
         MemReadable readers[seek.size()];
 
         char rawData[seek.last().value()];
-        if (readable.read (rawData, seek.last()) < 0)
-            return {-1, {}};
+        if (auto err = readable.read (rawData, seek.last()))
+            return {err, {}};
 
         for (i = 0; i < seek.size(); i++) {
             readers[i]
@@ -343,8 +347,8 @@ namespace WAbstractList {
                             [&versionController, &needToAbort, &readers, i, &result, &insertUnsafe]() {
                                 auto [res, data] = T::load (versionController, readers[i]);
 
-                                if (res < 0) {
-                                    needToAbort = true;
+                                if (res) {
+                                    needToAbort = res;
                                     return;
                                 }
 
@@ -361,9 +365,9 @@ namespace WAbstractList {
         }
 
         if (needToAbort)
-            return {-1, {}};
+            return {needToAbort, {}};
 
-        return {0, result};
+        return {Error::makeOk(), result};
     };
 
     template<template <class T> class List, class T2>
@@ -373,21 +377,21 @@ namespace WAbstractList {
             const Fn<Ptr<WTask>(
                     Fn<void()>
             )> &startNewThread
-    ) noexcept -> int
+    ) noexcept -> Error
     {
         int i = 0;
 
         std::vector<Ptr < WTask>> threads;
         MemWritable w[list.size()];
-        volatile bool needToAbort = false;
+        Error needToAbort = Error::makeOk();
 
         threads.reserve(list.size());
 
         // create threads with corresponding data
         for (const auto &ref: std::as_const(list)) {
             threads.push_back(startNewThread ([ref, &needToAbort, &w, i] {
-                                               if (T2::write (w[i], ref) < 0)
-                                                   needToAbort = true;
+                                               if (auto err = T2::write (w[i], ref))
+                                                   needToAbort = err;
                                            }
             ));
             i++;
@@ -404,7 +408,7 @@ namespace WAbstractList {
         }
 
         if (needToAbort)
-            return -1;
+            return needToAbort;
 
         // write to writer the seek information
         {
@@ -416,22 +420,22 @@ namespace WAbstractList {
                 seek.append(UnsignedLong(seekDelta));
             }
 
-            if (WAbstractList::write<List, UnsignedLong>(writable, seek) < 0)
-                return -1;
+            if (auto err = WAbstractList::write<List, UnsignedLong>(writable, seek))
+                return err;
         }
 
         // we merge all the single writer in the main writer
         for (MemWritable& singleWriter: w) {
-            if (singleWriter.merge(writable) < 0)
-                return -1;
+            if (auto err = singleWriter.merge(writable))
+                return err;
         }
 
         for (i = 0; i < list.size(); i++) {
             // TODO: optimize this copy
-            if (w[i].merge(writable) < 0)
-                return -1;
+            if (auto err = w[i].merge(writable))
+                return err;
         }
 
-        return 0;
+        return Error::makeOk();
     };
 };

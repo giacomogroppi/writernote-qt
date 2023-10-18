@@ -28,13 +28,13 @@ public:
     WByteArray (const char *d, size_t size) noexcept;
 
     static
-    auto write (WritableAbstract &writable, const WByteArray &object) -> int;
+    auto write (WritableAbstract &writable, const WByteArray &object) -> Error;
 
     static
-    auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, WByteArray>;
+    auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<Error, WByteArray>;
 
     static
-    auto loadPtr (const VersionFileController &versionFile, ReadableAbstract &readableAbstract) -> WPair<int, WByteArray*>;
+    auto loadPtr (const VersionFileController &versionFile, ReadableAbstract &readableAbstract) -> WPair<Error, WByteArray*>;
 
     auto operator=(WByteArray &&other) noexcept -> WByteArray & = default;
     auto operator=(const WByteArray &other) noexcept -> WByteArray & = default;

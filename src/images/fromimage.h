@@ -76,13 +76,14 @@ private:
 protected:
     /**
      * \return &lt 0 in case of error
-     * */
-    static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, ImageContainerDrawable>;
+     */
+    static auto load (const VersionFileController &versionController,
+                      ReadableAbstract &readable) -> WPair<Error, ImageContainerDrawable>;
 
     /**
      * \resurn &lt 0 in case of error
-     * */
-    static auto write (WritableAbstract &writable, const ImageContainerDrawable &source) -> int;
+     */
+    static auto write (WritableAbstract &writable, const ImageContainerDrawable &source) -> Error;
 };
 
 inline auto ImageContainerDrawable::getName_img(const unsigned i) -> WByteArray

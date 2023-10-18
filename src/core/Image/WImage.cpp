@@ -48,26 +48,27 @@ WImage::WImage(int page, bool consideringResolution) :
 }
 #endif // USE_QT
 
-auto WImage::load(const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, WImage>
+auto WImage::load(const VersionFileController &versionController,
+                  ReadableAbstract &readable) -> WPair<Error, WImage>
 {
     WImage result;
 
     if (versionController.getVersionWImage() != 0)
-        return {-1, {}};
+        return {Error::makeErrVersion(), {}};
 
     auto [res, raw] = WByteArray::load(versionController, readable);
-    if (res < 0)
-        return {-1, {}};
+    if (res)
+        return {res, {}};
 
     if (!result.loadFromData(raw, "PNG"))
-        return {-1, {}};
+        return {Error::makeCorruption(), {}};
 
-    return {0, std::move(result)};
+    return {Error::makeOk(), std::move(result)};
 }
 
-auto WImage::write(WritableAbstract &writable, const WImage &image) -> int
+auto WImage::write(WritableAbstract &writable, const WImage &image) -> Error
 {
-    if (WByteArray::write(writable, image.getRawDataPNG()) < 0)
-        return -1;
-    return 0;
+    if (auto err = WByteArray::write(writable, image.getRawDataPNG()))
+        return err;
+    return Error::makeOk();
 }

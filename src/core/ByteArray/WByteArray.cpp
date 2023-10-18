@@ -31,46 +31,47 @@ WByteArray::~WByteArray()
 
 auto WByteArray::load(
         const VersionFileController &versionController,
-        ReadableAbstract &readable) -> WPair<int, WByteArray>
+        ReadableAbstract &readable) -> WPair<Error, WByteArray>
 {
     WByteArray result;
 
     if (versionController.getVersionWByteArray() != 0)
-        return {-1, {}};
+        return {Error::makeErrVersion(), {}};
 
     TypeofSize size;
-    if (readable.read(size) < 0)
-        return {-1, {}};
+    if (auto err = readable.read(size))
+        return {err, {}};
 
     char d[size];
-    if (readable.read(d, size) < 0)
-        return {-1, {}};
+    if (auto err = readable.read(d, size))
+        return {err, {}};
 
     result = WByteArray(d, size);
 
-    return {0, result};
+    return {Error::makeOk(), result};
 }
 
-auto WByteArray::write(WritableAbstract &writable, const WByteArray &object) -> int
+auto WByteArray::write(WritableAbstract &writable, const WByteArray &object) -> Error
 {
     TypeofSize size = object.size();
 
-    if (writable.write(size) < 0)
-        return -1;
+    if (auto err = writable.write(size))
+        return err;
 
-    if (writable.write(object.constData(), size) < 0)
-        return -1;
-    return 0;
+    if (auto err = writable.write(object.constData(), size))
+        return err;
+
+    return Error::makeOk();
 }
 
 auto WByteArray::loadPtr(
         const VersionFileController &versionFile,
         ReadableAbstract &readableAbstract
-) -> WPair<int, WByteArray *>
+) -> WPair<Error, WByteArray *>
 {
     auto [res, data] = WByteArray::load (versionFile, readableAbstract);
-    if (res < 0)
-        return {-1, nullptr};
+    if (res)
+        return {res, nullptr};
 
-    return {res, new WByteArray (std::move (data))};
+    return {Error::makeOk(), new WByteArray (std::move (data))};
 }

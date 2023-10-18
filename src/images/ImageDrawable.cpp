@@ -1,44 +1,45 @@
 #include "ImageDrawable.h"
 
 auto ImageDrawable::load(const VersionFileController &versionController,
-                         ReadableAbstract &readable) -> WPair<int, ImageDrawable>
+                         ReadableAbstract &readable) -> WPair<Error, ImageDrawable>
 {
     ImageDrawable result;
 
     if (versionController.getVersionImageDrawable() != 0)
-        return {-1, {}};
+        return {Error::makeErrVersion(), {}};
 
     {
         auto [res, image] = WImage::load(versionController, readable);
-        if (res < 0)
-            return {-1, {}};
+        if (res)
+            return {res, {}};
         result.immagini = std::move(image);
     }
 
     {
         auto [res, point] = PointF::load(versionController, readable);
-        if (res < 0)
-            return {-1, {}};
+        if (res)
+            return {res, {}};
         result.i = std::move(point);
     }
 
     {
         auto [res, point] = PointF::load(versionController, readable);
-        if (res < 0)
-            return {-1, {}};
+        if (res)
+            return {res, {}};
         result.f = std::move(point);
     }
 
-    return {0, result};
+    return {Error::makeOk(), result};
 }
 
-auto ImageDrawable::write(WritableAbstract &writable, const ImageDrawable &source) noexcept -> int
+auto ImageDrawable::write(WritableAbstract &writable, 
+                            const ImageDrawable &source) noexcept -> Error
 {
-    if (WImage::write(writable, source.immagini) < 0)
-        return -1;
-    if (PointF::write(writable, source.i) < 0)
-        return -1;
-    if (PointF::write(writable, source.f) < 0)
-        return -1;
-    return 0;
+    if (auto err = WImage::write(writable, source.immagini))
+        return err;
+    if (auto err = PointF::write(writable, source.i))
+        return err;
+    if (auto err = PointF::write(writable, source.f))
+        return err;
+    return Error::makeOk();
 }

@@ -193,21 +193,21 @@ int StrokeRect::save(WritableAbstract &file) const
     if(res != OK)
         return res;
 
-    if (RectF::write(file, this->_data.rect) < 0)
+    if (auto err = RectF::write(file, this->_data.rect))
         return ERROR;
 
-    if (pressure_t::write(file, this->_data.press) < 0)
+    if (auto err = pressure_t::write(file, this->_data.press))
         return ERROR;
 
     return OK;
 }
 
-size_t StrokeRect::getSizeInMemory() const
+auto StrokeRect::getSizeInMemory() const -> size_t
 {
     return 0;
 }
 
-size_t StrokeRect::getSizeInFile() const
+auto StrokeRect::getSizeInFile() const -> size_t
 {
     static_assert(sizeof(StrokeComplexCommon::current_ver) == sizeof(unsigned char));
     static_assert(sizeof(this->_data) == (sizeof(PointF) * 2 + sizeof(pressure_t) + 4));
@@ -221,26 +221,28 @@ void StrokeRect::decreasePrecision()
 }
 
 auto StrokeRect::loadPtr(const VersionFileController &versionController,
-                         ReadableAbstract &readable) -> WPair<int, StrokeRect *>
+                         ReadableAbstract &readable) -> WPair<Error, StrokeRect *>
 {
     std::unique_ptr<StrokeRect> d(new StrokeRect);
+
     if (versionController.getVersionStrokeRect() != 0)
-        return {-1, nullptr};
+        return {Error::makeErrVersion(), nullptr};
+
     {
         auto [res, data] = RectF::load(versionController, readable);
-        if (res < 0)
-            return {-1, nullptr};
+        if (res)
+            return {res, nullptr};
         d->_data.rect = data;
     }
 
     {
         auto [res, data] = pressure_t::load(versionController, readable);
-        if (res < 0)
-            return {-1, nullptr};
+        if (res)
+            return {res, nullptr};
         d->_data.press = data;
     }
 
-    return {0, d.release()};
+    return {Error::makeOk(), d.release()};
 }
 
 void StrokeRect::append (WListFast<PointF> &&points, WListFast<pressure_t> &&pressures)

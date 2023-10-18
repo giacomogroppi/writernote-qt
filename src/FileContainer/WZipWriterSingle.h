@@ -19,7 +19,7 @@ public:
 
     void init(char *_data, size_t min, size_t max);
 
-    int write(const void *from, size_t size_object) ;
+    auto write(const void *from, size_t size_object) -> Error;
 
     void *get_data();
     size_t get_offset() const;
@@ -75,10 +75,10 @@ inline void WZipWriterSingle::init(char *data, size_t min, size_t max)
     this->_max = max;
     this->_min = min;
 
-    if(_allocated){
+    if (_allocated) {
         this->_data = (typeof(_data))WMalloc(max);
         W_ASSERT(_max > 0 and _min == 0);
-    }else{
+    } else {
         this->_data = data;
     }
 

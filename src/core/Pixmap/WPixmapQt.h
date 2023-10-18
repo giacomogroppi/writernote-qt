@@ -39,8 +39,8 @@ public:
     bool operator==(const WPixmap &other) const;
 
     static
-    auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, WPixmap>;
-    static auto write(WritableAbstract &writable, const WPixmap &pixmap) -> int;
+    auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<Error, WPixmap>;
+    static auto write(WritableAbstract &writable, const WPixmap &pixmap) -> Error;
 
     auto operator=(const WPixmap &other) noexcept -> WPixmap &;
     auto operator=(WPixmap &&other) noexcept -> WPixmap &;

@@ -59,7 +59,8 @@ public:
         return result;
     }
 
-    static auto load (const VersionFileController& versionController, ReadableAbstract &readable) -> WPair<int, WString>;
+    static auto load (const VersionFileController& versionController,
+                     ReadableAbstract &readable) -> WPair<Error, WString>;
 
     auto operator=(const WString &other) noexcept -> WString & = default;
     auto operator=(WString &&other) noexcept -> WString & = default;
@@ -67,7 +68,7 @@ public:
     /**
      * @return &lt 0 iff writable fail
      * */
-    static auto write (WritableAbstract &writable, const WString &str) -> int;
+    static auto write (WritableAbstract &writable, const WString &str) -> Error;
 
     void append(const char *d, int size = -1)
     {

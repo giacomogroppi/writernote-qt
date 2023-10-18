@@ -183,10 +183,11 @@ protected:
     void setPageVisible(int page);
 
     // load
-    static auto load (const VersionFileController &versionControl, ReadableAbstract &readable) -> WPair<int, DataStruct>;
+    static auto load (const VersionFileController &versionControl,
+                      ReadableAbstract &readable) -> WPair<Error, DataStruct>;
 
     // write
-    static auto write (WritableAbstract &readable, const DataStruct &source) -> int;
+    static auto write (WritableAbstract &readable, const DataStruct &source) -> Error;
 
     virtual void scala_all(const PointF &point, double heightView = -1);
 };
@@ -610,59 +611,59 @@ inline void DataStruct::decreaseAlfa(const WVector<int> &pos, int index)
 inline auto DataStruct::load(
             const VersionFileController &versionControl,
             ReadableAbstract &readable
-        ) -> WPair<int, DataStruct>
+        ) -> WPair<Error, DataStruct>
 {
     DataStruct result;
 
     if (versionControl.getVersionDataStruct() != 0)
-        return {-1, {}};
+        return {Error::makeErrVersion(), {}};
 
-    if (readable.read(result._zoom) < 0)
-        return {-1, {}};
+    if (auto err = readable.read(result._zoom))
+        return {err, {}};
 
     {
         auto [res, point] = PointF::load(versionControl, readable);
-        if (res < 0)
-            return {-1, {}};
+        if (res)
+            return {res, {}};
         result._pointFirstPage = std::move(point);
     }
 
     {
         auto [res, point] = PointF::load(versionControl, readable);
-        if (res < 0)
-            return {-1, {}};
+        if (res)
+            return {res, {}};
         result._last_translation = std::move(point);
     }
 
-    if (readable.read(result._pageVisible) < 0)
-        return {-1, {}};
+    if (auto err = readable.read(result._pageVisible))
+        return {err, {}};
 
     {
         auto [res, vec] = WVector<Page>::load(versionControl, readable);
-        if (res < 0)
-            return {-1, {}};
+        if (res)
+            return {res, {}};
         result._page = std::move(vec);
     }
 
-    return {0, result};
+    return {Error::makeOk(), result};
 }
 
-inline auto DataStruct::write (WritableAbstract &writable, const DataStruct &source) -> int
+inline auto DataStruct::write (WritableAbstract &writable, const DataStruct &source) -> Error
 {
-    if (writable.write (source._zoom) < 0)
-        return -1;
+    if (auto err = writable.write (source._zoom))
+        return err;
 
-    if (PointF::write (writable, source._pointFirstPage) < 0)
-        return -1;
+    if (auto err = PointF::write (writable, source._pointFirstPage))
+        return err;
 
-    if (PointF::write (writable, source._last_translation) < 0)
-        return -1;
+    if (auto err = PointF::write (writable, source._last_translation))
+        return err;
 
-    if (writable.write (source._pageVisible) < 0)
-        return -1;
+    if (auto err = writable.write (source._pageVisible))
+        return err;
 
-    if (WVector<Page>::write (writable, source._page) < 0)
-        return -1;
+    if (auto err = WVector<Page>::write (writable, source._page))
+        return err;
 
-    return 0;
+    return Error::makeOk();
 }

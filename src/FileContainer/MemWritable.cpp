@@ -14,17 +14,17 @@ auto MemWritable::getCurrentSize() const -> size_t
     return this->_size;
 }
 
-auto MemWritable::merge(WritableAbstract &writable) -> int
+auto MemWritable::merge(WritableAbstract &writable) -> Error
 {
-    return this->merge([&writable](const void *d, size_t size) -> int {
+    return this->merge([&writable](const void *d, size_t size) -> Error {
         return writable.write(d, size);
     });
 }
 
-int MemWritable::write(const void *data, size_t size)
+Error MemWritable::write(const void *data, size_t size)
 {
     if (size == 0)
-        return 0;
+        return Error::makeOk();
 
     const auto originalSize = size;
     size -= this->writeUntilEnd(data, size);
@@ -38,7 +38,7 @@ int MemWritable::write(const void *data, size_t size)
             this->writeFromZero(static_cast<const char*>(data) + originalSize - size, size);
     }
 
-    return 0;
+    return Error::makeOk();
 }
 
 MemWritable::~MemWritable()
@@ -48,19 +48,19 @@ MemWritable::~MemWritable()
     }
 }
 
-auto MemWritable::merge(const Fn<int(const void *, size_t)>& append) -> int
+auto MemWritable::merge(const Fn<Error(const void *, size_t)>& append) -> Error
 {
     // write all the blocks
     for (auto iter = _allocatedMemory.cbegin(); iter < _allocatedMemory.cend() - 1; iter ++) {
-        if (append(*iter, MemWritable::sizePage) < 0)
-            return -1;
+        if (auto err = append(*iter, MemWritable::sizePage))
+            return err;
     }
 
     // write the last object
-    if (append(*(_allocatedMemory.rbegin()), _internalStack) < 0)
-        return -1;
+    if (auto err = append(*(_allocatedMemory.rbegin()), _internalStack))
+        return err;
 
-    return 0;
+    return Error::makeOk();
 }
 
 auto MemWritable::writeUntilEnd(const void *from, size_t size) -> size_t
