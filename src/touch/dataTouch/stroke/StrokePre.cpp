@@ -231,7 +231,7 @@ void StrokePre::append(const PointF &point, const pressure_t &press, double prop
                 this->_point.constEnd(),
                 this->_last_draw_press,
                 false,
-                _last_draw_point.operator int()
+                _last_draw_point.operator long()
             );
 
             // TODO: consider pressure

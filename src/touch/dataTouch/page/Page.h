@@ -90,7 +90,6 @@ private:
     static auto get_size_area(const WListFast<SharedPtr<Stroke>> & item, int from, int to) -> RectF;
 
     auto operator[](int index) { return this->_stroke[index]; }
-    auto operator[](int index) const { return this->_stroke[index]; }
 
 public:
     const WPixmap &getImg() const;
@@ -563,26 +562,14 @@ inline void Page::append(const WListFast<SharedPtr<Stroke>> &stroke)
 
 inline auto Page::operator==(const Page &other) const noexcept -> bool
 {
-    const auto cmpMethod = [] (const WListFast<SharedPtr<Stroke>>& list1, const WListFast<SharedPtr<Stroke>>& list2) {
-        int i;
-        if (list1.size() != list2.size())
-            return false;
-
-        for (i = 0; i < list1.size(); i++) {
-            const Stroke& ref1 = *list1[i];
-            const Stroke& ref2 = *list2[i];
-
-            if (ref1 != ref2)
-                return false;
-        }
-
-        return true;
+    const auto cmp = [] (const SharedPtr<Stroke>& stroke1, const SharedPtr<Stroke>& stroke2) {
+        return static_cast<const Stroke&>(*stroke1) == static_cast<const Stroke&>(*stroke2);
     };
 
-    const auto strokeEquals = cmpMethod(_stroke, other._stroke);
+    const auto strokeEquals = _stroke.equals(other._stroke, cmp);
     const auto isVisibleEquals = this->_isVisible == other._isVisible;
 
-    const auto strokeTmpEquals = cmpMethod(_strokeTmp, other._strokeTmp);
+    const auto strokeTmpEquals = _strokeTmp.equals(other._strokeTmp, cmp);
     const auto strokeWriternoteEquals = this->_stroke_writernote == other._stroke_writernote;
 
     return strokeEquals

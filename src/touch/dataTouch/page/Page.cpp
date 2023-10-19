@@ -581,10 +581,10 @@ auto Page::get_size_area(const WVector<int> &pos) const -> RectF
     if (pos.isEmpty())
         return {};
 
-    RectF result(this->operator[](pos.first())->getBiggerPointInStroke());
+    RectF result(this->atStroke(pos.first()).getBiggerPointInStroke());
 
     for (const auto& index: std::as_const(pos)) {
-        const auto &tmp = this->operator[](index)->getBiggerPointInStroke();
+        const auto &tmp = atStroke(index).getBiggerPointInStroke();
         result = DataStruct::joinRect(result, tmp);
     }
 

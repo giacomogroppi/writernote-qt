@@ -131,7 +131,7 @@ public:
     auto lastPage() const -> const Page &;
 
     [[nodiscard]]
-    auto lengthPage() const -> int { return _page.size(); }
+    auto lengthPage() const { return _page.size(); }
     void newPage(n_style style);
 
     [[nodiscard]]
@@ -151,7 +151,6 @@ public:
     void newViewAudio(int newTime);
 
     auto operator[](unsigned long index) -> Page& { return this->_page[index]; }
-    auto operator[](unsigned long index) const -> const Page& { return this->_page[index]; }
 
     nd auto get_range_visible() const -> int;
     void insertPage(const Page &Page, int index);

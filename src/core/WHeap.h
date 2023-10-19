@@ -218,7 +218,7 @@ auto WHeap<T, lowToHigh>::rep() const -> bool
 {
     for (int i = 1; i < _d.size(); i++) {
         const auto first = _d.first();
-        const auto current = _d[i];
+        const auto current = _d.at(i);
         if constexpr (lowToHigh) {
             if (_cmpOriginal(first, current)) {
                 WDebug(true, first << "is lower than" << current << "... Array:" << _d);

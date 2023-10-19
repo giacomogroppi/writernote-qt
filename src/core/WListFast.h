@@ -23,12 +23,11 @@ template <class T>
 class WListFast
 {
 private:
+    using Size = long;
     static constexpr auto debug = false;
-    void test() const;
+    void rep() const noexcept;
 
     static_assert(std::is_move_constructible<T>::value);
-
-    using Size = int;
 
     T **_data;
     Size _size;
@@ -37,7 +36,7 @@ private:
     static constexpr Size numberOfObjectReserved = 128;
 
     // this function remove the object from the list
-    T *takeObject(int i) noexcept;
+    auto takeObject(Size i) noexcept -> T;
 
 public:
     constexpr WListFast() noexcept;
@@ -45,7 +44,7 @@ public:
     /**
      * \param reserve The reserve number of element
      * */
-    explicit WListFast(int reserve) noexcept;
+    explicit WListFast(Size reserve) noexcept;
 
     /**
      * \brief Copy constructor
@@ -71,8 +70,8 @@ public:
      * \param i The index of the item you want, it must be in the range [0, size())
      * \return The item in position "i"
      * */
-    [[nodiscard]]
-    auto at(int i) const noexcept -> const T&;
+    nd
+    auto at(Size i) const noexcept -> const T&;
 
     /**
      * \brief Append the element to the list with a copy
@@ -93,15 +92,15 @@ public:
 
     template <class Iter>
     void removeAt(Iter begin, Iter end) noexcept;
-    void removeAt(int index) noexcept;
-    void remove(int from, int to) noexcept;
+    void removeAt(Size index) noexcept;
+    void remove(Size from, Size to) noexcept;
     void removeObjects(const T &item) noexcept;
 
     nd constexpr
     auto isEmpty() const noexcept -> bool;
 
     nd constexpr
-    auto size() const noexcept -> int;
+    auto size() const noexcept -> Size;
 
     nd constexpr
     auto inBound(long index) const noexcept -> bool;
@@ -110,23 +109,22 @@ public:
     auto first() const noexcept -> const T&;
 
     void clear() noexcept;
-    void move(int from, int to) noexcept;
-    void reserve(int reserve) noexcept;
-    auto takeAt(int i) noexcept -> T;
+    void move(Size from, Size to) noexcept;
+    void reserve(Size reserve) noexcept;
+    auto takeAt(Size i) noexcept -> T;
     auto last() const noexcept -> const T&;
-    auto indexOf(const T& value) const noexcept -> int;
-    auto lastIndexOf(const T& object) const noexcept -> int;
-    void insert(int index, const T& object) noexcept;
+    auto indexOf(const T& value) const noexcept -> Size;
+    auto lastIndexOf(const T& object) const noexcept -> Size;
+    void insert(Size index, const T& object) noexcept;
     auto takeFirst() noexcept -> T;
 
     void forAll(Fn<void(const T&)> method) const noexcept;
     void forAll(Fn<void(T&)> method) noexcept;
 
     [[nodiscard]]
-    auto mid(int from, int to) const noexcept -> WListFast<T>;
+    auto mid(Size from, Size to) const noexcept -> WListFast<T>;
 
-    auto operator[](int i) noexcept -> T&;
-    auto operator[](int i) const noexcept -> const T&;
+    auto operator[](Size i) noexcept -> T&;
 
     auto operator==(const WListFast<T> &other) const noexcept -> bool;
 
@@ -143,9 +141,9 @@ public:
     {
     private:
         T *** _array;
-        int _index;
+        Size _index;
     public:
-        iterator(T ***data, int index) noexcept : _array(data), _index(index) {; };
+        iterator(T ***data, Size index) noexcept : _array(data), _index(index) {; };
 
         T* operator->()         { return (*_array)[_index]; };
         T &operator*() const    { return *(*_array)[_index]; };
@@ -153,19 +151,19 @@ public:
         constexpr bool operator!=(iterator i) const         { return _index != i._index || _array != i._array; }
         iterator &operator++()                              { _index ++; return *this; }
         iterator operator++(int) { auto copy = *this; ++*this; return copy; }
-        iterator operator+(int i) const { return iterator(_array, _index + i); }
-        iterator operator-(int i) const { return iterator(_array, _index - i); };
+        iterator operator+(Size i) const { return iterator(_array, _index + i); }
+        iterator operator-(Size i) const { return iterator(_array, _index - i); };
 
-        explicit operator int () const { return this->_index; }
+        explicit operator Size () const { return this->_index; }
     };
 
     class const_iterator
     {
     private:
         const T ***_array;
-        int _index;
+        Size _index;
     public:
-        const_iterator(const T ***data, int index) noexcept : _array(data), _index(index) { W_ASSERT(index >= 0); };
+        const_iterator(const T ***data, Size index) noexcept : _array(data), _index(index) { W_ASSERT(index >= 0); };
         const_iterator(const const_iterator &other) : _array(other._array), _index(other._index) {}
 
         const T* operator->() const   { return (*_array)[_index]; };
@@ -178,17 +176,17 @@ public:
         auto operator++() -> const_iterator &                             { _index ++; return *this; }
         auto operator++(int) -> const_iterator { auto copy = *this; ++*this; return copy; }
         
-        const_iterator operator+(int i) const { return const_iterator(_array, _index + i); }
-        const_iterator operator-(int i) const { return const_iterator(_array, _index - i); };
+        const_iterator operator+(Size i) const { return const_iterator(_array, _index + i); }
+        const_iterator operator-(Size i) const { return const_iterator(_array, _index - i); };
 
-        explicit operator int () const { return _index; }
+        explicit operator Size () const { return _index; }
     };
 
-    [[nodiscard]]
-    auto begin() noexcept -> iterator { return iterator((T ***)&_data, 0); };
+    template <class Func>
+    auto equals (const WListFast<T>& other, Func method) const noexcept -> bool;
 
-    [[nodiscard]]
-    auto end()   noexcept -> iterator { return iterator((T ***)&_data, size());  };
+    nd auto begin() noexcept -> iterator { return iterator((T ***)&_data, 0); };
+    nd auto end()   noexcept -> iterator { return iterator((T ***)&_data, size());  };
 
     auto constBegin() const noexcept -> const_iterator { return const_iterator((const T ***)&_data, 0); }
     auto constEnd()   const noexcept -> const_iterator { return const_iterator((const T ***)&_data, size()); }
@@ -259,7 +257,7 @@ inline T2 WListFast<T>::average () const noexcept
 }
 
 template<class T>
-inline WListFast<T>::WListFast(int reserve) noexcept
+inline WListFast<T>::WListFast(Size reserve) noexcept
     : _data(nullptr)
     , _size(0)
     , _reserved(0)
@@ -333,13 +331,13 @@ inline auto WListFast<T>::loadMultiThread(
             const auto &startNewThread
         ) noexcept -> WPair<Error, WListFast<T2>>
 {
-    auto reserveUnsafe = [] (WListFast<T2>& list, int numberOfElements) {
+    auto reserveUnsafe = [] (WListFast<T2>& list, Size numberOfElements) {
         list._data = (T2**) malloc(sizeof(T*) * numberOfElements);
         list._size = numberOfElements;
         list._reserved = 0u;
     };
 
-    auto insertUnsafe = [] (WListFast<T2>& list, T2 &&object, int index) {
+    auto insertUnsafe = [] (WListFast<T2>& list, T2 &&object, Size index) {
         list._data[index] = new T2(std::forward<T2>(object));
     };
 
@@ -353,7 +351,7 @@ inline auto WListFast<T>::operator=(WListFast<T> &&other) noexcept -> WListFast<
     if (this == &other)
         return *this;
 
-    for (int i = size() - 1; i >= 0; i--) {
+    for (Size i = size() - 1; i >= 0; i--) {
         delete this->_data[i];
     }
 
@@ -390,7 +388,7 @@ inline WListFast<T>::WListFast(const WListFast<T> &other) noexcept
 }
 
 template<class T>
-inline auto WListFast<T>::mid(int from, int to) const noexcept -> WListFast<T>
+inline auto WListFast<T>::mid(Size from, Size to) const noexcept -> WListFast<T>
 {
     W_ASSERT(from >= 0 && to <= size());
     W_ASSERT(from <= to);
@@ -398,7 +396,7 @@ inline auto WListFast<T>::mid(int from, int to) const noexcept -> WListFast<T>
     auto res = WListFast<T>();
 
     res.reserve(to - from);
-    for (int i = from; i < to; i++) {
+    for (Size i = from; i < to; i++) {
         res.append(at(i));
     }
 
@@ -406,9 +404,9 @@ inline auto WListFast<T>::mid(int from, int to) const noexcept -> WListFast<T>
 }
 
 template<class T>
-inline auto WListFast<T>::indexOf(const T &value) const noexcept -> int
+inline auto WListFast<T>::indexOf(const T &value) const noexcept -> Size
 {
-    for (int i = 0; i < size(); ++i) {
+    for (Size i = 0; i < size(); ++i) {
         if (at(i) == value)
             return i;
     }
@@ -417,7 +415,7 @@ inline auto WListFast<T>::indexOf(const T &value) const noexcept -> int
 }
 
 template<class T>
-inline void WListFast<T>::insert(int index, const T &object) noexcept
+inline void WListFast<T>::insert(Size index, const T &object) noexcept
 {
     W_ASSERT(index >= 0 && index <= size());
 
@@ -427,7 +425,7 @@ inline void WListFast<T>::insert(int index, const T &object) noexcept
         this->_data = (T **) realloc(_data, sizeof(T*) * (size() + 1));
     }
 
-    for (int i = size(); i > index; i--) {
+    for (Size i = size(); i > index; i--) {
         _data[i] = _data[i - 1];
     }
 
@@ -435,20 +433,20 @@ inline void WListFast<T>::insert(int index, const T &object) noexcept
 
     _size ++;
 
-    test();
+    rep();
 
     W_ASSERT(at(index) == object);
 }
 
 template<class T>
-force_inline void WListFast<T>::test() const
+force_inline void WListFast<T>::rep() const noexcept
 {
 #ifdef DEBUGINFO
     W_ASSERT(this->_size >= 0);
     W_ASSERT(this->_reserved >= 0);
 
     if (_size > 0) {
-        for (int i = 0; i < size(); i++)
+        for (Size i = 0; i < size(); i++)
             W_ASSERT(_data[i] != nullptr);
     } else {
         if (_reserved) {
@@ -470,7 +468,7 @@ inline auto WListFast<T>::load(
 }
 
 template<class T>
-void WListFast<T>::move(int from, int to) noexcept
+void WListFast<T>::move(Size from, Size to) noexcept
 {
     W_ASSERT(from >= 0 and from < size());
     W_ASSERT(to >= 0 and to < size());
@@ -482,7 +480,7 @@ void WListFast<T>::move(int from, int to) noexcept
     _data[from] = _data[to];
     _data[to] = r;
 
-    test();
+    rep();
 }
 
 template<class T>
@@ -492,7 +490,7 @@ auto WListFast<T>::operator=(const WListFast<T> &other) noexcept -> WListFast<T>
         return *this;
 
     // TODO: optimize [also to use shared data between list]
-    for (int i = 0; i < size(); i++) {
+    for (Size i = 0; i < size(); i++) {
         delete _data[i];
     }
 
@@ -505,12 +503,12 @@ auto WListFast<T>::operator=(const WListFast<T> &other) noexcept -> WListFast<T>
     if (_size) {
         this->_data = (T**) malloc(sizeof (T*) * other.size());
 
-        for (int i = 0; i < size(); i++) {
+        for (Size i = 0; i < size(); i++) {
             _data[i] = new T(other.at(i));
         }
     }
 
-    test();
+    rep();
 
     return *this;
 }
@@ -521,24 +519,18 @@ inline bool WListFast<T>::operator==(const WListFast<T> &other) const noexcept
     if (size() != other.size())
         return false;
 
-    for (int i = 0; i < size(); i++) {
+    for (Size i = 0; i < size(); i++) {
         if (at(i) != other.at(i))
             return false;
     }
 
-    test();
+    rep();
 
     return true;
 }
 
 template<class T>
-inline T &WListFast<T>::operator[](int i) noexcept
-{
-    return *this->_data[i];
-}
-
-template <class T>
-inline auto WListFast<T>::operator[](int i) const noexcept -> const T&
+inline T &WListFast<T>::operator[](Size i) noexcept
 {
     return *this->_data[i];
 }
@@ -550,9 +542,9 @@ inline T WListFast<T>::takeFirst() noexcept
 }
 
 template<class T>
-inline int WListFast<T>::lastIndexOf(const T &object) const noexcept
+inline auto WListFast<T>::lastIndexOf(const T &object) const noexcept -> Size
 {
-    for (int i = size() - 1; i >= 0; i--) {
+    for (Size i = size() - 1; i >= 0; i--) {
         if (at(i) == object)
             return i;
     }
@@ -568,12 +560,14 @@ inline const T &WListFast<T>::last() const noexcept
 }
 
 template <class T>
-inline T* WListFast<T>::takeObject(int index) noexcept
+inline auto WListFast<T>::takeObject(Size index) noexcept -> T
 {
     W_ASSERT(index >= 0 && index < size());
-    T* object = this->_data[index];
+    T object(std::forward<T>(*this->_data[index]));
 
-    for (int i = index; i < size() - 1; i++) {
+    delete _data[index];
+
+    for (Size i = index; i < size() - 1; i++) {
         this->_data[i] = this->_data[i + 1];
     }
 
@@ -589,25 +583,22 @@ inline T* WListFast<T>::takeObject(int index) noexcept
 
     _size --;
 
-    test();
+    rep();
     return object;
 }
 
 template<class T>
-inline auto WListFast<T>::takeAt(int index) noexcept -> T
+inline auto WListFast<T>::takeAt(Size index) noexcept -> T
 {
     W_ASSERT(index >= 0 && index < size());
-    T* p = takeObject(index);
-    T copy = T(*p);
+    T object(takeObject(index));
 
-    delete p;
-
-    test();
-    return copy;
+    rep();
+    return object;
 }
 
 template<class T>
-inline void WListFast<T>::reserve(int numberOfObjects) noexcept
+inline void WListFast<T>::reserve(Size numberOfObjects) noexcept
 {
     W_ASSERT(numberOfObjects >= 0);
 
@@ -616,13 +607,13 @@ inline void WListFast<T>::reserve(int numberOfObjects) noexcept
         this->_data = (T**) realloc(_data, sizeof (T*)  * (_size + _reserved));
     }
 
-    test();
+    rep();
 }
 
 template<class T>
 inline void WListFast<T>::clear() noexcept
 {
-    for (int i = 0; i < this->_size; i++) {
+    for (Size i = 0; i < this->_size; i++) {
         delete _data[i];
     }
 
@@ -631,7 +622,7 @@ inline void WListFast<T>::clear() noexcept
     _size = 0;
     _reserved = 0;
 
-    test();
+    rep();
 }
 
 template<class T>
@@ -641,7 +632,7 @@ inline auto WListFast<T>::first() const noexcept -> const T &
 }
 
 template<class T>
-constexpr inline auto WListFast<T>::size() const noexcept -> int
+constexpr inline auto WListFast<T>::size() const noexcept -> Size
 {
     return _size;
 }
@@ -653,12 +644,12 @@ constexpr inline bool WListFast<T>::isEmpty() const noexcept
 }
 
 template<class T>
-inline void WListFast<T>::remove(int from, int to) noexcept
+inline void WListFast<T>::remove(Size from, Size to) noexcept
 {
     W_ASSERT(from <= to);
     W_ASSERT(from >= 0 && to <= size());
 
-    for (int i = from; i < to; i++) {
+    for (Size i = from; i < to; i++) {
         delete this->_data[i];
     }
 
@@ -676,14 +667,14 @@ inline void WListFast<T>::remove(int from, int to) noexcept
 
     this->_size -= (to - from);
 
-    test();
+    rep();
 }
 
 template<class T>
-inline void WListFast<T>::removeAt(int index) noexcept 
+inline void WListFast<T>::removeAt(Size index) noexcept
 {
-    delete this->takeObject(index);
-    test();
+    (void)this->takeObject(index);
+    rep();
 }
 
 template<class T>
@@ -695,7 +686,7 @@ inline void WListFast<T>::append(const WListFast<T> &other) noexcept
         this->append(element);
     }
 
-    test();
+    rep();
 }
 
 template<class T>
@@ -708,7 +699,7 @@ inline auto WListFast<T>::append(const T &element) noexcept -> WListFast<T>&
     this->_data[_size - 1] = new T(element);
     _reserved --;
 
-    test();
+    rep();
     return *this;
 }
 
@@ -726,7 +717,7 @@ inline auto WListFast<T>::append(T &&object) noexcept -> WListFast<T>&
 }
 
 template<class T>
-inline const T &WListFast<T>::at(int i) const noexcept
+inline const T &WListFast<T>::at(Size i) const noexcept
 {
     W_ASSERT(i >= 0 && i < this->size());
     return *this->_data[i];
@@ -743,7 +734,7 @@ inline WListFast<T>::WListFast(std::initializer_list<T> args) noexcept
         this->append(d);
     }
 
-    test();
+    rep();
 }
 
 template<class T>
@@ -752,7 +743,7 @@ inline constexpr WListFast<T>::WListFast() noexcept
     , _size(0)
     , _reserved(0)
 {
-    test();
+    rep();
 }
 
 template <class T>
@@ -881,5 +872,23 @@ inline void WListFast<T>::removeAt(Iter begin, Iter end) noexcept
     }
     _size -= diff;
 
-    test();
+    rep();
+}
+
+template <class T>
+template <class Func>
+auto WListFast<T>::equals (const WListFast<T>& other, Func method) const noexcept -> bool
+{
+    if (size() != other.size())
+        return false;
+
+    auto b = other.begin();
+
+    for (const auto& ref: std::as_const(*this)) {
+        if (!method(ref, *b))
+            return false;
+        b++;
+    }
+
+    return true;
 }

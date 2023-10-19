@@ -17,7 +17,7 @@ class WVector
 {
 private:
 
-    using Size = size_t;
+    using Size = long;
 
     T *_data;
     Size _size;
@@ -29,6 +29,8 @@ private:
     static constexpr auto numberOfAllocation = 64;
 
     void test() const;
+
+    nd constexpr auto inBound(Size value) const -> bool;
 
     // TODO: create a method that swap item and call constructor
 
@@ -69,9 +71,8 @@ public:
     auto takeAt(Index i) noexcept -> T;
     auto last() const noexcept ->  const T&;
     auto first() const noexcept -> const T&;
-    auto operator[](int index) -> T&;
+    auto operator[](Size index) -> T&;
     auto operator[](Index index) -> T&;
-    auto operator[](Index index) const -> T&;
 
     nd auto isEmpty() const noexcept -> bool;
 
@@ -134,7 +135,7 @@ public:
     auto operator==(const WVector<T> &other) const -> bool;
     auto operator!=(const WVector<T> &other) const -> bool;
 
-    auto operator[](int i) const -> const T&;
+    constexpr auto asConst() const -> const WVector<T>&;
 
     template <class T2>
     class AbstractIterator
@@ -256,14 +257,21 @@ public:
 };
 
 template<class T>
+auto WVector<T>::operator[](WVector::Size i) -> T &
+{
+    W_ASSERT(inBound(i));
+    return _data[i];
+}
+
+template<class T>
 void WVector<T>::removeAt(const WVector<Index> &index) noexcept
 {
     // TODO: optimize
     if (index.isEmpty())
         return;
 
-    for (Index i = index.size() - 1; i >= 0; i--) {
-        removeAt(index[i]);
+    for (Index i = index.size() - 1; i >= Index(0); i--) {
+        removeAt(index.at(i));
     }
 }
 
@@ -335,8 +343,8 @@ auto WVector<T>::removeOrderHighToLow(
     if (iterator == end())
         return false;
 
-    const int indexFirst = iterator - begin();
-    int lastIndex = indexFirst;
+    const Index indexFirst = iterator - begin();
+    Index lastIndex = indexFirst;
 
     for (auto i = indexFirst; i < size(); i++) {
         if (at(i) != object)
@@ -390,8 +398,8 @@ auto WVector<T>::operator=(WVector<T> &&other) noexcept -> WVector<T> &
     _reserve = other._reserve;
 
     other._data = nullptr;
-    other._size = 0u;
-    other._reserve = 0u;
+    other._size = Size(0u);
+    other._reserve = Size(0u);
 
     return *this;
 }
@@ -409,7 +417,8 @@ auto WVector<T>::takeAt(Index i) noexcept -> T
 }
 
 template <class T>
-void WVector<T>::insert(Index index, WVector<T> &&vector) noexcept {
+void WVector<T>::insert(Index index, WVector<T> &&vector) noexcept
+{
     if (_reserve < vector.size()) {
         T* newData = (T*) malloc (sizeof(T) *
                 (_size + vector.size() + WVector::numberOfAllocation)
@@ -499,7 +508,7 @@ auto WVector<T>::takeFirst() noexcept -> T
         // we need to reallocate and move all the item
         T *newMem = (T*) malloc(sizeof (T) * (_size - 1));
 
-        for (int i = 0; i < _size - 1; i++) {
+        for (Size i = 0; i < _size - 1; i++) {
             const auto index = i + 1;
 
             callConstructorOn(newMem, i, std::forward<T>(_data[index]));
@@ -518,12 +527,6 @@ template<class T>
 void WVector<T>::test() const
 {
 
-}
-
-template<class T>
-auto WVector<T>::operator[](int index) -> T &
-{
-    return _data[index];
 }
 
 template<class T>
@@ -916,20 +919,22 @@ inline void WVector<T>::callConstructorOn(T* array, int index, Args&& ...args)
 }
 
 template <class T>
-inline auto WVector<T>::operator[](int i) const -> const T &
-{
-    W_ASSERT(i >= 0 and i < size());
-    return this->_data[i];
-}
-
-template <class T>
 inline auto WVector<T>::operator[](Index index) -> T &
 {
     return _data[index.value()];
 }
 
-template <class T>
-inline auto WVector<T>::operator[](Index index) const -> T &
+template<class T>
+constexpr auto WVector<T>::inBound(WVector::Size value) const -> bool
 {
-    return _data[index.value()];
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wtype-limits"
+    return value >= Size(0) and value < size();
+#pragma GCC diagnostic pop
+}
+
+template <class T>
+constexpr auto WVector<T>::asConst() const -> const WVector<T>&
+{
+    return static_cast<const WVector&>(*this);
 }

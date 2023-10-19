@@ -26,7 +26,7 @@ auto FileManager::getCurrentFiles() const -> const WListFast<WFile>&
 {
     if (_dir.isEmpty())
         return emptyFiles;
-    return _dir[_selected].getFiles();
+    return _dir.at(_selected).getFiles();
 }
 
 auto FileManager::getAllDir(const WPath &path) -> WListFast<Directory>
@@ -87,7 +87,7 @@ auto FileManager::selectedDirectory(int index) -> bool
 
 auto FileManager::getCurrentDirectory() const -> const Directory&
 {
-    return this->_dir[_selected];
+    return this->_dir.at(_selected);
 }
 
 auto FileManager::getCurrentDirectory() -> Directory&

@@ -19,9 +19,7 @@ public:
     nd constexpr auto isValid() const noexcept -> bool;
     nd constexpr auto isInvalid() const noexcept -> bool;
 
-    constexpr explicit operator unsigned long() const;
-
-    constexpr auto value() const noexcept -> unsigned long;
+    nd constexpr auto value() const noexcept -> unsigned long;
 
     constexpr auto operator ++() noexcept -> Index&;
     constexpr auto operator --() noexcept -> Index&;
@@ -36,6 +34,12 @@ public:
 
     constexpr auto operator==(const Index& other) const -> bool = default;
     constexpr auto operator!=(const Index& other) const -> bool = default;
+
+private:
+    constexpr operator unsigned long() const;
+
+    template <class T>
+    friend class WVector;
 };
 
 inline constexpr auto Index::value() const noexcept -> unsigned long

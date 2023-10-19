@@ -41,7 +41,7 @@ Scheduler::Scheduler()
 
     for (unsigned i = 0u; i < nThreads; i++) {
         _threads.append(std::thread(functionThread));
-        _idThreads.append(_threads[i].get_id());
+        _idThreads.append(_threads.at(i).get_id());
     }
 
     // start a new threads for timers
