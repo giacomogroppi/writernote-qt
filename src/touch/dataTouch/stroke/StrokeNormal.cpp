@@ -112,7 +112,7 @@ void StrokeNormal::draw(WPainter &painter, cbool is_rubber, cint page, WPen &pen
          this->_point.constBegin(), this->_point.constEnd(), this->_pressure.constBegin(), constPressure, 0
     );
 
-    StrokeNormal::draw(painter, is_rubber, page, pen, prop, this->getColor(1.), data);
+    StrokeNormal::draw(painter, is_rubber, page, pen, prop, this->getColor(1.0), data);
 }
 
 int StrokeNormal::is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const

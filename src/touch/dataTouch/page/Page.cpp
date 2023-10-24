@@ -152,7 +152,7 @@ void Page::swap(WListFast<SharedPtr<Stroke>> &list,
     RectF area;
 
 #ifdef DEBUGINFO
-    if(un(!WAbstractList::isSorted(pos))){
+    if (!WAbstractList::isSorted(pos)) {
         WDebug(true,"List not order");
     }
 #endif
@@ -236,17 +236,17 @@ void Page::drawStroke(
 
     W_ASSERT(painter.isActive());
 
-    if (un(isRubber)) {
+    if (isRubber) {
         painter.setCompositionMode(WPainter::CompositionMode_Clear);
+        /*
+        for (int i = 0; i < 500; i++)
+            painter.drawLine(i, 0, i, 500);
+        return;*/
     } else if(isHigh) {
         painter.setCompositionMode(WPainter::CompositionMode_SourceOver);
     }
 
     stroke.draw(painter, isRubber, page, pen, PROP_RESOLUTION);
-
-    if (un(isRubber)) {
-        painter.setCompositionMode(WPainter::CompositionMode_SourceOver);
-    }
 
     painter.setCompositionMode(last_comp_mode);
 
@@ -289,16 +289,10 @@ void * __page_load(void *__data)
         WDebug(false, "Page::__page_load pointer" << &ref);
         W_ASSERT(!ref.isEmpty());
 
-        const WColor &color = ref.getColor(
-            (un(m_pos_ris != -1))
-                    ?
-                        (
-                          (ref.getPosizionAudio() > m_pos_ris)
-                            ? 4
-                            : 1
-                        )
-                    :
-                        1
+        const auto &color = ref.getColor(
+            (m_pos_ris != -1)
+                    ? ((ref.getPosizionAudio() > m_pos_ris) ? 4 : 1)
+                    : 1
         );
 
         page->drawStroke(painter, ref, m_pen, color);
@@ -322,7 +316,8 @@ void Page::drawEngine(
         WPainter        &painter,
         WListFast<SharedPtr<Stroke>> &List,
         int             m_pos_ris,
-        bool            use_multi_thread) noexcept {
+        bool            use_multi_thread) noexcept
+{
     int i, threadCount;
 
     pthread_t thread[PAGE_THREAD_MAX];
@@ -360,7 +355,7 @@ inline void Page::draw(
 {
     W_ASSERT(painter.isActive());
 
-    if(un(all) and _stroke.size()){
+    if(all and _stroke.size()){
         this->drawEngine(painter, _stroke, m_pos_ris, true);
     }
 
@@ -425,13 +420,11 @@ bool Page::initImg(bool flag)
 
 void Page::decreaseAlfa(const WVector<int> &pos, WPainter * painter, int decrease)
 {
-    int i = pos.size();
-    uint color;
     WPen pen;
 
-    for (i --; i >= 0; i--) {
-        Stroke &stroke = atStrokeMod(pos.at(i));
-        color = stroke.getAlfa();
+    for (const auto position: WAbstractList::Reverse(pos)) {
+        Stroke &stroke = this->operator[](pos.at(position));
+        const auto color = stroke.getAlfa();
 
         stroke.setAlfaColor(color / decrease);
 
@@ -527,7 +520,7 @@ void Page::drawIfInside(int m_pos_ris, const RectF &area)
     for(; index >= 0; index --){
         const Stroke &stroke = this->atStroke(index);
 
-        if(un(is_inside_squade(stroke.getBiggerPointInStroke(), area))){
+        if (is_inside_squade(stroke.getBiggerPointInStroke(), area)) {
             drawForceColorStroke(stroke, m_pos_ris, stroke.getColor(1.0), &painter);
         }
     }
@@ -557,7 +550,7 @@ RectF Page::get_size_area(const WListFast<SharedPtr<Stroke> > &item, int from, i
 {
     RectF result;
 
-    if(un(from >= to)){
+    if(from >= to){
         return {};
     }
 
@@ -646,3 +639,9 @@ void Page::at_draw_page(
     __at_draw_private(p, point, zoom, translation);
 }
 
+auto Page::clearAudio() -> void
+{
+    for (auto& stroke: *this) {
+        stroke->clearAudio();
+    }
+}

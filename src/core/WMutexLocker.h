@@ -9,7 +9,7 @@ private:
     T &_m;
     static_assert(!std::is_pointer<T>::value);
 public:
-    WMutexLocker(T &mutex);
+    explicit WMutexLocker(T &mutex);
     ~WMutexLocker();
 };
 

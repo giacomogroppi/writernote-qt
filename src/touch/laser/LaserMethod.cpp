@@ -35,7 +35,7 @@ auto LaserMethod::touchUpdate(const PointF &point, double size, Document &doc) -
 
 auto LaserMethod::touchEnd(const PointF &, Document &) -> UpdateEvent
 {
-    if (un(__tmp->isEmpty()))
+    if (__tmp->isEmpty())
         return UpdateEvent::makeEmpty();
 
     this->_append_to(*__tmp);

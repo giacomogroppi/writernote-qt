@@ -56,7 +56,7 @@ auto InsertTools::touchEnd(const PointF &, class Document &doc) -> UpdateEvent
     int pageMod;
     const PointF &PointFirstPage = doc.getPointFirstPage();
 
-    if (un(strokeToAppend.isEmpty()))
+    if (strokeToAppend.isEmpty())
         return UpdateEvent::makeSheet();
 
     strokeToAppend.adjust(PointFirstPage);

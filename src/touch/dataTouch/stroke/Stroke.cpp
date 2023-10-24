@@ -196,22 +196,6 @@ bool Stroke::operator!=(const Stroke &other) const
     return this->_metadata != other._metadata;
 }
 
-void set_press(
-                            WPen &pen,
-                            const pressure_t press,
-                            const double prop,
-                            cbool is_rubber,
-                            const WColor &color)
-{
-    pen.setWidthF(TabletUtils::pressureToWidth(press / deltaPress) * prop);
-    if (un(is_rubber)) {
-        const auto _press = pen.widthF() * deltaColorNull;
-        pen.setWidthF(_press);
-    } else {
-        pen.setColor(color);
-    }
-}
-
 int Stroke::save(WritableAbstract &file) const
 {
     const int t = type();

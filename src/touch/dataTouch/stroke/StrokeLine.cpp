@@ -5,9 +5,11 @@
 #include "touch/dataTouch/stroke/StrokePre.h"
 #include "StrokeComplexCommon.h"
 #include "StrokeNormal.h"
+#include "touch/TabletUtils.h"
 
 StrokeLine::StrokeLine()
     : Stroke()
+    , _data()
 {
 }
 
@@ -17,13 +19,12 @@ void StrokeLine::draw(WPainter &painter,
                       WPen &pen,
                       cdouble prop) const
 {
-    const auto p = prop == PROP_RESOLUTION ? prop : 1.;
+    pen.setWidthF(_data.press * (is_rubber ? deltaColorNull : 1.0) * prop);
 
     painter.setPen(pen);
-    set_press(pen, this->_data.press, p, is_rubber, this->getColor(1.));
 
-    const auto _topLeft     = Page::at_translation(PointF(this->_data.pt1), page) * prop;
-    const auto _bottomRight = Page::at_translation(PointF(this->_data.pt2), page) * prop;
+    const auto _topLeft     = Page::at_translation(this->_data.pt1, page) * prop;
+    const auto _bottomRight = Page::at_translation(this->_data.pt2, page) * prop;
 
     painter.setPen(pen);
     painter.drawLine(_topLeft, _bottomRight);
@@ -32,7 +33,9 @@ void StrokeLine::draw(WPainter &painter,
 int StrokeLine::is_inside(const WLine &line, int from, int precision, cbool needToDeletePoint) const
 {
     (void)(needToDeletePoint);
+
     W_ASSERT(from == 0);
+
     WLine _line(this->_data.pt1, this->_data.pt2);
     return WLine::intersect(_line, line, precision);
 }

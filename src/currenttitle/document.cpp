@@ -85,16 +85,7 @@ void Document::reset()
 
 void Document::cleanAudio()
 {
-    const auto lenPage = lengthPage();
-
-    for(auto i = 0; i < lenPage; i++){
-        Page &page = this->at_mod(i);
-        const auto len = page.lengthStroke();
-
-        for(auto k = 0; k < len; k++){
-            page.atStrokeMod(k).clearAudio();
-        }
-    }
+    DataStruct::clearAudio();
 
     this->_audioRecordStatus = Document::AudioRecordStatus::not_record;
 }

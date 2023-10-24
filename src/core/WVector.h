@@ -26,7 +26,7 @@ private:
     static constexpr const auto useReserve = true;
 
     /*std::vector<T> _data;*/
-    static constexpr auto numberOfAllocation = 64;
+    static constexpr Size numberOfAllocation = 64;
 
     void test() const;
 
@@ -66,13 +66,18 @@ public:
     void removeAt(Index i) noexcept;
     void move(Index from, Index to) noexcept;
     void clear() noexcept;
-    auto at(Index i) const noexcept -> const T&;
+    nd auto at(Index i) const noexcept -> const T&;
     void reserve(long numberOfElement) noexcept;
     auto takeAt(Index i) noexcept -> T;
-    auto last() const noexcept ->  const T&;
-    auto first() const noexcept -> const T&;
+    nd auto last() const noexcept ->  const T&;
+    nd auto first() const noexcept -> const T&;
     auto operator[](Size index) -> T&;
     auto operator[](Index index) -> T&;
+
+    template <class... Args>
+    void emplace(Args&&... args);
+
+    auto at(Size i) const -> const T&;
 
     nd auto isEmpty() const noexcept -> bool;
 
@@ -82,10 +87,10 @@ public:
 
     auto takeFirst() noexcept -> T;
 
-    [[deprecated]]
+    [[deprecated]] nd
     auto constData() const noexcept -> const T*;
 
-    auto contains(const T& value) const noexcept -> bool;
+    nd auto contains(const T& value) const noexcept -> bool;
 
     /**
      * \return The index of the object, -1 in case there is no object equals to object
@@ -154,7 +159,7 @@ public:
         using iterator_category = std::random_access_iterator_tag;
 
 #if !defined(DEBUGINFO)
-        explicit AbstractIterator(T *data, int index, int max) : array(data), index(index) { unused(max); };
+        explicit AbstractIterator(T *data, long index, long max) : array(data), index(index) { unused(max); };
 #else
         explicit AbstractIterator(T* data, long index, long max): array(data), index(index), max(max) {};
 #endif // DEBUGINFO
@@ -257,6 +262,19 @@ public:
 };
 
 template<class T>
+template<class... Args>
+void WVector<T>::emplace(Args &&... args)
+{
+    if (_reserve == 0)
+        reserve(WVector::numberOfAllocation);
+
+    callConstructorOn(std::forward<Args>(args)...);
+
+    _reserve --;
+    _size ++;
+}
+
+template<class T>
 auto WVector<T>::operator[](WVector::Size i) -> T &
 {
     W_ASSERT(inBound(i));
@@ -346,7 +364,7 @@ auto WVector<T>::removeOrderHighToLow(
     const Index indexFirst = iterator - begin();
     Index lastIndex = indexFirst;
 
-    for (auto i = indexFirst; i < size(); i++) {
+    for (auto i = indexFirst; i < Index(size()); i++) {
         if (at(i) != object)
             break;
         lastIndex = i;
@@ -424,12 +442,12 @@ void WVector<T>::insert(Index index, WVector<T> &&vector) noexcept
                 (_size + vector.size() + WVector::numberOfAllocation)
         );
 
-        for (size_t i = 0; i < index.value(); i++) {
+        for (Size i = 0; i < index.value(); i++) {
             callConstructorOn(newData, i, std::forward<T>(_data[i]));
             _data[i].~T();
         }
 
-        for (size_t i = index.value(); i < index.value() + vector.size(); i++){
+        for (Size i = index.value(); i < index.value() + vector.size(); i++){
             callConstructorOn(
                     newData,
                     i,
@@ -441,7 +459,7 @@ void WVector<T>::insert(Index index, WVector<T> &&vector) noexcept
             vector._data[i - index.value()].~T();
         }
 
-        for (size_t i = index.value() + vector.size(); i < _size + vector.size(); i++) {
+        for (Size i = index.value() + vector.size(); i < _size + vector.size(); i++) {
             callConstructorOn(newData, i, std::forward<T>(_data[i - vector.size()]));
             _data[i - vector.size()].~T();
         }
@@ -538,7 +556,7 @@ auto WVector<T>::at(Index i) const noexcept -> const T&
 template<class T>
 void WVector<T>::move(Index from, Index to) noexcept
 {
-    W_ASSERT(from.value() < size() and to.value() < size());
+    W_ASSERT(inBound(from.value()));
 
     if (from == to)
         return;
@@ -742,14 +760,15 @@ inline void WVector<T>::append(WVector<T> &&item) noexcept
 template<class T>
 inline void WVector<T>::append(const WVector<T> &other) noexcept
 {
-    if (_reserve - other.size() > 0) {
-        for (auto &item: std::as_const(other)) {
-            this->append(item);
-        }
-    } else {
-        reserve(other.size() - _reserve);
-        return append(other);
+    if (_reserve < other.size())
+        reserve(std::max(WVector::numberOfAllocation, other.size()));
+
+    for (Size i = 0; i < other.size(); i++) {
+        callConstructorOn(_data, i + _size, other.at(i));
     }
+
+    _size += other.size();
+    _reserve -= other.size();
 }
 
 template<class T>
@@ -937,4 +956,11 @@ template <class T>
 constexpr auto WVector<T>::asConst() const -> const WVector<T>&
 {
     return static_cast<const WVector&>(*this);
+}
+
+template <class T>
+auto WVector<T>::at(WVector::Size i) const -> const T&
+{
+    W_ASSERT(inBound(i));
+    return _data[i];
 }

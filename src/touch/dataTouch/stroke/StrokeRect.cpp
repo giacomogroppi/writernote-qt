@@ -38,7 +38,8 @@ void StrokeRect::draw(WPainter &painter, cbool is_rubber, cint page, WPen &pen, 
 {
     painter.setPen(pen);
 
-    set_press(pen, _data.press, prop, is_rubber, this->getColor(1.));
+    pen.setWidthF(_data.press * prop * (is_rubber ? deltaColorNull : 1.0));
+    pen.setColor(getColor(1.0));
 
     const auto _topLeft     = Page::at_translation(
                 PointF(

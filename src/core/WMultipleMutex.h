@@ -31,8 +31,8 @@ force_inline int WMultipleMutex::blockAll()
 
 force_inline int WMultipleMutex::block(int from, int to)
 {
-    for(; from < to; from ++){
-        if (un(_sem[0].tryWait())) {
+    for (; from < to; from ++) {
+        if (_sem[0].tryWait()) {
             return -WMULTIMUTEX_ALREADY_LOCK;
         }
     }
@@ -45,7 +45,7 @@ force_inline int WMultipleMutex::unlock(int from, int to)
     W_ASSERT(to <= _size);
     W_ASSERT(from >= 0);
 
-    for(; from < to; from ++){
+    for (; from < to; from ++) {
         _sem[from].release();
     }
 

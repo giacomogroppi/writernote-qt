@@ -81,15 +81,13 @@ private:
 
     void mergeList() noexcept;
 
-    void AppendDirectly(const SharedPtr<Stroke>& stroke);
+    void appendDirectly(const SharedPtr<Stroke>& stroke);
     auto initImg(bool flag) -> bool;
 
     void decreaseAlfa(const WVector<int> &pos, WPainter *painter, int decrease);
 
     static auto at_translation(const PointF &point, cint page) -> PointF;
     static auto get_size_area(const WListFast<SharedPtr<Stroke>> & item, int from, int to) -> RectF;
-
-    auto operator[](int index) { return this->_stroke[index]; }
 
 public:
     const WPixmap &getImg() const;
@@ -99,6 +97,8 @@ public:
     Page (const Page &from);
     Page (int count, n_style style);
     ~Page();
+
+    auto clearAudio() -> void;
 
 #define PAGE_SWAP_TRIGGER_VIEW BIT(1)
     void swap(WListFast<SharedPtr<Stroke>> &stroke, const WVector<int> & pos, int flag);
@@ -133,13 +133,10 @@ public:
     __fast void append(const WList<SharedPtr<Stroke>> &stroke);
     __fast void append(const WListFast<SharedPtr<Stroke>> &stroke);
 
-    [[deprecated]]
-    __fast const Stroke             & atStroke(int i) const;
-    [[deprecated]]
-    __fast Stroke                   & atStrokeMod(int i);
+    __fast auto atStroke(int i) const -> const Stroke&;
 
     [[deprecated]]
-    __fast const StrokeForPage &get_stroke_page() const; //return the point written by writernote
+    __fast auto get_stroke_page() const -> const StrokeForPage &; //return the point written by writernote
     __slow void at_draw_page(int IndexPoint, const PointF &translation, PointF &point, double zoom) const;
 
     auto minHeight() const -> double;
@@ -197,6 +194,13 @@ public:
     auto operator=(Page &&other) noexcept -> Page &;
 
     auto operator==(const Page &other) const noexcept -> bool;
+
+    auto operator[](int index) -> Stroke& { return *this->_stroke[index]; }
+
+    auto begin() { return _stroke.begin(); }
+    auto end() { return _stroke.end(); }
+    auto begin() const { return _stroke.begin(); }
+    auto end() const { return _stroke.end(); }
 
     friend class StrokeNormal;
     friend class StrokeRect;
@@ -260,12 +264,12 @@ force_inline void Page::reset()
     this->_imgDraw = WPixmap(1, true);
 }
 
-inline PointF Page::at_translation(const PointF &point, cint page)
+inline PointF Page::at_translation(const PointF &point, int page)
 {
     PointF tmp;
     const double ytranslation = double(page) * Page::getHeight();
 
-    if (un(!page)) {
+    if (page == 0) {
         return point;
     }
 
@@ -279,7 +283,7 @@ force_inline int Page::getIndex() const
     return this->getCount() - 1;
 }
 
-force_inline void Page::AppendDirectly(const SharedPtr<Stroke>& stroke)
+force_inline void Page::appendDirectly(const SharedPtr<Stroke>& stroke)
 {
     this->_stroke.append(stroke);
 }
@@ -368,18 +372,12 @@ force_inline void Page::setVisible(bool vis) const
     this->_isVisible = vis;
 }
 
-force_inline const Stroke &Page::atStroke(int i) const
+force_inline auto Page::atStroke(int i) const -> const Stroke &
 {
     rep();
     const auto res = this->_stroke.at(i);
     W_ASSERT(res);
     return *res;
-}
-
-force_inline Stroke &Page::atStrokeMod(int i)
-{
-    rep();
-    return *this->_stroke.operator[](i);
 }
 
 force_inline const StrokeForPage &Page::get_stroke_page() const
@@ -439,8 +437,6 @@ force_inline void Page::removeAt(int i)
 /* the list should be order */
 inline void Page::removeAt(const WVector<int> &pos)
 {
-    int i;
-
     W_ASSERT(WAbstractList::isSorted(pos));
 
     _stroke.removeAt(pos.begin(), pos.end());
@@ -520,28 +516,29 @@ inline Page &Page::operator=(const Page &other) noexcept
 force_inline void Page::drawForceColorStroke(
         const Stroke    &stroke,
         cint            m_pos_ris,
-        const WColor  &color,
+        const WColor    &color,
         WPainter        *painter)
 {
     WPen pen;
-    const auto needDelete = (bool) (!painter);
+    const auto needDelete = bool (painter == nullptr);
 
     if (needDelete) {
         if (initImg(false))
             return this->triggerRenderImage(m_pos_ris, true);
 
-        WNew(painter, WPainterUnsafe, ());
+        painter = new WPainterUnsafe();
 
         if (!painter->begin(&this->_imgDraw))
             std::abort();
     }
 
     this->drawStroke(*painter, stroke, pen, color);
+
     W_ASSERT(painter->isActive());
 
     if (needDelete) {
         painter->end();
-        WDelete(painter);
+        delete painter;
     }
 }
 

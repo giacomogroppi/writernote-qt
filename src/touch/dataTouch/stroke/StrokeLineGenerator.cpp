@@ -120,7 +120,7 @@ double StrokeLineGenerator::model_near(const WListFast<PointF> &points, const WL
     line_data.is_vertical = false;
 
     /** list empty */
-    if (un(b == e)) {
+    if (b == e) {
         return StrokeComplexCommon::error;
     }
 
@@ -129,7 +129,7 @@ double StrokeLineGenerator::model_near(const WListFast<PointF> &points, const WL
     {
         const double det = area.topLeft().x() - area.bottomRight().x();
 
-        if(un(!det)){
+        if(!det){
             WDebug(StrokeLineGeneratorDebug, "det = 0");
             is_vertical = true;
             goto cont;

@@ -29,7 +29,7 @@ void TabletUtils::drawForAudio()
     const bool is_play          = _isPlay;
     const auto m_pos_ris = (is_play) ? (_positionAudio) : -1;
 
-    if (un(is_play and !_isExportingPdf)) {
+    if (is_play and !_isExportingPdf) {
         // the idea is to trigger this view only when
         // the second has changed
         if(last_m_pos_ris != m_pos_ris){

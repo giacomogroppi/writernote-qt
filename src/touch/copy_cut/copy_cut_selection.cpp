@@ -109,7 +109,7 @@ int copy::selection(
 
     adjustData(pointTouch);
 
-    if(un(this->isEmpty())){
+    if (this->isEmpty()){
         return 0;
     }
 

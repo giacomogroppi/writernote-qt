@@ -16,8 +16,6 @@
 #define __init__ __attribute((constructor))
 
 #define BIT(bit) (1 << (bit-1))
-#define un(exp) __builtin_expect(!!(exp), false)
-#define likely(exp) __builtin_expect(!!(exp), true)
 #define force_inline inline __attribute__((always_inline))
 #define not_used __attribute__ ((__unused__))
 #define static_assert_type(val, should_be) static_assert(std::is_same<decltype(val), should_be>::value, #val " must be " #should_be)
@@ -87,7 +85,7 @@ force_inline constexpr not_used int debug_enable()
 
 # define W_ASSERT_TEXT(condition, ...)                                                                  \
     do{                                                                                                 \
-        if(un(!!(condition) == false)){                                                                 \
+        if(!!(condition) == false){                                                                     \
             DEBUGGER_OUT << __FUNCTION__ << __FILE__ << __LINE__ << #condition << __VA_ARGS__;          \
             std::abort();                                                                               \
         }                                                                                               \
@@ -300,7 +298,7 @@ inline constexpr T Power(const T &value, cint power)
 {
     T res = value;
 
-    if(un(power) == 0){
+    if(power == 0){
         return 1;
     }
 

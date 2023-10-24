@@ -21,7 +21,7 @@ void DataStruct::newPage(int num)
 void DataStruct::changeZoom(double zoom,
                             int heightScreen)
 {
-    if(un(!DataStruct::isOkZoom(zoom))){
+    if (!DataStruct::isOkZoom(zoom)) {
         return;
     }
 
@@ -170,7 +170,7 @@ void DataStruct::restoreLastTranslation(const int heightView)
 void DataStruct::scala_all(const PointF &point, double heightView)
 {
     constexpr double prec = .00005;
-    if(un(point == PointF(0, 0)))
+    if (point == PointF(0, 0))
         return;
 
     W_ASSERT(_pointFirstPage.x() + point.x() - prec <= 0.);
@@ -179,13 +179,13 @@ void DataStruct::scala_all(const PointF &point, double heightView)
     this->_pointFirstPage += point;
     this->_pageVisible = -1;
 
-    if(heightView > 0){
+    if (heightView > 0) {
         this->triggerVisibility(heightView);
-    }else{
+    } else {
         cint range = this->get_range_visible();
         int first = this->getFirstPageVisible();
 
-        if(un(first) < 0)
+        if(first < 0)
             first = 0;
 
         this->setVisible(first, first + range);
@@ -201,9 +201,9 @@ void DataStruct::movePoint(
         int pageIndex,
         const PointF       &translation)
 {
-    Page &pageRef = at_mod(pageIndex);
+    Page &pageRef = this->operator[](pageIndex);
     for(const auto &index : std::as_const(pos)){
-        auto &stroke = pageRef.atStrokeMod(index);
+        auto &stroke = pageRef[index];
         stroke.scale(translation);
     }
 }
@@ -398,11 +398,11 @@ DataStruct &DataStruct::operator=(DataStruct &&other) noexcept
 }
 
 DataStruct::DataStruct(DataStruct &&other) noexcept
-    : _last_translation(other._last_translation)
+    : _last_translation(std::move(other._last_translation))
     , _page(std::move (other._page))
-    , _pointFirstPage(other._pointFirstPage)
-    , _zoom(other._zoom)
-    , _pageVisible(other._pageVisible)
+    , _pointFirstPage(std::move(other._pointFirstPage))
+    , _zoom(std::move(other._zoom))
+    , _pageVisible(std::move(other._pageVisible))
 {
     other.reset_touch();
 }
@@ -414,6 +414,13 @@ DataStruct::DataStruct(const DataStruct &other) noexcept
     , _zoom(other._zoom)
     , _pageVisible(other._pageVisible)
 {
+}
+
+auto DataStruct::clearAudio() -> void
+{
+    for (auto& page: *this) {
+        page.clearAudio();
+    }
 }
 
 bool DataStruct::operator==(const DataStruct &other) const

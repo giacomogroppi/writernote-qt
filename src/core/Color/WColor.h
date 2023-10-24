@@ -69,6 +69,7 @@ public:
 # define color_black       Qt::black
 # define color_white       Qt::white
 # define color_transparent Qt::transparent
+# define color_red          Qt::red
 #endif
 
 #ifdef USE_QT

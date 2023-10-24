@@ -29,6 +29,11 @@ void WPen::setWidthF(double value)
     this->_pen.setWidthF(value);
 }
 
+void WPen::setPressure(pressure_t value)
+{
+    this->_pen.setWidthF(value * 10.0);
+}
+
 void WPen::setStyle(WPenStyle style)
 {
     Qt::PenStyle s;

@@ -42,11 +42,11 @@ void *idle_rubber(void *arg)
     for(;;){
         thread_group->get_pass_sem().acquire();
 
-        if(un(thread_group->needToDelete())){
+        if (thread_group->needToDelete()) {
             return nullptr;
         }
 
-        if(un(data->id >= thread_group->get_create())){
+        if (data->id >= thread_group->get_create()) {
             goto wait;
         }
 
@@ -83,7 +83,7 @@ static inline not_used RectF rubber_get_area(const PointF &p1, const PointF &p2)
     return area;
 }
 
-static force_inline void draw_null(Page *_page, const WVector<int> &point,
+static force_inline void draw_null(Page &_page, const WVector<int> &point,
                                    const WVector<int> &stroke, bool is_left)
 {
     W_ASSERT(point.size() == stroke.size());
@@ -92,13 +92,13 @@ static force_inline void draw_null(Page *_page, const WVector<int> &point,
                                 const int indexPoint,
                                 const int indexStroke)
     {
-        auto &stroke = _page->atStrokeMod(indexStroke);
+        auto &stroke = _page[indexStroke];
 
         W_ASSERT(stroke.type() == Stroke::COMPLEX_NORMAL);
 
-        _page->lock();
-        _page->drawForceColorStroke(stroke, -1, COLOR_NULL, nullptr);
-        _page->unlock();
+        _page.lock();
+        _page.drawForceColorStroke(stroke, -1, COLOR_NULL, nullptr);
+        _page.unlock();
 
         if (is_left) {
             ((StrokeNormal*) &stroke)->removeAt(0, indexPoint);
@@ -106,18 +106,18 @@ static force_inline void draw_null(Page *_page, const WVector<int> &point,
             ((StrokeNormal*) &stroke)->removeAt(indexPoint, -1);
         }
 
-        _page->lock();
-        _page->drawStroke(stroke, -1);
-        _page->unlock();
+        _page.lock();
+        _page.drawStroke(stroke, -1);
+        _page.unlock();
     });
 }
 
-static bool makeNormal(Page *page, int index, Stroke *stroke)
+static bool makeNormal(Page &page, int index, Stroke &stroke)
 {
-    std::shared_ptr<Stroke> newStroke = stroke->makeNormal();
+    std::shared_ptr<Stroke> newStroke = stroke.makeNormal();
 
     if (newStroke) {
-        page->swap(index, newStroke);
+        page.swap(index, newStroke);
     }
 
     return newStroke != nullptr;
@@ -134,8 +134,8 @@ void actionRubberSinglePartial(DataPrivateMuThread &data)
 
     int from, to, _index;
 
-    Page *_page             = private_data->_page;
-    DataStruct *_datastruct = private_data->data;
+    Page &_page             = *private_data->_page;
+    DataStruct &_datastruct = *private_data->data;
     const auto &area        = private_data->line;
 
     from = data.from;
@@ -147,9 +147,9 @@ void actionRubberSinglePartial(DataPrivateMuThread &data)
 
     for (; from < to; from ++) {
 redo:
-        Stroke *stroke = &_page->atStrokeMod(from);
+        Stroke &stroke = _page[from];
 
-        if (un(stroke->isEmpty())) {
+        if (stroke.isEmpty()) {
             stroke_to_remove.append(from);
             continue;
         }
@@ -158,7 +158,7 @@ redo:
         while (true) {
             int lenPoint;
 
-            const int index = stroke->is_inside(area, _index, __m_size_gomma, true);
+            const int index = stroke.is_inside(area, _index, __m_size_gomma, true);
 
             if(index < 0)
                 break;
@@ -170,20 +170,20 @@ redo:
             if (makeNormal(_page, from, stroke))
                 goto redo;
 
-            auto *sNormal = dynamic_cast<StrokeNormal *>(&_page->atStrokeMod(from));
+            auto &sNormal = dynamic_cast<StrokeNormal &>(_page[from]);
 
-            lenPoint = sNormal->length();
-            W_ASSERT(sNormal->type() == Stroke::COMPLEX_NORMAL);
+            lenPoint = sNormal.length();
+            W_ASSERT(sNormal.type() == Stroke::COMPLEX_NORMAL);
 
             if (index < 3) {
-                if(sNormal->length() - index < 3){
+                if(sNormal.length() - index < 3){
                     stroke_to_remove.append(data.from);
 
                     // we need to exit the current stroke
                     break;
                 }
 
-                W_ASSERT(sNormal->length() >= 2);
+                W_ASSERT(sNormal.length() >= 2);
 
                 stroke_mod_left_point.append(index);
                 stroke_mod_left_stroke.append(from);
@@ -192,7 +192,7 @@ redo:
             }
 
             if (index + 3 > lenPoint) {
-                if(sNormal->length() < 3)
+                if(sNormal.length() < 3)
                     stroke_to_remove.append(data.from);
 
                 stroke_mod_rigth_point.append(index);
@@ -214,14 +214,14 @@ redo:
     // we don't need to do this operation
     // in order to the list
     {
-        int i = stroke_mod_stroke.size();
+        auto i = stroke_mod_stroke.size();
         W_ASSERT(stroke_mod_stroke.size() == stroke_mod_point.size());
 
         for (i-- ; i >= 0; i --) {
             cint indexStroke = stroke_mod_stroke.at(i);
             cint indexPoint  = stroke_mod_point.at(i);
 
-            _datastruct->changeIdThreadSave(indexPoint, _page->atStrokeMod(indexStroke), *_page);
+            _datastruct.changeIdThreadSave(indexPoint, _page[indexStroke], _page);
         }
     }
 
@@ -244,19 +244,18 @@ void actionRubberSingleTotal(DataPrivateMuThread &data)
     WVector<int> index_selected;
     cint data_already_len   = private_data->al_find;
 
-    Page *_page             = private_data->_page;
-    WVector<int> *_al_find  = private_data->data_find;
+    Page &_page             = *private_data->_page;
+    WVector<int> &_al_find  = *private_data->data_find;
     const auto &area        = private_data->line;
     index_selected.reserve(32);
 
     W_ASSERT(data.from <= data.to);
-    W_ASSERT(_page);
 
     for (; data.from < data.to; data.from++) {
-        auto &stroke = _page->atStrokeMod(data.from);
+        auto &stroke = _page[data.from];
         int index;
 
-        if (_al_find->contains(data.from))
+        if (_al_find.contains(data.from))
             continue;
 
         index = stroke.is_inside(area, 0, __m_size_gomma, false);
@@ -265,16 +264,13 @@ void actionRubberSingleTotal(DataPrivateMuThread &data)
             continue;
         }
 
-        if (un(stroke.is_highlighter())) {
+        if (stroke.is_highlighter()) {
             private_data->highlighter_delete = true;
 
             const auto currentArea = stroke.getBiggerPointInStroke();
 
-            mutex_area.lock();
-
+            WMutexLocker guard(mutex_area);
             private_data->area = DataStruct::joinRect(currentArea, private_data->area);
-
-            mutex_area.unlock();
         }
 
         index_selected.append(data.from);
@@ -285,12 +281,10 @@ void actionRubberSingleTotal(DataPrivateMuThread &data)
         return;
     }
 
-    single_mutex.lock();
+    WMutexLocker guard(single_mutex);
 
-    _al_find->append(index_selected);
-    private_data->data->decreaseAlfa(index_selected, _page->getCount() - 1);
-
-    single_mutex.unlock();
+    _al_find.append(index_selected);
+    private_data->data->decreaseAlfa(index_selected, _page.getCount() - 1);
 }
 
 /**
@@ -327,7 +321,7 @@ auto RubberMethod::touchUpdate(const PointF &__lastPoint,
     dataPrivate.highlighter_delete = false;
     dataPrivate.area = RectF();
 
-    if (un(_base < 0)) {
+    if (_base < 0) {
         this->_base = doc.whichPage(lastPoint);
         _data_to_remove.append(WVector<int>());
         indexPage = _base;
@@ -335,7 +329,7 @@ auto RubberMethod::touchUpdate(const PointF &__lastPoint,
         const auto now = doc.whichPage(lastPoint);
         int i;
 
-        if(likely(now == _base))
+        if (now == _base)
             goto out1;
 
         /**
@@ -380,7 +374,7 @@ auto RubberMethod::touchUpdate(const PointF &__lastPoint,
 
     // l'utente ha prima selezionato un punto su una pagina x,
     // e poi ne ha selezionato un altro su una pagina o x-1, o x+1
-    if (un(doc.whichPage(lastPoint) != doc.whichPage(_last))) {
+    if (doc.whichPage(lastPoint) != doc.whichPage(_last)) {
         goto save_point;
     }
 
@@ -389,16 +383,16 @@ auto RubberMethod::touchUpdate(const PointF &__lastPoint,
 
     __m_size_gomma = _size_gomma;
 
-    dataPrivate._page = &doc.at_mod(indexPage);
+    dataPrivate._page = &doc[indexPage];
 
     lenStroke = dataPrivate._page->lengthStroke();
 
-    if (un(!lenStroke))
+    if (lenStroke == 0)
         goto out2;
 
     // we trigger the copy if the page is shared
     // we can't do after
-    dataPrivate._page->atStrokeMod(0);
+    dataPrivate._page[0];
 
     dataPrivate.data_find      = &_data_to_remove.operator[](count);
     dataPrivate.data_to_remove = dataPrivate.data_find;
@@ -410,7 +404,7 @@ auto RubberMethod::touchUpdate(const PointF &__lastPoint,
 
     thread_group->postAndWait(thread_create);
 
-    if (un(dataPrivate.highlighter_delete)) {
+    if (dataPrivate.highlighter_delete) {
         dataPrivate._page->drawIfInside(-1, dataPrivate.area);
     }
 
@@ -459,7 +453,7 @@ bool RubberMethod::is_image_not_null(const Page *page,
 
     delta *= PROP_RESOLUTION;
 
-    if (un(img.isNull()))
+    if (img.isNull())
         return false;
 
     const auto data = img.toImage();
@@ -489,16 +483,16 @@ auto RubberMethod::touchEnd(const PointF&, Document &doc) -> UpdateEvent
     if (_rubber_type == type_rubber::total) {
         for (i = 0; i < len; i ++) {
             WVector<int> &arr = _data_to_remove.operator[](i);
-            Page &page = doc.at_mod(i + _base);
+            Page &page = doc[i + _base];
 
-            if(un(arr.isEmpty()))
+            if (arr.isEmpty())
                 continue;
 
-            if(un(index_mod >= 0)){
+            if (index_mod >= 0) {
                 index_mod = -2;
             }
 
-            if(un(index_mod == -1)){
+            if (index_mod == -1) {
                 index_mod = i + _base;
             }
 

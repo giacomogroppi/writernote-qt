@@ -25,6 +25,8 @@ public:
     auto isUnique() const -> bool;
     auto get() const -> T*;
 
+    auto numberOfRef() const -> int;
+
     template <class Func>
     auto atomically(T func) -> void;
 
@@ -41,7 +43,15 @@ public:
 
     auto operator=(const SharedPtrThreadSafe& other) -> SharedPtrThreadSafe&;
     auto operator=(SharedPtrThreadSafe&& other) -> SharedPtrThreadSafe&;
+
+    auto operator==(const SharedPtrThreadSafe& other) const -> bool;
 };
+
+template<class T>
+auto SharedPtrThreadSafe<T>::operator==(const SharedPtrThreadSafe& other) const -> bool
+{
+    return other._object == _object;
+}
 
 template <class T>
 template <class Func>
@@ -236,4 +246,15 @@ template <class T>
 inline auto SharedPtrThreadSafe<T>::get() const -> T *
 {
     return _object;
+}
+
+template<class T>
+auto SharedPtrThreadSafe<T>::numberOfRef() const -> int
+{
+    if (!_lock)
+        return 1;
+
+    WMutexLocker guard (*_lock);
+    return *_count;
+
 }

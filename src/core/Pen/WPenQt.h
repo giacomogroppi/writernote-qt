@@ -4,6 +4,7 @@
 
 #include "touch/dataTouch/Point.h"
 #include "core/Color/WColor.h"
+#include "touch/dataTouch/datastruct/utils_datastruct.h"
 
 #include <QPen>
 #include <QBrush>
@@ -22,6 +23,7 @@ public:
     double widthF() const;
 
     void setWidthF(double value);
+    void setPressure(pressure_t pressure);
 
     enum WPenStyle {
         DotLine

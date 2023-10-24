@@ -271,7 +271,7 @@ void StrokePre::timerReset(const PointF &point) noexcept
 {
     if(_timerPoint.isSet()){
         // if the point is equal we don't have to stop the timer
-        if(un(WCommonScript::is_near(_timerPoint, point, 1.))){
+        if(WCommonScript::is_near(_timerPoint, point, 1.)){
             return;
         }
 

@@ -20,7 +20,7 @@ int xmlstruct::readFile(FileContainer *fileZip, WByteArray &arr,
     if(clear)
         arr.clear();
 
-    if(un(!size)){
+    if (size == 0) {
         const auto prio = (path.indexOf("audio") != -1) ? log_ui::possible_bug : log_ui::info;
         log_write->write(WString("File %1 has 0 byte").arg(path), prio);
         return OK;
@@ -31,7 +31,7 @@ int xmlstruct::readFile(FileContainer *fileZip, WByteArray &arr,
         return ERROR;
 
     data = WMalloc(size);
-    if (file.read(data, size) < 0)
+    if (file.read(data, size))
         goto free_;
 
     arr.append((const char *)data, size);

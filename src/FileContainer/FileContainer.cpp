@@ -11,7 +11,6 @@ FileContainer::FileContainer(WPath path)
     , _file(_path)
 {
     WFile file (_path);
-    size_t offset = 0;
     int version;
 
     if (!file.open(WFile::ReadOnly)) {
@@ -51,8 +50,6 @@ bool FileContainer::close()
 
 auto FileContainer::load_ver_0(WFile &file, size_t size) noexcept -> Error
 {
-    size_t stack = 0;
-
     const auto [result, versionFileController] = VersionFileController::load(file);
 
     if (result)

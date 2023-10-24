@@ -2,6 +2,7 @@
 #include "touch/dataTouch/page/Page.h"
 #include "touch/dataTouch/stroke/StrokeComplexCommon.h"
 #include "utils/common_error_definition.h"
+#include "touch/TabletUtils.h"
 
 int StrokeCircle::load(WZipReaderSingle &reader)
 {
@@ -55,9 +56,10 @@ void StrokeCircle::draw(WPainter &painter, cbool is_rubber, cint page, WPen &pen
     y = tmp.y();
     x = tmp.x();
 
-    set_press(pen, press, prop, is_rubber, this->getColor(1.));
-    painter.setPen(pen);
+    pen.setColor(getColor(1.0));
+    pen.setPressure(press * (is_rubber ? deltaColorNull : 1.0));
 
+    painter.setPen(pen);
     painter.drawEllipse(PointF(x, y), _data.r * prop, _data.r * prop);
 
     WDebug(debCircle, _data.x << _data.y << _data.r);

@@ -324,12 +324,23 @@ inline void WPainter::setCompositionMode(WPainter::CompositionMode compositionMo
     QPainter::CompositionMode qtCompositionMode;
 
     switch (compositionMode) {
-        case WPainter::CompositionMode_Clear: qtCompositionMode = QPainter::CompositionMode_Clear;
-        case WPainter::CompositionMode_DestinationOver: qtCompositionMode = QPainter::CompositionMode_DestinationOver;
-        case WPainter::CompositionMode_SourceOver: qtCompositionMode = QPainter::CompositionMode_SourceOver;
+        case WPainter::CompositionMode_Clear:
+            qtCompositionMode = QPainter::CompositionMode_Clear;
+            break;
+        case WPainter::CompositionMode_DestinationOver:
+            qtCompositionMode = QPainter::CompositionMode_DestinationOver;
+            break;
+        case WPainter::CompositionMode_SourceOver:
+            qtCompositionMode = QPainter::CompositionMode_SourceOver;
+            break;
+        default:
+            W_ASSERT(0);
     }
 
+    WDebug(true, "Set composition mode to " << qtCompositionMode);
+
     this->_painter->setCompositionMode(qtCompositionMode);
+    W_ASSERT(_painter->compositionMode() == qtCompositionMode);
 }
 
 inline void WPainter::drawLine(int x1, int y1, int x2, int y2)

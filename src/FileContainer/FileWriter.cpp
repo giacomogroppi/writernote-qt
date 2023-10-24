@@ -16,7 +16,7 @@ bool FileWriter::isOk() const
 
 auto FileWriter::write(const void *data, size_t size) -> Error
 {
-    if (_data.capacity() < size)
+    if (static_cast<unsigned long>(_data.capacity()) < size)
         _data.reserve(FileWriter::dataReservePerTime + size);
 
     this->_data.append(static_cast<const char *>(data), size);

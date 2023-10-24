@@ -104,8 +104,8 @@ public:
 
     void changeIdThreadSave(int indexPoint, Stroke &stroke, Page &page);
 
-    nd constexpr PointF adjustPointReverce(const PointF &pointDatastruct) const;
-    nd constexpr PointF adjustPoint(const PointF &pointRealTouch) const;
+    nd constexpr auto adjustPointReverce(const PointF &pointDatastruct) const -> PointF;
+    nd constexpr auto adjustPoint(const PointF &pointRealTouch) const -> PointF;
 
     nd auto isEmptyTouch() const -> bool;
     void reset_touch();
@@ -117,7 +117,6 @@ public:
     void decreaseAlfa(const WVector<int> &pos, int page);
     void removePage(int page);
 
-    [[deprecated ("Use operator []")]]
     nd
     auto at(int page) const -> const Page &;
 
@@ -159,7 +158,6 @@ public:
     auto operator=(DataStruct &&other) noexcept -> DataStruct &;
     auto operator==(const DataStruct &other) const -> bool;
 
-#   define DATASTRUCT_MUST_TRASLATE_PATH BIT(1)
     static void MovePoint(WList<Stroke> &stroke, const PointF &translation, int flag);
     static bool userWrittenSomething(const DataStruct &data1, const DataStruct &data2);
 
@@ -171,6 +169,7 @@ public:
     friend class TestingCore;
 
 protected:
+    auto clearAudio() -> void;
     void controllForRepositioning(PointF &translateTo);
     void increaseZoom(double delta, const WSizeF &size, PointF& res);
     void adjustAll(double width, double height, PointF &res);
@@ -198,7 +197,7 @@ inline void DataStruct::triggerVisibility(cdouble viewSize)
     PointF _init(0, 0);
     PointF _end(0, viewSize - 0.1);
 
-    if(un(!len))
+    if(len == 0)
         return;
 
     _init = this->adjustPoint(_init);
@@ -207,7 +206,7 @@ inline void DataStruct::triggerVisibility(cdouble viewSize)
     from = this->whichPage(_init);
     to = this->whichPage(_end);
 
-    if(un(to < 0 || from < 0)){
+    if (to < 0 || from < 0) {
         from = 0;
         to = len - 1;
     }
@@ -230,40 +229,40 @@ force_inline bool DataStruct::needToCreateNewSheet() const
 {
     cint len = this->lengthPage();
 
-    if(un(len < 2))
+    if (len < 2)
         return true;
 
-    if(at(len - 1).lengthStroke())
+    if (at(len - 1).lengthStroke())
         return true;
-    if(at(len - 2).lengthStroke())
+    if (at(len - 2).lengthStroke())
         return true;
 
     return false;
 }
 
-inline const Page & DataStruct::at(int page) const
+inline auto DataStruct::at(int page) const -> const Page &
 {
     return _page.at(Index(page));
 }
 
-inline Page &DataStruct::at_mod(cint page)
+inline auto DataStruct::at_mod(cint page) -> Page &
 {
     W_ASSERT(page >= 0 and page < this->lengthPage());
     return _page.operator[](page);
 }
 
 // this function is not threadSave
-force_inline __slow WPoint DataStruct::at_draw_page(
+force_inline __slow auto DataStruct::at_draw_page(
         cint indexPoint,
-        const Page &Page) const
+        const Page &Page) const -> WPoint
 {
     return DataStruct::at_draw_page(indexPoint, Page, getPointFirstPage(), _zoom);
 }
 
-force_inline WPoint DataStruct::at_draw_page(
+force_inline auto DataStruct::at_draw_page(
         cint indexPoint,    const Page &Page,
         const PointF &PointFirstPageWithZoom,
-        cdouble zoom)
+        cdouble zoom) -> WPoint
 {
     PointF point;
 
@@ -272,7 +271,7 @@ force_inline WPoint DataStruct::at_draw_page(
     return point.castTo<int>();
 }
 
-force_inline const Page &DataStruct::lastPage() const
+force_inline auto DataStruct::lastPage() const -> const Page &
 {
     return this->_page.last();
 }
@@ -287,13 +286,13 @@ inline void DataStruct::newPage(const n_style style)
     //triggerVisibility(page::getHeight() * lengthPage());
 }
 
-inline RectF DataStruct::get_size_area(const WListFast<WVector<int>> &pos, int base) const
+inline auto DataStruct::get_size_area(const WListFast<WVector<int>> &pos, int base) const -> RectF
 {
     RectF result;
     int i, len;
 
-    if(un(pos.isEmpty()))
-        return result;
+    if (pos.isEmpty())
+        return {};
 
     len = pos.size();
     result = getSizeArea(pos.first(), base);
@@ -325,27 +324,27 @@ inline int DataStruct::getFirstPageVisible() const
      *  we don't want WListFast to copy all pages
      *  when they are shared. */
     int i, len;
-    int find;
+    bool find;
 
     len = this->lengthPage();
-    find = 0;
+    find = false;
 
-    if(un(_pageVisible < 0)){
+    if (_pageVisible < 0) {
         for(i = 0; i < len; i++){
             if(at(i).isVisible()){
                 _pageVisible = i;
-                find = 1;
+                find = true;
                 break;
             }
         }
-    }else{
-        find = 1;
+    } else {
+        find = true;
     }
 
-    if(un(!find)){
-        //log_write->write("Impossibile to find first page visible", log_ui::critic_error);
+    if (find == false) {
+        //log_write->write("Impossible to find first page visible", log_ui::critic_error);
         _pageVisible = 0;
-        for(const auto &page : _page){
+        for (const auto &page : _page) {
             page.setVisible(true);
         }
     }
@@ -371,7 +370,7 @@ inline int DataStruct::get_range_visible() const
     count = 0;
 
     for(; i < len; i++){
-        if(un(!at(i).isVisible()))
+        if(at(i).isVisible() == false)
             break;
 
         count ++;
@@ -397,7 +396,7 @@ force_inline bool DataStruct::isOkTranslate(const PointF &point, cbool isZoom) c
 
 force_inline void DataStruct::triggerNewView(int page, int m_pos_ris, cbool all)
 {
-    at_mod(page).triggerRenderImage(m_pos_ris, all);
+    this->operator[](page).triggerRenderImage(m_pos_ris, all);
 }
 
 /**
@@ -411,7 +410,7 @@ inline int DataStruct::whichPage(const Stroke &stroke) const
     const PointF &point = big.topLeft();
     i = this->whichPage(point);
 
-    if (un(i < 0)) {
+    if (i < 0) {
         const auto &tmp = big.bottomRight();
         i = this->whichPage(tmp);
     }
@@ -422,7 +421,7 @@ inline int DataStruct::whichPage(const Stroke &stroke) const
 
 inline void DataStruct::triggerNewView(const WListFast<int> &Page, int m_pos_ris, bool all)
 {
-    for(const int page: Page){
+    for (const int page: Page) {
         this->triggerNewView(page, m_pos_ris, all);
     }
 }
@@ -481,7 +480,8 @@ inline void DataStruct::append(const WListFast<SharedPtr<Stroke>> &stroke, int m
     this->triggerNewView(trigger, m_pos_ris, false);
 }
 
-inline void DataStruct::removeAt(int indexPage){
+inline void DataStruct::removeAt(int indexPage)
+{
     int index = indexPage, len;
     this->_page.removeAt(Index(indexPage));
 
@@ -490,12 +490,12 @@ inline void DataStruct::removeAt(int indexPage){
     len = lengthPage();
 
     for(; index < len; index ++){
-        at_mod(index).setCount(index + 1);
+        this->operator[](index).setCount(index + 1);
     }
 
 }
 
-inline int DataStruct::appendStroke(SharedPtr<Stroke> &&object)
+inline auto DataStruct::appendStroke(SharedPtr<Stroke> &&object) -> int
 {
     const auto page = adjustStroke(*object);
     this->appendStroke(std::move (object), page);
@@ -503,7 +503,7 @@ inline int DataStruct::appendStroke(SharedPtr<Stroke> &&object)
     return page;
 }
 
-inline int DataStruct::appendStroke(const SharedPtr<Stroke> &stroke)
+inline auto DataStruct::appendStroke(const SharedPtr<Stroke> &stroke) -> int
 {
     int page;
 
@@ -518,18 +518,18 @@ inline int DataStruct::appendStroke(const SharedPtr<Stroke> &stroke)
 
 inline void DataStruct::appendStroke(SharedPtr<Stroke> &&object, int page)
 {
-    at_mod(page).append(std::move (object));
+    this->operator[](page).append(std::move (object));
 }
 
 inline void DataStruct::appendStroke(const SharedPtr<Stroke> &stroke, int page)
 {
-    this->at_mod(page).append(stroke);
+    this->operator[](page).append(stroke);
 }
 
 // TODO: move this function in RectF
-inline RectF DataStruct::joinRect(
+inline auto DataStruct::joinRect(
         const RectF    &first,
-        const RectF    &second)
+        const RectF    &second) -> RectF
 {
     const auto tl1 = first.topLeft();
     const auto tl2 = second.topLeft();
@@ -544,7 +544,7 @@ inline RectF DataStruct::joinRect(
     };
 }
 
-force_inline WRect DataStruct::get_bigger_rect(const WRect &first, const WRect &second)
+force_inline auto DataStruct::get_bigger_rect(const WRect &first, const WRect &second) -> WRect
 {
     RectF firstCasted(first.castTo<double>());
     RectF secondCasted(second.castTo<double>());
@@ -574,19 +574,19 @@ inline int DataStruct::adjustStroke(Stroke &stroke) const
     return page;
 }
 
-constexpr force_inline PointF DataStruct::adjustPoint(const PointF &pointTouchUser) const
+constexpr force_inline auto DataStruct::adjustPoint(const PointF &pointTouchUser) const -> PointF
 {
     return (pointTouchUser / getZoom() - this->getPointFirstPageNoZoom());
 }
 
-constexpr force_inline PointF DataStruct::adjustPointReverce(const PointF &pointDatastruct) const
+constexpr force_inline auto DataStruct::adjustPointReverce(const PointF &pointDatastruct) const -> PointF
 {
     return (pointDatastruct + this->getPointFirstPageNoZoom()) * getZoom();
 }
 
-force_inline bool DataStruct::isEmptyTouch() const
+force_inline auto DataStruct::isEmptyTouch() const -> bool
 {
-    return un(_page.isEmpty());
+    return _page.isEmpty();
 }
 
 force_inline void DataStruct::setVisible(int from, int to)

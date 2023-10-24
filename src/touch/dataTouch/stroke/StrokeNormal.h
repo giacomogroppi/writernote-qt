@@ -175,7 +175,7 @@ inline bool StrokeNormal::needToUpdatePressure() const
 
 inline bool StrokeNormal::constantPressure() const
 {
-    if (un(needToUpdatePressure()))
+    if (needToUpdatePressure())
         this->updateFlagPressure();
 
     rep();
@@ -210,7 +210,7 @@ inline void StrokeNormal::updateFlagPressure() const
 
     W_ASSERT(_pressure.size() == _point.size());
 
-    if (un(len < 3)) {
+    if (len < 3) {
         /**
          * if we have less than 3 points we
          * cannot create a WPainterpath, so
@@ -274,26 +274,29 @@ force_inline void StrokeNormal::draw(
         const PointF pointDraw = Page::at_translation(*data.begin_point, page) * prop;
         const pressure_t pressure = *(data.begin_press);
 
-        if(!data.press_null){
+        if (!data.press_null){
             data.begin_press ++;
         }
 
-        set_press(pen, pressure, _prop, is_rubber, color);
+        pen.setPressure(pressure * _prop);
+        if (is_rubber == false)
+            pen.setColor(color);
+
         painter->setPen(pen);
 
-        if (un(is_rubber)) {
+        if (is_rubber) {
             pen.setWidthF(pen.widthF() * deltaColorNull);
-        } else if (un(isHigh)) {
+        } else if (isHigh) {
             const auto curr = painter->compositionMode();
             painter->setCompositionMode(WPainter::CompositionMode_Clear);
             painter->drawPoint(lastPoint);
             painter->setCompositionMode(curr);
         }
         
-        if (data.index_start == 0 || data.index_start == 1 or false) {
+        if (data.index_start == 0 || data.index_start == 1 or true) {
             painter->drawLine(lastPoint, pointDraw);
         } else {
-            // do the trick
+            // do the trick [for now disable]
             const auto previousPoint2 = Page::at_translation(*(data.begin_point - 2), page) * prop;
             const auto previousPoint1 = Page::at_translation(*(data.begin_point - 1), page) * prop;
             
@@ -331,11 +334,11 @@ force_inline void StrokeNormal::draw(
 }
 
 template<class T>
-inline RectF StrokeNormal::getBiggerPointInStroke(T begin, T end)
+inline auto StrokeNormal::getBiggerPointInStroke(T begin, T end) -> RectF
 {
     RectF biggerData;
 
-    if (un(begin == end)) {
+    if (begin == end) {
         WWarning("Warning: Stroke empty");
         return {0, 0, 0, 0};
     }
@@ -343,7 +346,7 @@ inline RectF StrokeNormal::getBiggerPointInStroke(T begin, T end)
     PointF topLeft      = *begin;
     PointF bottomRight  = *begin;
 
-    for(; begin != end; begin ++){
+    for (; begin != end; begin ++) {
         const PointF &point = *begin;
 
         topLeft.setX(std::min(topLeft.x(), point.x()));

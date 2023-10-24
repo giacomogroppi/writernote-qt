@@ -18,6 +18,10 @@ public:
     Pointer(Pointer&& other) noexcept;
     Pointer(const Pointer& other) noexcept;
 
+#ifdef DEBUGINFO
+    auto numberOfRef() const -> int;
+#endif // DEBUGINFO
+
     /**
      * \brief This method will destroy the object
      * */
@@ -34,8 +38,16 @@ public:
 
     void doAndUnref (auto method);
 
+    auto operator==(const Pointer<T>& other) const -> bool;
+
     explicit operator bool() const;
 };
+
+template <class T>
+auto Pointer<T>::operator==(const Pointer<T> &other) const -> bool
+{
+    return _pointer == other._pointer;
+}
 
 template <class T>
 void Pointer<T>::doAndUnref(auto method)
@@ -135,3 +147,11 @@ inline Pointer<T>::Pointer(const Pointer& other) noexcept
 {
 
 }
+
+#ifdef DEBUGINFO
+template <class T>
+auto Pointer<T>::numberOfRef() const -> int
+{
+    return _pointer.numberOfRef();
+}
+#endif // DEBUGINFO

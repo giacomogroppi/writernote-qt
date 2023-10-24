@@ -13,13 +13,13 @@ public:
     /**
      * \param value It's need to be > 0
      * */
-    constexpr Index (unsigned long value) noexcept;
+    constexpr Index (long value) noexcept;
     static auto constexpr makeInvalid() noexcept -> Index;
 
     nd constexpr auto isValid() const noexcept -> bool;
     nd constexpr auto isInvalid() const noexcept -> bool;
 
-    nd constexpr auto value() const noexcept -> unsigned long;
+    nd constexpr auto value() const noexcept -> long;
 
     constexpr auto operator ++() noexcept -> Index&;
     constexpr auto operator --() noexcept -> Index&;
@@ -36,13 +36,13 @@ public:
     constexpr auto operator!=(const Index& other) const -> bool = default;
 
 private:
-    constexpr operator unsigned long() const;
+    constexpr operator long() const;
 
     template <class T>
     friend class WVector;
 };
 
-inline constexpr auto Index::value() const noexcept -> unsigned long
+inline constexpr auto Index::value() const noexcept -> long
 {
     return static_cast<unsigned long>(_index);
 }
@@ -54,10 +54,10 @@ inline auto constexpr Index::makeInvalid() noexcept -> Index
     return index;
 }
 
-inline constexpr Index::operator unsigned long() const
+inline constexpr Index::operator long() const
 {
     W_ASSERT(isValid());
-    return static_cast<unsigned long>(_index);
+    return _index;
 }
 
 inline auto constexpr Index::isValid() const noexcept -> bool
@@ -70,8 +70,8 @@ inline auto constexpr Index::isInvalid() const noexcept -> bool
     return not isValid();
 }
 
-inline constexpr Index::Index(unsigned long value) noexcept
-        : _index(static_cast<long>(value))
+inline constexpr Index::Index(long value) noexcept
+        : _index(value)
 {
     W_ASSERT(value <= INT64_MAX);
 }

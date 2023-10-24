@@ -88,7 +88,7 @@ auto WPixmap::rect() const -> WRect
     const auto qtTopLeft = qtRect.topLeft();
     const auto qtBottomRight = qtRect.bottomRight();
 
-    WDebug(true, qtTopLeft.x() << qtTopLeft.y() << qtBottomRight.x() << qtBottomRight.y());
+    WDebug(false, qtTopLeft.x() << qtTopLeft.y() << qtBottomRight.x() << qtBottomRight.y());
 
     auto res = WRect {
         qtTopLeft.x(),

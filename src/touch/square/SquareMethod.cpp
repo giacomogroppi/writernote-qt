@@ -204,7 +204,7 @@ bool SquareMethod::find(Document &doc)
         __page = &doc.at(PageCounter);
         create = DataPrivateMuThreadInit(_dataThread, nullptr, _threadCount, __page->lengthStroke(), 0);
 
-        if(un(!__page->isVisible()))
+        if(__page->isVisible() == false)
             break;
 
         if(count > index.size() - 1)
@@ -359,7 +359,7 @@ void SquareMethod::findObjectToDraw(const WListFast<WVector<int>> &index, Docume
     return;
     WDebug(debugSquare, "call");
 
-    if(un(index.isEmpty()))
+    if (index.isEmpty())
         goto img;
 
     // find the first point
@@ -535,7 +535,7 @@ static void square_draw_square(
 void SquareMethod::needReload(WPainter &painter, const Document &doc)
 {
     if constexpr (WCommonScript::debug_enable()){
-        if(un(!painter.isActive())){
+        if (!painter.isActive()) {
             WDebug(true, "Painter not active in Square");
             std::abort();
         }
@@ -545,7 +545,7 @@ void SquareMethod::needReload(WPainter &painter, const Document &doc)
         const auto zoom = doc.getZoom();
         WDebug(debugSquare, "__need_reload = true");
 
-        if(likely(somethingInBox())){
+        if (somethingInBox()){
             const PointF point = doc.getPointFirstPage() + _trans_img * zoom;
             const int len = doc.lengthPage();
             const WSizeF size = createSizeRect(doc, len, DRAW_CREATE_SIZE_RECT_DEF_PRO);

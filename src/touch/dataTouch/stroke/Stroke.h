@@ -208,15 +208,11 @@ protected:
     friend class StrokePre;
 };
 
-void set_press( WPen &pen, pressure_t press, double prop,
-                cbool is_rubber, const WColor &color);
-
 inline Stroke &Stroke::operator=(const Stroke &other)
 {
     W_ASSERT(this->type() == other.type());
-    if (un(this == &other)) {
+    if (this == &other)
         return *this;
-    }
 
     this->_biggerData = other._biggerData;
     this->_metadata = other._metadata;
