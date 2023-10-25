@@ -9,11 +9,12 @@
 
 force_inline void waitTime(int ms)
 {
+    // TODO: use std::this_thread::sleep
 #if defined(WIN32) || defined(WIN64)
     Sleep(uint(ms));
 #else
     struct timespec ts = { ms / 1000, (ms % 1000) * 1000 * 1000 };
-    nanosleep(&ts, NULL);
+    nanosleep(&ts, nullptr);
 #endif
 }
 

@@ -5,7 +5,7 @@
 struct_file * bytearray_tostruct_file(WByteArray &array)
 {
     if(array.size() != sizeof(struct struct_file))
-        return NULL;
+        return nullptr;
 
     struct_file * m_temp;
     m_temp = new struct_file;

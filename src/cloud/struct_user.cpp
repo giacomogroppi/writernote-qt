@@ -34,7 +34,7 @@ struct struct_user * load_recent_user(){
 
     if(!setting.value(KEY_USER_CLOUD_IS_DEFINED, false).toBool()){
         setting.endGroup();
-        return user; /*NULL*/
+        return nullptr;
     }
 
 
@@ -46,7 +46,7 @@ struct struct_user * load_recent_user(){
 
     if(array == (WString)NOT_USER_RECENT){
         setting.endGroup();
-        return NULL;
+        return nullptr;
     }
 
     /*
@@ -59,7 +59,7 @@ struct struct_user * load_recent_user(){
         setting.setValue(KEY_USER_CLOUD_IS_DEFINED, false);
         setting.endGroup();
 
-        return NULL;
+        return nullptr;
     }
 
     setting.endGroup();

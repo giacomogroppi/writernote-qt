@@ -20,10 +20,10 @@ protected:
     void run();
 
 private:
-    const Poppler::Document *doc = NULL;
+    const Poppler::Document *doc = nullptr;
     int index = -1;
 
-    WImage *img = NULL;
+    WImage *img = nullptr;
     uint precision;
 };
 

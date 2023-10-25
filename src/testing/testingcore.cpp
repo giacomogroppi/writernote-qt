@@ -9,7 +9,7 @@
 #if (defined(DEBUG_CORE) || defined(DEBUGINFO)) && defined(CLOUD)
 TestingCore::TestingCore(MainWindow *__parent)
 {
-    srand(time(NULL));
+    srand(time(nullptr));
     parent = __parent;
 }
 

@@ -35,7 +35,7 @@ static void show_log_in(cloud_ui *cloud, bool temp, struct struct_user *user){
 
     cloud->ui->button_pass->setHidden(temp);
 
-    if(user != NULL){
+    if(user != nullptr){
         cloud->ui->edit_mail->setPlainText((WString)user->m_mail.m_mail);
         cloud->ui->edit_pass->setPlainText(PASS_HIDE);
     }

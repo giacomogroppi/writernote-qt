@@ -89,7 +89,7 @@ void updatecheck::managerFinished()
             dialog_critic("We had a problem with internet connection " + reply->errorString() + "\nReinstall the app, or download the ssl libraries.");
 #endif
         delete manager;
-        manager = NULL;
+        manager = nullptr;
         return;
     }
 

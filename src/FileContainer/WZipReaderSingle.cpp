@@ -13,7 +13,7 @@ WZipReaderSingle::WZipReaderSingle():
     offset(0)
 {
 #ifdef DEBUGINFO
-    this->_zip = NULL;
+    this->_zip = nullptr;
     this->offset = 0;
 #endif
 }

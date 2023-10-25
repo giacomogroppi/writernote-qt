@@ -170,11 +170,11 @@ int get_thread_used();
 
 #define START_THREAD(thread, data, count, functionToCall) \
     for(int __i = 0; __i < count; __i++){                                     \
-        pthread_create(&thread[__i], NULL, functionToCall, &data[__i]);     \
+        pthread_create(&thread[__i], nullptr, functionToCall, &data[__i]);     \
     }                                                                   \
 
 
-#define JOIN_THREAD(thread, count) for(int __i = 0; __i < count; __i ++){ pthread_join(thread[__i], NULL); }
+#define JOIN_THREAD(thread, count) for(int __i = 0; __i < count; __i ++){ pthread_join(thread[__i], nullptr); }
 
 force_inline void joinThread(pthread_t *thread, int count)
 {
