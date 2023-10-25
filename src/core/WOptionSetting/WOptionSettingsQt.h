@@ -6,13 +6,14 @@
 #include "core/WVariant.h"
 #include "core/WMap.h"
 #include "core/String/WString.h"
+#include "core/pointer/UniquePtr.h"
 
 #include <QSettings>
 
 class WOptionSettings final: public WOptionSettingsDefault
 {
 private:
-    QSettings *settings;
+    UniquePtr<QSettings> settings;
 public:
     WOptionSettings() = default;
     void begin();

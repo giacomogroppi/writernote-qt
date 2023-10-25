@@ -6,8 +6,8 @@
 
 void WOptionSettings::begin()
 {
-    this->settings = new QSettings(ORGANIZATIONAME, APPLICATION_NAME);
-    this->settings->beginGroup("deafult");
+    this->settings = UniquePtr<QSettings>(new QSettings(ORGANIZATIONAME, APPLICATION_NAME));
+    this->settings->beginGroup("default");
 }
 
 void WOptionSettings::save()
