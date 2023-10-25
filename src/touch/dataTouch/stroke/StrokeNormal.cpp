@@ -104,15 +104,20 @@ void StrokeNormal::append(const PointF &point, pressure_t pressure)
     this->modify();
 }
 
-void StrokeNormal::draw(WPainter &painter, cbool is_rubber, cint page, WPen &pen, cdouble prop) const
+void StrokeNormal::draw(WPainter &painter, bool is_rubber, int page, double prop, const WColor& color) const
 {
+    WPen pen;
     const auto constPressure = constantPressure();
 
-    auto data = drawData<WListFast<PointF>::const_iterator, WListFast<pressure_t>::const_iterator> (
-         this->_point.constBegin(), this->_point.constEnd(), this->_pressure.constBegin(), constPressure, 0
-    );
+    auto data = drawData(_point.begin(), _point.end(),
+                         _pressure.begin(), constPressure, 0);
 
-    StrokeNormal::draw(painter, is_rubber, page, pen, prop, this->getColor(1.0), data);
+    StrokeNormal::draw(painter, is_rubber, page, pen, prop, color, data);
+}
+
+void StrokeNormal::draw(WPainter &painter, bool is_rubber, int page, cdouble prop) const
+{
+    return this->draw(painter, is_rubber, page, prop, getColor(1.0));
 }
 
 int StrokeNormal::is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const

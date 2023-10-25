@@ -37,8 +37,7 @@ auto StrokeCircleGenerator::make(const WListFast<PointF>& points,
     unused(area);
 
     res->_data = {
-        .x = tmp._x,
-        .y = tmp._y,
+        .position = { tmp._x, tmp._y },
         .r = tmp._r,
         .press = pressures.first()
     };

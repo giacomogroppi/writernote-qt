@@ -109,7 +109,7 @@ static int xmlstruct_create_thread(WZip& zip, int lenPage, size_t *seek, DataStr
     for (i = 0; i < lenPage; i ++) {
         thread_data[i] = {
                 ._reader            = zipReader.get_reader(i),
-                ._page              = &data->at_mod(i),
+                ._page              = &data->operator[](i),
                 ._versionController = VersionFileController()
         };
 

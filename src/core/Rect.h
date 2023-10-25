@@ -17,7 +17,7 @@ public:
     constexpr RectTemplate(T xTopLeft, T yTopLeft, T width, T height);
     constexpr RectTemplate(const PointTemplate<T>&point, const WSizeTemplate<T> &size);
 
-    constexpr RectTemplate<T> addY(T y) const;
+    constexpr auto addY(T y) const -> RectTemplate<T>;
 
     constexpr T top() const;
     constexpr T bottom() const;
@@ -54,10 +54,10 @@ public:
     auto x() const -> T;
 
     template <typename Z>
-    constexpr RectTemplate<Z> castTo() const;
+    constexpr auto castTo() const -> RectTemplate<Z>;
 
-    bool intersects(const RectTemplate<T> &other) const;
-    RectTemplate<T> intersected(const RectTemplate<T> &other) const;
+    auto intersects(const RectTemplate<T> &other) const -> bool;
+    auto intersected(const RectTemplate<T> &other) const -> RectTemplate<T>;
 
     constexpr auto contains(const PointTemplate<T> &point, T precision = T(0)) const -> bool;
     constexpr auto containsAny(const std::initializer_list<PointTemplate<T>>& points, T precision = T(0)) const -> bool;
@@ -67,15 +67,15 @@ public:
 
     constexpr auto operator=(const RectTemplate<T> &other) -> RectTemplate<T>&;
     constexpr auto operator=(RectTemplate<T> &&other) -> RectTemplate<T>& = default;
-    constexpr RectTemplate<T> operator*(T val) const;
-    constexpr RectTemplate<T> operator/(T val) const;
-    constexpr RectTemplate<T> operator+(const PointTemplate<T> &other) const;
+    constexpr auto operator*(T val) const -> RectTemplate<T>;
+    constexpr auto operator/(T val) const -> RectTemplate<T>;
+    constexpr auto operator+(const PointTemplate<T> &other) const -> RectTemplate<T>;
 
-    constexpr RectTemplate<T> operator*=(double d);
-    constexpr RectTemplate<T> operator/=(double d);
-    constexpr RectTemplate<T> operator+=(const RectTemplate<T> &other);
+    constexpr auto operator*=(double d) -> RectTemplate<T>;
+    constexpr auto operator/=(double d) -> RectTemplate<T>;
+    constexpr auto operator+=(const RectTemplate<T> &other) -> RectTemplate<T>;
 
-    constexpr bool operator==(const RectTemplate &other) const;
+    constexpr auto operator==(const RectTemplate &other) const -> bool;
 
     // TODO: move outside of class definition
     static
@@ -196,7 +196,7 @@ inline constexpr RectTemplate<T> RectTemplate<T>::operator*=(double d)
 }
 
 template<typename T>
-inline constexpr RectTemplate<T> RectTemplate<T>::operator+(const PointTemplate<T> &other) const
+inline constexpr auto RectTemplate<T>::operator+(const PointTemplate<T> &other) const -> RectTemplate<T>
 {
     return {
         _topLeft + other,
@@ -205,7 +205,7 @@ inline constexpr RectTemplate<T> RectTemplate<T>::operator+(const PointTemplate<
 }
 
 template<typename T>
-inline constexpr RectTemplate<T> RectTemplate<T>::operator/(T val) const
+inline constexpr auto RectTemplate<T>::operator/(T val) const -> RectTemplate<T>
 {
     return {
         _topLeft / val,
@@ -214,7 +214,7 @@ inline constexpr RectTemplate<T> RectTemplate<T>::operator/(T val) const
 }
 
 template<typename T>
-inline constexpr RectTemplate<T> RectTemplate<T>::operator*(T val) const
+inline constexpr auto RectTemplate<T>::operator*(T val) const -> RectTemplate<T>
 {
     return {
         _topLeft * val,
@@ -223,7 +223,7 @@ inline constexpr RectTemplate<T> RectTemplate<T>::operator*(T val) const
 }
 
 template<typename T>
-inline constexpr RectTemplate<T> &RectTemplate<T>::operator=(const RectTemplate<T> &other)
+inline constexpr auto RectTemplate<T>::operator=(const RectTemplate<T> &other) -> RectTemplate<T>&
 {
     this->_topLeft = other._topLeft;
     this->_bottomRight = other._bottomRight;
@@ -232,7 +232,7 @@ inline constexpr RectTemplate<T> &RectTemplate<T>::operator=(const RectTemplate<
 }
 
 template<typename T>
-inline constexpr bool RectTemplate<T>::operator==(const RectTemplate &other) const
+inline constexpr auto RectTemplate<T>::operator==(const RectTemplate &other) const -> bool
 {
     if (this == &other)
         return true;
@@ -242,56 +242,56 @@ inline constexpr bool RectTemplate<T>::operator==(const RectTemplate &other) con
 }
 
 template<typename T>
-inline constexpr T RectTemplate<T>::left() const
+inline constexpr auto RectTemplate<T>::left() const -> T
 {
     return _topLeft.x();
 }
 
 template<typename T>
-inline constexpr T RectTemplate<T>::right() const
+inline constexpr auto RectTemplate<T>::right() const -> T
 {
     return _bottomRight.x();
 }
 
 template<typename T>
-inline constexpr T RectTemplate<T>::bottom() const
+inline constexpr auto RectTemplate<T>::bottom() const -> T
 {
     return _bottomRight.y();
 }
 
 template<typename T>
-inline constexpr T RectTemplate<T>::top() const
+inline constexpr auto RectTemplate<T>::top() const -> T
 {
     return _topLeft.y();
 }
 
 template<typename T>
-inline constexpr bool RectTemplate<T>::isNull() const
+constexpr auto RectTemplate<T>::isNull() const -> bool
 {
     return top() == bottom() || left() == right();
 }
 
 template<typename T>
-inline T RectTemplate<T>::x() const
+auto RectTemplate<T>::x() const -> T
 {
     return _topLeft.x();
 }
 
 template<typename T>
-inline T RectTemplate<T>::y() const
+auto RectTemplate<T>::y() const -> T
 {
     return _topLeft.y();
 }
 
 template<typename T>
-inline RectTemplate<T>& RectTemplate<T>::setBottomRight(const PointTemplate<T> &bottomRight)
+auto RectTemplate<T>::setBottomRight(const PointTemplate<T> &bottomRight) -> RectTemplate<T>&
 {
     _bottomRight = bottomRight;
     return *this;
 }
 
 template<typename T>
-inline RectTemplate<T>& RectTemplate<T>::setTopRight(const PointTemplate<T> &topRight)
+auto RectTemplate<T>::setTopRight(const PointTemplate<T> &topRight) -> RectTemplate<T>&
 {
     _topLeft.setY(topRight.y());
     _bottomRight.setX(topRight.x());
@@ -299,7 +299,7 @@ inline RectTemplate<T>& RectTemplate<T>::setTopRight(const PointTemplate<T> &top
 }
 
 template<typename T>
-inline RectTemplate<T>& RectTemplate<T>::setTopLeft(const PointTemplate<T> &topLeft)
+auto RectTemplate<T>::setTopLeft(const PointTemplate<T> &topLeft) -> RectTemplate<T>&
 {
     _topLeft = topLeft;
     return *this;
@@ -349,7 +349,7 @@ inline constexpr RectTemplate<T> &RectTemplate<T>::right(T amount)
 }
 
 template<typename T>
-inline constexpr RectTemplate<T> &RectTemplate<T>::bottom(T amount)
+inline constexpr auto RectTemplate<T>::bottom(T amount) -> RectTemplate<T>&
 {
     return {
         _topLeft.bottom(amount),
@@ -358,7 +358,7 @@ inline constexpr RectTemplate<T> &RectTemplate<T>::bottom(T amount)
 }
 
 template<typename T>
-inline constexpr RectTemplate<T> &RectTemplate<T>::top(T amount)
+inline constexpr auto RectTemplate<T>::top(T amount) -> RectTemplate<T>&
 {
     return {
         _topLeft.top(amount),
@@ -374,7 +374,8 @@ inline void RectTemplate<T>::translate(const T &x, const T &y)
 }
 
 template<typename T>
-inline constexpr RectTemplate<T> &RectTemplate<T>::left(T amount) {
+inline constexpr auto RectTemplate<T>::left(T amount) -> RectTemplate<T> &
+{
     return {
         _topLeft.left(amount),
         _bottomRight.left(amount)

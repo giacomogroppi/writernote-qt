@@ -34,26 +34,33 @@ int StrokeRect::type() const
     return Stroke::COMPLEX_RECT;
 }
 
-void StrokeRect::draw(WPainter &painter, cbool is_rubber, cint page, WPen &pen, cdouble prop) const
+void StrokeRect::draw(WPainter &painter, bool is_rubber, int page, double prop, const WColor &color) const
 {
-    painter.setPen(pen);
+    WPen pen;
 
     pen.setWidthF(_data.press * prop * (is_rubber ? deltaColorNull : 1.0));
-    pen.setColor(getColor(1.0));
+    pen.setColor(color);
+
+    painter.setPen(pen);
 
     const auto _topLeft     = Page::at_translation(
-                PointF(
+            PointF(
                     _data.rect.topLeft()),
-                    page
-                ) * prop;
+            page
+    ) * prop;
 
     const auto _bottomRight = Page::at_translation(
-                PointF(
+            PointF(
                     _data.rect.bottomRight()),
-                    page
-                ) * prop;
+            page
+    ) * prop;
 
     painter.drawRect(RectF(_topLeft, _bottomRight));
+}
+
+void StrokeRect::draw(WPainter &painter, bool is_rubber, int page, double prop) const
+{
+    return draw(painter, is_rubber, page, prop, getColor(1.0));
 }
 
 int StrokeRect::is_inside(const WLine &line, int from, int precision, cbool needToDeletePoint) const

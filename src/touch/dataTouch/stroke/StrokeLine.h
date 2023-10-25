@@ -20,17 +20,18 @@ private:
 public:
     StrokeLine();
 
-    void draw(WPainter &painter, cbool is_rubber, cint page, WPen &pen, cdouble prop) const;
-    int is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const;
-    bool is_inside(const RectF &rect, double precision) const;
+    void draw(WPainter &painter, bool is_rubber, int page, double prop, const WColor& color) const override;
+    void draw(WPainter &painter, bool is_rubber, int page, cdouble prop) const override;
+    int is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const override;
+    bool is_inside(const RectF &rect, double precision) const override;
 
 #   define stroke_append_default (-1.)
-    void append(const PointF &point, pressure_t pressure);
-    void append (WListFast<PointF> &&points, WListFast<pressure_t> &&pressures) final;
-    size_t createControl() const final;
+    void append(const PointF &point, pressure_t pressure) override;
+    void append (WListFast<PointF> &&points, WListFast<pressure_t> &&pressures) final override;
+    size_t createControl() const final override;
 
-    RectF getBiggerPointInStroke() const;
-    bool isInside(const RectF &rect) const;
+    RectF getBiggerPointInStroke() const override;
+    bool isInside(const RectF &rect) const override;
 
     int save(WritableAbstract &file) const final;
 

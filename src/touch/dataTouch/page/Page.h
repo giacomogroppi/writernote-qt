@@ -75,9 +75,14 @@ private:
 
     void drawNewPage(n_style style) noexcept;
     
-    void drawEngine(WPainter &painter, WListFast<SharedPtr<Stroke>> &List, int m_pos_ris, bool use_multi_thread) noexcept;
+    void drawEngine(WPainter &painter, WListFast<SharedPtr<Stroke>> &strokes, int m_pos_ris, bool use_multi_thread) noexcept;
     void draw(WPainter &painter, int m_pos_ris, bool all) noexcept;
-    void drawStroke(WPainter &painter, const Stroke &stroke, WPen &pen, const WColor &color) const noexcept;
+    void drawStroke(WPainter &painter, const Stroke& stroke, const WColor &color) const noexcept;
+
+    /**
+     * \brief This method draw the stroke pass as parameter with this color.
+     * */
+    void drawStroke(WPainter &painter, const Stroke& stroke) const noexcept;
 
     void mergeList() noexcept;
 
@@ -87,10 +92,10 @@ private:
     void decreaseAlfa(const WVector<int> &pos, WPainter *painter, int decrease);
 
     static auto at_translation(const PointF &point, cint page) -> PointF;
-    static auto get_size_area(const WListFast<SharedPtr<Stroke>> & item, int from, int to) -> RectF;
+    static auto get_size_area(const WListFast<SharedPtr<Stroke>> &strokes, int from, int to) -> RectF;
 
 public:
-    const WPixmap &getImg() const;
+    auto getImg() const -> const WPixmap&;
 
     Page ();
     Page (Page &&other) noexcept;
@@ -515,11 +520,10 @@ inline Page &Page::operator=(const Page &other) noexcept
 
 force_inline void Page::drawForceColorStroke(
         const Stroke    &stroke,
-        cint            m_pos_ris,
+        int             m_pos_ris,
         const WColor    &color,
         WPainter        *painter)
 {
-    WPen pen;
     const auto needDelete = bool (painter == nullptr);
 
     if (needDelete) {
@@ -532,7 +536,7 @@ force_inline void Page::drawForceColorStroke(
             std::abort();
     }
 
-    this->drawStroke(*painter, stroke, pen, color);
+    this->drawStroke(*painter, stroke, color);
 
     W_ASSERT(painter->isActive());
 

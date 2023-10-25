@@ -111,7 +111,14 @@ public:
             COMPLEX_LINE = 3
     };
 
-    virtual void draw(WPainter &painter, cbool is_rubber, cint page, WPen &pen, cdouble prop) const = 0;
+    virtual void draw(WPainter &painter, bool is_rubber, int page, double prop, const WColor& color) const = 0;
+
+    /**
+     * \param painter The painter to use for draw. It needs to be active and it's guarantee to be active at
+     *  the end of this method.
+     * \param page The page at which the stroke belongs
+     * */
+    virtual void draw(WPainter &painter, bool is_rubber, int page, double prop) const = 0;
     
     /**
      * \return -1 in case the stroke is not touched by the line

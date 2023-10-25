@@ -6,14 +6,14 @@
 class StrokeCircle final: public Stroke
 {
 private:
-    struct StrokeCircleData{
-        double x, y, r;
+    struct StrokeCircleData {
+        PointF position;
+        double r;
         pressure_t press;
 
         bool operator==(const StrokeCircleData &other) const {
             return  this->press == other.press and
-                    this->x == other.x and
-                    this->y == other.y and
+                    this->position == other.position and
                     this->r == other.r;
         }
     } _data;
@@ -28,27 +28,29 @@ private:
 
     static constexpr bool debugCircle = false;
 public:
-    void draw(WPainter &painter, cbool is_rubber, cint page, WPen &pen, cdouble prop) const;
-    int is_inside(const WLine &line, int from, int precision, cbool needToDeletePoint) const;
-    bool is_inside(const RectF &rect, double precision) const;
+    void draw(WPainter &painter, bool is_rubber, int page, double fakeProp, const WColor& color) const override;
+    void draw(WPainter &painter, bool is_rubber, int page, cdouble prop) const override;
 
-    void append(const PointF &point, pressure_t pressure);
+    int is_inside(const WLine &line, int from, int precision, cbool needToDeletePoint) const override;
+    bool is_inside(const RectF &rect, double precision) const override;
+
+    void append(const PointF &point, pressure_t pressure) override;
     void append (WListFast<PointF> &&points, WListFast<pressure_t> &&pressures) final;
-    virtual size_t createControl() const;
+    virtual size_t createControl() const override;
 
-    RectF getBiggerPointInStroke() const;
+    RectF getBiggerPointInStroke() const override;
     bool isInside(const RectF &rect) const final;
     int save(WritableAbstract &file) const final;
 
-    size_t getSizeInMemory() const;
+    size_t getSizeInMemory() const override;
     size_t getSizeInFile() const final;
 
-    void decreasePrecision();
+    void decreasePrecision() override;
 
-    void adjust(double zoom);
-    std::unique_ptr<Stroke> clone() const;
+    void adjust(double zoom) override;
+    std::unique_ptr<Stroke> clone() const override;
 
-    int how_much_decrese() const;
+    int how_much_decrese() const override;
 
     std::unique_ptr<Stroke> makeNormal() const final;
 

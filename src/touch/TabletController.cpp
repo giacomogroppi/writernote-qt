@@ -352,4 +352,6 @@ auto TabletController::closeCurrentFile() -> int
 
     W_EMIT_1(onNeedRefresh, UpdateEvent::makeAll());
     W_EMIT_1(onNumberOfPageChanged, 0);
+
+    return result;
 }

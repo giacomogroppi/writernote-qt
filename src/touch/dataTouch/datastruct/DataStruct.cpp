@@ -42,16 +42,11 @@ void DataStruct::increaseZoom(const double delta, const WSizeF &size, PointF &re
 
 void DataStruct::drawIfInside(const RectF &area)
 {
-    int i = this->getFirstPageVisible();
+    const auto startPage = whichPage(area.top());
+    const auto bottomPage = whichPage(area.bottom());
 
-    for(; i >= 0; i--){
-        Page *page = &at_mod(i);
-
-        if(!page->isVisible())
-            break;
-
-        page->drawIfInside(-1, area);
-    }
+    for (auto b = _page.begin() + startPage; b != _page.end() + bottomPage; b++)
+        b->drawIfInside(-1, area);
 }
 
 DataStruct::DataStruct()
@@ -63,7 +58,7 @@ DataStruct::DataStruct()
 
 void DataStruct::triggerIfNone(int m_pos_ris)
 {
-    for (auto &page : _page) {
+    for (auto &page : *this) {
         if(page._imgDraw.isNull())
             page.triggerRenderImage(m_pos_ris, true);
     }
@@ -209,52 +204,37 @@ void DataStruct::movePoint(
 }
 
 void DataStruct::removePointIndex(
-        WVector<int>    &pos,
-        cint            __page,
-        cbool           __isOrder)
+        WVector<int>    &positions,
+        cint            page,
+        cbool           isOrder)
 {
-    Page *page = &at_mod(__page);
-    int i = pos.size() - 1;
+    if (not isOrder)
+        WAbstractList::sort(positions.begin(), positions.end());
 
-    if (!__isOrder)
-        WAbstractList::sort(pos.begin(), pos.end());
-
-    W_ASSERT(WAbstractList::isSorted(pos));
-
-    for(; i >= 0; i --){
-        page->removeAt(pos.at(i));
-    }
+    this->operator[](page).removeAt(positions);
 }
 
 void DataStruct::removePointIndex(
         WListFast<WVector<int> >    &pos,
         int base,
-        bool __isOrder)
+        bool isOrder)
 {
     int i, lenList;
     lenList = pos.size();
 
     for(i = 0; i < lenList; i++){
-        removePointIndex(pos.operator[](i), base + i, __isOrder);
+        removePointIndex(pos.operator[](i), base + i, isOrder);
     }
-
 }
 
-void DataStruct::removePage(const int pageIndex)
+void DataStruct::removePage(int pageIndex)
 {
-    int i, len;
-    len = this->lengthPage();
-
-    W_ASSERT(pageIndex >= 0 and pageIndex < len);
+    W_ASSERT(pageIndex >= 0 and pageIndex < lengthPage());
 
     this->_page.removeAt(pageIndex);
 
-    len --;
-
-    for(i = pageIndex; i < len; i++){
-        auto &page = at_mod(i);
-        page.setCount(i + 1);
-    }
+    for(auto i = pageIndex; i < lengthPage(); i++)
+        this->operator[](i).setCount(i + 1);
 
     this->_pageVisible = -1;
 }
@@ -280,7 +260,7 @@ void DataStruct::moveToPage(int newPage)
 
 int DataStruct::getLastPageVisible() const
 {
-    int i = lengthPage();
+    auto i = lengthPage();
 
     for(i --; i >= 0; i--){
         if(at(i).isVisible()){
@@ -295,14 +275,10 @@ int DataStruct::getLastPageVisible() const
 
 void DataStruct::insertPage(const Page &Page, int index)
 {
-    int len;
-
     this->_page.insert(index, Page);
 
-    len = this->lengthPage();
-
-    for(index ++; index < len; index ++){
-        this->at_mod(index).setCount(index + 1);
+    for (index ++; index < lengthPage(); index ++) {
+        this->operator[](index).setCount(index + 1);
     }
 }
 

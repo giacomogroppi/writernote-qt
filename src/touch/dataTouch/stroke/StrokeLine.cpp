@@ -13,13 +13,12 @@ StrokeLine::StrokeLine()
 {
 }
 
-void StrokeLine::draw(WPainter &painter,
-                      cbool is_rubber,
-                      cint page,
-                      WPen &pen,
-                      cdouble prop) const
+void StrokeLine::draw(WPainter &painter, bool is_rubber, int page, double prop, const WColor &color) const
 {
+    WPen pen;
+
     pen.setWidthF(_data.press * (is_rubber ? deltaColorNull : 1.0) * prop);
+    pen.setColor(color);
 
     painter.setPen(pen);
 
@@ -28,6 +27,14 @@ void StrokeLine::draw(WPainter &painter,
 
     painter.setPen(pen);
     painter.drawLine(_topLeft, _bottomRight);
+}
+
+void StrokeLine::draw(WPainter &painter,
+                      bool is_rubber,
+                      int page,
+                      double prop) const
+{
+    return this->draw(painter, is_rubber, page, prop, getColor(1.0));
 }
 
 int StrokeLine::is_inside(const WLine &line, int from, int precision, cbool needToDeletePoint) const

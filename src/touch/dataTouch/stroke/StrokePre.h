@@ -72,7 +72,7 @@ public:
     void reset();
     void reset_img();
 
-    void draw(WPainter &painter, WPen &pen, double prop, const PointF &pointFirstPage);
+    void draw(WPainter &painter, double prop, const PointF &pointFirstPage);
     void append(const PointF &point, const pressure_t &press, double prop);
     [[nodiscard]] WColor getColor(double division = 1.) const;
 
@@ -129,7 +129,7 @@ inline auto StrokePre::get_last_point() const -> StrokePre::List<PointF>::const_
     return _last_draw_point;
 }
 
-force_inline void StrokePre::draw(WPainter &painter, WPen &pen, double prop, const PointF& pointFirstPage)
+force_inline void StrokePre::draw(WPainter &painter, double prop, const PointF& pointFirstPage)
 {
     WDebug(StrokePreDebug, "Pointer" << this);
 
@@ -160,6 +160,6 @@ force_inline void StrokePre::draw(WPainter &painter, WPen &pen, double prop, con
         //painter.drawPixmap(target, _img, source);
         painter.drawPixmap(RectF(0, 0, Page::getWidth(), Page::getHeight()).castTo<double>(), _img, _img.rect().castTo<double>());
     } else {
-        _stroke->draw(painter, false, 0, pen, prop);
+        _stroke->draw(painter, false, 0, prop);
     }
 }

@@ -19,9 +19,9 @@ double StrokeCircle::distanceFromCenter(const PointF &point) const
 {
     using namespace WCommonScript;
     return std::sqrt(
-        Power(_data.x - point.x(), 2) +
-        Power(_data.y - point.y(), 2)
-                );
+        Power(_data.position.x() - point.x(), 2) +
+        Power(_data.position.y() - point.y(), 2)
+    );
 }
 
 int StrokeCircle::isInternal(double distance, double precision) const
@@ -37,32 +37,30 @@ bool StrokeCircle::oneSide(double inside, double outside, double prec) const
             not isInternal(outside, prec);
 }
 
-void StrokeCircle::draw(WPainter &painter, cbool is_rubber, cint page, WPen &pen, cdouble prop_) const
+void StrokeCircle::draw(WPainter &painter, bool is_rubber, int page, double fakeProp, const WColor& color) const
 {
+    WPen pen;
     constexpr bool not_used debCircle = false;
-    PointF point;
-    PointF tmp;
     const auto press = _data.press;
-    double y, x;
-    cdouble prop = prop_ == PROP_RESOLUTION ? prop_ : 1.;
+    const double prop = fakeProp == PROP_RESOLUTION ? fakeProp : 1.;
 
-    point = PointF(_data.x, _data.y);
-
-    point = Page::at_translation(point, page);
-    tmp = point * prop;
+    const auto point = Page::at_translation(_data.position, page);
+    const auto tmp = point * prop;
 
     WDebug(debCircle, "prop: " << prop);
 
-    y = tmp.y();
-    x = tmp.x();
-
-    pen.setColor(getColor(1.0));
+    pen.setColor(color);
     pen.setPressure(press * (is_rubber ? deltaColorNull : 1.0));
 
     painter.setPen(pen);
-    painter.drawEllipse(PointF(x, y), _data.r * prop, _data.r * prop);
+    painter.drawEllipse(tmp, _data.r * prop, _data.r * prop);
 
-    WDebug(debCircle, _data.x << _data.y << _data.r);
+    WDebug(debCircle, tmp << _data.r);
+}
+
+void StrokeCircle::draw(WPainter &painter, bool is_rubber, int page, double prop_) const
+{
+    return draw(painter, is_rubber, page, prop_, getColor(1.0));
 }
 
 int StrokeCircle::is_inside(const WLine &line, int from, int precision, cbool needToDeletePoint) const
@@ -71,9 +69,9 @@ int StrokeCircle::is_inside(const WLine &line, int from, int precision, cbool ne
 
     constexpr bool not_used debug = true;
 
-    W_ASSERT(_data.x >= 0.);
+    W_ASSERT(_data.position.x() >= 0.);
+    W_ASSERT(_data.position.y() >= 0.);
     W_ASSERT(_data.r >= 0.);
-    W_ASSERT(_data.y >= 0.);
     W_ASSERT(_data.press >= 0.);
 
     line.get_point(tl, br);
@@ -106,7 +104,7 @@ bool StrokeCircle::is_inside(const RectF &area, double precision) const
     W_ASSERT(area.topLeft().x() <= area.bottomRight().x());
     W_ASSERT(area.topLeft().y() <= area.bottomRight().y());
 
-    if(area.contains(PointF(_data.x, _data.y)))
+    if(area.contains(_data.position))
         return true;
 
     const auto dist1 = distanceFromCenter(area.topLeft());
@@ -125,14 +123,13 @@ bool StrokeCircle::is_inside(const RectF &area, double precision) const
 void StrokeCircle::append(const PointF &point, pressure_t pressure)
 {
     (void)(pressure);
-    _data.r = WCommonScript::distance(PointF(_data.x, _data.y), point);
+    _data.r = WCommonScript::distance(_data.position, point);
 }
 
 void StrokeCircle::adjust(double zoom)
 {
     _data.r /= zoom;
-    _data.x /= zoom;
-    _data.y /= zoom;
+    _data.position /= zoom;
 }
 
 std::unique_ptr<Stroke> StrokeCircle::clone() const
@@ -168,8 +165,8 @@ std::unique_ptr<Stroke> StrokeCircle::makeNormal() const
     };
 
     press = _data.press;
-    from =  _data.y - WCommonScript::Power(_data.r, 1);
-    to =    _data.y + WCommonScript::Power(_data.r, 1);
+    from =  _data.position.y() - WCommonScript::Power(_data.r, 1);
+    to =    _data.position.y() + WCommonScript::Power(_data.r, 1);
 
     _pointLeft.reserve(to - from);
     _pointRigth.reserve(to - from);
@@ -178,17 +175,17 @@ std::unique_ptr<Stroke> StrokeCircle::makeNormal() const
     W_ASSERT(from <= to);
 
     for(; from <= to;){
-        const auto _res = WCommonScript::Power(double(from) - _data.y, 2);   // = y^2
+        const auto _res = WCommonScript::Power(double(from) - _data.position.y(), 2);   // = y^2
         const double res1 = WCommonScript::Power(_data.r, 2) - _res;         // = x^2
 
         W_ASSERT(res1 >= 0.);
 
         const double res2 = std::sqrt(res1);                        // = mod(x)
 
-        tmp = PointF(_data.x + res2, from);                   // = x + radius
+        tmp = PointF(_data.position.x() + res2, from);                   // = x + radius
         _pointLeft.append(tmp);
 
-        tmp.rx() = _data.x - res2;                               // = x - radius
+        tmp.rx() = _data.position.x() - res2;                               // = x - radius
         _pointRigth.insert(0, tmp);
 
         from += 1.;
@@ -207,8 +204,7 @@ bool StrokeCircle::isEmpty() const
 
 void StrokeCircle::scale(const PointF &offset)
 {
-    this->_data.x += offset.x();
-    this->_data.y += offset.y();
+    this->_data.position += offset;
 }
 
 bool StrokeCircle::operator==(const Stroke &other) const
@@ -240,8 +236,8 @@ int StrokeCircle::type() const
 
 RectF StrokeCircle::getBiggerPointInStroke() const
 {
-    const auto topLeft = PointF(_data.x - _data.r, _data.y - _data.r);
-    const auto bottomRight = PointF(_data.x + _data.r, _data.y + _data.r);
+    const auto topLeft = _data.position - PointF { _data.r, _data.r };
+    const auto bottomRight = _data.position - PointF { _data.r, _data.r };
     return RectF(topLeft, bottomRight);
 }
 
@@ -261,16 +257,12 @@ int StrokeCircle::save(WritableAbstract &writer) const
 
     if (auto err = writer.write(this->_data.r))
         return ERROR;
-    if (auto err = writer.write(this->_data.y))
-        return ERROR;
-    if (auto err = writer.write(this->_data.x))
-        return ERROR;
+    if (auto err = PointF::write(writer, _data.position))
+        return err;
     if (auto err = pressure_t::write(writer, this->_data.press))
         return ERROR;
 
     static_assert_type(_data.r, double);
-    static_assert_type(_data.x, double);
-    static_assert_type(_data.y, double);
 
     return OK;
 }
@@ -308,11 +300,12 @@ auto StrokeCircle::loadPtr(const VersionFileController &versionController,
     if (auto err = readable.read(d->_data.r))
         return {err, nullptr};
 
-    if (auto err = readable.read(d->_data.y))
-        return {err, nullptr};
-
-    if (auto err = readable.read(d->_data.x))
-        return {err, nullptr};
+    {
+        const auto [result, data] = PointF::load(versionController, readable);
+        if (result)
+            return {result, {}};
+        d->_data.position = std::move(data);
+    }
 
     {
         const auto [result, data] = pressure_t::load(versionController, readable);

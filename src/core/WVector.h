@@ -167,7 +167,7 @@ public:
         AbstractIterator(const AbstractIterator& other) noexcept = default;
         AbstractIterator(AbstractIterator&& other) noexcept = default;
 
-        auto operator->() const -> T* { W_ASSERT(index >= 0 and index < max); return array[index]; };
+        auto operator->() const -> T* { W_ASSERT(index >= 0 and index < max); return &array[index]; };
         auto operator*()  const -> T& { W_ASSERT(index >= 0 and index < max); return array[index]; };
 
         auto operator++() -> AbstractIterator & { index ++; return *this; }

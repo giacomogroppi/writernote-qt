@@ -13,7 +13,7 @@ private:
     /**
      * Return true if the subimage Rect (from, to) is not null
      * */
-    static bool is_image_not_null(const Page *page,
+    static bool is_image_not_null(const Page &page,
                            const PointF &from, const PointF &to, int delta);
 
     int _base;

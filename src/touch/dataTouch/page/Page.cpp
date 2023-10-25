@@ -219,10 +219,14 @@ void Page::append(const WList<SharedPtr<Stroke>> &stroke)
     }
 }
 
+void Page::drawStroke(WPainter &painter, const Stroke& stroke) const noexcept
+{
+    stroke.draw(painter, false, _count - 1, PROP_RESOLUTION);
+}
+
 void Page::drawStroke(
         WPainter        &painter,
         const Stroke    &stroke,
-        WPen            &pen,
         const WColor    &color) const noexcept
 {
     const auto isRubber = (color == COLOR_NULL);
@@ -232,21 +236,15 @@ void Page::drawStroke(
     constexpr not_used bool debColor = false;
     const int page = _count - 1;
 
-    pen.setColor(color);
-
     W_ASSERT(painter.isActive());
 
     if (isRubber) {
         painter.setCompositionMode(WPainter::CompositionMode_Clear);
-        /*
-        for (int i = 0; i < 500; i++)
-            painter.drawLine(i, 0, i, 500);
-        return;*/
     } else if(isHigh) {
         painter.setCompositionMode(WPainter::CompositionMode_SourceOver);
     }
 
-    stroke.draw(painter, isRubber, page, pen, PROP_RESOLUTION);
+    stroke.draw(painter, isRubber, page, PROP_RESOLUTION, color);
 
     painter.setCompositionMode(last_comp_mode);
 
@@ -271,7 +269,6 @@ void * __page_load(void *__data)
     auto *  _data = (struct DataPrivateMuThread *)__data;
     auto *  extra = (struct page_thread_data *)_data->extra;
     WPixmap img;
-    WPen m_pen;
     WPainterUnsafe painter;
     auto &mutex = *extra->append;
     int m_pos_ris = extra->m_pos_ris;
@@ -295,7 +292,7 @@ void * __page_load(void *__data)
                     : 1
         );
 
-        page->drawStroke(painter, ref, m_pen, color);
+        page->drawStroke(painter, ref, color);
     }
 
     End_painter(painter);
@@ -314,7 +311,7 @@ void * __page_load(void *__data)
 
 void Page::drawEngine(
         WPainter        &painter,
-        WListFast<SharedPtr<Stroke>> &List,
+        WListFast<SharedPtr<Stroke>> &strokes,
         int             m_pos_ris,
         bool            use_multi_thread) noexcept
 {
@@ -326,12 +323,12 @@ void Page::drawEngine(
 
     extraData.append        = &_append_load;
     extraData.painter       = &painter;
-    extraData.m_stroke      = &List;
+    extraData.m_stroke      = &strokes;
     extraData.m_pos_ris     = m_pos_ris;
     extraData.parent        = this;
 
     if (use_multi_thread) {
-        threadCount = DataPrivateMuThreadInit(threadData, &extraData, PAGE_THREAD_MAX, List.size(), ~DATA_PRIVATE_FLAG_SEM);
+        threadCount = DataPrivateMuThreadInit(threadData, &extraData, PAGE_THREAD_MAX, strokes.size(), ~DATA_PRIVATE_FLAG_SEM);
 
         for (i = 0; i < threadCount; i++) {
             pthread_create(&thread[i], nullptr, __page_load, &threadData[i]);
@@ -342,7 +339,7 @@ void Page::drawEngine(
     } else {
         threadData->extra   = &extraData;
         threadData->from    = 0;
-        threadData->to      = List.size();
+        threadData->to      = strokes.size();
 
         __page_load(&threadData[0]);
     }
@@ -397,7 +394,7 @@ void Page::drawToImage(
 
     for (const int __index : std::as_const(index)) {
         const Stroke &stroke = atStroke(__index);
-        this->drawStroke(painter, stroke, pen, stroke.getColor());
+        this->drawStroke(painter, stroke, stroke.getColor());
     }
 
     W_ASSERT(painter.isActive());
@@ -420,8 +417,6 @@ bool Page::initImg(bool flag)
 
 void Page::decreaseAlfa(const WVector<int> &pos, WPainter * painter, int decrease)
 {
-    WPen pen;
-
     for (const auto position: WAbstractList::Reverse(pos)) {
         Stroke &stroke = this->operator[](pos.at(position));
         const auto color = stroke.getAlfa();
@@ -429,8 +424,8 @@ void Page::decreaseAlfa(const WVector<int> &pos, WPainter * painter, int decreas
         stroke.setAlfaColor(color / decrease);
 
         if (painter) {
-            this->drawStroke(*painter, stroke, pen, COLOR_NULL);
-            this->drawStroke(*painter, stroke, pen, stroke.getColor());
+            this->drawStroke(*painter, stroke, COLOR_NULL);
+            this->drawStroke(*painter, stroke, stroke.getColor());
         }
     }
 
@@ -513,16 +508,17 @@ void Page::removeAndDraw(
 
 void Page::drawIfInside(int m_pos_ris, const RectF &area)
 {
-    int index = lengthStroke() - 1;
+    if (not area.intersects(RectF {
+        0, 0, getWidth(), getHeight()
+    }))
+        return;
+
     WPainterUnsafe painter;
     painter.begin(&this->_imgDraw);
 
-    for(; index >= 0; index --){
-        const Stroke &stroke = this->atStroke(index);
-
-        if (is_inside_squade(stroke.getBiggerPointInStroke(), area)) {
-            drawForceColorStroke(stroke, m_pos_ris, stroke.getColor(1.0), &painter);
-        }
+    for (auto &stroke: *this) {
+        if (is_inside_squade(stroke->getBiggerPointInStroke(), area))
+            stroke->draw(painter, false, getIndex(), PROP_RESOLUTION);
     }
 
     End_painter(painter);
@@ -546,7 +542,7 @@ void Page::decreaseAlfa(const WVector<int> &pos, int decrease)
     End_painter(painter);
 }
 
-RectF Page::get_size_area(const WListFast<SharedPtr<Stroke> > &item, int from, int to)
+auto Page::get_size_area(const WListFast<SharedPtr<Stroke>> &strokes, int from, int to) -> RectF
 {
     RectF result;
 
@@ -554,10 +550,10 @@ RectF Page::get_size_area(const WListFast<SharedPtr<Stroke> > &item, int from, i
         return {};
     }
 
-    result = item.at(from)->getBiggerPointInStroke();
+    result = strokes.at(from)->getBiggerPointInStroke();
 
     for(; from < to; from ++){
-        const RectF tmp = item.at(from)->getBiggerPointInStroke();
+        const RectF tmp = strokes.at(from)->getBiggerPointInStroke();
         result = DataStruct::joinRect(result, tmp);
     }
 
@@ -565,8 +561,13 @@ RectF Page::get_size_area(const WListFast<SharedPtr<Stroke> > &item, int from, i
 }
 
 Page::Page()
+    : _img()
+    , _isVisible(true)
+    , _count(-1)
+    , _stroke()
+    , _strokeTmp()
 {
-    this->_count = -1;
+
 }
 
 auto Page::get_size_area(const WVector<int> &pos) const -> RectF

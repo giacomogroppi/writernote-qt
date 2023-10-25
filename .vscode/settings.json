@@ -67,7 +67,8 @@
         "*.def": "cpp",
         "vector": "cpp",
         "optional": "cpp",
-        "__locale": "cpp"
+        "__locale": "cpp",
+        "__bit_reference": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled",
     "cmake.configureOnOpen": true,

@@ -5,21 +5,21 @@
 
 StrokePre *__tmp;
 
-static void drawSingleStroke(StrokePre &_stroke, WPainter &_painter, WPen &pen, double prop, const PointF& pointFirstPage)
+static void drawSingleStroke(StrokePre &_stroke, WPainter &_painter, double prop, const PointF& pointFirstPage)
 {
     if (!_stroke.isEmpty()) {
-        _stroke.draw(_painter, pen, prop, pointFirstPage);
+        _stroke.draw(_painter, prop, pointFirstPage);
     }
 }
 
-static void draw_laser(WPainter &painter, Laser &_laser, WPen &pen, double zoom)
+static void draw_laser(WPainter &painter, Laser &_laser, double zoom)
 {
     auto begin = _laser.begin();
     const auto end = _laser.end();
 
     // TODO view area {0., 0.}
     for (; begin != end; begin ++) {
-        drawSingleStroke(*begin, painter, pen, zoom, {0., 0.});
+        drawSingleStroke(*begin, painter, zoom, {0., 0.});
     }
 }
 
@@ -44,13 +44,13 @@ void TabletUtils::loadLaser()
 {
     const auto zoom = this->getZoom();
     if (this->_laser) {
-        draw_laser(this->getPainter(), this->getLaser(), this->_pen, zoom);
+        draw_laser(this->getPainter(), this->getLaser(), zoom);
     }
 }
 
 void TabletUtils::load(LoadTypes types)
 {
-    int lenPage                     = this->_doc.lengthPage();
+    auto lenPage                     = this->_doc.lengthPage();
     const PointF &PointFirstPage    = this->_doc.getPointFirstPageNoZoom();
     const auto zoom                 = this->getZoom();
     const WSizeF sizeRect           = createSizeRect(this->_doc, DRAW_CREATE_SIZE_RECT_DEF_COUNTER_HEIGTH,  _m);
@@ -101,7 +101,7 @@ void TabletUtils::load(LoadTypes types)
     
     /* stroke not already add to page */
     if (types & UpdateEvent::stroke)
-        drawSingleStroke(strokeToDraw, getPainter(), _pen, zoom * _m, _doc.getPointFirstPageNoZoom());
+        drawSingleStroke(strokeToDraw, getPainter(), zoom * _m, _doc.getPointFirstPageNoZoom());
     
     if (types & UpdateEvent::laser)
         this->loadLaser();

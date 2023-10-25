@@ -26,7 +26,7 @@ private:
      * \tparam T Iterator for points
      * \tparam Z Iterator for pressure
     */
-    template <class T, class Z>
+    template <class T = WListFast<PointF>::const_iterator, class Z = WListFast<pressure_t>::const_iterator>
     class drawData {
     public:
         explicit drawData (T begin_point, T end_point, Z begin_press, bool press_null, int index_start)
@@ -74,7 +74,9 @@ public:
     StrokeNormal(StrokeNormal &&other) noexcept;
     ~StrokeNormal() final;
 
-    void draw(WPainter &painter, cbool is_rubber, cint page, WPen &pen, cdouble prop) const override;
+    void draw(WPainter &painter, bool is_rubber, int page, double prop, const WColor& color) const override;
+    void draw(WPainter &painter, bool is_rubber, int page, cdouble prop) const override;
+
     int is_inside(const WLine &line, int from, int precision, cbool needToDeletePoint) const final;
     bool is_inside(const RectF &rect, double precision) const final;
 
@@ -269,7 +271,9 @@ force_inline void StrokeNormal::draw(
     }
 
     lastPoint = Page::at_translation(*data.begin_point, page) * prop;
-    
+
+    pen.setColor(color);
+
     for (data.begin_point ++; data.begin_point != data.end_point; data.begin_point ++) {
         const PointF pointDraw = Page::at_translation(*data.begin_point, page) * prop;
         const pressure_t pressure = *(data.begin_press);
@@ -279,8 +283,6 @@ force_inline void StrokeNormal::draw(
         }
 
         pen.setPressure(pressure * _prop);
-        if (is_rubber == false)
-            pen.setColor(color);
 
         painter->setPen(pen);
 

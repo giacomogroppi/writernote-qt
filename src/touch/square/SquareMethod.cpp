@@ -71,14 +71,14 @@ void SquareMethod::reset()
         });
 #endif // DEBUGINFO
 
-        Page * page         = &_getDoc().at_mod(i + _base);
+        auto &page = _getDoc()[i + _base];
 
         for (auto &ref : ll){
             ref->scale(_trans_img);
         }
 
-        page->append(ll);
-        page->triggerRenderImage(-1, false);
+        page.append(ll);
+        page.triggerRenderImage(-1, false);
     }
 
     _stroke.clear();
@@ -305,7 +305,7 @@ void SquareMethod::moveObjectIntoPrivate(WListFast<WVector<int>> &index, Documen
         const WVector<int> & ref = index.at(count);
         WDebug(debugSquare, ref);
 
-        page = &doc.at_mod(count + _base);
+        page = &doc[count + _base];
 
         if (ref.isEmpty())
             continue;
@@ -317,7 +317,7 @@ void SquareMethod::moveObjectIntoPrivate(WListFast<WVector<int>> &index, Documen
         this->mergeImg(tmp, _img, count + _base);
 
         page->swap(_stroke.operator[](count), ref, PAGE_SWAP_TRIGGER_VIEW);
-        WDebug(true, "lenDopo" << page->lengthStroke());
+        WDebug(true, "lenAfter" << page->lengthStroke());
     }
 
 #ifdef DEBUGINFO

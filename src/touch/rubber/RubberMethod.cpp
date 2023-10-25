@@ -362,7 +362,7 @@ auto RubberMethod::touchUpdate(const PointF &__lastPoint,
     out1:
 
     if (!is_image_not_null(
-            &doc.at_mod(indexPage),
+            doc[indexPage],
             lastPoint,
             _last,
             _size_gomma)) {
@@ -427,16 +427,15 @@ auto RubberMethod::touchUpdate(const PointF &__lastPoint,
     return UpdateEvent::makePage(pageMod, pageMod + 1);
 }
 
-bool RubberMethod::is_image_not_null(const Page *page,
+bool RubberMethod::is_image_not_null(const Page &page,
                                      const PointF &from, const PointF &to,
                                      int delta)
 {
     int i, j;
 
-    W_ASSERT(page);
     W_ASSERT(delta > 0);
 
-    const auto &img = page->getImg();
+    const auto &img = page.getImg();
 
     const auto ymin = std::min(from.y(), to.y());
     const auto ymax = std::min(from.y(), to.y());
@@ -446,7 +445,7 @@ bool RubberMethod::is_image_not_null(const Page *page,
     const int x = static_cast<int>(xmin) - delta;
     const int y = static_cast<int>(
                             ymin - Page::getHeight() *
-                            (page->getCount() - 1)
+                            (page.getIndex())
                         )
                         - delta;
     W_ASSERT(y >= 0. and y <= Page::getHeight());

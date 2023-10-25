@@ -16,7 +16,6 @@ private:
     const Unsigned _positionAudio;
     Double _m;
     Optional<Laser> _laser;
-    WPen _pen;
     RectF _visibleArea;
 
     const Document &_doc;

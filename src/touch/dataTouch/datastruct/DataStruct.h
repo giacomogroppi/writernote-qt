@@ -59,6 +59,7 @@ public:
     nd constexpr auto getPointFirstPage() const { return _pointFirstPage * _zoom; }
     nd constexpr PointF getPointFirstPageNoZoom() const { return _pointFirstPage; }
 
+    nd auto whichPage(double height) const -> int;
     nd auto whichPage(const PointF &point) const -> int;
     nd auto whichPage(const Stroke &stroke) const -> int;
 
@@ -85,14 +86,14 @@ public:
      * \param stroke to be added
      * \return the index of the page to which the stroke was added
      * */
-    auto  appendStroke(const SharedPtr<Stroke> &stroke) -> int; /* return value: the page of the point */
+    auto  appendStroke(const SharedPtr<Stroke> &stroke) -> int;
 
     void appendStroke(SharedPtr<Stroke> &&object, int page);
     void appendStroke(const SharedPtr<Stroke> &stroke, int page);
 
     void restoreLastTranslation(int heightView);
 
-    void removePointIndex(WListFast<WVector<int> > &pos, int base, bool __isOrder);
+    void removePointIndex(WListFast<WVector<int> > &pos, int base, bool isOrder);
     void removePointIndex(WVector<int> &pos, cint page, cbool isOrder);
 
     void movePoint(const WList<WVector<int>> & pos, int base, const PointF &translation);
@@ -110,18 +111,15 @@ public:
     nd auto isEmptyTouch() const -> bool;
     void reset_touch();
     void triggerVisibility(cdouble viewSize);
-    [[nodiscard]] double biggerX() const noexcept;
+    nd double biggerX() const noexcept;
 
-    [[nodiscard]] bool needToCreateNewSheet() const;
+    nd bool needToCreateNewSheet() const;
 
     void decreaseAlfa(const WVector<int> &pos, int page);
     void removePage(int page);
 
     nd
     auto at(int page) const -> const Page &;
-
-    [[deprecated ("Use operator []")]]
-    auto at_mod(int page) -> Page &;
 
     [[deprecated]] [[nodiscard]]
     auto at_draw_page(cint indexPoint, const Page &Page) const -> WPoint;
@@ -243,12 +241,6 @@ force_inline bool DataStruct::needToCreateNewSheet() const
 inline auto DataStruct::at(int page) const -> const Page &
 {
     return _page.at(Index(page));
-}
-
-inline auto DataStruct::at_mod(cint page) -> Page &
-{
-    W_ASSERT(page >= 0 and page < this->lengthPage());
-    return _page.operator[](page);
 }
 
 // this function is not threadSave
@@ -447,17 +439,22 @@ force_inline bool DataStruct::isOkZoom(double newPossibleZoom)
     return !(newPossibleZoom >= 2.0 || newPossibleZoom <= 0.3);
 }
 
-inline int DataStruct::whichPage(const PointF &point) const
+inline auto DataStruct::whichPage(double height) const -> int
 {
-    const double heigth = Page::getHeight();
+    constexpr auto heigthPage = Page::getHeight();
     const not_used auto debug_which = false;
 
-    W_ASSERT(point.y() >= 0.);
+    W_ASSERT(height >= 0.);
 
-    const auto index = WCommonScript::diff(point.y() / heigth);
+    const auto index = WCommonScript::diff(height / heigthPage);
 
     W_ASSERT(index >= 0 and index < this->lengthPage());
     return index;
+}
+
+inline int DataStruct::whichPage(const PointF &point) const
+{
+    return whichPage(point.y());
 }
 
 /**

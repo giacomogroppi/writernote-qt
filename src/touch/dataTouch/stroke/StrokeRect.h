@@ -20,7 +20,9 @@ private:
 public:
     StrokeRect();
 
-    void draw(WPainter &painter, cbool is_rubber, cint page, WPen &pen, cdouble prop) const;
+    void draw(WPainter &painter, bool is_rubber, int page, double prop, const WColor& color) const override;
+    void draw(WPainter &painter, bool is_rubber, int page, double prop) const override;
+
     int is_inside(const WLine &line, int from, int precision, cbool needToDeletePoint) const;
     bool is_inside(const RectF &rect, double precision) const;
 

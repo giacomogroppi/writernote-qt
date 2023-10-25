@@ -39,16 +39,15 @@ public:
         err_image_not_valid
     };
 
-    [[nodiscard]]
-    auto addImage(const WString &pos, const PointSettable *point, const WString &writernote_file) -> int;
+    nd auto addImage(const WString &pos, const PointSettable *point, const WString &writernote_file) -> int;
 
     explicit ImageContainerDrawable();
 
-    [[nodiscard]] int lengthImage() const { return m_img.size(); };
-    [[nodiscard]] ImageContainerDrawable::load_res_img loadImage(WZipReaderSingle &zip, int len);
-    ImageContainerDrawable::load_res_img saveImage(WZipWriter &file, const WListFast<WString> &path) const;
-    ImageContainerDrawable::load_res_img saveImage(WZipWriter &file, const WString &path) const;
-    ImageContainerDrawable::load_res_img saveMetadataImage(WZipWriterSingle &writer);
+    nd auto lengthImage() const -> int { return m_img.size(); };
+    nd auto loadImage(WZipReaderSingle &zip, int len) -> ImageContainerDrawable::load_res_img;
+    auto saveImage(WZipWriter &file, const WListFast<WString> &path) const -> ImageContainerDrawable::load_res_img;
+    auto saveImage(WZipWriter &file, const WString &path) const -> ImageContainerDrawable::load_res_img;
+    auto saveMetadataImage(WZipWriterSingle &writer) -> ImageContainerDrawable::load_res_img;
 
     void moveImage(const PointF &translation);
 
@@ -61,8 +60,7 @@ public:
     void drawImage(WPainter &painter) const;
 
     void reset_img();
-    [[nodiscard]]
-    auto getSizeFileImage() const -> size_t;
+    nd auto getSizeFileImage() const -> size_t;
 
     auto operator=(const ImageContainerDrawable &other) noexcept -> ImageContainerDrawable &;
     auto operator=(ImageContainerDrawable &&other) noexcept -> ImageContainerDrawable &;
