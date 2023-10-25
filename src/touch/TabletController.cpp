@@ -299,6 +299,8 @@ TabletController::~TabletController()
     _settings.begin();
     _settings.setValue(WOptionSettings::namePathSaving, _fileManager->getCurrentPath().toString());
     _settings.save();
+
+    delete _doc;
 }
 
 void TabletController::setCurrentPathSaving(WString path)
