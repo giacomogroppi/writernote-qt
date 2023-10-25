@@ -125,6 +125,8 @@ Scheduler::Scheduler()
         }
     }));
 
+    initMainThread();
+
     WAbstractList::sort(_idThreads.begin(), _idThreads.end());
 
     WDebug(debug and false, "finish constructor");
@@ -243,6 +245,8 @@ Scheduler::~Scheduler()
             t.release();
     }
     _lockGeneric.unlock();
+
+    endMainThread();
 
     instance = nullptr;
 }

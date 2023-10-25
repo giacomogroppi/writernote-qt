@@ -33,6 +33,9 @@ private:
     mutable WSemaphore _semGeneral;
     mutable WMutex _lockGeneric;
 
+    void initMainThread();
+    void endMainThread();
+
     void createHeap();
 
     bool isHeap() const;

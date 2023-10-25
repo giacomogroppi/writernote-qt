@@ -5,10 +5,43 @@
 #include <QTimer>
 #include <QThread>
 #include <QThreadPool>
+#include <QRunnable>
+#include <QAbstractEventDispatcher>
+#include "SchedulerQt.h"
+#include <QGuiApplication>
+
+SchedulerQt::SchedulerQt(QObject *parent)
+    : QObject(parent)
+{
+    auto *i = QGuiApplication::instance();
+    i->installEventFilter(this);
+}
+
+auto SchedulerQt::eventFilter(QObject *watched, QEvent *event) -> bool
+{
+    W_ASSERT(this->thread()->currentThreadId() == QGuiApplication::instance()->thread()->currentThreadId());
+
+    if (auto *e = dynamic_cast<SchedulerEvent*>(event)) {
+        e->run();
+        return true;
+    }
+    return false;
+}
+
+static SchedulerQt *instance;
+
+auto Scheduler::initMainThread() -> void
+{
+    instance = new SchedulerQt(nullptr);
+}
+
+auto Scheduler::endMainThread() -> void
+{
+    delete instance;
+}
 
 auto Scheduler::addTaskMainThread(Ptr<WTask> task) -> void
 {
-    // TODO: use qt scheduler
     W_ASSERT(task);
 
 #ifdef DEBUGINFO
@@ -16,20 +49,11 @@ auto Scheduler::addTaskMainThread(Ptr<WTask> task) -> void
         W_ASSERT(task.numberOfRef() == 1);
 #endif // DEBUGINFO
 
-    WDebug(true, "Add task to main thread");
-
-    auto method = [task = std::move(task)] () mutable {
-        WDebug(true, "Execute");
+    auto method = [task = std::move(task)]() mutable {
         manageExecution(std::move(task));
     };
 
-    QTimer::singleShot(0, std::move(method));
-
-    //method();
-
-#ifdef DEBUGINFO
-    W_ASSERT(task == Ptr<WTask>());
-#endif // DEBUGINFO
+    QGuiApplication::postEvent(instance, new SchedulerEvent(std::move(method)));
 }
 
 auto Scheduler::numberOfThread() -> Unsigned
