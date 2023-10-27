@@ -93,8 +93,9 @@ public:
 
     void restoreLastTranslation(int heightView);
 
-    void removePointIndex(WListFast<WVector<int> > &pos, int base, bool isOrder);
-    void removePointIndex(WVector<int> &pos, cint page, cbool isOrder);
+    // TODO: change parameter from accept a WVector to accept a Iterator
+    // TODO: remove parameter isOrder
+    void removePointIndex(WVector<int> &pos, int page, bool isOrder);
 
     void movePoint(const WList<WVector<int>> & pos, int base, const PointF &translation);
     void movePoint(const WVector<int> & pos, int pageIndex, const PointF &translation);
@@ -110,11 +111,12 @@ public:
 
     nd auto isEmptyTouch() const -> bool;
     void reset_touch();
-    void triggerVisibility(cdouble viewSize);
+    void triggerVisibility(double viewSize);
     nd double biggerX() const noexcept;
 
     nd bool needToCreateNewSheet() const;
 
+    // TODO: change parameter from accept a WVector to accept a Iterator
     void decreaseAlfa(const WVector<int> &pos, int page);
     void removePage(int page);
 
@@ -147,7 +149,7 @@ public:
     auto getLastPageVisible() const -> int;
     void newViewAudio(int newTime);
 
-    auto operator[](unsigned long index) -> Page& { return this->_page[index]; }
+    auto operator[](long index) -> Page& { return this->_page[index]; }
 
     nd auto get_range_visible() const -> int;
     void insertPage(const Page &Page, int index);

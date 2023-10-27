@@ -121,8 +121,8 @@ public:
     /**
      * \param pos to order positions of the stroke to be removed
      * */
-    void removeAt(const WVector<int> & pos);
-    void removeAt(int i);
+     template <class Iter>
+    void removeAt(Iter begin, Iter end);
 
     const Stroke & last() const;
     Stroke &lastMod();
@@ -435,17 +435,13 @@ force_inline bool Page::isVisible() const
     dest._count                     = src._count;
 }*/
 
-force_inline void Page::removeAt(int i)
-{
-    return removeAt(WVector<int>{i});
-}
-
 /* the list should be order */
-inline void Page::removeAt(const WVector<int> &pos)
+template <class Iter>
+inline void Page::removeAt(Iter begin, Iter end)
 {
-    W_ASSERT(WAbstractList::isSorted(pos));
+    W_ASSERT(WAbstractList::isSorted(begin, end));
 
-    _stroke.removeAt(pos.begin(), pos.end());
+    _stroke.removeAt(begin, end);
 }
 
 force_inline const Stroke &Page::last() const

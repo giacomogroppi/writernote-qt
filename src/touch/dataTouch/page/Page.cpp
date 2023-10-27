@@ -496,12 +496,9 @@ void Page::removeAndDraw(
         const WVector<int>  &pos,
         const RectF        &area)
 {
-    int i = pos.size();
     this->drawForceColorStroke(pos, m_pos_ris, COLOR_NULL);
 
-    for(i --; i >= 0; i --){
-        removeAt(pos.at(i));
-    }
+    removeAt(pos.begin(), pos.end());
 
     drawIfInside(m_pos_ris, area);
 }

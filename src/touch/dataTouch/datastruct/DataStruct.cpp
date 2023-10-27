@@ -211,20 +211,7 @@ void DataStruct::removePointIndex(
     if (not isOrder)
         WAbstractList::sort(positions.begin(), positions.end());
 
-    this->operator[](page).removeAt(positions);
-}
-
-void DataStruct::removePointIndex(
-        WListFast<WVector<int> >    &pos,
-        int base,
-        bool isOrder)
-{
-    int i, lenList;
-    lenList = pos.size();
-
-    for(i = 0; i < lenList; i++){
-        removePointIndex(pos.operator[](i), base + i, isOrder);
-    }
+    this->operator[](page).removeAt(positions.begin(), positions.end());
 }
 
 void DataStruct::removePage(int pageIndex)

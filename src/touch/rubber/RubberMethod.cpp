@@ -409,7 +409,7 @@ auto RubberMethod::touchUpdate(const PointF &__lastPoint,
     }
 
     if (!isTotal) {
-        dataPrivate._page->removeAt(*dataPrivate.data_to_remove);
+        dataPrivate._page->removeAt(dataPrivate.data_to_remove->begin(), dataPrivate.data_to_remove->end());
 
         dataPrivate._page->mergeList();
     }
