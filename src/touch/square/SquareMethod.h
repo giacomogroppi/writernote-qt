@@ -77,7 +77,7 @@ private:
     WListFast<WListFast<SharedPtr<Stroke>>> _stroke;
 
     int _base;
-    WListFast<int> _index_img; /* image */
+    WVector<int> _index_img; /* image */
 
     WPen _penna;
 

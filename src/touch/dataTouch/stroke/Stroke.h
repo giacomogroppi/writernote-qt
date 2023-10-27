@@ -15,6 +15,7 @@
 #include "core/Pen/WPen.h"
 #include "utils/common_error_definition.h"
 #include "core/Color/WColor.h"
+#include "core/WVector.h"
 
 #define PROP_RESOLUTION (2.)
 constexpr double deltaPress = 2.;
@@ -104,7 +105,7 @@ public:
     virtual ~Stroke() = default;
 
     // TODO: remove this enum
-    enum type_stroke_private: int{
+    enum type_stroke_private: int {
             COMPLEX_NORMAL = 0,
             COMPLEX_CIRCLE = 1,
             COMPLEX_RECT = 2,
@@ -124,21 +125,21 @@ public:
      * \return -1 in case the stroke is not touched by the line
      */
     [[deprecated]]
-    virtual int is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const = 0;
-    virtual bool is_inside(const RectF &rect, double precision) const = 0;
+    virtual auto is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const -> int = 0;
+    virtual auto is_inside(const RectF &rect, double precision) const -> bool = 0;
 
-    WColor getColor(double division = 1.) const;
+    auto getColor(double division = 1.) const -> WColor;
 
     virtual void append (const PointF &point, pressure_t pressure) = 0;
-    virtual void append (WListFast<PointF> &&points, WListFast<pressure_t> &&pressure) = 0;
+    virtual void append (WListFast<PointF> &&points, WVector<pressure_t> &&pressure) = 0;
     
     void setMetadata(int posizione_audio, const WColor &color);
     void setMetadata(const metadata_stroke &metadata);
     void setPositionAudio(int m_pos_ris);
-    virtual size_t createControl() const;
+    virtual auto createControl() const -> size_t;
 
-    auto getPosizionAudio() const -> int;
-    virtual RectF getBiggerPointInStroke() const;
+    auto getPositionAudio() const -> int;
+    virtual auto getBiggerPointInStroke() const -> RectF;
     virtual auto isInside(const RectF &rect) const -> bool = 0;
 
     void clearAudio();
@@ -260,7 +261,7 @@ inline void Stroke::setPositionAudio(int m_pos_ris)
     this->_metadata.posizione_audio = m_pos_ris;
 }
 
-inline int Stroke::getPosizionAudio() const
+inline int Stroke::getPositionAudio() const
 {
     return this->_metadata.posizione_audio;
 }

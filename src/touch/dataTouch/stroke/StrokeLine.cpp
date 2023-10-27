@@ -325,7 +325,7 @@ auto StrokeLine::loadPtr(const VersionFileController &versionController,
     return {Error::makeOk(), d.release()};
 }
 
-void StrokeLine::append (WListFast<PointF> &&points, WListFast<pressure_t> &&pressures)
+void StrokeLine::append (WListFast<PointF> &&points, WVector<pressure_t> &&pressures)
 {
     W_ASSERT(points.size() == pressures.size());
     for (int i = 0; i < points.size(); i++) {

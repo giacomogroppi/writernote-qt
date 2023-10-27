@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Stroke.h"
+#include "core/pointer/UniquePtr.h"
 
 class StrokeRect final: public Stroke
 {
@@ -23,33 +24,33 @@ public:
     void draw(WPainter &painter, bool is_rubber, int page, double prop, const WColor& color) const override;
     void draw(WPainter &painter, bool is_rubber, int page, double prop) const override;
 
-    int is_inside(const WLine &line, int from, int precision, cbool needToDeletePoint) const;
-    bool is_inside(const RectF &rect, double precision) const;
+    int is_inside(const WLine &line, int from, int precision, cbool needToDeletePoint) const final;
+    bool is_inside(const RectF &rect, double precision) const final;
 
-    void append(const PointF &point, pressure_t pressure);
-    void append (WListFast<PointF> &&points, WListFast<pressure_t> &&pressures) final;
-    size_t createControl() const final;
+    void append(const PointF &point, pressure_t pressure) final;
+    void append (WListFast<PointF> &&points, WVector<pressure_t> &&pressures) final;
+    auto createControl() const -> size_t final;
 
-    RectF getBiggerPointInStroke() const;
-    bool isInside(const RectF &rect) const;
+    auto getBiggerPointInStroke() const -> RectF final;
+    bool isInside(const RectF &rect) const final;
 
     int save(WritableAbstract &file) const final;
 
     auto getSizeInMemory() const -> size_t final;
     auto getSizeInFile() const -> size_t final;
 
-    void decreasePrecision();
+    void decreasePrecision() final;
 
-    void adjust(double zoom);
-    auto clone() const -> std::unique_ptr<Stroke> final;
+    void adjust(double zoom) final;
+    auto clone() const -> UniquePtr<Stroke> final;
 
-    int how_much_decrese() const;
+    int how_much_decrese() const final;
 
-    auto makeNormal() const -> std::unique_ptr<Stroke>;
+    auto makeNormal() const -> UniquePtr<Stroke> final;
 
     auto isEmpty() const -> bool final;
 
-    void scale(const PointF &offset);
+    void scale(const PointF &offset) final;
 
     void preappend(int) final {};
 

@@ -10,12 +10,9 @@
 #include "core/Settable.h"
 
 
-class StrokePre: public WObject
+class StrokePre final: public WObject
 {
 private:
-    template <class T>
-    using List = WListFast<T>;
-
     static constexpr auto _timerTime = 500;
     Fn<void()> _timerEndLambda = [this]() { this->timerEnd(); };
 
@@ -29,63 +26,58 @@ private:
 
     Fn<void()> _callUpdate;
 
-    List<PointF>       _point;
-    List<pressure_t>   _pressure;
+    WListFast<PointF>       _point;
+    WVector<pressure_t>     _pressure;
 
-    List<PointF>       ::const_iterator   _last_draw_point;
-    List<pressure_t>   ::const_iterator   _last_draw_press;
+    WListFast<PointF>       ::const_iterator   _last_draw_point;
+    WVector<pressure_t>     ::const_iterator   _last_draw_press;
 
     pressure_t _max_pressure;
     PointSettable _min, _max;
 
     constexpr static bool StrokePreDebug = false;
 
-    [[nodiscard]] bool isImageEmpty() const;
+    nd auto isImageEmpty() const -> bool;
 
 #ifdef DEBUGINFO
     bool already_merge = false;
 #endif // DEBUGINFO
 
-    [[nodiscard]] List<pressure_t>::const_iterator get_last_press() const;
-    [[nodiscard]] List<PointF>::const_iterator get_last_point() const;
-    [[nodiscard]] const Stroke &get_stroke_for_draw() const;
+    nd auto get_last_press() const -> WVector<pressure_t>::const_iterator;
+    nd auto get_last_point() const -> WListFast<PointF>::const_iterator;
+    nd auto get_stroke_for_draw() const -> const Stroke &;
 public:
-    StrokePre (Fn<void()> callUpdate);
+    explicit StrokePre (Fn<void()> callUpdate);
     StrokePre (const StrokePre &other) noexcept;
     StrokePre (StrokePre &&other) noexcept;
-    ~StrokePre() noexcept;
+    ~StrokePre() noexcept final;
 
     void adjust(const PointF &delta);
     void setAlfaColor(int alfa);
 
     void setTime(int time);
     void setColor(const WColor &color) noexcept;
-    [[nodiscard]] bool isEmpty() const noexcept;
-    [[nodiscard]] RectF getBiggerPointInStroke() const;
-    [[nodiscard]] RectF getFirstAndLast() const;
-    [[nodiscard]] pressure_t getPressure() const;
-    [[nodiscard]] const PointF &last() const;
+    nd auto isEmpty() const noexcept -> bool;
+    nd auto getBiggerPointInStroke() const -> RectF;
+    nd auto getFirstAndLast() const -> RectF;
+    nd auto getPressure() const -> pressure_t;
+    nd const PointF &last() const;
 
-    [[nodiscard]] auto constBegin() const { return _point.constBegin(); };
-    [[nodiscard]] auto constEnd() const { return _point.constEnd(); };
+    nd auto constBegin() const { return _point.constBegin(); };
+    nd auto constEnd() const { return _point.constEnd(); };
 
     void reset();
     void reset_img();
 
     void draw(WPainter &painter, double prop, const PointF &pointFirstPage);
     void append(const PointF &point, const pressure_t &press, double prop);
-    [[nodiscard]] WColor getColor(double division = 1.) const;
+    nd auto getColor(double division = 1.) const -> WColor;
 
     auto merge() -> UniquePtr<Stroke>;
 
     auto operator=(const StrokePre &other) -> StrokePre&;
 
-    /*
-    friend class StrokeLineGenerator;
-    friend class StrokeRectGenerator;
-    friend class StrokeCircleGenerator;
-    */
-     friend class stroke_drawer;
+    friend class stroke_drawer;
 
     void timerReset(const PointF &point) noexcept;
 };
@@ -118,12 +110,12 @@ inline const Stroke &StrokePre::get_stroke_for_draw() const
     return *_stroke;
 }
 
-inline auto StrokePre::get_last_press() const -> StrokePre::List<pressure_t>::const_iterator
+inline auto StrokePre::get_last_press() const -> WVector<pressure_t>::const_iterator
 {
     return _last_draw_press;
 }
 
-inline auto StrokePre::get_last_point() const -> StrokePre::List<PointF>::const_iterator
+inline auto StrokePre::get_last_point() const -> WListFast<PointF>::const_iterator
 {
     W_ASSERT(this->_point.size() > 1);
     return _last_draw_point;

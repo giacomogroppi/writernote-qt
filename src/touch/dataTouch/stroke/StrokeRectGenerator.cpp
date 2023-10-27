@@ -43,7 +43,7 @@ double StrokeRectGenerator::is_near_rect(const RectF &area, const PointF &point)
 }
 
 auto StrokeRectGenerator::make(const WListFast<PointF>& points,
-                               const WListFast<pressure_t>& pressures,
+                               const WVector<pressure_t>& pressures,
                                const RectF& area) -> UniquePtr<Stroke>
 {
     UniquePtr<StrokeRect> res(new StrokeRect());
@@ -56,7 +56,7 @@ auto StrokeRectGenerator::make(const WListFast<PointF>& points,
     return res;
 }
 
-double StrokeRectGenerator::model_near(const WListFast<PointF> &points, const WListFast<pressure_t> &pressures,
+double StrokeRectGenerator::model_near(const WListFast<PointF> &points, const WVector<pressure_t> &pressures,
                                        const RectF &area)
 {
     using namespace WUtils;

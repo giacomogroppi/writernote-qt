@@ -12,16 +12,14 @@ StrokePre::StrokePre(Fn<void()> callUpdate)
     , _stroke(new StrokeNormal)
     , _timer(new WTimer(this, this->_timerEndLambda, _timerTime))
     , _callUpdate(std::move(callUpdate))
-    , _last_draw_point(_point.constBegin())
-    , _last_draw_press(_pressure.constBegin())
+    , _last_draw_point(std::as_const(_point).begin())
+    , _last_draw_press(std::as_const(_pressure).begin())
     , _max_pressure(0.)
     , _min({0., 0.}, false)
     , _max({0., 0.}, false)
 {
     _timer->setSingleShot(timerIsSingleShot);
     W_ASSERT(_stroke->isEmpty());
-    //W_ASSERT(this->isImageEmpty());
-    //W_ASSERT(QImage(100, 100, QImage::Format_ARGB32) == QImage(100, 100, QImage::Format_ARGB32));
 }
 
 StrokePre::~StrokePre() noexcept = default;
@@ -106,18 +104,16 @@ void StrokePre::setTime(int time)
 auto StrokePre::getBiggerPointInStroke() const -> RectF
 {
     // TODO: define a cache
-    const auto res = (_stroke->isEmpty()) ?
-                    StrokeNormal::getBiggerPointInStroke(
-                                                this->_point.constBegin(),
-                                                this->_point.constEnd()) :
-                    _stroke->getBiggerPointInStroke();
+    const auto res = (_stroke->isEmpty())
+                    ? StrokeNormal::getBiggerPointInStroke(this->_point.begin(), this->_point.end())
+                    : _stroke->getBiggerPointInStroke();
 
     return res;
 }
 
 RectF StrokePre::getFirstAndLast() const
 {
-    const auto &first = *_point.constBegin();
+    const auto &first = *std::as_const(_point).begin();
     const auto &last  = _point.last();
 
     return {
@@ -126,10 +122,10 @@ RectF StrokePre::getFirstAndLast() const
     };
 }
 
-pressure_t StrokePre::getPressure() const
+auto StrokePre::getPressure() const -> pressure_t
 {
     W_ASSERT(!this->_pressure.isEmpty());
-    return *this->_pressure.constBegin();
+    return *this->_pressure.begin();
 }
 
 void StrokePre::reset_img()
@@ -216,6 +212,10 @@ void StrokePre::append(const PointF &point, const pressure_t &press, double prop
         painter.setPen(pen);
         painter.setAntialiasing();
 
+        for (const auto& ref: std::as_const(_point)) {
+
+        }
+
         if (_point.size() == 1) {
             _last_draw_point = this->_point.constBegin();
             _last_draw_press = this->_pressure.constBegin();
@@ -225,7 +225,7 @@ void StrokePre::append(const PointF &point, const pressure_t &press, double prop
             _min = _max;
             _max_pressure = _pressure.last();
         } else {
-            auto data = StrokeNormal::drawData<List<PointF>::const_iterator, List<pressure_t>::const_iterator> 
+            auto data = StrokeNormal::drawData<WListFast<PointF>::const_iterator, WVector<pressure_t>::const_iterator>
             (
                 this->_last_draw_point,
                 this->_point.constEnd(),

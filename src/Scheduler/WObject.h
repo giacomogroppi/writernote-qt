@@ -8,7 +8,7 @@
 
 #define W_EMITTABLE_PRIVATE_LIST(name_signals, ...) \
     private:                                   \
-    std::vector<Fn<void( __VA_ARGS__)>> w_object_observer_##name_signals; \
+    std::list<Fn<void( __VA_ARGS__)>> w_object_observer_##name_signals; \
 
 #define W_EMITTABLE_PRIVATE_REGI(name_signals, ...) \
     public: \

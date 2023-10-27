@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Stroke.h"
+#include "core/pointer/UniquePtr.h"
 
 class StrokeLine final : public Stroke
 {
@@ -20,47 +21,48 @@ private:
 public:
     StrokeLine();
 
-    void draw(WPainter &painter, bool is_rubber, int page, double prop, const WColor& color) const override;
-    void draw(WPainter &painter, bool is_rubber, int page, cdouble prop) const override;
-    int is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const override;
-    bool is_inside(const RectF &rect, double precision) const override;
+    void draw(WPainter &painter, bool is_rubber, int page, double prop, const WColor& color) const final;
+    void draw(WPainter &painter, bool is_rubber, int page, cdouble prop) const final;
+    auto is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const -> int final;
+    bool is_inside(const RectF &rect, double precision) const final;
 
 #   define stroke_append_default (-1.)
-    void append(const PointF &point, pressure_t pressure) override;
-    void append (WListFast<PointF> &&points, WListFast<pressure_t> &&pressures) final override;
-    size_t createControl() const final override;
+    void append(const PointF &point, pressure_t pressure) final;
+    void append (WListFast<PointF> &&points, WVector<pressure_t> &&pressures) final;
+    auto createControl() const -> size_t final;
 
-    RectF getBiggerPointInStroke() const override;
-    bool isInside(const RectF &rect) const override;
+    auto getBiggerPointInStroke() const -> RectF final;
+    auto isInside(const RectF &rect) const -> bool final;
 
-    int save(WritableAbstract &file) const final;
+    auto save(WritableAbstract &file) const -> int final;
 
-    size_t getSizeInMemory() const final;
-    size_t getSizeInFile() const final;
+    auto getSizeInMemory() const -> size_t final;
+    auto getSizeInFile() const -> size_t final;
 
-    void decreasePrecision();
+    void decreasePrecision() final;
 
-    void adjust(double zoom);
-    std::unique_ptr<Stroke> clone() const final;
+    void adjust(double zoom) final;
+    auto clone() const -> UniquePtr<Stroke> final;
 
     int how_much_decrese() const final;
 
-    std::unique_ptr<Stroke> makeNormal() const final;
+    auto makeNormal() const -> UniquePtr<Stroke> final;
 
-    [[nodiscard]] bool isEmpty() const final;
+    nd
+    auto isEmpty() const -> bool final;
 
     void scale(const PointF &offset) final;
 
     void preappend(int) final {};
 
-    bool operator==(const Stroke &other) const final;
-    bool operator!=(const Stroke &other) const final;
+    auto operator==(const Stroke &other) const -> bool final;
+    auto operator!=(const Stroke &other) const -> bool final;
 
-    static bool cmp(const Stroke &stroke1, const Stroke &stroke2);
+    static auto cmp(const Stroke &stroke1, const Stroke &stroke2) -> bool;
     static void copy(const Stroke &src, Stroke &dest);
 
-    static StrokeLine *make(const PointF& pt1, const PointF& pt2, const StrokeNormal &s);
-    int type() const final;
+    static auto make(const PointF& pt1, const PointF& pt2, const StrokeNormal &s) -> StrokeLine *;
+    auto type() const -> int final;
 
     static
     auto loadPtr(const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<Error, StrokeLine*>;

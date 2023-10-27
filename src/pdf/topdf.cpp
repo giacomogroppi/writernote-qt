@@ -10,10 +10,9 @@
 
 topdf::topdf(const WString &path, const Document &doc)
 {
-    uint i;
-    const uint len = doc.lengthPage();
+    const auto len = doc.lengthPage();
 
-    WListFast<int> page;
+    WVector<int> page;
 
     this->path = &path;
 
@@ -21,12 +20,12 @@ topdf::topdf(const WString &path, const Document &doc)
 
     this->data->triggerNewView(-1, true);
 
-    for(i = 0; i < len; i++){
+    for(auto i = 0; i < len; i++){
         if(data->at(i).getImg().isNull())
             page.append((int)i);
     }
 
-    data->triggerNewView(page, -1, true);
+    data->triggerNewView(page.begin(), page.end(), -1, true);
 
     W_ASSERT(doc.lengthPage() == data->lengthPage());
 }

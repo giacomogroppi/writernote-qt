@@ -419,10 +419,10 @@ auto StrokeNormal::loadPtr(const VersionFileController &versionController,
     }
 
     {
-        auto [res, d] = WListFast<pressure_t>::load(versionController, readable);
+        auto [res, d] = WVector<pressure_t>::load(versionController, readable);
         if (res)
             return {res, nullptr};
-        result->_pressure = static_cast<const WListFast<pressure_t>&>(d);
+        result->_pressure = std::move(d);
     }
 
     if (auto err = readable.read(result->_flag))
@@ -439,7 +439,7 @@ int StrokeNormal::save(WritableAbstract &file) const
     if (auto err = WListFast<PointF>::write(file, this->_point))
         return ERROR;
 
-    if (auto err = WListFast<pressure_t>::write(file, this->_pressure))
+    if (auto err = WVector<pressure_t>::write(file, this->_pressure))
         return ERROR;
 
     if (auto err = file.write(_flag))
@@ -448,7 +448,7 @@ int StrokeNormal::save(WritableAbstract &file) const
     return OK;
 }
 
-void StrokeNormal::append (WListFast<PointF> &&points, WListFast<pressure_t> &&pressures)
+void StrokeNormal::append (WListFast<PointF> &&points, WVector<pressure_t> &&pressures)
 {
     W_ASSERT(points.size() == pressures.size());
     _point = std::move(points);

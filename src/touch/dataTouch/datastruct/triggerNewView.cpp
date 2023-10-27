@@ -17,7 +17,7 @@ void __search_for_stroke(DataPrivateMuThread *data, int pos_audio, WVector<int> 
     W_ASSERT(page);
 
     for(; data->from < data->to; data->from ++){
-        if(page->atStroke(data->from).getPosizionAudio() == pos_audio){
+        if(page->atStroke(data->from).getPositionAudio() == pos_audio){
             save.append(data->from);
         }
     }

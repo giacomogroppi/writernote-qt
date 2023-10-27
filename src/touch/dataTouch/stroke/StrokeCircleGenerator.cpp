@@ -28,7 +28,7 @@ void StrokeCircleGenerator::model_circle_precision(const PointF &point, double &
 }
 
 auto StrokeCircleGenerator::make(const WListFast<PointF>& points,
-                                 const WListFast<pressure_t>& pressures,
+                                 const WVector<pressure_t>& pressures,
                                  const RectF& area) -> UniquePtr<Stroke>
 {
     UniquePtr<StrokeCircle> res(new StrokeCircle);
@@ -46,7 +46,7 @@ auto StrokeCircleGenerator::make(const WListFast<PointF>& points,
 }
 
 auto StrokeCircleGenerator::model_near(const WListFast<PointF> &points,
-                                       const WListFast<pressure_t> &pressures,
+                                       const WVector<pressure_t> &pressures,
                                        const RectF &area) -> double
 {
     using namespace WUtils;

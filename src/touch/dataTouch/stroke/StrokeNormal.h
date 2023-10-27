@@ -15,7 +15,7 @@ private:
     int load(WZipReaderSingle &reader, int version, int len_point = -1);
 
     WListFast<PointF> _point;
-    WListFast<pressure_t> _pressure;
+    WVector<pressure_t> _pressure;
     bool isInsideBiggerData(const RectF &rect) const;
     int removeAt(int i);
 
@@ -26,7 +26,7 @@ private:
      * \tparam T Iterator for points
      * \tparam Z Iterator for pressure
     */
-    template <class T = WListFast<PointF>::const_iterator, class Z = WListFast<pressure_t>::const_iterator>
+    template <class T = WListFast<PointF>::const_iterator, class Z = WVector<pressure_t>::const_iterator>
     class drawData {
     public:
         explicit drawData (T begin_point, T end_point, Z begin_press, bool press_null, int index_start)
@@ -91,7 +91,7 @@ public:
     size_t getSizeInFile() const final;
     void decreasePrecision() final;
 
-    void append (WListFast<PointF> &&points, WListFast<pressure_t> &&pressures) final;
+    void append (WListFast<PointF> &&points, WVector<pressure_t> &&pressures) final;
     
     int how_much_decrese() const final;
 
@@ -188,7 +188,7 @@ inline bool StrokeNormal::constantPressure() const
 inline void StrokeNormal::updateFlagPressure() const
 {
     pressure_t press;
-    auto &_press = (WListFast<pressure_t> &) _pressure;
+    auto &_press = (WVector<pressure_t> &) _pressure;
 
     this->_flag &= flag_state::UPDATE_PRESSURE;
 

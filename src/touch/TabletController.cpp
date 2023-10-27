@@ -81,7 +81,7 @@ TabletController::TabletController(WObject *parent,
             )
     };
 
-    this->_toolsContainer.append(WListFast<Tools*> {
+    this->_toolsContainer.append(WVector<Tools*> {
         _tools._square,
         _tools._pen,
         _tools._laser,

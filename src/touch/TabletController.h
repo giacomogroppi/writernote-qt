@@ -29,7 +29,7 @@ private:
         Square *_square;
     } _tools;
 
-    WListFast<Tools*> _toolsContainer;
+    WVector<Tools*> _toolsContainer;
 
     WOptionSettings _settings;
     SharedPtr<FileManager> _fileManager;

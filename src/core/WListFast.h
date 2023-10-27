@@ -29,6 +29,11 @@ private:
 
     static_assert(std::is_move_constructible<T>::value);
 
+#ifndef TEST_W
+    static_assert(sizeof(T) > sizeof(void*)
+                    or std::is_same<T, UnsignedLong>::value, "Use WVector for object smaller than sizeof(void*)");
+#endif // TEST_W
+
     T **_data;
     Size _size;
     Size _reserved;
@@ -160,16 +165,13 @@ public:
     class const_iterator
     {
     private:
-        const T ***_array;
+        const T *const * const *_array;
         Size _index;
     public:
-        const_iterator(const T ***data, Size index) noexcept : _array(data), _index(index) { W_ASSERT(index >= 0); };
-        const_iterator(const const_iterator &other) : _array(other._array), _index(other._index) {}
+        const_iterator(const T * const * const *data, Size index) noexcept : _array(data), _index(index) { W_ASSERT(index >= 0); };
 
         const T* operator->() const   { return (*_array)[_index]; };
         const T &operator*() const    { return *(*_array)[_index]; };
-
-        auto operator=(const const_iterator &other) -> const_iterator & = default;
 
         constexpr auto operator==(const_iterator i) const -> bool         { return _index == i._index && _array == i._array; }
         constexpr auto operator!=(const_iterator i) const -> bool         { return _index != i._index && _array == i._array; }
@@ -185,15 +187,14 @@ public:
     template <class Func>
     auto equals (const WListFast<T>& other, Func method) const noexcept -> bool;
 
-    nd auto begin() noexcept -> iterator { return iterator((T ***)&_data, 0); };
-    nd auto end()   noexcept -> iterator { return iterator((T ***)&_data, size());  };
+    nd auto begin() noexcept { return iterator(&_data, 0); };
+    nd auto end()   noexcept { return iterator(&_data, size()); };
 
-    auto constBegin() const noexcept -> const_iterator { return const_iterator((const T ***)&_data, 0); }
-    auto constEnd()   const noexcept -> const_iterator { return const_iterator((const T ***)&_data, size()); }
-    auto cBegin() const noexcept -> const_iterator { return const_iterator((const T ***)&_data, 0); }
-    auto cEnd()   const noexcept -> const_iterator { return const_iterator((const T ***)&_data, size()); }
-    auto begin() const noexcept -> const_iterator { return const_iterator((const T ***)&_data, 0); }
-    auto end()   const noexcept -> const_iterator { return const_iterator((const T ***)&_data, size()); }
+    nd auto begin() const noexcept { return const_iterator(&_data, 0); };
+    nd auto end()   const noexcept { return const_iterator(&_data, size()); };
+
+    auto constBegin() const noexcept { return const_iterator(&_data, 0); }
+    auto constEnd()   const noexcept { return const_iterator(&_data, size()); }
 
     /**
      * \param writable needs to have write(const void *data, size_t size) and it needs to return < 0 in case

@@ -41,15 +41,26 @@ public:
     DataStruct(DataStruct &&other) noexcept;
     ~DataStruct() = default;
 
-    void triggerNewView(const WListFast<int> &Page, int m_pos_ris, bool all);
+    /**
+     * \brief This method trigger the view of pages in the range of [begin, end)
+     * \tparam Iter The iterator that point to integer of the collection used
+     * \param begin first item of the collection
+     * \param end iterator that point to the end of the collection
+     * \param m_pos_ris In case the user is playing audio pass the current time value, otherwise pass -1
+     * */
+    template <class Iter>
+    void triggerNewView(Iter begin, Iter end, int m_pos_ris, bool all);
+
     void triggerNewView(int m_pos_ris, bool all);
+
     void triggerIfNone(int m_pos_ris);
+
     void triggerViewIfVisible(int m_pos_ris);
 
     void changeZoom(double zoom, int heightScreen);
 
-    auto constBegin()   const { return this->_page.constBegin(); }
-    auto constEnd()     const { return this->_page.constEnd(); }
+    auto begin()   const { return this->_page.begin(); }
+    auto end()     const { return this->_page.end(); }
     auto begin()              { return this->_page.begin(); }
     auto end()                { return this->_page.end(); }
 
@@ -413,10 +424,11 @@ inline int DataStruct::whichPage(const Stroke &stroke) const
     return i;
 }
 
-inline void DataStruct::triggerNewView(const WListFast<int> &Page, int m_pos_ris, bool all)
+template <class Iter>
+inline void DataStruct::triggerNewView(Iter begin, Iter end, int m_pos_ris, bool all)
 {
-    for (const int page: Page) {
-        this->triggerNewView(page, m_pos_ris, all);
+    for (; begin != end; begin ++) {
+        this->triggerNewView(*begin, m_pos_ris, all);
     }
 }
 
@@ -464,19 +476,19 @@ inline int DataStruct::whichPage(const PointF &point) const
  * to which data has been added*/
 inline void DataStruct::append(const WListFast<SharedPtr<Stroke>> &stroke, int m_pos_ris)
 {
-    WListFast<int> trigger;
+    WVector<int> trigger;
 
     for (const auto &ref : std::as_const(stroke)) {
         /// get the page of the point
         const int WhichPage = this->appendStroke(ref);
 
         /// it the page is not in the list we append
-        if (trigger.indexOf(WhichPage) == -1) {
+        if (trigger.indexOf(WhichPage).isInvalid()) {
             trigger.append(WhichPage);
         }
     }
 
-    this->triggerNewView(trigger, m_pos_ris, false);
+    this->triggerNewView(trigger.begin(), trigger.end(), m_pos_ris, false);
 }
 
 inline void DataStruct::removeAt(int indexPage)

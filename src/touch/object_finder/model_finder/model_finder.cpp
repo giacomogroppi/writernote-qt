@@ -14,15 +14,15 @@ static struct{
     double is[THREAD_FINDER];
 } finder;
 
-double (*functions[])(const WListFast<PointF>& points, const WListFast<pressure_t>& pressures, const RectF& area) = {
-        &StrokeLineGenerator::model_near,
+double (*functions[])(const WListFast<PointF>& points, const WVector<pressure_t>& pressures, const RectF& area) = {
+        &StrokeLineGenerator    ::model_near,
         &StrokeRectGenerator    ::model_near,
         &StrokeCircleGenerator  ::model_near
 };
 
 UniquePtr<Stroke> (*function_create[])(
             const WListFast<PointF>& points,
-            const WListFast<pressure_t>& pressures,
+            const WVector<pressure_t>& pressures,
             const RectF& area
         ) = {
         &StrokeLineGenerator    ::make,
@@ -80,13 +80,13 @@ static int get_index_most_prob(cdouble min_precision)
     return index;
 }
 
-auto model::find(const WListFast<PointF> &points, const WListFast<pressure_t> &pressures, const RectF &area) -> UniquePtr<Stroke>
+auto model::find(const WListFast<PointF> &points, const WVector<pressure_t> &pressures, const RectF &area) -> UniquePtr<Stroke>
 {
     std::unique_ptr<Stroke> res;
 
     W_ASSERT(!points.isEmpty());
 
-    WListFast<WTask *> tasks;
+    WVector<WTask *> tasks;
 
     for (int i = 0; i < THREAD_FINDER; i++) {
         auto task = Scheduler::Ptr<WTask>(new WTaskFunction(nullptr, [=]() {
@@ -99,8 +99,7 @@ auto model::find(const WListFast<PointF> &points, const WListFast<pressure_t> &p
         Scheduler::getInstance().addTaskGeneric(std::move(task));
     }
 
-    tasks.forAll([](WTask* task) { task->join(); });
-
+    tasks.forAll(&WTask::join);
 
     const auto index = get_index_most_prob(_min_precision);
     WDebug(debug_model, index);

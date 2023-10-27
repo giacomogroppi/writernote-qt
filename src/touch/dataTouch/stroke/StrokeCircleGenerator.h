@@ -11,11 +11,11 @@ private:
     static void model_circle_precision(const PointF &point, double &precision);
 public:
     static auto make(const WListFast<PointF>& points,
-                     const WListFast<pressure_t>& pressures,
+                     const WVector<pressure_t>& pressures,
                      const RectF& area) -> UniquePtr<Stroke>;
 
     // TODO: make this method return a StrokeGeneratorData
     static auto model_near(const WListFast<PointF> &points,
-                             const WListFast<pressure_t> &pressures,
-                             const RectF &area) -> double;
+                           const WVector<pressure_t> &pressures,
+                           const RectF &area) -> double;
 };

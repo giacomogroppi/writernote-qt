@@ -185,7 +185,7 @@ void Page::swap(WListFast<SharedPtr<Stroke> > &list,
     W_ASSERT(from >= to);
     DO_IF_DEBUG(
     int drop = 0;
-    WListFast<int> itemDrop;
+    WVector<int> itemDrop;
     );
 
     for(to --; from <= to; to --){
@@ -197,7 +197,7 @@ void Page::swap(WListFast<SharedPtr<Stroke> > &list,
 
     DO_IF_DEBUG_ENABLE(debugPage,
         WDebug(true, "Page::swap" << _count - 1 << drop << "Item drop, list" << itemDrop);
-            );
+    );
 }
 
 auto Page::swap(int index, const SharedPtr<Stroke>& newData) -> SharedPtr<Stroke>
@@ -288,7 +288,7 @@ void * __page_load(void *__data)
 
         const auto &color = ref.getColor(
             (m_pos_ris != -1)
-                    ? ((ref.getPosizionAudio() > m_pos_ris) ? 4 : 1)
+                    ? ((ref.getPositionAudio() > m_pos_ris) ? 4 : 1)
                     : 1
         );
 

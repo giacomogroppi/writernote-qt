@@ -135,6 +135,8 @@ public:
      * */
     auto removeOrderHighToLow(const T& object, const Fn<bool(const T &, const T &)> &cmp) noexcept -> bool;
 
+    void forAll(Fn<void(T&)> method) noexcept;
+
     auto operator=(const WVector<T> &other) -> WVector<T>&;
     auto operator=(WVector &&other) noexcept -> WVector<T>&;
     auto operator==(const WVector<T> &other) const -> bool;
@@ -146,29 +148,29 @@ public:
     class AbstractIterator
     {
     private:
-        T *array;
+        T2 * const * array;
         long index;
 #ifdef DEBUGINFO
         long max;
 #endif // DEBUGINFO
     public:
         using difference_type = std::ptrdiff_t;
-        using value_type = T;
-        using pointer = T*;
-        using reference = T&;
+        using value_type = T2;
+        using pointer = T2*;
+        using reference = T2&;
         using iterator_category = std::random_access_iterator_tag;
 
 #if !defined(DEBUGINFO)
-        explicit AbstractIterator(T *data, long index, long max) : array(data), index(index) { unused(max); };
+        explicit AbstractIterator(T2* const * data, long index, long max) : array(data), index(index) { unused(max); };
 #else
-        explicit AbstractIterator(T* data, long index, long max): array(data), index(index), max(max) {};
+        explicit AbstractIterator(T2* const * data, long index, long max): array(data), index(index), max(max) {};
 #endif // DEBUGINFO
 
         AbstractIterator(const AbstractIterator& other) noexcept = default;
         AbstractIterator(AbstractIterator&& other) noexcept = default;
 
-        auto operator->() const -> T* { W_ASSERT(index >= 0 and index < max); return &array[index]; };
-        auto operator*()  const -> T& { W_ASSERT(index >= 0 and index < max); return array[index]; };
+        auto operator->() const -> T2* { W_ASSERT(index >= 0 and index < max); return array[index]; };
+        auto operator*()  const -> T2& { W_ASSERT(index >= 0 and index < max); return (*array)[index]; };
 
         auto operator++() -> AbstractIterator & { index ++; return *this; }
         auto operator--() -> AbstractIterator & { index --; return *this; }
@@ -198,7 +200,7 @@ public:
             return 0;
         }
 
-        auto operator[](long i) -> T& { W_ASSERT(i >= 0 and i < max); return array[i]; };
+        auto operator[](long i) -> T2& { W_ASSERT(i >= 0 and i < max); return (*array)[i]; };
 
         auto operator==(const AbstractIterator& iter) const -> bool = default;
         auto operator!=(const AbstractIterator& iter) const -> bool = default;
@@ -221,15 +223,14 @@ public:
     nd auto rbegin() const noexcept { return reverse_const_iterator(end()); }
     nd auto rend() const noexcept { return reverse_const_iterator(begin()); }
 
-    nd auto begin() noexcept -> iterator { return iterator(this->_data, 0u, _size); };
-    nd auto end()   noexcept -> iterator { return iterator(this->_data, size(), _size);  };
+    nd auto begin() noexcept -> iterator { return iterator{&this->_data, 0, _size}; };
+    nd auto end()   noexcept -> iterator { return iterator{&this->_data, size(), _size};  };
 
-    nd auto constBegin() const noexcept -> const_iterator  { return const_iterator(_data, 0u, _size); }
-    nd auto constEnd()   const noexcept -> const_iterator { return const_iterator(_data, size(), _size); }
-    nd auto cBegin() const noexcept -> const_iterator { return const_iterator(_data, 0u, _size); }
-    nd auto cEnd()   const noexcept -> const_iterator { return const_iterator(_data, size(), _size); }
-    nd auto begin() const noexcept -> const_iterator { return const_iterator(_data, 0u, _size); }
-    nd auto end()   const noexcept -> const_iterator { return const_iterator(_data, size(), _size); }
+    nd auto constBegin() const noexcept { return const_iterator{&_data, 0, _size}; };
+    nd auto constEnd() const noexcept { return const_iterator{&_data, size(), _size}; };
+
+    nd auto begin() const noexcept -> const_iterator { return const_iterator{&_data, Size(0), _size}; }
+    nd auto end()   const noexcept;
 
     /**
      * \return < 0 if error
@@ -332,6 +333,12 @@ inline auto WVector<T>::loadMultiThread(
 }
 
 template <class T>
+auto WVector<T>::end() const noexcept
+{
+    return const_iterator{&_data, size(), _size};
+}
+
+template <class T>
 template <class T2>
 auto WVector<T>::write(WritableAbstract &writable, const WVector<T2> &list) noexcept -> Error
 {
@@ -425,9 +432,9 @@ auto WVector<T>::operator=(WVector<T> &&other) noexcept -> WVector<T> &
 template<class T>
 auto WVector<T>::takeAt(Index i) noexcept -> T
 {
-    W_ASSERT(i < size());
+    W_ASSERT(i < Index(size()));
 
-    T element = std::move(_data[i]);
+    T element = std::forward<T>(_data[i]);
 
     removeAt(i);
 
@@ -963,4 +970,11 @@ auto WVector<T>::at(WVector::Size i) const -> const T&
 {
     W_ASSERT(inBound(i));
     return _data[i];
+}
+
+template <class T>
+void WVector<T>::forAll(Fn<void(T&)> method) noexcept
+{
+    for (auto& ref: *this)
+        method(ref);
 }

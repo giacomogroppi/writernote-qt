@@ -11,11 +11,7 @@ private:
         double r;
         pressure_t press;
 
-        bool operator==(const StrokeCircleData &other) const {
-            return  this->press == other.press and
-                    this->position == other.position and
-                    this->r == other.r;
-        }
+        bool operator==(const StrokeCircleData &other) const = default;
     } _data;
 
     int load(WZipReaderSingle &reader);
@@ -35,26 +31,26 @@ public:
     bool is_inside(const RectF &rect, double precision) const override;
 
     void append(const PointF &point, pressure_t pressure) override;
-    void append (WListFast<PointF> &&points, WListFast<pressure_t> &&pressures) final;
+    void append (WListFast<PointF> &&points, WVector<pressure_t> &&pressures) final;
     virtual size_t createControl() const override;
 
-    RectF getBiggerPointInStroke() const override;
-    bool isInside(const RectF &rect) const final;
-    int save(WritableAbstract &file) const final;
+    auto getBiggerPointInStroke() const -> RectF final;
+    auto isInside(const RectF &rect) const -> bool final;
+    auto save(WritableAbstract &file) const -> int final;
 
-    size_t getSizeInMemory() const override;
-    size_t getSizeInFile() const final;
+    auto getSizeInMemory() const -> size_t final;
+    auto getSizeInFile() const -> size_t final;
 
-    void decreasePrecision() override;
+    void decreasePrecision() final;
 
-    void adjust(double zoom) override;
-    std::unique_ptr<Stroke> clone() const override;
+    void adjust(double zoom) final;
+    auto clone() const -> UniquePtr<Stroke> final;
 
-    int how_much_decrese() const override;
+    auto how_much_decrese() const -> int final;
 
-    std::unique_ptr<Stroke> makeNormal() const final;
+    auto makeNormal() const -> UniquePtr<Stroke> final;
 
-    bool isEmpty() const final;
+    auto isEmpty() const -> bool final;
 
     void scale(const PointF &offset) final;
 

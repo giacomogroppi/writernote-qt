@@ -29,7 +29,7 @@ void StrokeLineGenerator::is_near_line(double m, double &max, cdouble q, const P
 }
 
 void StrokeLineGenerator::makeVertical(const WListFast<PointF>& points,
-                                       const WListFast<pressure_t>& pressures,
+                                       const WVector<pressure_t>& pressures,
                                        const RectF& area, StrokeLine &res)
 {
     using namespace WUtils;
@@ -57,7 +57,7 @@ void StrokeLineGenerator::makeVertical(const WListFast<PointF>& points,
 }
 
 void StrokeLineGenerator::makeGeneric(const WListFast<PointF>& points,
-                                      const WListFast<pressure_t>& pressures,
+                                      const WVector<pressure_t>& pressures,
                                       const RectF& area, StrokeLine &res)
 {
     using namespace WUtils;
@@ -74,9 +74,9 @@ void StrokeLineGenerator::makeGeneric(const WListFast<PointF>& points,
     res._data.press = pressure;
 }
 
-std::unique_ptr<Stroke> StrokeLineGenerator::make(const WListFast<PointF>& points,
-                                                  const WListFast<pressure_t>& pressures,
-                                                  const RectF& area)
+auto StrokeLineGenerator::make(const WListFast<PointF>& points,
+                                                  const WVector<pressure_t>& pressures,
+                                                  const RectF& area) -> std::unique_ptr<Stroke>
 {
     std::unique_ptr<StrokeLine> tmp(new StrokeLine);
 
@@ -103,8 +103,8 @@ force_inline void StrokeLineGenerator::model_line_adjust_m(double &m)
     }
 }
 
-double StrokeLineGenerator::model_near(const WListFast<PointF> &points, const WListFast<pressure_t> &pressures,
-                                       const RectF &area) noexcept
+auto StrokeLineGenerator::model_near(const WListFast<PointF> &points, const WVector<pressure_t> &pressures,
+                                       const RectF &area) noexcept -> double
 {
     int segno_var_x, segno_var_y;
     const PointF *one, *two;

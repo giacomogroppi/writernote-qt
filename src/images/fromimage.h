@@ -51,7 +51,7 @@ public:
 
     void moveImage(const PointF &translation);
 
-    void moveImage(const WListFast<int> &index, const PointF &translation);
+    void moveImage(const WVector<int> &index, const PointF &translation);
 
     static void drawImage(WPainter &painter, const RectF &rect, const WImage &img);
     static void drawImage(WPainter &painter, const ImageDrawable &img);
@@ -113,7 +113,7 @@ inline void ImageContainerDrawable::moveImage(const PointF &translation)
     }
 }
 
-inline void ImageContainerDrawable::moveImage(const WListFast<int> &index, const PointF &translation)
+inline void ImageContainerDrawable::moveImage(const WVector<int> &index, const PointF &translation)
 {
     for (const auto currentIndex : std::as_const(index)) {
         this->m_img.operator[](currentIndex).i += translation;
