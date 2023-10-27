@@ -59,7 +59,7 @@ auto StrokeRectGenerator::make(const WListFast<PointF>& points,
 double StrokeRectGenerator::model_near(const WListFast<PointF> &points, const WListFast<pressure_t> &pressures,
                                        const RectF &area)
 {
-    using namespace WCommonScript;
+    using namespace WUtils;
 
     double precision = 0.;
     int err = 0;

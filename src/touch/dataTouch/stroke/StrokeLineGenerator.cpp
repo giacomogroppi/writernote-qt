@@ -32,7 +32,7 @@ void StrokeLineGenerator::makeVertical(const WListFast<PointF>& points,
                                        const WListFast<pressure_t>& pressures,
                                        const RectF& area, StrokeLine &res)
 {
-    using namespace WCommonScript;
+    using namespace WUtils;
 
     // TODO: make this an average
     const auto press = pressures.first();
@@ -60,7 +60,7 @@ void StrokeLineGenerator::makeGeneric(const WListFast<PointF>& points,
                                       const WListFast<pressure_t>& pressures,
                                       const RectF& area, StrokeLine &res)
 {
-    using namespace WCommonScript;
+    using namespace WUtils;
 
     // make the pressure an average
     const auto pressure = pressures.first();

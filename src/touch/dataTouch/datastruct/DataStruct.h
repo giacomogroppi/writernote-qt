@@ -446,7 +446,7 @@ inline auto DataStruct::whichPage(double height) const -> int
 
     W_ASSERT(height >= 0.);
 
-    const auto index = WCommonScript::diff(height / heigthPage);
+    const auto index = WUtils::diff(height / heigthPage);
 
     W_ASSERT(index >= 0 and index < this->lengthPage());
     return index;

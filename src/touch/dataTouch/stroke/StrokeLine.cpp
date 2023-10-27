@@ -92,7 +92,7 @@ bool StrokeLine::is_inside(const RectF &area, double precision) const
 
 void StrokeLine::append(const PointF &point, pressure_t pressure)
 {
-    using namespace WCommonScript;
+    using namespace WUtils;
     const auto dist1 = distance_not_square(_data.pt1, point);
     const auto dist2 = distance_not_square(_data.pt2, point);
 

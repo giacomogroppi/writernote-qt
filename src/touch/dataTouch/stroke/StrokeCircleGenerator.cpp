@@ -18,8 +18,8 @@ void StrokeCircleGenerator::model_circle_precision(const PointF &point, double &
      * X^2 + Y^2 - R = res
      */
 
-    res =   WCommonScript::Power(point.x() - x, 2) +
-            WCommonScript::Power(point.y() - y, 2)
+    res = WUtils::Power(point.x() - x, 2) +
+          WUtils::Power(point.y() - y, 2)
           - tmp._r;
 
     if(std::abs(res) > precision){
@@ -49,7 +49,7 @@ auto StrokeCircleGenerator::model_near(const WListFast<PointF> &points,
                                        const WListFast<pressure_t> &pressures,
                                        const RectF &area) -> double
 {
-    using namespace WCommonScript;
+    using namespace WUtils;
     constexpr auto coef = 500.;
     constexpr auto _end = 10.;
     double precision = 0.;

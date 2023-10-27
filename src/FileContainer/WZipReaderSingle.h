@@ -83,7 +83,7 @@ inline int WZipReaderSingle::readBySize(void *to, size_t size)
 
     W_ASSERT(this->offset == off + size);
 
-    WCommonScript::WMemcpy(to, data, size);
+    WUtils::WMemcpy(to, data, size);
 
     return 0;
 }
@@ -116,7 +116,7 @@ inline Error WZipReaderSingle::read(void *to, size_t size) const
         return Error::makeErrInternal();
     }
 
-    WCommonScript::WMemcpy(to, data, size);
+    WUtils::WMemcpy(to, data, size);
     return Error::makeOk();
 }
 

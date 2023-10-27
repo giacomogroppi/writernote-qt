@@ -83,7 +83,7 @@ bool StrokeRect::is_inside(const RectF &rect, double precision) const
 
 void StrokeRect::append(const PointF &point, pressure_t pressure)
 {
-    using namespace WCommonScript;
+    using namespace WUtils;
     const auto distanceTopLeft = distance(point, _data.rect.topLeft());
     const auto distanceBottomRight  = distance(point, _data.rect.bottomRight());
     const auto distanceTopRight  = distance(point, _data.rect.topRight());

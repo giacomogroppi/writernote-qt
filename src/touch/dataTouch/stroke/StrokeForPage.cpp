@@ -22,7 +22,7 @@ void StrokeForPage::setPressure(pressure_t press)
 
 void StrokeForPage::append(const StrokeNormal &stroke)
 {
-    using namespace WCommonScript;
+    using namespace WUtils;
     auto &l = this->_data->_point;
 
     l.append(stroke._point);

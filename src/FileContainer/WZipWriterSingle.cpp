@@ -42,7 +42,7 @@ auto WZipWriterSingle::write(const void *from, size_t size_object) -> Error
     W_ASSERT(from);
 
     void *to = this->_data + this->_offset;
-    WCommonScript::WMemcpy(to, from, size_object);
+    WUtils::WMemcpy(to, from, size_object);
 #ifdef DEBUGINFO
     for(size_t i = 0; i < size_object; i++){
         const char *d1 = (const char *) to;

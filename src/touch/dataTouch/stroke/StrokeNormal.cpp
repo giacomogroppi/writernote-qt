@@ -178,12 +178,12 @@ size_t StrokeNormal::createControl() const
     size_t control = 0;
 
     for(const auto &p : std::as_const(this->_point)){
-        control += WCommonScript::diff(p.x());
-        control += WCommonScript::diff(p.y());
+        control += WUtils::diff(p.x());
+        control += WUtils::diff(p.y());
     }
 
     for(const auto &p : std::as_const(this->_pressure)){
-        control += WCommonScript::diff(p);
+        control += WUtils::diff(p);
     }
 
     return control + Stroke::createControl();

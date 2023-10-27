@@ -32,7 +32,7 @@ void WPool::addTaskGeneric(WTask *task)
 {
     W_ASSERT(this->_active_thread == 0);
     WMutexLocker _(this->_tasks_locker);
-    W_ASSERT(WCommonScript::contains(_tasks, task) == 0);
+    W_ASSERT(WUtils::contains(_tasks, task) == 0);
     this->_tasks.push_back(task);
 
     WObject::connect(task, &WTask::finished,

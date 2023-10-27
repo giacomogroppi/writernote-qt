@@ -19,6 +19,7 @@
 #include "core/pointer/SharedPtr.h"
 #include "core/WVector.h"
 #include "core/WPainter/WPainterUnsafe.h"
+#include "utils/WCommonScript.h"
 
 #define COLOR_NULL WColor::fromRgb(255, 255, 255, 255)
 #define TEMP_COLOR WColor::fromRgb(105, 105, 105, 255)
@@ -37,7 +38,7 @@
 
 #define Define_PAINTER(painter) Define_PAINTER_p(painter, _imgDraw)
 
-#define End_painter(painter) if(!painter.end()) { if(WCommonScript::debug_enable()){ std::abort(); }  };
+#define End_painter(painter) if(!painter.end()) { if(WUtils::debug_enable()){ std::abort(); }  };
 
 
 enum n_style: int;
@@ -358,8 +359,8 @@ force_inline bool Page::updateFlag(
             goto ret;
     }
 
-    _isVisible = WCommonScript::included(0.0, heightView, minH) or
-                 WCommonScript::included(0.0, heightView, maxH);
+    _isVisible = WUtils::included(0.0, heightView, minH) or
+                 WUtils::included(0.0, heightView, maxH);
 
 ret:
     WDebug(debugPage, "count" << _count

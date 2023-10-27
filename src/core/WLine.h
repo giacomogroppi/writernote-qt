@@ -338,7 +338,7 @@ inline bool WLineTemplate<Precision>::belongs(const PointTemplate<Precision> &po
     return isUp and isDown and isInDomain(point, precision);
 
     /*
-    const auto res = WCommonScript::is_near(this->_m * point.x() + this->_p, point.y(), precision);
+    const auto res = WUtils::is_near(this->_m * point.x() + this->_p, point.y(), precision);
 
     if (isInDomain(point, precision)) {
         WDebug(debug_WLine, "\t" << "It's in domain" << point);
@@ -443,11 +443,11 @@ bool WLineTemplate<Precision>::intersect(
     const WLineTemplate<Precision> line2Down    = line2.bottom(precision)   .growLeft(precision).growRight(precision);
 
     /*
-    W_ASSERT(WCommonScript::is_near(line1Up._m, line1._m, 1e-05));
-    W_ASSERT(WCommonScript::is_near(line2Up._m, line2._m, 1e-05));
+    W_ASSERT(WUtils::is_near(line1Up._m, line1._m, 1e-05));
+    W_ASSERT(WUtils::is_near(line2Up._m, line2._m, 1e-05));
 
-    W_ASSERT(WCommonScript::is_near(line1Up._m, line1Down._m, 1e-05));
-    W_ASSERT(WCommonScript::is_near(line2Up._m, line2Down._m, 1e-05));
+    W_ASSERT(WUtils::is_near(line1Up._m, line1Down._m, 1e-05));
+    W_ASSERT(WUtils::is_near(line2Up._m, line2Down._m, 1e-05));
     */
 
     if (isTouch(line1Up, line2Up))

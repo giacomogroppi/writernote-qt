@@ -489,21 +489,21 @@ inline constexpr RectTemplate<T>::RectTemplate(
             const PointTemplate<T> &pt2
         )
     : _topLeft(
-            WCommonScript::min(
+        WUtils::min(
                     pt1.x(),
                     pt2.x()
             ),
-            WCommonScript::min(
+        WUtils::min(
                     pt1.y(),
                     pt2.y()
             )
         )
     , _bottomRight(
-            WCommonScript::max(
+                WUtils::max(
                     pt1.x(),
                     pt2.x()
             ),
-            WCommonScript::max(
+                WUtils::max(
                     pt1.y(),
                     pt2.y()
             )

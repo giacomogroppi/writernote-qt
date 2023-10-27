@@ -38,7 +38,7 @@ force_inline void ObjectFinder::move(const PointF& point)
 
     if(_point.isSet()){
         // if the point is equal we don't have to stop the timer
-        if(un(WCommonScript::is_near(_point, point, 1.))){
+        if(un(WUtils::is_near(_point, point, 1.))){
             return;
         }
 

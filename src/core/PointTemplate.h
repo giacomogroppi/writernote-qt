@@ -333,10 +333,10 @@ inline auto PointTemplate<T>::rotate(const PointTemplate<T> &cir, T angle) const
     const auto currentDeltaX = x() - cir.x();
     const auto currentDeltaY = -(y() - cir.y());
     const auto currentDistance = std::sqrt(
-            WCommonScript::Power(
+            WUtils::Power(
                     x() - cir.x(), 2
             ) +
-            WCommonScript::Power(
+            WUtils::Power(
                     y() - cir.y(), 2
             )
     );
@@ -344,7 +344,7 @@ inline auto PointTemplate<T>::rotate(const PointTemplate<T> &cir, T angle) const
     const auto currentAngle = currentDistance > 0
             ? std::acos(static_cast<double>((x() - cir.x()) / currentDistance))
             : 0;
-    const auto newCurrentAngle = currentAngle + static_cast<double>(WCommonScript::toRad(angle));
+    const auto newCurrentAngle = currentAngle + static_cast<double>(WUtils::toRad(angle));
 
     const auto newX = std::cos(newCurrentAngle) * currentDistance + cir.x();
     const auto newY = std::sin(newCurrentAngle) * currentDistance + cir.y();

@@ -66,7 +66,7 @@ auto MemWritable::merge(const Fn<Error(const void *, size_t)>& append) -> Error
 auto MemWritable::writeUntilEnd(const void *from, size_t size) -> size_t
 {
     const size_t byteToWrite = std::min(MemWritable::sizePage - _internalStack, size);
-    WCommonScript::WMemcpy(getData() + _internalStack, static_cast<const char*>(from), byteToWrite);
+    WUtils::WMemcpy(getData() + _internalStack, static_cast<const char*>(from), byteToWrite);
 
     _size += byteToWrite;
     _internalStack += byteToWrite;
@@ -84,7 +84,7 @@ auto MemWritable::writeInDedicated(const void *from, size_t size) -> size_t
     W_ASSERT(size >= MemWritable::sizePage);
     W_ASSERT(_internalStack == 0u);
 
-    WCommonScript::WMemcpy(getData(), from, MemWritable::sizePage);
+    WUtils::WMemcpy(getData(), from, MemWritable::sizePage);
 
     _allocatedMemory.push_back(malloc(MemWritable::sizePage));
     _size += MemWritable::sizePage;
@@ -97,7 +97,7 @@ auto MemWritable::writeFromZero(const void *from, size_t size) -> size_t
     W_ASSERT(size < MemWritable::sizePage);
     W_ASSERT(_internalStack == 0u);
 
-    WCommonScript::WMemcpy(getData(), from, size);
+    WUtils::WMemcpy(getData(), from, size);
 
     _size += size;
     _internalStack += size;

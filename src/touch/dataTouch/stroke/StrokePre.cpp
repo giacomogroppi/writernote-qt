@@ -48,7 +48,7 @@ void StrokePre::timerEnd()
 
 auto StrokePre::merge() -> UniquePtr<Stroke>
 {
-    using namespace WCommonScript;
+    using namespace WUtils;
     W_ASSERT(this->already_merge == false);
     W_ASSERT(_point.size() == _pressure.size());
     W_ASSERT(this->_stroke != nullptr);
@@ -271,7 +271,7 @@ void StrokePre::timerReset(const PointF &point) noexcept
 {
     if(_timerPoint.isSet()){
         // if the point is equal we don't have to stop the timer
-        if(WCommonScript::is_near(_timerPoint, point, 1.)){
+        if(WUtils::is_near(_timerPoint, point, 1.)){
             return;
         }
 

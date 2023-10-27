@@ -88,7 +88,7 @@ static force_inline void draw_null(Page &_page, const WVector<int> &point,
 {
     W_ASSERT(point.size() == stroke.size());
 
-    WCommonScript::for_each(point, stroke, [&_page, is_left](
+    WUtils::for_each(point, stroke, [&_page, is_left](
                                 const int indexPoint,
                                 const int indexStroke)
     {

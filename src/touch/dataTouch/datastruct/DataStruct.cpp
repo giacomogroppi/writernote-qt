@@ -248,7 +248,7 @@ void DataStruct::moveToPage(int newPage)
     W_ASSERT(this->getPointFirstPageNoZoom().x() <= 0.);
     W_ASSERT(this->getPointFirstPageNoZoom().y() <= 0.);
 
-    if constexpr (WCommonScript::debug_enable()){
+    if constexpr (WUtils::debug_enable()){
         const auto not_used point = this->adjustPoint(PointF(0., 0.));
         const auto not_used index = this->whichPage(point);
         WDebug(true, newPage << index << this->getPointFirstPage() << get_range_visible());
@@ -269,7 +269,7 @@ int DataStruct::getLastPageVisible() const
         }
     }
 
-    WCommonScript::abortIfDebug(__FILE__, __LINE__);
+    WUtils::abortIfDebug(__FILE__, __LINE__);
     return -1;
 }
 

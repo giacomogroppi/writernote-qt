@@ -654,10 +654,10 @@ inline void WListFast<T>::remove(Size from, Size to) noexcept
     }
 
 #ifdef DEBUGINFO
-    WCommonScript::WMemset(&_data[from], 0, sizeof(T*) * (to - from));
+    WUtils::WMemset(&_data[from], 0, sizeof(T*) * (to - from));
 #endif
 
-    WCommonScript::WMemmove(&_data[from], &_data[to], sizeof(T*) * (_size - to));
+    WUtils::WMemmove(&_data[from], &_data[to], sizeof(T*) * (_size - to));
 
     if (this->_reserved == 0) {
         this->_data = (T **) realloc(this->_data, (this->_size - (to - from)) * sizeof(T *));

@@ -110,7 +110,7 @@ const QPainterPath& RoundedPolygon::GetPath()
 
 void WPainter::addCurve(const PointF &to, const PointF &control) noexcept
 {
-    using namespace WCommonScript;
+    using namespace WUtils;
 
     const PointF start = {_path.currentPosition().x(), _path.currentPosition().y()};
 

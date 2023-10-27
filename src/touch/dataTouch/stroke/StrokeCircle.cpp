@@ -17,7 +17,7 @@ StrokeCircle::StrokeCircle()
 
 double StrokeCircle::distanceFromCenter(const PointF &point) const
 {
-    using namespace WCommonScript;
+    using namespace WUtils;
     return std::sqrt(
         Power(_data.position.x() - point.x(), 2) +
         Power(_data.position.y() - point.y(), 2)
@@ -81,8 +81,8 @@ int StrokeCircle::is_inside(const WLine &line, int from, int precision, cbool ne
 
     WDebug(debug, distance1 << distance2 << tl << br);
 
-    if(     WCommonScript::is_near(distance1, _data.r, (double) precision) or
-            WCommonScript::is_near(distance2, _data.r, (double) precision))
+    if(WUtils::is_near(distance1, _data.r, (double) precision) or
+       WUtils::is_near(distance2, _data.r, (double) precision))
         return true;
 
     cbool res = oneSide(distance1, distance2, precision) ||
@@ -123,7 +123,7 @@ bool StrokeCircle::is_inside(const RectF &area, double precision) const
 void StrokeCircle::append(const PointF &point, pressure_t pressure)
 {
     (void)(pressure);
-    _data.r = WCommonScript::distance(_data.position, point);
+    _data.r = WUtils::distance(_data.position, point);
 }
 
 void StrokeCircle::adjust(double zoom)
@@ -165,8 +165,8 @@ std::unique_ptr<Stroke> StrokeCircle::makeNormal() const
     };
 
     press = _data.press;
-    from =  _data.position.y() - WCommonScript::Power(_data.r, 1);
-    to =    _data.position.y() + WCommonScript::Power(_data.r, 1);
+    from = _data.position.y() - WUtils::Power(_data.r, 1);
+    to = _data.position.y() + WUtils::Power(_data.r, 1);
 
     _pointLeft.reserve(to - from);
     _pointRigth.reserve(to - from);
@@ -175,8 +175,8 @@ std::unique_ptr<Stroke> StrokeCircle::makeNormal() const
     W_ASSERT(from <= to);
 
     for(; from <= to;){
-        const auto _res = WCommonScript::Power(double(from) - _data.position.y(), 2);   // = y^2
-        const double res1 = WCommonScript::Power(_data.r, 2) - _res;         // = x^2
+        const auto _res = WUtils::Power(double(from) - _data.position.y(), 2);   // = y^2
+        const double res1 = WUtils::Power(_data.r, 2) - _res;         // = x^2
 
         W_ASSERT(res1 >= 0.);
 

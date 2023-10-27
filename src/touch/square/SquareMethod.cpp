@@ -66,7 +66,7 @@ void SquareMethod::reset()
         WListFast<SharedPtr<Stroke>> ll   = _stroke.operator[](i);
 
 #ifdef DEBUGINFO
-        WCommonScript::for_each(ll, [](const std::shared_ptr<Stroke>& stroke){
+        WUtils::for_each(ll, [](const std::shared_ptr<Stroke>& stroke){
             W_ASSERT(!stroke->isEmpty());
         });
 #endif // DEBUGINFO
@@ -321,8 +321,8 @@ void SquareMethod::moveObjectIntoPrivate(WListFast<WVector<int>> &index, Documen
     }
 
 #ifdef DEBUGINFO
-    WCommonScript::for_each(_stroke, [](const WListFast<SharedPtr<Stroke>> &list) {
-        WCommonScript::for_each(list, [](const SharedPtr<Stroke>& s) {
+    WUtils::for_each(_stroke, [](const WListFast<SharedPtr<Stroke>> &list) {
+        WUtils::for_each(list, [](const SharedPtr<Stroke>& s) {
             W_ASSERT(!s->isEmpty());
         });
     });
@@ -477,7 +477,7 @@ void SquareMethod::actionProperty(PropertySignals action)
             NAME_LOG_EXT->write(
                     WString("It was not possibile to determinate %1").arg(WString::number((int)action)),
                     log_ui::error_internal);
-            WCommonScript::abortIfDebug(__FUNCTION__, __LINE__);
+            WUtils::abortIfDebug(__FUNCTION__, __LINE__);
         }
     }
 
@@ -506,10 +506,10 @@ force_inline void SquareMethod::adjustPoint()
     WDebug(debugSquare, topLeft << bottomRight);
 
     if(topLeft.x() > bottomRight.x())
-        WCommonScript::swap(topLeft.rx(), bottomRight.rx());
+        WUtils::swap(topLeft.rx(), bottomRight.rx());
 
     if(topLeft.y() > bottomRight.y())
-        WCommonScript::swap(topLeft.ry(), bottomRight.ry());
+        WUtils::swap(topLeft.ry(), bottomRight.ry());
 
     WDebug(debugSquare, topLeft << bottomRight);
 
@@ -534,7 +534,7 @@ static void square_draw_square(
 
 void SquareMethod::needReload(WPainter &painter, const Document &doc)
 {
-    if constexpr (WCommonScript::debug_enable()){
+    if constexpr (WUtils::debug_enable()){
         if (!painter.isActive()) {
             WDebug(true, "Painter not active in Square");
             std::abort();

@@ -21,7 +21,7 @@ auto MemReadable::read(void *to, size_t size) const -> Error
         return Error::makeCorruption();
     }
 
-    WCommonScript::WMemcpy(to, _data + _seek, size);
+    WUtils::WMemcpy(to, _data + _seek, size);
     _seek += size;
 
     return Error::makeOk();

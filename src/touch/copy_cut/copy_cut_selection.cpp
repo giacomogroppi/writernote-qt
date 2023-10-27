@@ -128,7 +128,7 @@ int copy::selection(
 
 void copy::adjustData(const PointF &offset)
 {
-    using namespace WCommonScript;
+    using namespace WUtils;
     const PointF &inverso = offset * -1.;
 
     for_each(this->m_stroke, [&inverso](const std::shared_ptr<Stroke>& d) {

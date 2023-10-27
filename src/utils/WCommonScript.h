@@ -62,7 +62,7 @@ force_inline std::string get_only_name(const char *name)
 }
 #endif
 
-namespace WCommonScript{
+namespace WUtils{
 force_inline constexpr not_used int debug_enable()
 {
 #ifdef DEBUGINFO
@@ -296,18 +296,7 @@ force_inline void set_zero(T &value)
 template <typename T>
 inline constexpr T Power(const T &value, cint power)
 {
-    T res = value;
-
-    if(power == 0){
-        return 1;
-    }
-
-    int i = 1;
-    for(; i < power; i ++){
-        res *= value;
-    }
-
-    return res;
+    return std::pow(value, power);
 }
 
     template <class T>
@@ -322,12 +311,12 @@ template <class T, class Z>
 force_inline bool is_near(T one, T two, Z precision)
 {
     W_ASSERT(precision >= Z(0));
-    return WCommonScript::abs(one - two) <= precision;
+    return WUtils::abs(one - two) <= precision;
 }
 
 force_inline double distance(double y1, double y2)
 {
-    return WCommonScript::abs(y1 - y2);
+    return WUtils::abs(y1 - y2);
 }
 
 // return true if left <= value <= right
@@ -338,11 +327,13 @@ force_inline bool is_between(T left, T value, T right, T precision = T(0))
     return left - precision <= value and value <= right + precision;
 }
 
-// return true if qMin(left, rigth) <= value <= qMax(right, left)
-force_inline bool is_between_change(double left, double value, double rigth)
+/**
+ * \return True if WUtils::min(left, right) <= value <= WUtils::max(right, left)
+ * */
+force_inline bool is_between_change(double left, double value, double right)
 {
-    const auto min = std::min(left, rigth);
-    const auto max = std::min(left, rigth);
+    const auto min = std::min(left, right);
+    const auto max = std::min(left, right);
 
     return min <= value and value <= max;
 }
