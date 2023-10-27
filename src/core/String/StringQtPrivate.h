@@ -78,8 +78,6 @@ public:
             QString::append(QByteArray(d, size));
     }
 
-    auto addSlashIfNecessary() const -> WString;
-
     void append (const QChar c);
 
     auto charAt(int i) const -> char;
@@ -95,15 +93,6 @@ inline void WString::append(const QChar c)
 inline auto WString::charAt(int i) const -> char
 {
     return at(i).toLatin1();
-}
-
-inline auto WString::addSlashIfNecessary() const -> WString
-{
-    if (isEmpty())
-        return {slash::__slash()};
-    if (at(size() - 1) != slash::__slash())
-        return *this + slash::__slash();
-    return *this;
 }
 
 inline auto WString::contains(std::initializer_list<char> listOfChar) const -> bool

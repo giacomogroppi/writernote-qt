@@ -5,9 +5,8 @@
 class pathFile
 {
 public:
-    static WString remove_file(const WString &path);
-
 #if defined(WIN32) || defined(WIN64) || defined(__OS2__)
+    // TODO: remove this method and use WPath
     static WString changeSlash(const WString &path);
 #endif
 };
