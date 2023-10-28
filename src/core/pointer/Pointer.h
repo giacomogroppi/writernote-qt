@@ -36,7 +36,7 @@ public:
     auto operator->() -> T*;
     auto operator*() -> T&;
 
-    void doAndUnref (auto method);
+    void doAndUnref (Fn<void(T&)> method);
 
     auto operator==(const Pointer<T>& other) const -> bool;
 
@@ -50,7 +50,7 @@ auto Pointer<T>::operator==(const Pointer<T> &other) const -> bool
 }
 
 template <class T>
-void Pointer<T>::doAndUnref(auto method)
+void Pointer<T>::doAndUnref(Fn<void(T&)> method)
 {
     W_ASSERT(_pointer.operator bool());
 

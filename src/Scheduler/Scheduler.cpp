@@ -214,9 +214,7 @@ void Scheduler::manageExecution(Ptr<WTask> task)
         task->releaseJoiner();
         task.release();
     } else {
-        task.doAndUnref([](WTask& t) {
-            t.releaseJoiner();
-        });
+        task.doAndUnref(&WTask::releaseJoiner);
     }
 }
 

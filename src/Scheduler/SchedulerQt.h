@@ -26,6 +26,8 @@ public:
 
     }
 
+    ~SchedulerEvent() override = default;
+
     /**
      * \brief This method will call the associated method passed as parameter
      *  It's possible to call this method only once
