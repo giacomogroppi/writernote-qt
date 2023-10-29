@@ -22,7 +22,7 @@ class Scheduler final: public WObject
 {
 public:
     template <class P>
-    using Ptr = SharedPtrThreadSafe<P>;
+    using Ptr = Pointer<P>;
 private:
     static constexpr auto debug = false;
     WList<Ptr<WTask>> _task_General;
@@ -31,7 +31,6 @@ private:
     WVector<std::thread::id> _idThreads;
 
     mutable std::condition_variable _conditionalVariableTasks;
-    //mutable WSemaphore _semGeneral;
     mutable std::mutex _lockGeneric;
 
     void initMainThread();

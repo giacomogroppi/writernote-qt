@@ -6,7 +6,8 @@
 #include <concepts>
 #include "core/AtomicSafe.h"
 
-//#define SHARED_PTR_THREAD_SAFE_USE_MUTEX
+//
+// #define SHARED_PTR_THREAD_SAFE_USE_MUTEX
 #ifdef SHARED_PTR_THREAD_SAFE_USE_MUTEX
 template <class T>
 class SharedPtrThreadSafe
@@ -14,6 +15,15 @@ class SharedPtrThreadSafe
     mutable int *_count;
     mutable WRecursiveLock *_lock;
     T* _object;
+
+    void rep() const noexcept
+    {
+        if (_object) {
+            W_ASSERT(_lock != nullptr and _count != nullptr);
+        } else {
+            W_ASSERT(_lock == nullptr and _count == nullptr);
+        }
+    }
 
     void destroy();
 public:
@@ -63,12 +73,15 @@ auto SharedPtrThreadSafe<T>::atomically(T func) -> void
     W_ASSERT(_lock);
     WMutexLocker guard(*_lock);
     func();
+
+    rep();
 }
 
 template <class T>
 void SharedPtrThreadSafe<T>::release() noexcept
 {
     *this = SharedPtrThreadSafe<T>(nullptr);
+    rep();
 }
 
 template <class T>
@@ -91,6 +104,8 @@ void SharedPtrThreadSafe<T>::doAndUnref(Fn<void(T&)> method)
     _lock = nullptr;
     _object = nullptr;
     _count = nullptr;
+
+    rep();
 }
 
 template<class T>
@@ -120,6 +135,8 @@ inline void SharedPtrThreadSafe<T>::destroy()
             _lock->unlock();
         }
     }
+
+    rep();
 }
 
 template<class T>
@@ -162,11 +179,13 @@ inline auto SharedPtrThreadSafe<T>::operator=(const SharedPtrThreadSafe& other) 
     if (_object != nullptr)
         *_count += 1;
 
+    rep();
+
     return *this;
 }
 
 template <class T>
-inline auto SharedPtrThreadSafe<T>::operator=(SharedPtrThreadSafe&& other) -> SharedPtrThreadSafe&
+auto SharedPtrThreadSafe<T>::operator=(SharedPtrThreadSafe&& other) -> SharedPtrThreadSafe&
 {
     if (this == &other)
         return *this;
@@ -181,6 +200,8 @@ inline auto SharedPtrThreadSafe<T>::operator=(SharedPtrThreadSafe&& other) -> Sh
     other._lock = nullptr;
     other._count = nullptr;
 
+    rep();
+
     return *this;
 }
 
@@ -193,6 +214,7 @@ inline SharedPtrThreadSafe<T>::SharedPtrThreadSafe(SharedPtrThreadSafe&& other)
     other._count = nullptr;
     other._object = nullptr;
     other._lock = nullptr;
+    rep();
 }
 
 template<class T>
@@ -205,6 +227,7 @@ inline SharedPtrThreadSafe<T>::SharedPtrThreadSafe(const SharedPtrThreadSafe &ot
     if (_object) {
         *_count += 1;
     }
+    rep();
 }
 
 template <class T>
@@ -213,7 +236,9 @@ inline SharedPtrThreadSafe<T>::SharedPtrThreadSafe(T *object)
         , _lock(new WRecursiveLock)
         , _object(object)
 {
-
+    if (object == nullptr)
+        destroy();
+    rep();
 }
 
 template <class T>
@@ -222,25 +247,29 @@ inline SharedPtrThreadSafe<T>::SharedPtrThreadSafe()
         , _object(nullptr)
         , _lock(nullptr)
 {
-
+    rep();
 }
 
 template <class T>
 inline SharedPtrThreadSafe<T>::~SharedPtrThreadSafe()
 {
     destroy();
+    rep();
 }
 
 template <class T>
 inline auto SharedPtrThreadSafe<T>::isUnique() const -> bool
 {
     if (_count == nullptr)
-        return false;
+        return true;
 
     WMutexLocker guard(*_lock);
     if (*_count == 1) {
+        rep();
         return true;
     }
+
+    rep();
 
     return false;
 }
@@ -258,8 +287,8 @@ auto SharedPtrThreadSafe<T>::numberOfRef() const -> int
         return 1;
 
     WMutexLocker guard (*_lock);
+    rep();
     return *_count;
-
 }
 #else
 template <class T>
@@ -460,7 +489,8 @@ inline auto SharedPtrThreadSafe<T>::isUnique() const -> bool
     if (_counter == nullptr)
         return false;
 
-    WDebug(true, *_counter);
+    if (*_counter != 1)
+        WDebug(true, *_counter);
     if (*_counter == 1) {
         return true;
     }

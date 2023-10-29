@@ -27,6 +27,9 @@ void WTask::join()
 {
     W_ASSERT(not isDeleteLater());
 
+    if (_hasFinish)
+        return;
+
     Scheduler::joinThread(_hasFinish);
 
     std::unique_lock guard (_waiterLock);
