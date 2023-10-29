@@ -25,10 +25,7 @@ void __search_for_stroke(DataPrivateMuThread *data, int pos_audio, WVector<int> 
 
 void drawStroke(Page *page, WVector<int> &pos, int pos_audio)
 {
-    for(const auto &index : std::as_const(pos)){
-        const Stroke &stroke = page->atStroke(index);
-        page->drawStroke(stroke, pos_audio);
-    }
+    page->drawStroke(pos, pos_audio);
 }
 
 void *__search_new_view(void *__data)

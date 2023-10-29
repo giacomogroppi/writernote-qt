@@ -5,7 +5,7 @@
 template <class T>
 class DebugVariable
 {
-    static_assert(std::is_arithmetic<T>::value);
+    static_assert(std::is_arithmetic<T>::value or std::is_pointer<T>::value);
     T _value;
 
 public:
@@ -20,12 +20,52 @@ public:
     auto operator*=(T amount) -> T&;
     auto operator/=(T amount) -> T&;
 
+    auto operator<(T amount) -> bool;
+    auto operator>(T amount) -> bool;
+
+    auto operator<=(T amount) -> bool;
+    auto operator>=(T amount) -> bool;
+
+
+    auto operator*() const -> T;
+
     operator T() const;
 
     auto operator=(T value) -> DebugVariable&;
 };
 
 #ifdef DEBUGINFO
+
+template <class T>
+auto DebugVariable<T>::operator<(T amount) -> bool
+{
+    return this->_value < amount;
+}
+
+template <class T>
+auto DebugVariable<T>::operator>(T amount) -> bool
+{
+    return this->_value > amount;
+}
+
+template <class T>
+auto DebugVariable<T>::operator<=(T amount) -> bool
+{
+    return this->_value <= amount;
+}
+
+template <class T>
+auto DebugVariable<T>::operator>=(T amount) -> bool
+{
+    return this->_value >= amount;
+}
+
+template <class T>
+auto DebugVariable<T>::operator*() const -> T
+{
+    return _value;
+}
+
 template <class T>
 auto DebugVariable<T>::operator++() -> T&
 {

@@ -22,7 +22,7 @@ class Scheduler final: public WObject
 {
 public:
     template <class P>
-    using Ptr = Pointer<P>;
+    using Ptr = SharedPtrThreadSafe<P>;
 private:
     static constexpr auto debug = false;
     WList<Ptr<WTask>> _task_General;
@@ -30,8 +30,9 @@ private:
     WVector<std::thread> _threads;
     WVector<std::thread::id> _idThreads;
 
-    mutable WSemaphore _semGeneral;
-    mutable WMutex _lockGeneric;
+    mutable std::condition_variable _conditionalVariableTasks;
+    //mutable WSemaphore _semGeneral;
+    mutable std::mutex _lockGeneric;
 
     void initMainThread();
     void endMainThread();
@@ -45,10 +46,17 @@ private:
 
     WHeap<WTimer*, true> _timersWaiting;
     std::mutex _muxTimers;
-    std::condition_variable _c;
+    std::condition_variable _conditionalVariableTimers;
 
     static void manageExecution (Ptr<WTask> task);
     static auto numberOfThread () -> Unsigned;
+
+    /**
+     * \brief This method needs to be call in the main function, when we are creating
+     * a dedicated thread for manage timers.
+     * It's possible to call this method only once
+     * */
+    void timerFunction();
 
 public:
     explicit Scheduler();
@@ -88,7 +96,7 @@ public:
      * The function pass will be executed in a generic thread
      * */
     static constexpr auto startNewTask = [] (Fn<void()> function) -> Ptr<WTask> {
-        Ptr<WTask> task(new WTaskFunction(nullptr, std::move(function)));
+        Ptr<WTask> task (new WTaskFunction(nullptr, false, std::move(function)));
 
         task->setDestroyLater(false);
 
@@ -127,6 +135,6 @@ inline void Scheduler::addTaskGeneric(Ptr<WTask> task)
     WMutexLocker _(sched._lockGeneric);
     sched._task_General.append(std::move(task));
 
-    sched._semGeneral.release();
+    sched._conditionalVariableTasks.notify_one();
 }
 

@@ -315,19 +315,19 @@ auto TabletController::getFileManager() -> const SharedPtr<FileManager>&
 
 auto TabletController::openFile(const WString &name) -> Error
 {
-    auto data = _fileManager->openFile<Document>(name, Extension::makeWriternote());
+    auto [error, data] = _fileManager->openFile<Document>(name, Extension::makeWriternote());
     const auto methodUpdate = [this] {
         W_EMIT_1(onNeedRefresh, UpdateEvent::makeAll());
     };
 
-    if (data.first)
-        return data.first;
+    if (error)
+        return error;
 
-    *this->_doc = std::move (data.second);
+    *this->_doc = std::move (data);
     this->_nameDoc = name;
 
     // we need to give the ui the time to switch
-    Scheduler::addTaskMainThread(Scheduler::Ptr<WTask>(new WTaskFunction(nullptr, methodUpdate, true)));
+    Scheduler::addTaskMainThread(Scheduler::Ptr<WTask>(new WTaskFunction(nullptr, true, methodUpdate)));
 
     return Error::makeOk();
 }

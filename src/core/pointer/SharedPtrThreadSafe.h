@@ -37,7 +37,7 @@ public:
 
     explicit operator bool() const;
 
-    void doAndUnref (auto method);
+    void doAndUnref (Fn<void(T&)> method);
 
     void release() noexcept;
 
@@ -68,10 +68,11 @@ void SharedPtrThreadSafe<T>::release() noexcept
 }
 
 template <class T>
-void SharedPtrThreadSafe<T>::doAndUnref(auto method)
+void SharedPtrThreadSafe<T>::doAndUnref(Fn<void(T&)> method)
 {
-    method(*_object);
     *_counter -= 1;
+
+    method(*_object);
 
     if (*_counter == 0) {
         delete _object;

@@ -4,26 +4,20 @@
 #include "core/WVector.h"
 #include "Scheduler.h"
 
-std::atomic<unsigned long> identifier;
-
 WTask::WTask(WObject *parent, bool deleteLater)
     : WObject(parent)
     , _waiterLock()
-    , _waiter(0)
     , _deleteLater(deleteLater)
     , _hasFinish(false)
-    , _identifier(identifier++)
     , _threadsCreated(0)
 {
-    WDebug(false, "Create object" << identifier);
 }
 
 void WTask::releaseJoiner() noexcept
 {
     WMutexLocker _(this->_waiterLock);
 
-    _sem.release(_waiter);
-    _waiter = 0;
+    _conditionalVariable.notify_all();
     _hasFinish = true;
 }
 
@@ -32,16 +26,11 @@ WTask::~WTask() = default;
 void WTask::join()
 {
     W_ASSERT(not isDeleteLater());
-    {
-        WMutexLocker _(this->_waiterLock);
-
-        if (_hasFinish)
-            return;
-
-        _waiter ++;
-    }
 
     Scheduler::joinThread(_hasFinish);
 
-    this->_sem.acquire();
+    std::unique_lock guard (_waiterLock);
+
+    while (_hasFinish)
+        _conditionalVariable.wait(guard);
 }

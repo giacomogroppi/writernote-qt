@@ -622,7 +622,26 @@ void Page::drawForceColorStroke(const WVector<int> &pos, int m_pos_ris, const WC
 
 void Page::drawStroke(const Stroke &stroke, int m_pos_ris)
 {
-    drawForceColorStroke(stroke, m_pos_ris, stroke.getColor(1.0), nullptr);
+    auto [status, painter] = initPainter();
+
+    if (status)
+        return;
+
+    drawStroke(painter, stroke);
+
+    painter.end();
+}
+
+void Page::drawStroke(const WVector<int> &positions, int m_pos_ris)
+{
+    auto [status, painter] = initPainter();
+
+    if (status)
+        return;
+
+    for (const auto& index: std::as_const(positions)) {
+        drawForceColorStroke(atStroke(index), m_pos_ris, atStroke(index).getColor(), &painter);
+    }
 }
 
 void Page::at_draw_page(

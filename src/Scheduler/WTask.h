@@ -10,15 +10,15 @@
 class WTask: public WObject
 {
 private:
-    WMutex _waiterLock;
-    int _waiter;
-    WSemaphore _sem;
+    std::mutex _waiterLock;
+    std::condition_variable _conditionalVariable;
     bool _deleteLater;
     bool _hasFinish;
-    const unsigned long _identifier;
     std::atomic<int> _threadsCreated;
 public:
-    explicit WTask(WObject *parent = nullptr, bool destroyLater = false);
+    // TODO: add documentation
+    // TODO: change destroyLater parameter with a WFlag (for a better code reading)
+    explicit WTask(WObject *parent, bool destroyLater);
     ~WTask() override;
 
     virtual void run() = 0;
@@ -28,13 +28,11 @@ public:
 
     constexpr void setDestroyLater(bool needToDestroy);
 
-    constexpr auto getIdentifier() const noexcept -> unsigned long;
-
     /**
      * \return True iff you should delete this task after call "run"
      * */
     [[nodiscard]]
-    auto isDeleteLater() const -> bool;
+    constexpr auto isDeleteLater() const -> bool;
 
     WDISABILE_COPY(WTask);
 
@@ -46,7 +44,7 @@ public:
     friend class Scheduler;
 };
 
-inline auto WTask::isDeleteLater() const -> bool
+inline constexpr auto WTask::isDeleteLater() const -> bool
 {
     return this->_deleteLater;
 }
@@ -56,17 +54,12 @@ inline constexpr void WTask::setDestroyLater(bool needToDestroy)
     this->_deleteLater = needToDestroy;
 }
 
-constexpr auto WTask::getIdentifier() const noexcept -> unsigned long
-{
-    return _identifier;
-}
-
 class WTaskFunction: public WTask
 {
 private:
     Fn<void()> _method;
 public:
-    WTaskFunction (WObject *parent, Fn<void()> method, bool destroyLater = false)
+    WTaskFunction (WObject *parent, bool destroyLater, Fn<void()> method)
         : WTask(parent, destroyLater)
         , _method(std::move(method))
         {};

@@ -13,11 +13,11 @@ FileManager::FileManager(WObject *parent, WPath basePath, bool createDir)
 {
     if (createDir and _dir.isEmpty()) {
         // maybe basePath don't exist
-        Directory::createDir(_basePath);
+        (void)Directory::createDir(_basePath);
     }
 
     if (_dir.isEmpty() and createDir) {
-        Directory::createDir(_basePath / "Not classified");
+        (void)Directory::createDir(_basePath / "Not classified");
         _dir = FileManager::getAllDir(_basePath);
     }
 }

@@ -90,6 +90,14 @@ private:
     void appendDirectly(const SharedPtr<Stroke>& stroke);
     auto initImg(bool flag) -> bool;
 
+    /**
+     * \brief This method is used to get a painter which is already ready for drawing
+     * on the current image in the page.
+     * If, for any reason, an error occurred, the value in the pair will have an error set and the painter return
+     * will be not valid for draw.
+     * */
+    auto initPainter() -> WPair<Error, WPainter>;
+
     void decreaseAlfa(const WVector<int> &pos, WPainter *painter, int decrease);
 
     static auto at_translation(const PointF &point, cint page) -> PointF;
@@ -124,7 +132,7 @@ public:
      template <class Iter>
     void removeAt(Iter begin, Iter end);
 
-    const Stroke & last() const;
+    auto last() const -> const Stroke &;
     Stroke &lastMod();
 
     /**
@@ -156,11 +164,26 @@ public:
 
     void triggerRenderImage(int m_pos_ris, bool all);
 
+    /**
+     * \brief Getter function to retrieve the counter of the page
+     *  If you have to retrieve the index use \link getIndex
+     *  This method is commonly used when drawing stroke, because
+     *  we need to shift all the points based on the page in which they are
+     *  located
+     * \return The counter of the page, the counter start from 1.
+     * */
     auto getCount() const -> int;
+
+    /**
+     * \brief Getter function to retrieve the index of the page
+     *  If you have to retrieve the counter use \link getCounter
+     * \return The counter of the page, the counter start from 0.
+     * */
     auto getIndex() const -> int;
 
     void reset();
 
+    void drawStroke(const WVector<int> &positions, int m_pos_ris);
     void drawStroke(const Stroke &stroke, int m_pos_ris);
     void drawForceColorStroke(const Stroke &stroke, cint m_pos_ris, const WColor &color, WPainter *painter);
     void drawForceColorStroke(const WVector<int> &pos, int m_pos_ris, const WColor &color);
@@ -673,4 +696,17 @@ inline auto Page::write(WritableAbstract &writable, const Page &page, bool saveI
             return err;
 
     return Error::makeOk();
+}
+
+inline auto Page::initPainter() -> WPair<Error, WPainter>
+{
+    if(initImg(false)) {
+        this->triggerRenderImage(-1, true);
+        return {Error::makeErrGeneric(), {}};
+    }
+
+    WPainterUnsafe painter;
+    painter.begin(&_imgDraw);
+
+    return {Error::makeOk(), painter};
 }

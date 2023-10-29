@@ -86,25 +86,26 @@ auto model::find(const WListFast<PointF> &points, const WVector<pressure_t> &pre
 
     W_ASSERT(!points.isEmpty());
 
-    WVector<WTask *> tasks;
+    WVector<Scheduler::Ptr<WTask>> tasks;
+
+    auto method = [=] (int i) {
+        auto function = functions[i];
+        finder.is[i] = function(points, pressures, area);
+    };
 
     for (int i = 0; i < THREAD_FINDER; i++) {
-        auto task = Scheduler::Ptr<WTask>(new WTaskFunction(nullptr, [=]() {
-            auto function = functions[i];
-
-            finder.is[i] = function(points, pressures, area);
-
-            WDebug(debug_model, "index: " << i << finder.is[i]);
-        }));
+        auto task = Scheduler::Ptr<WTask>(new WTaskFunction(nullptr, false, std::bind(method, i)));
+        tasks.append(task);
         Scheduler::getInstance().addTaskGeneric(std::move(task));
     }
 
     tasks.forAll(&WTask::join);
+    tasks.forAll(&Scheduler::Ptr<WTask>::release);
 
     const auto index = get_index_most_prob(_min_precision);
     WDebug(debug_model, index);
 
-    if (index < 0){
+    if (index < 0) {
         return nullptr;
     }
 

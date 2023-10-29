@@ -14,7 +14,7 @@
 
 namespace WAbstractList {
     template <class T>
-    using Ptr = Pointer<T>;
+    using Ptr = SharedPtrThreadSafe<T>;
 
     template <class Iter>
     auto isSorted(Iter begin, Iter end) noexcept -> bool

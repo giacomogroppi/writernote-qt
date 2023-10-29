@@ -11,6 +11,7 @@
 #include "Scheduler/WTask.h"
 #include "core/WPair.h"
 #include "core/Index.h"
+#include "DebugVariable.h"
 
 template <class T>
 class WVector
@@ -149,10 +150,8 @@ public:
     {
     private:
         T2 * const * array;
-        long index;
-#ifdef DEBUGINFO
-        long max;
-#endif // DEBUGINFO
+        Size index;
+        DebugVariable<const Size*> max;
     public:
         using difference_type = std::ptrdiff_t;
         using value_type = T2;
@@ -160,17 +159,13 @@ public:
         using reference = T2&;
         using iterator_category = std::random_access_iterator_tag;
 
-#if !defined(DEBUGINFO)
-        explicit AbstractIterator(T2* const * data, long index, long max) : array(data), index(index) { unused(max); };
-#else
-        explicit AbstractIterator(T2* const * data, long index, long max): array(data), index(index), max(max) {};
-#endif // DEBUGINFO
+        explicit AbstractIterator(T2* const * data, long index, const long *max): array(data), index(index), max(max) {};
 
         AbstractIterator(const AbstractIterator& other) noexcept = default;
         AbstractIterator(AbstractIterator&& other) noexcept = default;
 
-        auto operator->() const -> T2* { W_ASSERT(index >= 0 and index < max); return array[index]; };
-        auto operator*()  const -> T2& { W_ASSERT(index >= 0 and index < max); return (*array)[index]; };
+        auto operator->() const -> T2* { W_ASSERT(index >= 0 and index < **max); return array[index]; };
+        auto operator*()  const -> T2& { W_ASSERT(index >= 0 and index < **max); return (*array)[index]; };
 
         auto operator++() -> AbstractIterator & { index ++; return *this; }
         auto operator--() -> AbstractIterator & { index --; return *this; }
@@ -193,6 +188,7 @@ public:
         auto operator>=(const AbstractIterator& other) const -> bool { return this->index >= other.index; }
         auto operator<=>(const AbstractIterator& other) const -> int
         {
+            // TODO: remove the implementation outsize of the class definition
             if (index < other.index)
                 return -1;
             if (index > other.index)
@@ -200,7 +196,7 @@ public:
             return 0;
         }
 
-        auto operator[](long i) -> T2& { W_ASSERT(i >= 0 and i < max); return (*array)[i]; };
+        auto operator[](long i) -> T2& { W_ASSERT(i >= 0 and i < (**max)); return (*array)[i]; };
 
         auto operator==(const AbstractIterator& iter) const -> bool = default;
         auto operator!=(const AbstractIterator& iter) const -> bool = default;
@@ -223,13 +219,13 @@ public:
     nd auto rbegin() const noexcept { return reverse_const_iterator(end()); }
     nd auto rend() const noexcept { return reverse_const_iterator(begin()); }
 
-    nd auto begin() noexcept -> iterator { return iterator{&this->_data, 0, _size}; };
-    nd auto end()   noexcept -> iterator { return iterator{&this->_data, size(), _size};  };
+    nd auto begin() noexcept -> iterator { return iterator{&this->_data, 0, &_size}; };
+    nd auto end()   noexcept -> iterator { return iterator{&this->_data, size(), &_size};  };
 
-    nd auto constBegin() const noexcept { return const_iterator{&_data, 0, _size}; };
-    nd auto constEnd() const noexcept { return const_iterator{&_data, size(), _size}; };
+    nd auto constBegin() const noexcept { return const_iterator{&_data, 0, &_size}; };
+    nd auto constEnd() const noexcept { return const_iterator{&_data, size(), &_size}; };
 
-    nd auto begin() const noexcept -> const_iterator { return const_iterator{&_data, Size(0), _size}; }
+    nd auto begin() const noexcept -> const_iterator { return const_iterator{&_data, Size(0), &_size}; }
     nd auto end()   const noexcept;
 
     /**
@@ -335,7 +331,7 @@ inline auto WVector<T>::loadMultiThread(
 template <class T>
 auto WVector<T>::end() const noexcept
 {
-    return const_iterator{&_data, size(), _size};
+    return const_iterator{&_data, size(), &_size};
 }
 
 template <class T>

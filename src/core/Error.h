@@ -22,6 +22,7 @@ public:
     DefineErr(ErrInternal, -2);
     DefineErr(Corruption, -3);
     DefineErr(ErrFileNotExist, -4);
+    DefineErr(ErrGeneric, -5);
 
     operator bool () const;
 

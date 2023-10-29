@@ -157,14 +157,12 @@ ExactNumber::ExactNumber(long double number)
     , d(0)
 {
     double tmp;
-    int exp = 0;
     double floatPart = 1.;
 
     while (floatPart != 0.) {
         floatPart =  std::modf(number, &tmp);
 
         number *= 10.;
-        exp ++;
     }
 
     n = number;
@@ -181,14 +179,10 @@ ExactNumber::ExactNumber(const ExactNumber::String &value)
         return;
     }
 
-    const bool signPresent = value[0] == '+' or value[0] == '-';
-
     if (value[1] == '-')
         sign = true;
 
-    const auto firstIndex = value.indexOf('.');
-
-    int index;
+    long long index;
     if ((index = value.indexOf('.')) != -1) {
         n = value.remove('.').toStdString();
         d = 1;

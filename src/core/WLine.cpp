@@ -1,6 +1,7 @@
 #include "WLine.h"
 #include "core/String/WString.h"
+#include "utils/WCommonScript.h"
 
-constexpr auto debug_WLine = false;
+constexpr auto not_used debug_WLine = false;
 
 
