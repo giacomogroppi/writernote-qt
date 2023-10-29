@@ -41,7 +41,6 @@ private:
 
     bool isHeap() const;
 
-    mutable WMutex _needToDieLock;
     volatile bool _needToDie;
 
     WHeap<WTimer*, true> _timersWaiting;
@@ -116,7 +115,7 @@ private:
      */
     auto addTimerUnsafe (WTimer *timer) -> void;
 
-    static void joinThread(volatile bool &hasFinish);
+    static void joinThread(AtomicSafe<bool> &hasFinish);
 
     friend class WTask;
 

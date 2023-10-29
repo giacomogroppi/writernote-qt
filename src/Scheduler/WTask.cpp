@@ -31,6 +31,6 @@ void WTask::join()
 
     std::unique_lock guard (_waiterLock);
 
-    while (_hasFinish)
+    while (not _hasFinish)
         _conditionalVariable.wait(guard);
 }

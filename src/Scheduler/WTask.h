@@ -6,6 +6,7 @@
 #include "core/WSemaphore.h"
 #include "utils/WCommonScript.h"
 #include "core/WMutex.h"
+#include "core/AtomicSafe.h"
 
 class WTask: public WObject
 {
@@ -13,7 +14,7 @@ private:
     std::mutex _waiterLock;
     std::condition_variable _conditionalVariable;
     bool _deleteLater;
-    bool _hasFinish;
+    AtomicSafe<bool> _hasFinish;
     std::atomic<int> _threadsCreated;
 public:
     // TODO: add documentation

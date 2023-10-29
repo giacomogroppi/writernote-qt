@@ -152,16 +152,14 @@ auto Scheduler::isExecutionSchedulerThread() -> bool
     */
 }
 
-void Scheduler::joinThread(volatile bool &hasFinish)
+void Scheduler::joinThread(AtomicSafe<bool> &hasFinish)
 {
     // if we are on a thread of the Scheduler we need to create another thread that is
     // executing another task in generic lists
     if (isExecutionSchedulerThread()) {
         for (;;) {
-            {
-                if (hasFinish)
-                    return;
-            }
+            if (hasFinish)
+                return;
 
             //print("Didn't finish yet " << std::this_thread::get_id() << std::endl);
 
@@ -224,9 +222,7 @@ void Scheduler::manageExecution(Ptr<WTask> task)
 Scheduler::~Scheduler()
 {
     WDebug(debug and false, "Call destructor");
-    _needToDieLock.lock();
     this->_needToDie = true;
-    _needToDieLock.unlock();
 
     _conditionalVariableTimers.notify_all();
     _conditionalVariableTasks.notify_all();

@@ -252,7 +252,7 @@ public:
     auto loadMultiThread (
             const VersionFileController &versionController,
             ReadableAbstract &readable,
-            const Fn<Pointer<WTask>(
+            const Fn<WAbstractList::Ptr<WTask>(
                     Fn<void()>
             )> &startNewThread
     ) noexcept -> WPair<Error, WVector<T2>>;
@@ -307,9 +307,9 @@ inline auto WVector<T>::writeMultiThread(WritableAbstract &writable, const WVect
 
 template <class T>
 template <class T2>
-inline auto WVector<T>::loadMultiThread(
+auto WVector<T>::loadMultiThread(
         const VersionFileController &versionController, ReadableAbstract &readable,
-        const Fn<Pointer<WTask>(
+        const Fn<WAbstractList::Ptr<WTask>(
                     Fn<void()>
                 )> &startNewThread
     ) noexcept -> WPair<Error, WVector<T2>>

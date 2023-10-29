@@ -1,5 +1,5 @@
 #include "mostra_explorer.h"
-#include "string.h"
+#include "core/Path/WPath.h"
 #include "windows/mostra_finestra_i.h"
 #include "utils/slash/slash.h"
 #include "../path/pathfile.h"
@@ -30,8 +30,7 @@ void mostra_explorer(const WString &posizione)
     }
 
 #elif (defined(unix) || defined(MACOS)) && !defined(SNAP)
-    WString tmp = pathFile::remove_file(posizione);
-    tmp = pathFile::remove_file(posizione);
+    WString tmp = WPath(posizione).getNameWithoutExtension();
     mostra_finestra_i(tmp);
 #elif defined(SNAP)
     const WString path = pathFile::remove_file(posizione);
