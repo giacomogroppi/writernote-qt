@@ -75,15 +75,12 @@ auto Scheduler::timerFunction() -> void
                                            : _timersWaiting.getFirst()->getEnd();
 
         if (shouldWaitFor.count() > minWait) {
-            const auto shouldExit = [&] {
+            const auto shouldExit = [this, lastValueEnd] {
                 return needToDie() or
                        (_timersWaiting.size() > 0 and _timersWaiting.getFirst()->getEnd() < lastValueEnd);
             };
 
             _conditionalVariableTimers.wait_for(lk, shouldWaitFor, shouldExit);
-
-            //while (shouldExit() == false)
-            //    this->_conditionalVariableTimers.wait_for(lk, shouldWaitFor);
         }
 
         if (needToDie())
@@ -224,8 +221,15 @@ Scheduler::~Scheduler()
     WDebug(debug and false, "Call destructor");
     this->_needToDie = true;
 
-    _conditionalVariableTimers.notify_all();
-    _conditionalVariableTasks.notify_all();
+    {
+        std::unique_lock guard (_muxTimers);
+        _conditionalVariableTimers.notify_all();
+    }
+
+    {
+        std::unique_lock guard(_lockGeneric);
+        _conditionalVariableTasks.notify_all();
+    }
 
     _threads.forAll(&std::thread::join);
 
