@@ -19,6 +19,13 @@ public:
     auto operator=(PdfContainerDrawable && object) -> PdfContainerDrawable & = default;
     auto operator=(const PdfContainerDrawable &object) -> PdfContainerDrawable & = default;
 
+    /**
+     * \brief This method need to be called in the main function before do anything on a document and
+     * all the classed he use.
+     * This method require that a instance of Scheduler is present
+     * */
+    static void init() {};
+
 protected:
     template <class Readable> requires (std::is_base_of_v<ReadableAbstract, Readable>)
     static auto load (const VersionFileController &versionController, 

@@ -10,12 +10,12 @@ AudioPlayer::AudioPlayer(WObject *parent)
     , _buffer(nullptr)
     , _dataArray()
 {
-    QObject::connect(&_mediaPlayer, &QMediaPlayer::mediaStatusChanged, [this] (QMediaPlayer::MediaStatus status) {
+    QObject::connect(&_mediaPlayer, &QMediaPlayer::mediaStatusChanged, [this] (auto status) {
          if (status == QMediaPlayer::MediaStatus::EndOfMedia)
              W_EMIT_0(onAudioEnd);
     });
 
-    QObject::connect(&_mediaPlayer, &QMediaPlayer::positionChanged, [this] (qint64 position) {
+    QObject::connect(&_mediaPlayer, &QMediaPlayer::positionChanged, [this] (auto position) {
         W_ASSERT(position >= 0 and position < UINT_MAX);
 
         const auto castedPosition = static_cast<unsigned> (position);

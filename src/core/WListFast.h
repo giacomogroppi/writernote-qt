@@ -110,7 +110,11 @@ public:
     nd constexpr
     auto inBound(long index) const noexcept -> bool;
 
-    [[nodiscard]]
+    nd auto refMidConst(int from, int to) const noexcept -> WAbstractList::SplitList<WListFast, const T, Size>;
+
+    nd auto refMidConst(int from, int to) noexcept -> WAbstractList::SplitList<WListFast, T, Size>;
+
+    nd
     auto first() const noexcept -> const T&;
 
     void clear() noexcept;
@@ -326,19 +330,19 @@ inline auto WListFast<T>::writeMultiThread(
 
 template<class T>
 template<class T2>
-inline auto WListFast<T>::loadMultiThread(
+auto WListFast<T>::loadMultiThread(
             const VersionFileController &versionController,
             ReadableAbstract &readable,
             const auto &startNewThread
         ) noexcept -> WPair<Error, WListFast<T2>>
 {
-    auto reserveUnsafe = [] (WListFast<T2>& list, Size numberOfElements) {
+    auto reserveUnsafe = [] (auto& list, auto numberOfElements) {
         list._data = (T2**) malloc(sizeof(T*) * numberOfElements);
         list._size = numberOfElements;
         list._reserved = 0u;
     };
 
-    auto insertUnsafe = [] (WListFast<T2>& list, T2 &&object, Size index) {
+    auto insertUnsafe = [] (auto& list, auto &&object, auto index) {
         list._data[index] = new T2(std::forward<T2>(object));
     };
 
@@ -531,8 +535,9 @@ inline bool WListFast<T>::operator==(const WListFast<T> &other) const noexcept
 }
 
 template<class T>
-inline T &WListFast<T>::operator[](Size i) noexcept
+auto WListFast<T>::operator[](Size i) noexcept -> T &
 {
+    W_ASSERT(inBound(i));
     return *this->_data[i];
 }
 
@@ -563,7 +568,7 @@ inline const T &WListFast<T>::last() const noexcept
 template <class T>
 inline auto WListFast<T>::takeObject(Size index) noexcept -> T
 {
-    W_ASSERT(index >= 0 && index < size());
+    W_ASSERT(inBound(index));
     T object(std::forward<T>(*this->_data[index]));
 
     delete _data[index];
@@ -591,7 +596,7 @@ inline auto WListFast<T>::takeObject(Size index) noexcept -> T
 template<class T>
 inline auto WListFast<T>::takeAt(Size index) noexcept -> T
 {
-    W_ASSERT(index >= 0 && index < size());
+    W_ASSERT(inBound(index));
     T object(takeObject(index));
 
     rep();
@@ -629,6 +634,7 @@ inline void WListFast<T>::clear() noexcept
 template<class T>
 inline auto WListFast<T>::first() const noexcept -> const T &
 {
+    W_ASSERT(inBound(0));
     return *this->_data[0];
 }
 
@@ -641,7 +647,7 @@ constexpr inline auto WListFast<T>::size() const noexcept -> Size
 template<class T>
 constexpr inline bool WListFast<T>::isEmpty() const noexcept
 {
-    return _size == 0;
+    return size() == Size(0);
 }
 
 template<class T>

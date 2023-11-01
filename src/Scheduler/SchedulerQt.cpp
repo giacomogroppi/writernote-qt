@@ -42,12 +42,12 @@ auto Scheduler::endMainThread() -> void
 
 auto Scheduler::addTaskMainThread(Ptr<WTask> task) -> void
 {
-    W_ASSERT(task);
+    task->beforeRun();
 
-#ifdef DEBUGINFO
-    if (task->isDeleteLater())
-        W_ASSERT(task.numberOfRef() == 1);
-#endif // DEBUGINFO
+    if constexpr (WUtils::debug_enable()) {
+        if (task->isDeleteLater())
+            W_ASSERT(task.numberOfRef() == 1);
+    }
 
     auto method = [task = std::move(task)]() mutable {
         manageExecution(std::move(task));

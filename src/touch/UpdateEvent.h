@@ -67,7 +67,7 @@ inline constexpr auto UpdateEvent::operator|(const UpdateEvent &d) const -> Upda
 
 inline constexpr auto UpdateEvent::makeEmpty() -> UpdateEvent
 {
-    return WFlags<UpdateEventType>{0};
+    return WFlags{static_cast<UpdateEventType>(0)};
 }
 
 inline constexpr auto UpdateEvent::makeSheet() -> UpdateEvent

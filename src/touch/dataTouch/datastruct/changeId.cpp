@@ -10,19 +10,18 @@ force_inline void DataStruct::__changeId(int IndexPoint, Stroke &stroke, Page &p
     auto *strokeNormal = dynamic_cast<StrokeNormal *>(&stroke);
 
     if (threadSafe) {
-        _changeIdMutex.lock();
+        WMutexLocker guard(_changeIdMutex);
 
         // draw to old stroke with color_null
         page.drawForceColorStroke(stroke, -1, COLOR_NULL, nullptr);
-
-        _changeIdMutex.unlock();
     }
 
     SharedPtr<StrokeNormal> strokeToAppend = strokeNormal->split(IndexPoint);
 
-    if(threadSafe){
-        _changeIdMutex.lock();
-    }
+    WMutexLocker guard(_changeIdMutex, (threadSafe) ?
+        WMutexLocker<WMutex>::Lock :
+        WMutexLocker<WMutex>::NotLock
+    );
 
     // we draw the new 2 stroke
     page.drawForceColorStroke(stroke,           -1, stroke.getColor(1.0),           nullptr);
@@ -30,10 +29,6 @@ force_inline void DataStruct::__changeId(int IndexPoint, Stroke &stroke, Page &p
 
     // we append the stroke
     page.append(strokeToAppend);
-
-    if(threadSafe){
-        _changeIdMutex.unlock();
-    }
 }
 
 void DataStruct::changeIdThreadSave(int indexPoint, Stroke &stroke, Page &page)

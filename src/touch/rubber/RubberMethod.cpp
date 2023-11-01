@@ -7,7 +7,7 @@
 
 constexpr bool rubber_debug = false;
 
-struct RubberPrivateData{
+struct RubberPrivateData {
     WVector<int>    *data_find;
     Page            *_page;
     WLine           line;
@@ -27,43 +27,40 @@ struct RubberPrivateData{
 static volatile int     __m_size_gomma;
 static WMutex           single_mutex;
 static WMutex           mutex_area;
-static thread_group_sem *thread_group;
 
-static void (*functionToCall)(DataPrivateMuThread &);
-
-constexpr const auto rubberMethod = [](struct DataPrivateMuThread& d) {
-    functionToCall (d);
+class RubberMethodTask: public WTask
+{
+private:
+    void (**_functionToCall)(DataPrivateMuThread &);
+    DataPrivateMuThread &_data;
+public:
+    explicit RubberMethodTask(void (**functionToCall)(DataPrivateMuThread &), DataPrivateMuThread& data);
+    void run() final
+    {
+        (*_functionToCall)(_data);
+    };
 };
 
-void *idle_rubber(void *arg)
+RubberMethodTask::RubberMethodTask(void (**functionToCall)(DataPrivateMuThread &), DataPrivateMuThread& data)
+    : WTask{nullptr, WTask::NotDeleteLater}
+    , _functionToCall{functionToCall}
+    , _data{data}
 {
-    auto *data = (struct DataPrivateMuThread *)arg;
 
-    for(;;){
-        thread_group->get_pass_sem().acquire();
-
-        if (thread_group->needToDelete()) {
-            return nullptr;
-        }
-
-        if (data->id >= thread_group->get_create()) {
-            goto wait;
-        }
-
-        functionToCall(*data);
-        wait:
-        thread_group->get_finish_sem().release();
-        thread_group->get_all_finish_sem().acquire();
-    }
 }
 
 RubberMethod::RubberMethod(const type_rubber &type, const int &size_rubber)
-    : _base(-1),
-      _size_gomma(size_rubber),
-      _rubber_type(type)
+    : _base(-1)
+    , functionToCall(nullptr)
+    , _size_gomma(size_rubber)
+    , _rubber_type(type)
 {
-    WNew(thread_group, thread_group_sem, ());
-    thread_group->startLoop(idle_rubber);
+    const auto numberOfThreads = threadCount::count();
+
+    for (int i = 0; i < numberOfThreads; i++) {
+        _dataTasks.append(DataPrivateMuThread());
+        _tasks.append(Scheduler::Ptr<RubberMethodTask>::make(&this->functionToCall, _dataTasks[i]));
+    }
 }
 
 static inline not_used RectF rubber_get_area(const PointF &p1, const PointF &p2)
@@ -226,15 +223,15 @@ redo:
     }
 
 
-    single_mutex.lock();
+    {
+        WMutexLocker guard(single_mutex);
 
-    draw_null(_page, stroke_mod_left_point,  stroke_mod_left_stroke,   true);
-    draw_null(_page, stroke_mod_rigth_point, stroke_mod_rigth_stroke,  false);
+        draw_null(_page, stroke_mod_left_point,  stroke_mod_left_stroke,   true);
+        draw_null(_page, stroke_mod_rigth_point, stroke_mod_rigth_stroke,  false);
 
-    // append to the list the index of the stroke to be remove
-    private_data->data_to_remove->append(stroke_to_remove);
-
-    single_mutex.unlock();
+        // append to the list the index of the stroke to be remove
+        private_data->data_to_remove->append(stroke_to_remove);
+    }
 }
 
 void actionRubberSingleTotal(DataPrivateMuThread &data)
@@ -296,9 +293,8 @@ auto RubberMethod::touchUpdate(const PointF &__lastPoint,
                                Document &doc) -> UpdateEvent
 {
     int lenStroke, count, indexPage, thread_create;
-    cbool isTotal = (_rubber_type == RubberMethod::total);
+    const bool isTotal = (_rubber_type == RubberMethod::total);
     const PointF &lastPoint = doc.adjustPoint(__lastPoint);
-    auto *dataThread = thread_group->get_thread_data();
     int pageMod = 0;
     RubberPrivateData dataPrivate;
 
@@ -344,8 +340,7 @@ auto RubberMethod::touchUpdate(const PointF &__lastPoint,
 
             _base = now;
             count = 0;
-        }
-        else if (now > _base) {
+        } else if (now > _base) {
             indexPage = now;
             count = now - _base;
 
@@ -398,11 +393,10 @@ auto RubberMethod::touchUpdate(const PointF &__lastPoint,
     dataPrivate.data_to_remove = dataPrivate.data_find;
     dataPrivate.al_find        = dataPrivate.data_find->size();
 
-    thread_create = DataPrivateMuThreadInit(dataThread, &dataPrivate,
-                                            thread_group->get_max(),
-                                            lenStroke, DATA_PRIVATE_FLAG_SEM);
+    thread_create = DataPrivateMuThreadInit(_dataTasks, &dataPrivate, _tasks.size(), lenStroke, DATA_PRIVATE_FLAG_SEM);
 
-    thread_group->postAndWait(thread_create);
+    _tasks.refMidConst(0, thread_create).forAll(&Scheduler::addTaskGeneric);
+    _tasks.refMidConst(0, thread_create).forAll(&WTask::join);
 
     if (dataPrivate.highlighter_delete) {
         dataPrivate._page->drawIfInside(-1, dataPrivate.area);
@@ -510,7 +504,7 @@ auto RubberMethod::touchEnd(const PointF&, Document &doc) -> UpdateEvent
 
 RubberMethod::~RubberMethod()
 {
-    WDelete(thread_group);
+    _tasks.forAll(&Scheduler::Ptr<WTask>::release);
 }
 
 auto RubberMethod::touchBegin(const PointF &point, double, Document &doc) -> UpdateEvent

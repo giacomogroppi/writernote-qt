@@ -13,6 +13,16 @@ private:
 #endif // DEBUGINFO
 public:
     explicit Pointer(T* object = nullptr);
+
+    template <class Z> requires (not std::is_pointer<Z>::value and std::is_convertible<Z*, T*>::value)
+    Pointer(Z* data);
+
+    template <class Z> requires (not std::is_pointer<Z>::value and std::is_convertible<Z*, T*>::value)
+    Pointer(const Pointer<Z> &data);
+
+    template <class Z> requires (not std::is_pointer<Z>::value and std::is_convertible<Z*, T*>::value)
+    Pointer(Pointer<Z> &&data);
+
     ~Pointer();
 
     Pointer(Pointer&& other) noexcept;
@@ -27,6 +37,13 @@ public:
      * */
     void release();
 
+    template <class Z> requires (not std::is_pointer<Z>::value and std::is_convertible<Z*, T*>::value)
+    auto operator=(const Pointer<Z> &data) -> Pointer<T>&;
+
+    template <class Z> requires (not std::is_pointer<Z>::value and std::is_convertible<Z*, T*>::value)
+    auto operator=(Pointer<Z> &&data) -> Pointer<T>&;
+
+
     auto operator=(Pointer&& other) -> Pointer&;
     auto operator=(const Pointer& other) -> Pointer&;
 
@@ -40,8 +57,33 @@ public:
 
     auto operator==(const Pointer<T>& other) const -> bool;
 
+    template<class ...Args>
+    static Pointer<T> make(Args &&...args)
+    {
+        return Pointer<T>(new T(std::forward<Args>(args)...));
+    }
+
     explicit operator bool() const;
+
+    template <class Z>
+    friend class Pointer;
 };
+
+template <class T>
+template <class Z> requires (not std::is_pointer<Z>::value and std::is_convertible<Z*, T*>::value)
+Pointer<T>::Pointer(const Pointer<Z> &data)
+    : _pointer(data._pointer)
+{
+
+}
+
+template <class T>
+template <class Z> requires (not std::is_pointer<Z>::value and std::is_convertible<Z*, T*>::value)
+Pointer<T>::Pointer(Pointer<Z> &&data)
+    : _pointer(std::move(data._pointer))
+{
+
+}
 
 template <class T>
 auto Pointer<T>::operator==(const Pointer<T> &other) const -> bool
@@ -90,7 +132,7 @@ inline auto Pointer<T>::operator=(Pointer &&other) -> Pointer &
 }
 
 template <class T>
-inline Pointer<T>::Pointer(T* object)
+Pointer<T>::Pointer(T* object)
     : _pointer(object)
 {
 }
@@ -135,15 +177,23 @@ inline auto Pointer<T>::operator*() -> T&
 }
 
 template <class T>
-inline Pointer<T>::Pointer(Pointer&& other) noexcept
+Pointer<T>::Pointer(Pointer&& other) noexcept
     : _pointer(std::move(other._pointer))
 {
 
 }
 
 template <class T>
-inline Pointer<T>::Pointer(const Pointer& other) noexcept
+Pointer<T>::Pointer(const Pointer& other) noexcept
     : _pointer(other._pointer)
+{
+
+}
+
+template <class T>
+template <class Z> requires (not std::is_pointer<Z>::value and std::is_convertible<Z*, T*>::value)
+Pointer<T>::Pointer(Z* data)
+    : _pointer(data)
 {
 
 }

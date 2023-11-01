@@ -109,14 +109,14 @@ auto Scheduler::timerFunction() -> void
 
         timer->_lock.unlock();
 
-        auto task = Scheduler::Ptr<WTask>(new WTaskFunction(nullptr, true, [timer, isSingleShot] {
+        auto task = Scheduler::Ptr<WTaskFunction>::make(nullptr, WTask::DeleteLater, [timer, isSingleShot] {
             timer->trigger();
 
             if (isSingleShot)
                 timer->setActive(false);
             else
                 timer->start();
-        }));
+        });
 
         auto method = (isExecutionMainThread) ? &Scheduler::addTaskMainThread : &Scheduler::addTaskGeneric;
         method(std::move(task));
@@ -202,7 +202,7 @@ auto Scheduler::execute() -> bool
 
 void Scheduler::manageExecution(Ptr<WTask> task)
 {
-    WDebug(debug and false, "Execute object" << static_cast<const void*>(&(*task)));
+    WDebug(true, "Execute object" << static_cast<const void*>(&(*task)) << "with" << task.numberOfRef() << "ref");
 
     const auto needToDeleteLater = task->isDeleteLater();
 

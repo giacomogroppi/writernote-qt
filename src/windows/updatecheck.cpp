@@ -51,7 +51,7 @@ void updatecheck::start()
     request.setUrl(QUrl("https://api.github.com/repos/giacomogroppi/writernote-qt/tags"));
     reply = manager->get(request);
 
-    QObject::connect(reply, &QNetworkReply::finished, [this] () {
+    QObject::connect(reply, &QNetworkReply::finished, [this] {
         this->managerFinished();
     });
     //QObject::connect(reply, &QNetworkReply::finished, this, &updatecheck::managerFinished);

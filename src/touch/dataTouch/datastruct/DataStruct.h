@@ -42,6 +42,13 @@ public:
     ~DataStruct() = default;
 
     /**
+     * \brief This method need to be called in the main function before do anything on a DataStruct object and
+     * all the classed he use.
+     * This method require that a instance of Scheduler is present
+     * */
+    static void init();
+
+    /**
      * \brief This method trigger the view of pages in the range of [begin, end)
      * \tparam Iter The iterator that point to integer of the collection used
      * \param begin first item of the collection

@@ -304,6 +304,12 @@ public:
 
     explicit SharedPtrThreadSafe(T* object);
 
+    template <class Z> requires (not std::is_pointer<Z>::value and std::is_convertible<Z*, T*>::value)
+    SharedPtrThreadSafe(const SharedPtrThreadSafe<Z>& object);
+
+    template <class Z> requires (not std::is_pointer<Z>::value and std::is_convertible<Z*, T*>::value)
+    SharedPtrThreadSafe(SharedPtrThreadSafe<Z>&& object);
+
     SharedPtrThreadSafe(const SharedPtrThreadSafe& other);
     SharedPtrThreadSafe(SharedPtrThreadSafe&& other);
 
@@ -314,6 +320,12 @@ public:
 
     template <class Func>
     auto atomically(T func) -> void;
+
+    template <class ...Args>
+    static auto make (Args&& ...args)
+    {
+        return SharedPtrThreadSafe<T>(new T(std::forward<Args>(args)...));
+    }
 
     auto operator->() const -> const T*;
     auto operator->() -> T*;
@@ -330,6 +342,9 @@ public:
     auto operator=(SharedPtrThreadSafe&& other) -> SharedPtrThreadSafe&;
 
     auto operator==(const SharedPtrThreadSafe& other) const -> bool;
+
+    template <class Z>
+    friend class SharedPtrThreadSafe;
 };
 
 template<class T>
@@ -417,7 +432,7 @@ inline auto SharedPtrThreadSafe<T>::operator=(const SharedPtrThreadSafe& other) 
     if (!other._counter)
         return *this;
 
-    *other._counter ++;
+    *other._counter += 1;
 
     _counter = other._count;
     _object = other._object;
@@ -512,4 +527,26 @@ auto SharedPtrThreadSafe<T>::numberOfRef() const -> int
 
     return *_counter;
 }
+
+template <class T>
+template <class Z> requires (not std::is_pointer<Z>::value and std::is_convertible<Z*, T*>::value)
+SharedPtrThreadSafe<T>::SharedPtrThreadSafe(const SharedPtrThreadSafe<Z>& object)
+    : _counter(object._counter)
+    , _object(object._object)
+{
+    if (_counter) {
+        *_counter += 1;
+    }
+}
+
+template <class T>
+template <class Z> requires (not std::is_pointer<Z>::value and std::is_convertible<Z*, T*>::value)
+SharedPtrThreadSafe<T>::SharedPtrThreadSafe(SharedPtrThreadSafe<Z>&& object)
+    : _counter(object._counter)
+    , _object(object._object)
+{
+    object._counter = nullptr;
+    object._object = nullptr;
+}
+
 #endif // SHARED_PTR_THREAD_SAFE_USE_MUTEX

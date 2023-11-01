@@ -9,10 +9,100 @@
 #include "FileContainer/WZipWriterSingle.h"
 #include "touch/dataTouch/stroke/StrokeNormal.h"
 #include "utils/time/current_time.h"
+#include "Scheduler/Scheduler.h"
+#include "utils/threadcount.h"
 
 #define PAGE_THREAD_MAX 16
 
 static force_inline double widthToPressure(double v) { return v/10.0; };
+
+static force_inline void __initImg(WPixmap &img)
+{
+    img = WPixmap(1, true);
+    W_ASSERT(!img.isNull());
+    img.fill({color_transparent});
+}
+
+struct page_thread_data{
+    WMutex                          * append;
+    WPainter                        * painter;
+    WListFast<SharedPtr<Stroke>>    * m_stroke;
+    int                             m_pos_ris;
+    const Page                      * parent;
+};
+
+static bool initPage = false;
+static WVector<DataPrivateMuThread> threadData;
+static WMutex drawMutex;
+
+class PageDrawTask: public WTask
+{
+    DataPrivateMuThread &_data;
+public:
+    explicit PageDrawTask (DataPrivateMuThread& data)
+        : WTask(nullptr, WTask::NotDeleteLater)
+        , _data(data)
+    {
+
+    }
+
+    void run() final
+    {
+        auto *  extra = (struct page_thread_data *)_data.extra;
+        WPixmap img;
+        WPainterUnsafe painter;
+        auto &mutex = *extra->append;
+        int m_pos_ris = extra->m_pos_ris;
+        const Page *page = extra->parent;
+
+        __initImg(img);
+
+        painter.begin(&img);
+
+        WDebug(false, "call");
+
+        for(; _data.from < _data.to; _data.from ++){
+            const Stroke &ref = *extra->m_stroke->at(_data.from);
+
+            WDebug(false, "Page::__page_load pointer" << &ref);
+            W_ASSERT(!ref.isEmpty());
+
+            const auto &color = ref.getColor(
+                    (m_pos_ris != -1)
+                    ? ((ref.getPositionAudio() > m_pos_ris) ? 4 : 1)
+                    : 1
+            );
+
+            page->drawStroke(painter, ref, color);
+        }
+
+        End_painter(painter);
+
+        // the source image has the same size as img
+        {
+            WMutexLocker guard(mutex);
+            W_ASSERT(extra->painter->isActive());
+            extra->painter->drawPixmap(
+                    img.rect(),
+                    img);
+        }
+    }
+};
+
+static WVector<Scheduler::Ptr<WTask>> tasks;
+
+void Page::init()
+{
+    const auto numberOfThread = threadCount::count();
+    tasks.reserve(numberOfThread);
+
+    for (int i = 0; i < numberOfThread; i++) {
+        threadData.append(DataPrivateMuThread());
+        tasks.append(Scheduler::Ptr<PageDrawTask>::make(threadData[i]));
+    }
+
+    initPage = true;
+}
 
 Page::Page(Page &&other) noexcept
     : _isVisible(other._isVisible)
@@ -22,6 +112,7 @@ Page::Page(Page &&other) noexcept
     , _strokeTmp(std::move(other._strokeTmp))
     , _imgDraw(std::move(other._imgDraw))
 {
+    W_ASSERT(initPage == true);
 }
 
 static void setStylePrivate(
@@ -52,13 +143,6 @@ static void setStylePrivate(
         style.nx = TEMP_SQUARE * (Page::getHeight() / Page::getWidth());
         style.ny = TEMP_SQUARE;
     }
-}
-
-static force_inline void __initImg(WPixmap &img)
-{
-    img = WPixmap(1, true);
-    W_ASSERT(!img.isNull());
-    img.fill({color_transparent});
 }
 
 Page::Page(const int count, const n_style style)
@@ -251,74 +335,14 @@ void Page::drawStroke(
     W_ASSERT(painter.isActive());
 }
 
-struct page_thread_data{
-    WMutex                          * append;
-    WPainter                        * painter;
-    WListFast<SharedPtr<Stroke>>    * m_stroke;
-    int                             m_pos_ris;
-    const Page                      * parent;
-};
-
-/*The only way to draw in thread safe on a WPainter is to draw an image,
- *  as it is very fast compared to drawing the stroke, first we draw
- *  all the strokes on the images, residing in the thread stack stacks,
- *  and then we draw them on top the original painter
-*/
-void * __page_load(void *__data)
-{
-    auto *  _data = (struct DataPrivateMuThread *)__data;
-    auto *  extra = (struct page_thread_data *)_data->extra;
-    WPixmap img;
-    WPainterUnsafe painter;
-    auto &mutex = *extra->append;
-    int m_pos_ris = extra->m_pos_ris;
-    const Page *page = extra->parent;
-
-    __initImg(img);
-
-    painter.begin(&img);
-
-    WDebug(false, "call");
-
-    for(; _data->from < _data->to; _data->from ++){
-        const Stroke &ref = *extra->m_stroke->at(_data->from);
-
-        WDebug(false, "Page::__page_load pointer" << &ref);
-        W_ASSERT(!ref.isEmpty());
-
-        const auto &color = ref.getColor(
-            (m_pos_ris != -1)
-                    ? ((ref.getPositionAudio() > m_pos_ris) ? 4 : 1)
-                    : 1
-        );
-
-        page->drawStroke(painter, ref, color);
-    }
-
-    End_painter(painter);
-
-    // the source image has the same size as img
-    mutex.lock();
-
-    W_ASSERT(extra->painter->isActive());
-    extra->painter->drawPixmap(
-            img.rect(),
-            img);
-    mutex.unlock();
-
-    return nullptr;
-}
-
 void Page::drawEngine(
         WPainter        &painter,
         WListFast<SharedPtr<Stroke>> &strokes,
         int             m_pos_ris,
         bool            use_multi_thread) noexcept
 {
-    int i, threadCount;
+    int i;
 
-    pthread_t thread[PAGE_THREAD_MAX];
-    struct DataPrivateMuThread threadData[PAGE_THREAD_MAX];
     struct page_thread_data extraData;
 
     extraData.append        = &_append_load;
@@ -327,21 +351,19 @@ void Page::drawEngine(
     extraData.m_pos_ris     = m_pos_ris;
     extraData.parent        = this;
 
+    WMutexLocker guard(drawMutex);
+
     if (use_multi_thread) {
-        threadCount = DataPrivateMuThreadInit(threadData, &extraData, PAGE_THREAD_MAX, strokes.size(), ~DATA_PRIVATE_FLAG_SEM);
+        auto threadCount = DataPrivateMuThreadInit(threadData, &extraData, PAGE_THREAD_MAX, strokes.size(), ~DATA_PRIVATE_FLAG_SEM);
 
-        for (i = 0; i < threadCount; i++) {
-            pthread_create(&thread[i], nullptr, __page_load, &threadData[i]);
-        }
-        for (i = 0; i < threadCount; i++) {
-            pthread_join(thread[i], nullptr);
-        }
+        tasks.refMidConst(0, threadCount).forAll(&Scheduler::addTaskGeneric);
+        tasks.refMidConst(0, threadCount).forAll(&WTask::join);
     } else {
-        threadData->extra   = &extraData;
-        threadData->from    = 0;
-        threadData->to      = strokes.size();
+        threadData[0].extra = &extraData;
+        threadData[0].from = 0;
+        threadData[0].to = strokes.size();
 
-        __page_load(&threadData[0]);
+        tasks[0]->run();
     }
 }
 

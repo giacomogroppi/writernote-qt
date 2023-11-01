@@ -41,6 +41,8 @@ TabletController::TabletController(WObject *parent,
         W_EMIT_1(onNeedRefresh, UpdateEvent::makeStroke());
     });
 
+    Document::init();
+
     auto showProperty = [this] (const PointF &point, ActionProperty prop) {
         W_EMIT_2(onPropertyShow, point, prop);
     };
@@ -327,7 +329,7 @@ auto TabletController::openFile(const WString &name) -> Error
     this->_nameDoc = name;
 
     // we need to give the ui the time to switch
-    Scheduler::addTaskMainThread(Scheduler::Ptr<WTask>(new WTaskFunction(nullptr, true, methodUpdate)));
+    Scheduler::addTaskMainThread(Scheduler::Ptr<WTaskFunction>::make(nullptr, WTask::DeleteLater, methodUpdate));
 
     return Error::makeOk();
 }

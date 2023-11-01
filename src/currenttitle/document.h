@@ -63,6 +63,13 @@ public:
 
     void setAudioPath(const WString &path) noexcept;
 
+    /**
+     * \brief This method need to be called in the main function before do anything on a document and
+     * all the classed he use.
+     * This method require that a instance of Scheduler is present
+     * */
+    static void init();
+
 private:
     WString _audioPositionPath;
     AudioRecordStatus _audioRecordStatus = AudioRecordStatus::not_record;

@@ -5,6 +5,8 @@
 #include "testing/memtest.h"
 #include "pthread.h"
 #include "core/WSemaphore.h"
+#include "core/pointer/UniquePtr.h"
+#include "core/WVector.h"
 
 struct DataPrivateMuThread{
     int from, to;
@@ -36,9 +38,9 @@ public:
 
     DataPrivateMuThread *get_thread_data();
 
-    WSemaphore &get_pass_sem();
-    WSemaphore &get_finish_sem();
-    WSemaphore &get_all_finish_sem();
+    auto get_pass_sem() -> WSemaphore&;
+    auto get_finish_sem() -> WSemaphore&;
+    auto get_all_finish_sem() -> WSemaphore&;
 
     bool needToDelete() const;
 
@@ -143,7 +145,7 @@ force_inline thread_group_sem::~thread_group_sem()
     WFree(_data);
 }
 
-force_inline DataPrivateMuThread *thread_group_sem::get_thread_data()
+force_inline auto thread_group_sem::get_thread_data() -> DataPrivateMuThread *
 {
     return _data;
 }
@@ -156,16 +158,17 @@ force_inline void thread_group_sem::stopThread()
 void DataPrivateInit();
 
 #define DATA_PRIVATE_FLAG_SEM BIT(1)
-int DataPrivateMuThreadInit(DataPrivateMuThread *data, void *extraData, cint maxThread, cint to, int flag);
+int DataPrivateMuThreadInit(WVector<DataPrivateMuThread> &data, void *extraData, int maxThread, int to, int flag);
 
 int DataPrivateCountThread(int numNewThread);
 void DataPrivateCountThreadRelease(int numReleaseThread);
 
 pthread_t *get_thread_max();
-DataPrivateMuThread *get_data_max();
+WVector<DataPrivateMuThread> get_data_max();
 
 void free_thread_data(pthread_t **thread, DataPrivateMuThread **data);
 
+[[deprecated]]
 int get_thread_used();
 
 #define START_THREAD(thread, data, count, functionToCall) \

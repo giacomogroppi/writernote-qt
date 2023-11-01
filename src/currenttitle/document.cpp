@@ -208,3 +208,11 @@ auto Document::load(const VersionFileController &versionController, ReadableAbst
 
     return {Error::makeOk(), doc};
 }
+
+
+void Document::init()
+{
+    DataStruct::init();
+    PdfContainerDrawable::init();
+    ImageContainerDrawable::init();
+}

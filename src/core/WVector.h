@@ -138,6 +138,16 @@ public:
 
     void forAll(Fn<void(T&)> method) noexcept;
 
+    nd auto refMidConst(int from, int to) const noexcept -> WAbstractList::SplitList<WVector, const T, Size>
+    {
+        return WAbstractList::SplitList<WVector, const T, Size> (*this, from, to);
+    };
+
+    nd auto refMidConst(int from, int to) noexcept -> WAbstractList::SplitList<WVector, T, Size>
+    {
+        return WAbstractList::SplitList<WVector, T, Size> (*this, from, to);
+    }
+
     auto operator=(const WVector<T> &other) -> WVector<T>&;
     auto operator=(WVector &&other) noexcept -> WVector<T>&;
     auto operator==(const WVector<T> &other) const -> bool;
@@ -314,13 +324,13 @@ auto WVector<T>::loadMultiThread(
                 )> &startNewThread
     ) noexcept -> WPair<Error, WVector<T2>>
 {
-    const auto reserveUnsafe = [] (WVector<T2>& list, int size) {
+    const auto reserveUnsafe = [] (auto& list, auto size) {
         list.reserve(size);
         list._size = list._reserve;
         list._reserve = 0;
     };
 
-    const auto insertUnsafe = [] (WVector<T2> &list, T2 &&object, int index) {
+    const auto insertUnsafe = [] (auto &list, auto &&object, auto index) {
         list.callConstructorOn(list._data, index, std::forward<T2>(object));
     };
 

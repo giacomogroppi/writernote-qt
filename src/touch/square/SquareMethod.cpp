@@ -1,4 +1,6 @@
 #include "SquareMethod.h"
+
+#include <utility>
 #include "core/core.h"
 #include "touch/square/Square.h"
 #include "touch/TabletUtils.h"
@@ -13,18 +15,63 @@ static PointF          __s;
 static WVector<int>     *__index;
 static bool             *__in_box;
 
+class SquareTask: public WTask
+{
+private:
+    // TOOD: remove this paramter
+    const int _index;
+    DataPrivateMuThread & _data;
+public:
+    explicit SquareTask(int index, DataPrivateMuThread& data)
+        : WTask {nullptr, WTask::NotDeleteLater}
+        , _index{index}
+        , _data{data}
+    {
+
+    };
+
+    void run() override;
+};
+
+void SquareTask::run()
+{
+    bool in_box = false;
+
+    W_ASSERT(_data.from <= _data.to);
+
+    for (; _data.from < _data.to;  _data.from ++) {
+        const Stroke &stroke = __page->atStroke(_data.from);
+
+        if (datastruct_isinside(__f, __s, stroke)) {
+            WMutexLocker<WMutex>::atomically(__mutex_sq, [this] {
+                __index->append(_data.from);
+            });
+
+            in_box = true;
+        }
+    }
+
+    if (in_box)
+        *__in_box = true;
+}
+
 SquareMethod::SquareMethod(Fn<void()> hideProperty,
                            Fn<void (const PointF &, ActionProperty)> showProperty,
                            Fn<Document &()> getDoc)
-    : _hideProperty(hideProperty)
+    : _hideProperty(std::move(hideProperty))
     , _showProperty(std::move(showProperty))
-    , _getDoc(getDoc)
+    , _getDoc(std::move(getDoc))
     , _need_reload(false)
+    , _base(0)
     , _in_box(false)
 {
-    _thread        = get_thread_max();
     _dataThread    = get_data_max();
     _threadCount   = get_thread_used();
+
+    for (int i = 0; i < _threadCount; i++) {
+        _dataThread.append(DataPrivateMuThread());
+        _tasks.append(Scheduler::Ptr<SquareTask>::make(i, _dataThread[i]));
+    }
 
     WNew(_copy, copy, ());
 
@@ -38,7 +85,7 @@ SquareMethod::SquareMethod(Fn<void()> hideProperty,
 
 SquareMethod::~SquareMethod()
 {
-    free_thread_data(&_thread, &_dataThread);
+    _tasks.forAll(&Scheduler::Ptr<WTask>::release);
     WDelete(_copy);
 }
 
@@ -57,12 +104,8 @@ void SquareMethod::reset()
     _index_img.clear();
 
     WDebug(debugSquare, "paste = 1");
-    const auto len = _stroke.size();
 
-    if(len == 0)
-        goto out;
-
-    for (i = 0; i < len; i++) {
+    for (i = 0; i < _stroke.size(); i++) {
         WListFast<SharedPtr<Stroke>> ll   = _stroke.operator[](i);
 
 #ifdef DEBUGINFO
@@ -83,37 +126,9 @@ void SquareMethod::reset()
 
     _stroke.clear();
 
-    out:
-    WPixmap tmp = WPixmap();
-    this->_img = std::move(tmp);
+    this->_img = WPixmap();
     this->_stroke.clear();
     this->_trans_img = PointF(0.0, 0.0);
-}
-
-void * __square_search(void *__data)
-{
-    W_ASSERT(__data);
-    auto *data = static_cast<DataPrivateMuThread *>(__data);
-    bool in_box = false;
-
-    W_ASSERT(data->from <= data->to);
-
-    for (; data->from < data->to;  data->from ++) {
-        const Stroke &stroke = __page->atStroke(data->from);
-
-        if (datastruct_isinside(__f, __s, stroke)) {
-            __mutex_sq.lock();
-            __index->append(data->from);
-            __mutex_sq.unlock();
-
-            in_box = true;
-        }
-    }
-
-    if (in_box)
-        *__in_box = true;
-
-    return nullptr;
 }
 
 auto SquareMethod::touchBegin(const PointF &point, double, Document &doc) -> UpdateEvent
@@ -184,9 +199,8 @@ bool SquareMethod::find(Document &doc)
     const PointF &topLeft = _pointinit;
     const PointF &bottomRight = _pointfine;
 
-#define CTRL_POINT(point) W_ASSERT(point.x() >= 0. && point.y() >= 0.);
-    CTRL_POINT(topLeft);
-    CTRL_POINT(bottomRight);
+    W_ASSERT(topLeft.x() >= 0. && topLeft.y() >= 0.);
+    W_ASSERT(bottomRight.x() >= 0. && bottomRight.y() >= 0.);
 
     WDebug(debugSquare, "call");
 
@@ -200,7 +214,7 @@ bool SquareMethod::find(Document &doc)
     __s     = bottomRight;
 
     /* point selected by user */
-    for(count = 0; PageCounter < lenPage; PageCounter ++, count ++){
+    for (count = 0; PageCounter < lenPage; PageCounter ++, count ++){
         __page = &doc.at(PageCounter);
         create = DataPrivateMuThreadInit(_dataThread, nullptr, _threadCount, __page->lengthStroke(), 0);
 
@@ -212,23 +226,18 @@ bool SquareMethod::find(Document &doc)
 
         __index = &index.operator[](count);
 
-        for(i = 0; i < create; i++){
-            pthread_create(&_thread[i], nullptr, __square_search, (void *)&_dataThread[i]);
-        }
-        for(i = 0; i < create; i++){
-            pthread_join(_thread[i], nullptr);
-        }
+        _tasks.refMidConst(0, create).forAll(&Scheduler::addTaskGeneric);
+        _tasks.refMidConst(0, create).forAll(&WTask::join);
     }
 
     /* image selected by user */
-    const int lenImg = doc.lengthImage();
-    for (int counterImg = 0; counterImg < lenImg; counterImg++) {
+    for (int counterImg = 0; counterImg < doc.lengthImage(); counterImg++) {
         const auto &ref = doc.m_img.at(counterImg);
 
         tmp_find = datastruct_isinside(topLeft, bottomRight, ref.i) ||
                    datastruct_isinside(topLeft, bottomRight, ref.f);
 
-        if(!tmp_find)
+        if (not tmp_find)
             continue;
 
         _index_img.append(counterImg);

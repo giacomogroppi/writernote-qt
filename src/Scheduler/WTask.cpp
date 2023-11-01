@@ -4,13 +4,13 @@
 #include "core/WVector.h"
 #include "Scheduler.h"
 
-WTask::WTask(WObject *parent, bool deleteLater)
+WTask::WTask(WObject *parent, WFlags<Flag> deleteLater)
     : WObject(parent)
     , _waiterLock()
-    , _deleteLater(deleteLater)
+    , _deleteLater((deleteLater & Flag::DeleteLater) != 0x0)
     , _hasFinish(false)
-    , _threadsCreated(0)
 {
+
 }
 
 void WTask::releaseJoiner() noexcept
@@ -22,6 +22,11 @@ void WTask::releaseJoiner() noexcept
 }
 
 WTask::~WTask() = default;
+
+void WTask::beforeRun()
+{
+    this->_hasFinish = false;
+}
 
 void WTask::join()
 {

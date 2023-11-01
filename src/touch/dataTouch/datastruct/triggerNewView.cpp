@@ -11,53 +11,90 @@ struct DatastructNewView{
     WMutex          &mutex;
 };
 
-void __search_for_stroke(DataPrivateMuThread *data, int pos_audio, WVector<int> &save, Page *page)
-{
-    W_ASSERT(data);
-    W_ASSERT(page);
-
-    for(; data->from < data->to; data->from ++){
-        if(page->atStroke(data->from).getPositionAudio() == pos_audio){
-            save.append(data->from);
-        }
-    }
-}
-
 void drawStroke(Page *page, WVector<int> &pos, int pos_audio)
 {
     page->drawStroke(pos, pos_audio);
 }
 
-void *__search_new_view(void *__data)
+struct dPrivate {
+    WMutex accessToDrawMutex;
+    WVector<Scheduler::Ptr<WTask>> tasks;
+    WVector<DataPrivateMuThread> data;
+
+    ~dPrivate() {
+        tasks.forAll(&Scheduler::Ptr<WTask>::release);
+    }
+} dataStructAudioTask;
+
+class DataStructNewViewTask: public WTask
 {
-    auto *_data = static_cast<DataPrivateMuThread *>(__data);
-    auto *_private_data = static_cast<DatastructNewView *>(_data->extra);
-    Page *_page = _private_data->m_page;
-    WVector<int> _index;
+private:
+    DataPrivateMuThread &_data;
+    int position_audio;
 
-    __search_for_stroke(_data, _private_data->time - 1, _index, _page);
+    auto searchForStroke(Page &page, int position_audio) -> WVector<int>;
+public:
+    explicit DataStructNewViewTask(DataPrivateMuThread &data);
 
-    // block other thread
-    _private_data->mutex.lock();
+    void run() final;
+};
+
+DataStructNewViewTask::DataStructNewViewTask(DataPrivateMuThread &data)
+    : WTask{nullptr, WTask::NotDeleteLater}
+    , _data(data)
+    , position_audio(0)
+{
+
+}
+
+auto DataStructNewViewTask::searchForStroke(Page &page, int positionAudio) -> WVector<int>
+{
+    WVector<int> result;
+
+    for (; _data.from < _data.to; _data.from ++) {
+        if (page.atStroke(_data.from).getPositionAudio() == positionAudio) {
+            result.append(_data.from);
+        }
+    }
+
+    return result;
+}
+
+void DataStructNewViewTask::run()
+{
+    auto *private_data = static_cast<DatastructNewView *>(_data.extra);
+    Page &page = *private_data->m_page;
+
+    const auto index = searchForStroke(page, private_data->time - 1);
+
+    // block others thread
+    WMutexLocker guard (private_data->mutex);
 
     // draw the new stroke
-    drawStroke(_page, _index, _private_data->time - 1);
+    page.drawStroke(index, private_data->time - 1);
+}
 
-    // release other thread
-    _private_data->mutex.unlock();
+void DataStruct::init()
+{
+    const auto threadCreated = threadCount::count();
 
-    return nullptr;
+    for (int i = 0; i < threadCreated; i++) {
+        dataStructAudioTask.data.append(DataPrivateMuThread());
+        dataStructAudioTask.tasks.append(
+                Scheduler::Ptr<WTask>(
+                        new DataStructNewViewTask(dataStructAudioTask.data[i])
+                )
+        );
+    }
+
+    Page::init();
 }
 
 void DataStruct::newViewAudio(int newTime)
 {
-    int index, create, len;
+    int index;
 
     index = this->getFirstPageVisible();
-    len = this->lengthPage();
-
-    DataPrivateMuThread dataThread[DATASTRUCT_THREAD_MAX];
-    pthread_t thread[DATASTRUCT_THREAD_MAX];
 
     DatastructNewView extra = {
             .m_page = nullptr,
@@ -72,16 +109,12 @@ void DataStruct::newViewAudio(int newTime)
     }
     WDebug(true, "Call with time" << newTime);
 
-    for(; index < len; index ++){
+    for(; index < lengthPage(); index ++){
         extra.m_page = (Page *)&at(index);
 
-        create = DataPrivateMuThreadInit(dataThread, &extra, DATASTRUCT_THREAD_MAX, extra.m_page->lengthStroke(), 0);
-        if (create == 1) {
-            __search_new_view(&dataThread[0]);
-            continue;
-        }
+        auto create = DataPrivateMuThreadInit(dataStructAudioTask.data, &extra, DATASTRUCT_THREAD_MAX, extra.m_page->lengthStroke(), 0);
 
-        START_THREAD(thread, dataThread, create, __search_new_view);
-        JOIN_THREAD(thread, create);
+        dataStructAudioTask.tasks.refMidConst(0, create).forAll(&Scheduler::addTaskGeneric);
+        dataStructAudioTask.tasks.refMidConst(0, create).forAll(&WTask::join);
     }
 }

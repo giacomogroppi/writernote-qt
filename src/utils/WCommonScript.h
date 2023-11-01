@@ -63,12 +63,12 @@ force_inline std::string get_only_name(const char *name)
 #endif
 
 namespace WUtils{
-force_inline constexpr not_used int debug_enable()
+force_inline consteval not_used auto debug_enable() -> bool
 {
 #ifdef DEBUGINFO
-    return 1;
+    return true;
 #else
-    return 0;
+    return false;
 #endif
 }
 

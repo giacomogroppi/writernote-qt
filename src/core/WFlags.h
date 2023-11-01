@@ -16,7 +16,10 @@ class WFlags
 public:
     constexpr WFlags(Enum f) : _d(Type(f)) {}
     constexpr WFlags() : _d(0) {}
-    constexpr WFlags(Type f) : _d(f) {}
+
+    template <class Z> requires ((std::is_same<Z, Type>::value and not std::is_same<Z, Enum>::value)
+                                or std::is_same<Z, int>::value)
+    constexpr WFlags(Z f) : _d(f) {}
 
     constexpr auto operator&=(Type mask) -> WFlags<Enum> & { _d &= mask; return *this; }
     constexpr auto operator|=(WFlags<Enum> f) -> WFlags<Enum> &{ _d |= f.i; return *this; }

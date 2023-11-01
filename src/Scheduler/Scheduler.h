@@ -24,7 +24,7 @@ public:
     template <class P>
     using Ptr = Pointer<P>;
 private:
-    static constexpr auto debug = false;
+    static constexpr auto debug = true;
     WList<Ptr<WTask>> _task_General;
 
     WVector<std::thread> _threads;
@@ -85,18 +85,15 @@ public:
      * */
     static void addTaskMainThread(Ptr<WTask> task);
 
-    static
-    auto getInstance() -> Scheduler &;
+    static auto getInstance() -> Scheduler &;
 
     /**
      * This function is used to create a new task within the scheduler with "needToDeleteLater"
      * set to false, so it is up to whoever receives the task to destroy it.
      * The function pass will be executed in a generic thread
      * */
-    static constexpr auto startNewTask = [] (Fn<void()> function) -> Ptr<WTask> {
-        Ptr<WTask> task (new WTaskFunction(nullptr, false, std::move(function)));
-
-        task->setDestroyLater(false);
+    static auto startNewTask (Fn<void()> function) -> Ptr<WTask> {
+        Ptr<WTask> task (new WTaskFunction(nullptr, WTask::NotDeleteLater, std::move(function)));
 
         Scheduler::addTaskGeneric(task);
         return task;
@@ -129,6 +126,13 @@ private:
 
 inline void Scheduler::addTaskGeneric(Ptr<WTask> task)
 {
+    task->beforeRun();
+
+    if constexpr (WUtils::debug_enable()) {
+        if (task->isDeleteLater())
+            W_ASSERT(task.numberOfRef() == 1);
+    }
+
     auto &sched = Scheduler::getInstance();
     WMutexLocker _(sched._lockGeneric);
     sched._task_General.append(std::move(task));

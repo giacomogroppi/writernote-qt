@@ -13,6 +13,48 @@
 #include "core/Error.h"
 
 namespace WAbstractList {
+    /**
+     * \brief This class is usefull for functional programming.
+     * If you have a list and you want to iterate over it only in a certain
+     * range you can implement a method that return a SplitList with a reference
+     * of that list and the 'from' 'to' parameter to specify the range in which 
+     * you want to iterate; the receiving object can use the class returned into
+     * a for loop or use the \link forAll and pass a callable object with his
+     * parameter
+    */
+    template <template <typename Ty> class List, class T, class Size>
+    class SplitList {
+        static_assert(std::is_arithmetic<Size>::value);
+
+        List<T> &_list;
+        Size _start;
+        Size _stop;
+    public:
+        SplitList (List<T>& list, Size from, Size to)
+            : _list(list)
+            , _start(from)
+            , _stop(to) {};
+
+        template <class ...Args>
+        void forAll (Fn<void(const T&)> method, Args&& ...args) const
+        {
+            for (const auto& ref: *this) {
+                method(ref, std::forward<Args>(args)...);
+            }
+        }
+
+        void forAll (Fn<void(T&)> method)
+        {
+            for (auto& ref: *this)
+                method(ref);
+        }
+
+        auto begin () { return _list.begin() + _start; }
+        auto end() { return begin() + _stop; }
+        auto begin () const { return _list.begin() + _start; }
+        auto end() const { return begin() + _stop; }
+    };
+
     template <class T>
     using Ptr = Pointer<T>;
 
@@ -236,7 +278,7 @@ namespace WAbstractList {
     {
         return WAbstractList::write<List, T2>(writable,
                                               list,
-                                              [] (WritableAbstract &writable, const T2 &object) -> Error {
+                                              [] (auto &writable, const T2 &object) -> Error {
             return T2::write (writable, object);
         });
     }

@@ -94,7 +94,7 @@ auto model::find(const WListFast<PointF> &points, const WVector<pressure_t> &pre
     };
 
     for (int i = 0; i < THREAD_FINDER; i++) {
-        auto task = Scheduler::Ptr<WTask>(new WTaskFunction(nullptr, false, std::bind(method, i)));
+        auto task = Scheduler::Ptr<WTaskFunction>::make(nullptr, WTask::NotDeleteLater, std::bind(method, i));
         tasks.append(task);
         Scheduler::getInstance().addTaskGeneric(std::move(task));
     }

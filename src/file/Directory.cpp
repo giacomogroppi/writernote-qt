@@ -56,13 +56,16 @@ auto Directory::moveAllFilesTo(const WPath &newPath) -> void
     namespace fs = std::filesystem;
     std::error_code error;
 
+    if (newPath == _path)
+        return;
+
     // before move files, we need to close everything
     this->_files.clear();
 
     fs::rename(_path, newPath, error);
 
     if (error) {
-        W_ASSERT_TEXT(0, "move file error...");
+        W_ASSERT_TEXT(0, "move file error... from" << _path << "to" << newPath);
     }
 
     _path = newPath;

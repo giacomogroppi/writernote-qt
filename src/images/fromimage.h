@@ -65,6 +65,13 @@ public:
     auto operator=(const ImageContainerDrawable &other) noexcept -> ImageContainerDrawable &;
     auto operator=(ImageContainerDrawable &&other) noexcept -> ImageContainerDrawable &;
 
+    /**
+     * \brief This method need to be called in the main function before do anything on a ImageContainerDrawable and
+     * all the classed he use.
+     * This method require that a instance of Scheduler is present
+     * */
+    static void init() {};
+
 private:
     static auto getImageRawData(WByteArray &arr, const WString &path) -> load_res_img;
     auto loadMetadataImage(WZipReaderSingle &reader, int len) -> load_res_img;

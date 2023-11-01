@@ -9,6 +9,7 @@
 #include "touch/multi_thread_data.h"
 #include "touch/tools/Scrollable.h"
 #include "utils/WCommonScript.h"
+#include "Scheduler/Scheduler.h"
 
 enum ActionProperty: int {
     PROPERTY_SHOW_DELETE = 0x1,
@@ -84,8 +85,8 @@ private:
     bool _in_box;
     copy *_copy;
 
-    pthread_t *_thread;
-    DataPrivateMuThread *_dataThread;
+    WVector<Scheduler::Ptr<WTask>> _tasks;
+    WVector<DataPrivateMuThread> _dataThread;
     int _threadCount;
 
     PointF _trans_img;

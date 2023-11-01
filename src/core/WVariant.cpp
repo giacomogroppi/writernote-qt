@@ -32,7 +32,7 @@ WVariant::WVariant(const WByteArray &data)
 {
     MemWritable writable;
     WByteArray::write(writable, data);
-    writable.merge([this] (const void *d, size_t size) {
+    writable.merge([this] (auto *d, auto size) {
         this->_data.append(static_cast<const char *>(d), size);
         return 0;
     });
@@ -44,7 +44,7 @@ WVariant::WVariant(const WString& data)
 {
     MemWritable writable;
     WString::write(writable, data);
-    writable.merge([this] (const void *d, size_t size) {
+    writable.merge([this] (auto *d, auto size) {
         this->_data.append(static_cast<const char *>(d), size);
         return 0;
     });

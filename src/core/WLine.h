@@ -35,10 +35,17 @@ public:
     auto addBottom(Precision precision) const -> WLineTemplate<Precision>;
 
     /**
+     * \return The area in which the line belongs.
+     * */
+    auto area (Precision amount) const -> RectTemplate<Precision>;
+
+    /**
      * \return A new WLineTemplate grow left with the same _m
      * */
     auto growLeft(Precision amount) const -> WLineTemplate<Precision>;
     auto growRight(Precision amount) const -> WLineTemplate<Precision>;
+
+    bool intersect (const WLineTemplate& other, Precision precision, Precision *result = nullptr) const;
 
     static bool intersect(
             const WLineTemplate<Precision> &line1,
@@ -291,17 +298,10 @@ inline WLineTemplate<Precision> &WLineTemplate<Precision>::operator=(const WLine
 }
 
 template <class Precision>
-inline WLineTemplate<Precision>::WLineTemplate(const WLineTemplate<Precision> &line)
-{
-    this->_m = line._m;
-    this->_pt1 = line._pt1;
-    this->_pt2 = line._pt2;
-    this->_is_vertical = line._is_vertical;
-    this->_p = line._p;
-}
+WLineTemplate<Precision>::WLineTemplate(const WLineTemplate<Precision> &line) = default;
 
 template <class Precision>
-inline WLineTemplate<Precision>::WLineTemplate(
+WLineTemplate<Precision>::WLineTemplate(
         const PointTemplate<Precision> &pt1,
         const PointTemplate<Precision> &pt2)
 {
@@ -380,6 +380,19 @@ inline bool WLineTemplate<Precision>::intersect_vertical(
 }
 
 template <class Precision>
+bool WLineTemplate<Precision>::intersect(const WLineTemplate<Precision> &other, Precision precision,
+                                         Precision *) const
+{
+    if (isVertical() and other.isVertical())
+        return false;
+
+    const auto myArea = area(precision);
+    const auto otherArea = area(precision);
+
+    return myArea.intersects(otherArea);
+}
+
+template <class Precision>
 bool WLineTemplate<Precision>::intersect(
         const WLineTemplate<Precision> &line1,
         const WLineTemplate<Precision> &line2,
@@ -392,8 +405,8 @@ bool WLineTemplate<Precision>::intersect(
         return false;
 
     const auto isTouch = [](
-                const WLineTemplate<Precision> &line1,
-                const WLineTemplate<Precision> &line2
+                const auto &line1,
+                const auto &line2
             ) -> bool {
 
         if (!line2.isVertical() and !line1.isVertical()) {
@@ -473,6 +486,23 @@ inline bool WLineTemplate<Precision>::isInDomain(
             _pt1,
             _pt2
     }.contains(point, precision);
+}
+
+template <class Precision>
+auto WLineTemplate<Precision>::area(Precision amount) const -> RectTemplate<Precision>
+{
+    auto maxX = WUtils::max(_pt1.x(), _pt2.x());
+    auto minX = WUtils::min(_pt1.x(), _pt2.x());
+    auto maxY = WUtils::max(_pt1.y(), _pt2.y());
+    auto minY = WUtils::min(_pt1.y(), _pt2.y());
+
+    auto width  = maxX - minX + amount * Precision(2);
+    auto height = maxY - minY + amount * Precision(2);
+
+    return RectTemplate<Precision> {
+        minX - amount, minY - amount,
+        width, height
+    };
 }
 
 #ifdef USE_QT

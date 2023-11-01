@@ -17,7 +17,7 @@ AudioRecord::AudioRecord(WObject *parent,
     m_captureSession.setRecorder(recorder);
     m_captureSession.setAudioInput(new QAudioInput(nullptr));
 
-    QObject::connect(recorder, &QMediaRecorder::recorderStateChanged, [this] (QMediaRecorder::RecorderState status) {
+    QObject::connect(recorder, &QMediaRecorder::recorderStateChanged, [this] (auto status) {
         if (status == QMediaRecorder::StoppedState) {
             WByteArray result;
             if (WFile::readFile(result, this->_currentPosition) < 0) {

@@ -112,6 +112,13 @@ public:
     Page (int count, n_style style);
     ~Page();
 
+    /**
+     * \brief This method need to be called in the main function before do anything on a document and
+     * all the classed he use.
+     * This method require that a instance of Scheduler is present
+     * */
+    static auto init() -> void;
+
     auto clearAudio() -> void;
 
 #define PAGE_SWAP_TRIGGER_VIEW BIT(1)
@@ -241,7 +248,7 @@ public:
     friend class DataStruct;
     friend class xmlstruct;
     friend class RubberMethod;
-    friend void * __page_load(void *);
+    friend class PageDrawTask;
     friend void adjustStrokePage(WList<Stroke> &List, int count, Stroke *m_stroke);
     friend class copy;
     friend void actionRubberSingleTotal(struct DataPrivateMuThread *_data);
@@ -583,7 +590,7 @@ inline void Page::append(const WListFast<SharedPtr<Stroke>> &stroke)
 
 inline auto Page::operator==(const Page &other) const noexcept -> bool
 {
-    const auto cmp = [] (const SharedPtr<Stroke>& stroke1, const SharedPtr<Stroke>& stroke2) {
+    const auto cmp = [] (auto& stroke1, auto& stroke2) {
         return static_cast<const Stroke&>(*stroke1) == static_cast<const Stroke&>(*stroke2);
     };
 

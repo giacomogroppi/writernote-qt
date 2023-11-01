@@ -22,7 +22,7 @@ void DataPrivateInit()
 #endif
 }
 
-static void ctrlThread(DataPrivateMuThread *data, int create)
+static void ctrlThread(WVector<DataPrivateMuThread> &data, int create)
 {
 #ifdef DEBUGINFO
     int i, count;
@@ -46,21 +46,19 @@ static void ctrlThread(DataPrivateMuThread *data, int create)
 }
 
 int DataPrivateMuThreadInit(
-        DataPrivateMuThread     *data,
-        void                    *extraData,
-        cint                    maxThread,
-        cint                    to,
-        int                     flag)
+        WVector<DataPrivateMuThread>    &data,
+        void                            *extraData,
+        cint                            maxThread,
+        cint                            to,
+        int                             flag)
 {
     int i, done, div, count;
 
     done = 0;
     div = WUtils::div_diff(to, maxThread);
 
-    if (flag & DATA_PRIVATE_FLAG_SEM) {
-        for (i = 0; i < maxThread; i++) {
-            data[i].id = i;
-        }
+    for (i = 0; i < maxThread and flag & DATA_PRIVATE_FLAG_SEM; i++) {
+        data[i].id = i;
     }
 
     if (to > maxThread) {
@@ -92,7 +90,7 @@ int DataPrivateCountThread(int newThread)
 {
     int ret;
 
-    mutex_thread_write.lock();
+    WMutexLocker guard(mutex_thread_write);
 
     if (threadLast - newThread > 0) {
         ret = newThread;
@@ -110,17 +108,14 @@ int DataPrivateCountThread(int newThread)
 
     threadLast -= ret;
 
-    mutex_thread_write.unlock();
     return ret;
 }
 
 void DataPrivateCountThreadRelease(int releaseThread)
 {
-    mutex_thread_write.lock();
+    WMutexLocker guard(mutex_thread_write);
 
     threadLast -= releaseThread;
-
-    mutex_thread_write.unlock();
 }
 
 pthread_t *get_thread_max()
@@ -130,13 +125,16 @@ pthread_t *get_thread_max()
     return data;
 }
 
-DataPrivateMuThread *get_data_max()
+auto get_data_max() -> WVector<DataPrivateMuThread>
 {
     int thread = threadCount::count();
-    auto * data = (DataPrivateMuThread *)WMalloc(sizeof(DataPrivateMuThread) * thread);
-    return data;
-}
+    WVector<DataPrivateMuThread> result(thread);
 
+    for (int i = 0; i < thread; i++)
+        result.append(DataPrivateMuThread());
+
+    return result;
+}
 
 void free_thread_data(pthread_t **thread, DataPrivateMuThread **data)
 {
@@ -146,8 +144,8 @@ void free_thread_data(pthread_t **thread, DataPrivateMuThread **data)
     W_ASSERT(*thread);
     W_ASSERT(*data);
 
-    WFree(*thread);
-    WFree(*data);
+    free(*thread);
+    free(*data);
 
     *thread = nullptr;
     *data = nullptr;

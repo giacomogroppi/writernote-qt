@@ -4,6 +4,7 @@
 #include <pthread.h>
 #include "RubberMethod.h"
 #include "touch/tools/Tools.h"
+#include "Scheduler/Scheduler.h"
 
 #define DEFAULT_GOMMA_SIZE 5
 
@@ -19,6 +20,10 @@ private:
     int _base;
     PointSettable _last;
     WListFast<WVector<int>> _data_to_remove;
+
+    WVector<Scheduler::Ptr<WTask>> _tasks;
+    WVector<DataPrivateMuThread> _dataTasks;
+    void (*functionToCall)(DataPrivateMuThread &);
 public:
     enum type_rubber: int{
         total, /* delete all the point with the saim id */
