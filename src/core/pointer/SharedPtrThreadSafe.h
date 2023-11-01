@@ -362,11 +362,11 @@ void SharedPtrThreadSafe<T>::release() noexcept
 template <class T>
 void SharedPtrThreadSafe<T>::doAndUnref(Fn<void(T&)> method)
 {
-    *_counter -= 1;
+    const auto numberOfRef = --(*_counter);
 
     method(*_object);
 
-    if (*_counter == 0) {
+    if (numberOfRef == 0) {
         delete _object;
         delete _counter;
     }
@@ -385,8 +385,8 @@ template <class T>
 inline void SharedPtrThreadSafe<T>::destroy()
 {
     if (_counter) {
-        *_counter -= 1;
-        if (*_counter == 0) {
+        auto valueWritten = --(*_counter);
+        if (valueWritten == 0) {
 
             delete _object;
             delete _counter;
@@ -506,6 +506,7 @@ inline auto SharedPtrThreadSafe<T>::isUnique() const -> bool
 
     if (*_counter != 1)
         WDebug(true, *_counter);
+    
     if (*_counter == 1) {
         return true;
     }

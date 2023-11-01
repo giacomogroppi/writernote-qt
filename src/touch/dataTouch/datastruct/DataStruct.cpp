@@ -84,12 +84,11 @@ void DataStruct::adjustHeight(cdouble height, PointF& translateTo)
     unsigned char not_used ff = 0;
     double y = this->_page.size() * Page::height;
 
-    if(point.y() > 0.0){
+    if (point.y() > 0.0) {
         ff = 1;
         translateTo.setY( - point.y());
-        WDebug(true, "Need to restore first point" << point);
-    }
-    else if(y < height){
+        WDebug(debug, "Need to restore first point" << point);
+    } else if(y < height) {
         ff = 2;
         translateTo.setY((height - y) / _zoom);
 
@@ -235,10 +234,10 @@ void DataStruct::moveToPage(int newPage)
     W_ASSERT(this->getPointFirstPageNoZoom().x() <= 0.);
     W_ASSERT(this->getPointFirstPageNoZoom().y() <= 0.);
 
-    if constexpr (WUtils::debug_enable()){
+    if constexpr (WUtils::debug_enable()) {
         const auto not_used point = this->adjustPoint(PointF(0., 0.));
         const auto not_used index = this->whichPage(point);
-        WDebug(true, newPage << index << this->getPointFirstPage() << get_range_visible());
+        WDebug(debug, newPage << index << this->getPointFirstPage() << get_range_visible());
         W_ASSERT(index == newPage);
     }
 

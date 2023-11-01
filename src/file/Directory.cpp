@@ -23,12 +23,12 @@ auto Directory::getAllFiles(const WPath& path) -> WListFast<WFile>
     const auto iterator = std::filesystem::directory_iterator(path, error);
 
     if (error) {
-        WDebug(true, "Warning folder not exists");
+        WWarning("Warning folder not exists");
         return {};
     }
 
     for (const auto & entry : iterator) {
-        WDebug(true, "Name of the file is:" << entry.path().string());
+        WDebug(debug, "Name of the file is:" << entry.path().string());
         ret.append(WFile(entry.path()));
     }
 
@@ -41,9 +41,8 @@ auto Directory::allDirsInFolder() const -> WListFast<WByteArray>
 
     res.reserve(_files.size());
 
-
     for (const auto& entry : std::as_const(_files)) {
-        WDebug(true, entry.getName());
+        WDebug(debug, entry.getName());
         res.append(entry.getName());
     }
 

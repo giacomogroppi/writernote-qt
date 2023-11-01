@@ -14,7 +14,7 @@
 class WPixmap : public QPixmap
 {
 private:
-
+    static constexpr auto debug = false;
 public:
     WPixmap() = default;
     WPixmap (const WPixmap &other) noexcept;

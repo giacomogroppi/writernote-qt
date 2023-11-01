@@ -383,9 +383,7 @@ auto WVector<T>::removeOrderHighToLow(
         lastIndex = i;
     }
 
-    WDebug(true, "Before" << *this);
     removeAll(indexFirst, lastIndex + 1);
-    WDebug(true, "After" << *this);
 
     return true;
 }

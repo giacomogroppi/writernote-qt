@@ -9,6 +9,8 @@
 class Directory
 {
 private:
+    static constexpr auto debug = false;
+
     WListFast<WFile> _files;
     WPath _path;
 

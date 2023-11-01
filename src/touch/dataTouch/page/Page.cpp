@@ -1,4 +1,4 @@
-#include "Page.h"
+﻿#include "Page.h"
 #include "core/core.h"
 #include "log/log_ui/log_ui.h"
 #include "sheet/style_struct.h"
@@ -32,8 +32,18 @@ struct page_thread_data{
 };
 
 static bool initPage = false;
-static WVector<DataPrivateMuThread> threadData;
-static WMutex drawMutex;
+
+struct dPrivate {
+    WVector<DataPrivateMuThread> threadData;
+    WMutex drawMutex;
+    WVector<Scheduler::Ptr<WTask>> tasks;
+
+    ~dPrivate()
+    {
+        tasks.forAll(&Scheduler::Ptr<WTask>::release);
+    }
+
+} pageDraw;
 
 class PageDrawTask: public WTask
 {
@@ -89,16 +99,14 @@ public:
     }
 };
 
-static WVector<Scheduler::Ptr<WTask>> tasks;
-
 void Page::init()
 {
     const auto numberOfThread = threadCount::count();
-    tasks.reserve(numberOfThread);
+    pageDraw.tasks.reserve(numberOfThread);
 
     for (int i = 0; i < numberOfThread; i++) {
-        threadData.append(DataPrivateMuThread());
-        tasks.append(Scheduler::Ptr<PageDrawTask>::make(threadData[i]));
+        pageDraw.threadData.append(DataPrivateMuThread());
+        pageDraw.tasks.append(Scheduler::Ptr<PageDrawTask>::make(pageDraw.threadData[i]));
     }
 
     initPage = true;
@@ -280,7 +288,7 @@ void Page::swap(WListFast<SharedPtr<Stroke> > &list,
     }
 
     DO_IF_DEBUG_ENABLE(debugPage,
-        WDebug(true, "Page::swap" << _count - 1 << drop << "Item drop, list" << itemDrop);
+        WDebug(debugPage, "Page::swap" << _count - 1 << drop << "Item drop, list" << itemDrop);
     );
 }
 
@@ -351,19 +359,19 @@ void Page::drawEngine(
     extraData.m_pos_ris     = m_pos_ris;
     extraData.parent        = this;
 
-    WMutexLocker guard(drawMutex);
+    WMutexLocker guard(pageDraw.drawMutex);
 
     if (use_multi_thread) {
-        auto threadCount = DataPrivateMuThreadInit(threadData, &extraData, PAGE_THREAD_MAX, strokes.size(), ~DATA_PRIVATE_FLAG_SEM);
+        auto threadCount = DataPrivateMuThreadInit(pageDraw.threadData, &extraData, PAGE_THREAD_MAX, strokes.size(), ~DATA_PRIVATE_FLAG_SEM);
 
-        tasks.refMidConst(0, threadCount).forAll(&Scheduler::addTaskGeneric);
-        tasks.refMidConst(0, threadCount).forAll(&WTask::join);
+        pageDraw.tasks.refMidConst(0, threadCount).forAll(&Scheduler::addTaskGeneric);
+        pageDraw.tasks.refMidConst(0, threadCount).forAll(&WTask::join);
     } else {
-        threadData[0].extra = &extraData;
-        threadData[0].from = 0;
-        threadData[0].to = strokes.size();
+        pageDraw.threadData[0].extra = &extraData;
+        pageDraw.threadData[0].from = 0;
+        pageDraw.threadData[0].to = strokes.size();
 
-        tasks[0]->run();
+        pageDraw.tasks[0]->run();
     }
 }
 

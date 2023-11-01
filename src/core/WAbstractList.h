@@ -198,13 +198,11 @@ namespace WAbstractList {
             return end;
 
         for (;;) {
-            WDebug(false, "Cicle")
             if (result == begin)
                 return result;
 
             result --;
             if (*result != object) {
-                WDebug(false, "return");
                 return result + 1;
             }
         }
@@ -258,8 +256,6 @@ namespace WAbstractList {
     ) -> Error
     {
         unsigned size = list.size();
-
-        WDebug(false, "Saving: " << typeid(T2).name() << size);
 
         if (auto err = writable.write(size)) {
             return err;
@@ -400,11 +396,8 @@ namespace WAbstractList {
             );
         }
 
-        for (auto &thread: threads) {
-            thread->join();
-
-            thread.release();
-        }
+        threads.forAll(&WTask::join);
+        threads.forAll(&Ptr<WTask>::release);
 
         if (needToAbort)
             return {needToAbort, {}};

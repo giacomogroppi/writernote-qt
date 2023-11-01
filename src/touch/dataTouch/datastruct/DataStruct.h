@@ -15,6 +15,8 @@ class ImageContainerDrawable;
 class DataStruct
 {
 private:
+    static constexpr auto debug = false;
+    
     PointF _last_translation;
     WVector<Page> _page;
     PointF _pointFirstPage = {0., 0.};

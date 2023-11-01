@@ -64,7 +64,7 @@ auto StrokeCircleGenerator::model_near(const WListFast<PointF> &points,
         };
 
         if (!is_near(rect.topLeft(), rect.bottomRight(), _end)) {
-            WDebug(StrokeCircleGeneratorDebug, "first point and last are not near" << rect.topLeft() << rect.bottomRight());
+            WDebug(debug, "first point and last are not near" << rect.topLeft() << rect.bottomRight());
             return StrokeComplexCommon::error;
         }
     }
@@ -83,7 +83,7 @@ auto StrokeCircleGenerator::model_near(const WListFast<PointF> &points,
 
     precision /= coef;
 
-    WDebug(StrokeCircleGeneratorDebug, qstr("Cricle precision: %1").arg(precision));
+    WDebug(debug, qstr("Cricle precision: %1").arg(precision));
 
     return precision;
 }

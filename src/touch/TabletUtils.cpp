@@ -73,7 +73,8 @@ void TabletUtils::load(LoadTypes types)
 
     counterPage = _isExportingPdf ? 0 : _doc.getFirstPageVisible();
     
-    WDebug(true, "Start draw img from" << counterPage);
+    WDebug(debug, "Start draw img from" << counterPage);
+
     for (; counterPage < 1 && lenPage and (types & (UpdateEvent::page | UpdateEvent::sheet)); counterPage ++) {
         const Page &page = _doc.at(counterPage);
         const auto isPageVisible = page.isVisible();

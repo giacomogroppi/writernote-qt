@@ -7,7 +7,7 @@
 class StrokeCircleGenerator
 {
 private:
-    static constexpr bool StrokeCircleGeneratorDebug = false;
+    static constexpr bool debug = false;
     static void model_circle_precision(const PointF &point, double &precision);
 public:
     static auto make(const WListFast<PointF>& points,

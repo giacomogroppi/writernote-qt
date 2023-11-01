@@ -11,6 +11,8 @@
 class RubberMethod: public Tools
 {
 private:
+    static constexpr auto debug = false;
+    
     /**
      * Return true if the subimage Rect (from, to) is not null
      * */

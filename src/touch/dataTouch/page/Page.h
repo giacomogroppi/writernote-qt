@@ -45,6 +45,7 @@ enum n_style: int;
 
 void adjustStrokePage(const WList<Stroke> &List, int count, Stroke *m_stroke);
 
+// TODO: move this variable into Page
 constexpr bool debugPage = false;
 
 class Page

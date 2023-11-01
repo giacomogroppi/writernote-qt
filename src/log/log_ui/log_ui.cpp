@@ -60,8 +60,9 @@ void log_ui::write(const WString &stringa, log_ui::type_write var)
     WFile file(this->getCurrentPosition(), WFile::Write);
     WString tmp;
 
-    if(m_permi != permi::enable){
-        WDebug(true, "It's not possible to write log because of permission. Log: " << stringa.toUtf8().toStdString());
+    if (m_permi != permi::enable) {
+        
+        WWarning("It's not possible to write log because of permission. Log: " << stringa.toUtf8().toStdString());
     }
 
     if(var == log_ui::info)

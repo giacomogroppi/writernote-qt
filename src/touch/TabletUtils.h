@@ -10,6 +10,8 @@
 
 class TabletUtils {
 private:
+    static constexpr auto debug = false;
+
     const Bool _withPdf;
     const Bool _isExportingPdf;
     const Bool _isPlay;

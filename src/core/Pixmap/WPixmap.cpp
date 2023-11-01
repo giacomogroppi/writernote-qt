@@ -88,7 +88,7 @@ auto WPixmap::rect() const -> WRect
     const auto qtTopLeft = qtRect.topLeft();
     const auto qtBottomRight = qtRect.bottomRight();
 
-    WDebug(false, qtTopLeft.x() << qtTopLeft.y() << qtBottomRight.x() << qtBottomRight.y());
+    WDebug(debug, qtTopLeft.x() << qtTopLeft.y() << qtBottomRight.x() << qtBottomRight.y());
 
     auto res = WRect {
         qtTopLeft.x(),
@@ -162,7 +162,7 @@ auto WPixmap::write(WritableAbstract &writable, const WPixmap &pixmap) -> Error
 {
     const auto raw = pixmap.getRawDataPNG();
 
-    WDebug(true, raw.size());
+    WDebug(debug, raw.size());
 
     if (auto err = WByteArray::write(writable, raw))
         return err;

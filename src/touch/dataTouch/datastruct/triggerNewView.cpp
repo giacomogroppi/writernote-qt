@@ -17,11 +17,16 @@ void drawStroke(Page *page, WVector<int> &pos, int pos_audio)
 }
 
 struct dPrivate {
+    /**
+     * since this that is shared between all the instances of datastruct when you need to call this set
+     * of tasks you need to synchronize with \link accessToDrawMutex
+     * */
     WMutex accessToDrawMutex;
     WVector<Scheduler::Ptr<WTask>> tasks;
     WVector<DataPrivateMuThread> data;
 
     ~dPrivate() {
+        W_ASSERT(Scheduler::isStop());
         tasks.forAll(&Scheduler::Ptr<WTask>::release);
     }
 } dataStructAudioTask;
@@ -107,7 +112,9 @@ void DataStruct::newViewAudio(int newTime)
             ref.triggerRenderImage(newTime, true);
         }
     }
-    WDebug(true, "Call with time" << newTime);
+    WDebug(debug, "Call with time" << newTime);
+
+    WMutexLocker guard(dataStructAudioTask.accessToDrawMutex);
 
     for(; index < lengthPage(); index ++){
         extra.m_page = (Page *)&at(index);

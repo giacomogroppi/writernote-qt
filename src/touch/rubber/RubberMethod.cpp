@@ -5,8 +5,6 @@
 #include "touch/dataTouch/stroke/StrokeNormal.h"
 #include "core/WRgb.h"
 
-constexpr bool rubber_debug = false;
-
 struct RubberPrivateData {
     WVector<int>    *data_find;
     Page            *_page;
@@ -298,7 +296,7 @@ auto RubberMethod::touchUpdate(const PointF &__lastPoint,
     int pageMod = 0;
     RubberPrivateData dataPrivate;
 
-    WDebug(true, &this->_last);
+    WDebug(debug, &this->_last);
 
     W_ASSERT(_last.isSet());
 
@@ -361,11 +359,11 @@ auto RubberMethod::touchUpdate(const PointF &__lastPoint,
             lastPoint,
             _last,
             _size_gomma)) {
-        WDebug(rubber_debug, "It's null");
+        WDebug(debug, "It's null");
         goto save_point;
     }
 
-    WDebug(rubber_debug, "It's not null");
+    WDebug(debug, "It's not null");
 
     // l'utente ha prima selezionato un punto su una pagina x,
     // e poi ne ha selezionato un altro su una pagina o x-1, o x+1
@@ -458,13 +456,13 @@ bool RubberMethod::is_image_not_null(const Page &page,
             //WDebug(rubber_debug, name << "pixel" << pix);
 
             if (pix) {
-                WDebug(rubber_debug, "yes");
+                WDebug(debug, "yes");
                 return true;
             }
         }
     }
 
-    WDebug(rubber_debug, "No");
+    WDebug(debug, "No");
     return false;
 }
 
@@ -512,7 +510,7 @@ auto RubberMethod::touchBegin(const PointF &point, double, Document &doc) -> Upd
     _last = true;
     _last = doc.adjustPoint(point);
 
-    WDebug(true, &this->_last);
+    WDebug(debug, &this->_last);
 
     W_ASSERT(_last.isSet());
     return UpdateEvent::makeEmpty();

@@ -13,6 +13,8 @@ template <class T, bool lowToHigh = true>
 class WHeap
 {
 private:
+    static constexpr auto debug = false;
+
     WVector<T> _d;
 
     /**
@@ -224,12 +226,12 @@ auto WHeap<T, lowToHigh>::rep() const -> bool
         const auto current = _d.at(i);
         if constexpr (lowToHigh) {
             if (_cmpOriginal(first, current)) {
-                WDebug(true, first << "is lower than" << current << "... Array:" << _d);
+                WDebug(debug, first << "is lower than" << current << "... Array:" << _d);
                 return false;
             }
         } else {
             if (!_cmpOriginal(first, current)) {
-                WDebug(true, _d);
+                WDebug(debug, _d);
                 return false;
             }
         }

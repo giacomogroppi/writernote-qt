@@ -319,14 +319,11 @@ void SquareMethod::moveObjectIntoPrivate(WListFast<WVector<int>> &index, Documen
         if (ref.isEmpty())
             continue;
 
-        WDebug(true, "lenPrima" << page->lengthStroke());
-
         page->drawToImage(ref, tmp, DR_IMG_INIT_IMG);
 
         this->mergeImg(tmp, _img, count + _base);
 
         page->swap(_stroke.operator[](count), ref, PAGE_SWAP_TRIGGER_VIEW);
-        WDebug(true, "lenAfter" << page->lengthStroke());
     }
 
 #ifdef DEBUGINFO
@@ -543,9 +540,9 @@ static void square_draw_square(
 
 void SquareMethod::needReload(WPainter &painter, const Document &doc)
 {
-    if constexpr (WUtils::debug_enable()){
+    if constexpr (WUtils::debug_enable()) {
         if (!painter.isActive()) {
-            WDebug(true, "Painter not active in Square");
+            WWarning("Painter not active in Square");
             std::abort();
         }
     }

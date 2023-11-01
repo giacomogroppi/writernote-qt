@@ -23,7 +23,13 @@ class Scheduler final: public WObject
 public:
     template <class P>
     using Ptr = Pointer<P>;
-private:
+
+    /**
+     * \return True if there is no instance of scheduler in the
+     * all application
+     */
+    static auto isStop() noexcept -> bool ;
+
     static constexpr auto debug = true;
     WList<Ptr<WTask>> _task_General;
 

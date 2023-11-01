@@ -202,7 +202,7 @@ auto Scheduler::execute() -> bool
 
 void Scheduler::manageExecution(Ptr<WTask> task)
 {
-    WDebug(true, "Execute object" << static_cast<const void*>(&(*task)) << "with" << task.numberOfRef() << "ref");
+    WDebug(debug, "Execute object" << static_cast<const void*>(&(*task)) << "with" << task.numberOfRef() << "ref");
 
     const auto needToDeleteLater = task->isDeleteLater();
 
@@ -294,5 +294,10 @@ auto Scheduler::removeTimer(WTimer *timer) -> void
 
     if (_timersWaiting.removeIfPresent(timer))
         this->_conditionalVariableTimers.notify_all();
+}
+
+bool Scheduler::isStop() noexcept
+{
+    return instance == nullptr;
 }
 

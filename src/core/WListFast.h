@@ -845,11 +845,6 @@ inline void WListFast<T>::removeAt(Iter begin, Iter end) noexcept
     for (;;) {
         const auto isAtEnd = (begin + 1) == end;
 
-        WDebug(false, "Current is:" << *begin
-                << "Deliting object" << i
-                << "next is: " << (((begin + 1) >= end) ? -1 : *(begin + 1))
-        );
-
         numberOfDeletion ++;
         delete _data[i];
         _data[i] = nullptr;
@@ -860,7 +855,7 @@ inline void WListFast<T>::removeAt(Iter begin, Iter end) noexcept
         for (i++; i < s; i++) {
             W_ASSERT(i < size());
             W_ASSERT(i - numberOfDeletion < size() - diff);
-            WDebug(false, "Move" << i << "to" << i - numberOfDeletion);
+            
             to[i - numberOfDeletion] = _data[i];
         }
 
