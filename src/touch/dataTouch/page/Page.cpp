@@ -447,8 +447,8 @@ bool Page::initImg(bool flag)
 
 void Page::decreaseAlfa(const WVector<int> &pos, WPainter * painter, int decrease)
 {
-    for (const auto position: WAbstractList::Reverse(pos)) {
-        Stroke &stroke = this->operator[](pos.at(position));
+    for (const auto position: std::as_const(pos)) {
+        Stroke &stroke = this->operator[](position);
         const auto color = stroke.getAlfa();
 
         stroke.setAlfaColor(color / decrease);
