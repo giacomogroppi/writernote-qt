@@ -502,7 +502,7 @@ template <class T>
 inline auto SharedPtrThreadSafe<T>::isUnique() const -> bool
 {
     if (_counter == nullptr)
-        return false;
+        return true;
 
     if (*_counter != 1)
         WDebug(true, *_counter);

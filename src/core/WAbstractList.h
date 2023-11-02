@@ -76,16 +76,7 @@ namespace WAbstractList {
     template<class T>
     auto isSorted(const T& list) -> bool
     {
-        auto b1 = list.begin();
-        auto b2 = b1 + 1;
-        const auto end = list.end();
-
-        for (; b2 != end; b1++, b2++) {
-            if (b1 > b2)
-                return false;
-        }
-
-        return true;
+        return WAbstractList::isSorted(list.begin(), list.end());
     };
 
     template <class T>
@@ -416,7 +407,7 @@ namespace WAbstractList {
     {
         int i = 0;
 
-        std::vector<Ptr < WTask>> threads;
+        List<Ptr<WTask>> threads;
         MemWritable w[list.size()];
         Error needToAbort = Error::makeOk();
 
@@ -424,7 +415,7 @@ namespace WAbstractList {
 
         // create threads with corresponding data
         for (const auto &ref: std::as_const(list)) {
-            threads.push_back(startNewThread ([ref, &needToAbort, &w, i] {
+            threads.append(startNewThread ([ref, &needToAbort, &w, i] {
                                                if (auto err = T2::write (w[i], ref))
                                                    needToAbort = err;
                                            }
@@ -433,14 +424,8 @@ namespace WAbstractList {
         }
 
         // join the threads
-        for (auto &thread: threads) {
-            thread->join();
-            thread.release();
-        }
-
-        for (auto& thread: threads) {
-            thread.release();
-        }
+        threads.forAll(&WTask::join);
+        threads.forAll(&Ptr<WTask>::release);
 
         if (needToAbort)
             return needToAbort;

@@ -40,6 +40,7 @@ struct dPrivate {
 
     ~dPrivate()
     {
+        W_ASSERT(Scheduler::isStop());
         tasks.forAll(&Scheduler::Ptr<WTask>::release);
     }
 
