@@ -26,7 +26,7 @@ void copy::managePaste(
 
     this->adjustData(tmp);
 
-    data.append(this->m_stroke, -1);
+    data.append(this->m_stroke, AudioPosition::makeInvalid());
 
     if(this->isSomeThingCopy()){
         tmp *= -1.;

@@ -95,9 +95,8 @@ void StrokePre::setAlfaColor(int alfa)
     _stroke->setAlfaColor(alfa);
 }
 
-void StrokePre::setTime(int time)
+void StrokePre::setTime(AudioPosition time)
 {
-    W_ASSERT( time == -1 or time >= 0 );
     _stroke->setPositionAudio(time);
 }
 

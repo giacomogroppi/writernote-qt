@@ -27,7 +27,7 @@ struct page_thread_data{
     WMutex                          * append;
     WPainter                        * painter;
     WListFast<SharedPtr<Stroke>>    * m_stroke;
-    int                             m_pos_ris;
+    AudioPosition                   m_pos_ris;
     const Page                      * parent;
 };
 
@@ -63,7 +63,7 @@ public:
         WPixmap img;
         WPainterUnsafe painter;
         auto &mutex = *extra->append;
-        int m_pos_ris = extra->m_pos_ris;
+        auto positionAudio = extra->m_pos_ris;
         const Page *page = extra->parent;
 
         __initImg(img);
@@ -79,8 +79,8 @@ public:
             W_ASSERT(!ref.isEmpty());
 
             const auto &color = ref.getColor(
-                    (m_pos_ris != -1)
-                    ? ((ref.getPositionAudio() > m_pos_ris) ? 4 : 1)
+                    (positionAudio.isValid())
+                    ? ((ref.getPositionAudio() > positionAudio) ? 4 : 1)
                     : 1
             );
 
@@ -133,20 +133,19 @@ static void setStylePrivate(
         res = n_style::square;
     }
 
-    if(res == n_style::line){
+    if (res == n_style::line) {
         fast = true;
 
         style.nx = TEMP_N_X;
         style.ny = 0;
-    }
-    else if(res == n_style::white){
+    } else if(res == n_style::white) {
         /* we set the color manually */
         style.colore = color_black;
 
         style.nx = 1;
         style.ny = 1;
         style.thickness = 1;
-    }else{
+    } else {
         fast = true;
 
         style.nx = TEMP_SQUARE * (Page::getHeight() / Page::getWidth());
@@ -238,59 +237,59 @@ void Page::drawNewPage(n_style __style) noexcept
     stroke.setPressure(widthToPressure(style.thickness));
 }
 
-void Page::swap(WListFast<SharedPtr<Stroke>> &list,
-        const WVector<int>  &pos,
-        int                 flag)
+auto Page::swap(
+        const WVector<int>      &pos,
+        WFlags<SwapItemFlag::swapItemFlag>    flag
+    ) -> WListFast<SharedPtr<Stroke>>
 {
+    WListFast<SharedPtr<Stroke>> result;
     RectF area;
 
-#ifdef DEBUGINFO
-    if (!WAbstractList::isSorted(pos)) {
-        WDebug(true,"List not order");
-    }
-#endif
+    W_ASSERT_TEXT(WAbstractList::isSorted(pos), pos << "is not sorted");
 
-    if(!(flag & PAGE_SWAP_TRIGGER_VIEW)){
+    if (not (flag & SwapItemFlag::TriggerView)) {
+        // TODO: implement
         for (const auto index : std::as_const(pos)) {
-            this->swap(list, index, index + 1);
+            result.append(this->swap(index, index + 1));
         }
-        return;
+        return {};
     }
 
-    for(cint ref : pos){
+    for (const auto ref : std::as_const(pos)) {
         auto &r = this->_stroke[ref];
         W_ASSERT(!r->isEmpty());
-        list.append(r);
+        result.append(r);
     }
 
     area = this->get_size_area(pos);
 
-    this->removeAndDraw(-1, pos, area);
+    this->removeAndDraw(AudioPosition::makeInvalid(), pos, area);
+
+    return result;
 }
 
 /*
  * this function mantain the item already in list
 */
-void Page::swap(WListFast<SharedPtr<Stroke> > &list,
-                int             from,
-                int             to)
+auto Page::swap(int from, int to) -> WListFast<SharedPtr<Stroke>>
 {
+    WListFast<SharedPtr<Stroke>> result;
     W_ASSERT(from >= to);
-    DO_IF_DEBUG(
-    int drop = 0;
-    WVector<int> itemDrop;
-    );
+
+    DebugVariable<int> drop = 0;
+    DebugVariable<WVector<int>> itemDrop;
 
     for(to --; from <= to; to --){
-        list.append(_stroke.takeAt(to));
+        result.append(_stroke.takeAt(to));
 
-        DO_IF_DEBUG_ENABLE(debugPage, drop ++);
-        DO_IF_DEBUG_ENABLE(debugPage, itemDrop.append(to));
+        if (debugPage) {
+            drop ++;
+            itemDrop.append(to);
+        }
     }
 
-    DO_IF_DEBUG_ENABLE(debugPage,
+    if (debugPage)
         WDebug(debugPage, "Page::swap" << _count - 1 << drop << "Item drop, list" << itemDrop);
-    );
 }
 
 auto Page::swap(int index, const SharedPtr<Stroke>& newData) -> SharedPtr<Stroke>
@@ -302,14 +301,6 @@ auto Page::swap(int index, const SharedPtr<Stroke>& newData) -> SharedPtr<Stroke
 
     W_ASSERT(res.get());
     return res;
-}
-
-void Page::append(const WList<SharedPtr<Stroke>> &stroke)
-{
-    reserve(stroke.size());
-    for (const auto & tmp : std::as_const(stroke)) {
-        this->append(tmp);
-    }
 }
 
 void Page::drawStroke(WPainter &painter, const Stroke& stroke) const noexcept
@@ -345,10 +336,10 @@ void Page::drawStroke(
 }
 
 void Page::drawEngine(
-        WPainter        &painter,
-        WListFast<SharedPtr<Stroke>> &strokes,
-        int             m_pos_ris,
-        bool            use_multi_thread) noexcept
+        WPainter                        &painter,
+        WListFast<SharedPtr<Stroke>>    &strokes,
+        AudioPosition                   m_pos_ris,
+        bool                            use_multi_thread) noexcept
 {
     int i;
 
@@ -365,8 +356,8 @@ void Page::drawEngine(
     if (use_multi_thread) {
         auto threadCount = DataPrivateMuThreadInit(pageDraw.threadData, &extraData, PAGE_THREAD_MAX, strokes.size(), ~DATA_PRIVATE_FLAG_SEM);
 
-        pageDraw.tasks.refMidConst(0, threadCount).forAll(&Scheduler::addTaskGeneric);
-        pageDraw.tasks.refMidConst(0, threadCount).forAll(&WTask::join);
+        pageDraw.tasks.refMid(0, threadCount).forAll(&Scheduler::addTaskGeneric);
+        pageDraw.tasks.refMid(0, threadCount).forAll(&WTask::join);
     } else {
         pageDraw.threadData[0].extra = &extraData;
         pageDraw.threadData[0].from = 0;
@@ -377,9 +368,9 @@ void Page::drawEngine(
 }
 
 inline void Page::draw(
-    WPainter    &painter,
-    int         m_pos_ris,
-    bool        all) noexcept
+    WPainter        &painter,
+    AudioPosition   m_pos_ris,
+    bool            all) noexcept
 {
     W_ASSERT(painter.isActive());
 
@@ -398,33 +389,26 @@ inline void Page::draw(
 
 void Page::mergeList() noexcept
 {
-    for(auto &s : _strokeTmp) {
-        W_ASSERT(!s->isEmpty());
-        _stroke.append(s);
-        W_ASSERT(*_stroke.last() == *s);
-    }
-
-    _strokeTmp.clear();
+    _stroke.append(std::move(_strokeTmp));
+    W_ASSERT(_strokeTmp.isEmpty());
 }
 
 void Page::drawToImage(
-    const WVector<int>  &index,
-    WPixmap             &img,
-    cint                flag) const
+    const WVector<int>      &indexes,
+    WPixmap                 &img,
+    WFlags<DrawToPageFlag::drawToPageFlag>  flag) const
 {
     WPen pen;
     WPainterUnsafe painter;
 
-    if (flag & DR_IMG_INIT_IMG) {
+    if (flag & DrawToPageFlag::initImage) {
         __initImg(img);
-    } else {
-        W_ASSERT(flag == ~DR_IMG_INIT_IMG);
     }
 
     painter.begin(&img);
 
-    for (const int __index : std::as_const(index)) {
-        const Stroke &stroke = atStroke(__index);
+    for (const int index : std::as_const(indexes)) {
+        const Stroke &stroke = atStroke(index);
         this->drawStroke(painter, stroke, stroke.getColor());
     }
 
@@ -467,7 +451,7 @@ void Page::decreaseAlfa(const WVector<int> &pos, WPainter * painter, int decreas
  * all --> indicates if all the points must be drawn from scratch,
  * if false it is drawn over the old image
 */
-void Page::triggerRenderImage(int m_pos_ris, bool all)
+void Page::triggerRenderImage(AudioPosition m_pos_ris, bool all)
 {
     rep();
 
@@ -523,9 +507,9 @@ static force_inline int is_inside_squade(
 }
 
 void Page::removeAndDraw(
-        int                 m_pos_ris,
+        AudioPosition       m_pos_ris,
         const WVector<int>  &pos,
-        const RectF        &area)
+        const RectF         &area)
 {
     this->drawForceColorStroke(pos, m_pos_ris, COLOR_NULL);
 
@@ -534,7 +518,7 @@ void Page::removeAndDraw(
     drawIfInside(m_pos_ris, area);
 }
 
-void Page::drawIfInside(int m_pos_ris, const RectF &area)
+void Page::drawIfInside(AudioPosition m_pos_ris, const RectF &area)
 {
     if (not area.intersects(RectF {
         0, 0, getWidth(), getHeight()
@@ -552,6 +536,7 @@ void Page::drawIfInside(int m_pos_ris, const RectF &area)
     End_painter(painter);
 }
 
+// let this method accept AudioPosition
 void Page::decreaseAlfa(const WVector<int> &pos, int decrease)
 {
     bool needInit = initImg(false);
@@ -559,7 +544,7 @@ void Page::decreaseAlfa(const WVector<int> &pos, int decrease)
     if (needInit) {
         WDebug(debugPage, "Warning: page not draw");
         W_ASSERT(0);
-        return this->triggerRenderImage(-1, true);
+        return this->triggerRenderImage(AudioPosition::makeInvalid(), true);
     }
 
     WPainterUnsafe painter;
@@ -634,13 +619,12 @@ void Page::setCount(int newCount)
     rep();
 }
 
-void Page::drawForceColorStroke(const WVector<int> &pos, int m_pos_ris, const WColor &color)
+void Page::drawForceColorStroke(const WVector<int> &pos, AudioPosition m_pos_ris, const WColor &color)
 {
-    if(initImg(false))
-        return this->triggerRenderImage(m_pos_ris, true);
+    auto [error, painter] = initPainter(m_pos_ris);
 
-    WPainterUnsafe painter;
-    painter.begin(&_imgDraw);
+    if (error)
+        return;
 
     for (const auto &index: std::as_const(pos)) {
         const Stroke &stroke = atStroke(index);
@@ -651,9 +635,9 @@ void Page::drawForceColorStroke(const WVector<int> &pos, int m_pos_ris, const WC
     End_painter(painter);
 }
 
-void Page::drawStroke(const Stroke &stroke, int m_pos_ris)
+void Page::drawStroke(const Stroke &stroke, AudioPosition m_pos_ris)
 {
-    auto [status, painter] = initPainter();
+    auto [status, painter] = initPainter(m_pos_ris);
 
     if (status)
         return;
@@ -663,22 +647,22 @@ void Page::drawStroke(const Stroke &stroke, int m_pos_ris)
     painter.end();
 }
 
-void Page::drawStroke(const WVector<int> &positions, int m_pos_ris)
+void Page::drawStroke(const WVector<int> &positions, AudioPosition positionAudio)
 {
-    auto [status, painter] = initPainter();
+    auto [status, painter] = initPainter(positionAudio);
 
     if (status)
         return;
 
     for (const auto& index: std::as_const(positions)) {
-        drawForceColorStroke(atStroke(index), m_pos_ris, atStroke(index).getColor(), &painter);
+        drawForceColorStroke(atStroke(index), positionAudio, atStroke(index).getColor(), &painter);
     }
 }
 
 void Page::at_draw_page(
-        int            IndexPoint,
-        const PointF   &translation,
-        PointF         &point,
+        int             IndexPoint,
+        const PointF    &translation,
+        PointF          &point,
         const double    zoom) const
 {
     const auto &stroke = get_stroke_page();

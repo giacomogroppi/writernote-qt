@@ -42,8 +42,9 @@ private:
     DEFINE_VERSION(WMap, 0);
     DEFINE_VERSION(WAbstractList, 0);
     DEFINE_VERSION(WElement, 0);
+    DEFINE_VERSION(AudioPosition, 0);
 
-    static constexpr auto numberOfElements = 24;
+    static constexpr auto numberOfElements = 25;
     static constexpr unsigned short versionVersionFileController = 0u;
 
     static
@@ -92,7 +93,8 @@ inline auto VersionFileController::getArray(VersionFileController &versionContro
         &versionController._versionWImage,
         &versionController._versionWMap,
         &versionController._versionWAbstractList,
-        &versionController._versionWElement
+        &versionController._versionWElement,
+        &versionController._versionAudioPosition
     };
     static_assert(sizeof (VersionFileController) == sizeof(unsigned short) * numberOfElements);
 

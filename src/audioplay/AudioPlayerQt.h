@@ -8,6 +8,7 @@
 #include "core/pointer/UniquePtr.h"
 #include "Scheduler/WObject.h"
 #include "AudioData/AudioData.h"
+#include "touch/dataTouch/stroke/AudioPosition.h"
 
 #ifdef USE_QT
 
@@ -29,10 +30,8 @@ public:
     void stop();
 
     [[nodiscard]]
-    auto getCurrentTimeSecond() const -> Unsigned;
+    auto getCurrentTimeSecond() const -> AudioPosition;
 
-    [[nodiscard]]
-    auto getCurrentTimeMilliseconds() const -> Unsigned;
 
     [[nodiscard]]
     auto getCurrentDurationSeconds() const -> Unsigned;

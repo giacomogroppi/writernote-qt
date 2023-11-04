@@ -121,7 +121,7 @@ void SquareMethod::reset()
         }
 
         page.append(ll);
-        page.triggerRenderImage(-1, false);
+        page.triggerRenderImage(AudioPosition::makeInvalid(), false);
     }
 
     _stroke.clear();
@@ -226,8 +226,8 @@ bool SquareMethod::find(Document &doc)
 
         __index = &index.operator[](count);
 
-        _tasks.refMidConst(0, create).forAll(&Scheduler::addTaskGeneric);
-        _tasks.refMidConst(0, create).forAll(&WTask::join);
+        _tasks.refMid(0, create).forAll(&Scheduler::addTaskGeneric);
+        _tasks.refMid(0, create).forAll(&WTask::join);
     }
 
     /* image selected by user */
@@ -277,7 +277,7 @@ void SquareMethod::mergeImg(
     WPainterUnsafe painter;
     auto rectTo = from.rect();
 
-    rectTo.translate(0, page * Page::getResolutionHeigth());
+    rectTo.translate(0, page * Page::getResolutionHeight());
 
     painter.begin(&to);
     W_ASSERT(painter.isActive());
@@ -289,7 +289,6 @@ void SquareMethod::moveObjectIntoPrivate(WListFast<WVector<int>> &index, Documen
 {
     int count;
     const auto len = index.size();
-    Page * page;
     WPixmap tmp;
 
     WDebug(debugSquare, "call");
@@ -314,22 +313,22 @@ void SquareMethod::moveObjectIntoPrivate(WListFast<WVector<int>> &index, Documen
         const WVector<int> & ref = index.at(count);
         WDebug(debugSquare, ref);
 
-        page = &doc[count + _base];
+        auto& page = doc[count + _base];
 
         if (ref.isEmpty())
             continue;
 
-        page->drawToImage(ref, tmp, DR_IMG_INIT_IMG);
+        page.drawToImage(ref, tmp, Page::DrawToPageFlag::initImage);
 
         this->mergeImg(tmp, _img, count + _base);
 
-        page->swap(_stroke.operator[](count), ref, PAGE_SWAP_TRIGGER_VIEW);
+        _stroke.operator[](count).append(page.swap(ref, Page::SwapItemFlag::TriggerView));
     }
 
 #ifdef DEBUGINFO
-    WUtils::for_each(_stroke, [](const WListFast<SharedPtr<Stroke>> &list) {
-        WUtils::for_each(list, [](const SharedPtr<Stroke>& s) {
-            W_ASSERT(!s->isEmpty());
+    _stroke.forAll([](const auto& list) {
+        list.forAll([](const auto& stroke) {
+            W_ASSERT(!stroke->isEmpty());
         });
     });
 #endif // DEBUGINFO

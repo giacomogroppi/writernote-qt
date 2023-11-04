@@ -92,7 +92,7 @@ static force_inline void draw_null(Page &_page, const WVector<int> &point,
         W_ASSERT(stroke.type() == Stroke::COMPLEX_NORMAL);
 
         _page.lock();
-        _page.drawForceColorStroke(stroke, -1, COLOR_NULL, nullptr);
+        _page.drawForceColorStroke(stroke, AudioPosition::makeInvalid(), COLOR_NULL, nullptr);
         _page.unlock();
 
         if (is_left) {
@@ -102,7 +102,7 @@ static force_inline void draw_null(Page &_page, const WVector<int> &point,
         }
 
         _page.lock();
-        _page.drawStroke(stroke, -1);
+        _page.drawStroke(stroke, AudioPosition::makeInvalid());
         _page.unlock();
     });
 }
@@ -393,11 +393,11 @@ auto RubberMethod::touchUpdate(const PointF &__lastPoint,
 
     thread_create = DataPrivateMuThreadInit(_dataTasks, &dataPrivate, _tasks.size(), lenStroke, DATA_PRIVATE_FLAG_SEM);
 
-    _tasks.refMidConst(0, thread_create).forAll(&Scheduler::addTaskGeneric);
-    _tasks.refMidConst(0, thread_create).forAll(&WTask::join);
+    _tasks.refMid(0, thread_create).forAll(&Scheduler::addTaskGeneric);
+    _tasks.refMid(0, thread_create).forAll(&WTask::join);
 
     if (dataPrivate.highlighter_delete) {
-        dataPrivate._page->drawIfInside(-1, dataPrivate.area);
+        dataPrivate._page->drawIfInside(AudioPosition::makeInvalid(), dataPrivate.area);
     }
 
     if (!isTotal) {
@@ -490,7 +490,7 @@ auto RubberMethod::touchEnd(const PointF&, Document &doc) -> UpdateEvent
             WAbstractList::sort(arr.begin(), arr.end());
 
             const auto rect = doc.getSizeArea(arr, i + _base);
-            page.removeAndDraw(-1, arr, rect);
+            page.removeAndDraw(AudioPosition::makeInvalid(), arr, rect);
         }
 
         _data_to_remove.clear();

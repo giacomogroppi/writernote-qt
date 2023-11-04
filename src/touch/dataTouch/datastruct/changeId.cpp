@@ -13,7 +13,7 @@ force_inline void DataStruct::__changeId(int IndexPoint, Stroke &stroke, Page &p
         WMutexLocker guard(_changeIdMutex);
 
         // draw to old stroke with color_null
-        page.drawForceColorStroke(stroke, -1, COLOR_NULL, nullptr);
+        page.drawForceColorStroke(stroke, AudioPosition::makeInvalid(), COLOR_NULL, nullptr);
     }
 
     SharedPtr<StrokeNormal> strokeToAppend = strokeNormal->split(IndexPoint);
@@ -24,8 +24,8 @@ force_inline void DataStruct::__changeId(int IndexPoint, Stroke &stroke, Page &p
     );
 
     // we draw the new 2 stroke
-    page.drawForceColorStroke(stroke,           -1, stroke.getColor(1.0),           nullptr);
-    page.drawForceColorStroke(*strokeToAppend,  -1, strokeToAppend->getColor(1.0),  nullptr);
+    page.drawForceColorStroke(stroke,           AudioPosition::makeInvalid(), stroke.getColor(1.0),           nullptr);
+    page.drawForceColorStroke(*strokeToAppend,  AudioPosition::makeInvalid(), strokeToAppend->getColor(1.0),  nullptr);
 
     // we append the stroke
     page.append(strokeToAppend);

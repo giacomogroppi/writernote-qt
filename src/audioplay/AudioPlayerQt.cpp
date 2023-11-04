@@ -51,15 +51,12 @@ auto AudioPlayer::isPlaying() const -> Bool
     return Bool(this->_mediaPlayer.isPlaying());
 }
 
-auto AudioPlayer::getCurrentTimeSecond() const -> Unsigned
+auto AudioPlayer::getCurrentTimeSecond() const -> AudioPosition
 {
+    if (not isPlaying())
+        return AudioPosition::makeInvalid();
     const unsigned currentSecond = this->_mediaPlayer.position() / 1000u;
-    return Unsigned(currentSecond);
-}
-
-auto AudioPlayer::getCurrentTimeMilliseconds() const -> Unsigned
-{
-    return getCurrentTimeSecond() * Unsigned(1000u);
+    return AudioPosition::make(currentSecond);
 }
 
 auto AudioPlayer::getCurrentDurationSeconds() const -> Unsigned

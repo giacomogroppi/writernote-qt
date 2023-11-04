@@ -55,7 +55,7 @@ public:
     void adjust(const PointF &delta);
     void setAlfaColor(int alfa);
 
-    void setTime(int time);
+    void setTime(AudioPosition time);
     void setColor(const WColor &color) noexcept;
     nd auto isEmpty() const noexcept -> bool;
     nd auto getBiggerPointInStroke() const -> RectF;

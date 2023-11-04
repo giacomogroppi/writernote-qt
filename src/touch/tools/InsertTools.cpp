@@ -6,7 +6,7 @@
 
 extern StrokePre *__tmp;
 
-InsertTools::InsertTools(Fn<int()> getTime,
+InsertTools::InsertTools(Fn<AudioPosition()> getTime,
                          Fn<pressure_t(double)> getSize,
                          WColor &color,
                          WPen &pen)
@@ -19,7 +19,6 @@ InsertTools::InsertTools(Fn<int()> getTime,
 
 auto InsertTools::touchBegin(const PointF &point, double size, class Document &doc) -> UpdateEvent
 {
-    pressure_t pressure;
     StrokePre &strokeTmp = *__tmp;
 
     W_ASSERT(strokeTmp.isEmpty());
@@ -29,7 +28,7 @@ auto InsertTools::touchBegin(const PointF &point, double size, class Document &d
     strokeTmp.setColor(_color);
     strokeTmp.setAlfaColor(getAlfa());
 
-    pressure = this->_getSize(size);
+    auto pressure = this->_getSize(size);
 
     strokeTmp.append(point, pressure, getProp(doc));
 
@@ -66,7 +65,7 @@ auto InsertTools::touchEnd(const PointF &, class Document &doc) -> UpdateEvent
     pageMod = doc.appendStroke(std::move(res));
 
     doc[pageMod].triggerRenderImage(
-            -1,
+            AudioPosition::makeInvalid(), // (before was -1) reasoning on this paramter
             false
     );
 

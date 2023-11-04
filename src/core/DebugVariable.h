@@ -5,15 +5,18 @@
 template <class T>
 class DebugVariable
 {
-    static_assert(std::is_arithmetic<T>::value or std::is_pointer<T>::value);
     T _value;
 
 public:
     DebugVariable() = default;
-    DebugVariable(T value) : _value(value) {};
+    DebugVariable(T &&value) : _value(std::move(value)) {};
+    DebugVariable(const T& value) : _value(value) {};
 
     auto operator++() -> T&;
     auto operator--() -> T&;
+
+    auto operator++(int) -> T;
+    auto operator--(int) -> T;
 
     auto operator+=(T amount) -> T&;
     auto operator-=(T amount) -> T&;
@@ -26,15 +29,42 @@ public:
     auto operator<=(T amount) -> bool;
     auto operator>=(T amount) -> bool;
 
+#define defineAttribute(name)                               \
+    template <class ...Args>                                \
+    auto name(Args&& ...args)                               \
+    {                                                       \
+        return _value.name(std::forward<Args>(args)...);    \
+    }
+
+    defineAttribute(append);
+    defineAttribute(size);
 
     auto operator*() const -> T;
 
     operator T() const;
 
     auto operator=(T value) -> DebugVariable&;
+
+    friend QDebug operator<<(QDebug d, const DebugVariable<T> &p);
 };
 
 #ifdef DEBUGINFO
+
+template <class T>
+auto DebugVariable<T>::operator++(int) -> T
+{
+    auto value = this->_value;
+    _value ++;
+    return value;
+}
+
+template <class T>
+auto DebugVariable<T>::operator--(int) -> T
+{
+    auto value = this->_value;
+    _value --;
+    return value;
+}
 
 template <class T>
 auto DebugVariable<T>::operator<(T amount) -> bool
@@ -115,6 +145,13 @@ auto DebugVariable<T>::operator=(T value) -> DebugVariable&
     return *this;
 }
 
+#ifdef USE_QT
+template <class T>
+inline Q_CORE_EXPORT QDebug operator<<(QDebug d, const DebugVariable<T> &p)
+{
+    return d.nospace() << p._value;
+}
+#endif // USE_QT
 
 #endif // DEBUGINFO
 

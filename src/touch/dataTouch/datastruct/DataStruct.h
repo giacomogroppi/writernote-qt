@@ -30,7 +30,7 @@ private:
 
     [[nodiscard]] bool isOkTranslate(const PointF &point, cbool isZoom) const;
 
-    void triggerNewView(int page, int m_pos_ris, cbool all);
+    void triggerNewView(int page, AudioPosition m_pos_ris, cbool all);
 
     void newPage(int num);
 
@@ -58,13 +58,13 @@ public:
      * \param m_pos_ris In case the user is playing audio pass the current time value, otherwise pass -1
      * */
     template <class Iter>
-    void triggerNewView(Iter begin, Iter end, int m_pos_ris, bool all);
+    void triggerNewView(Iter begin, Iter end, AudioPosition m_pos_ris, bool all);
 
-    void triggerNewView(int m_pos_ris, bool all);
+    void triggerNewView(AudioPosition m_pos_ris, bool all);
 
-    void triggerIfNone(int m_pos_ris);
+    void triggerIfNone(AudioPosition m_pos_ris);
 
-    void triggerViewIfVisible(int m_pos_ris);
+    void triggerViewIfVisible(AudioPosition m_pos_ris);
 
     void changeZoom(double zoom, int heightScreen);
 
@@ -93,7 +93,7 @@ public:
     void removeAt(int indexPage);
 
     /* the draw function triggers the drawing of the points automatically */
-    void append(const WListFast<SharedPtr<Stroke>> &stroke, int m_pos_ris);
+    void append(const WListFast<SharedPtr<Stroke>> &stroke, AudioPosition m_pos_ris);
 
     /**
      * This method take the object from 'object'
@@ -144,7 +144,7 @@ public:
     auto at(int page) const -> const Page &;
 
     [[deprecated]] [[nodiscard]]
-    auto at_draw_page(cint indexPoint, const Page &Page) const -> WPoint;
+    auto at_draw_page(int indexPoint, const Page &Page) const -> WPoint;
 
     [[nodiscard]]
     auto lastPage() const -> const Page &;
@@ -167,7 +167,7 @@ public:
     void moveToPage(int page);
 
     auto getLastPageVisible() const -> int;
-    void newViewAudio(int newTime);
+    void newViewAudio(AudioPosition newTime);
 
     auto operator[](long index) -> Page& { return this->_page[index]; }
 
@@ -408,7 +408,7 @@ force_inline bool DataStruct::isOkTranslate(const PointF &point, cbool isZoom) c
            y + point.y() / _zoom <= 0.;
 }
 
-force_inline void DataStruct::triggerNewView(int page, int m_pos_ris, cbool all)
+force_inline void DataStruct::triggerNewView(int page, AudioPosition m_pos_ris, cbool all)
 {
     this->operator[](page).triggerRenderImage(m_pos_ris, all);
 }
@@ -434,14 +434,14 @@ inline int DataStruct::whichPage(const Stroke &stroke) const
 }
 
 template <class Iter>
-inline void DataStruct::triggerNewView(Iter begin, Iter end, int m_pos_ris, bool all)
+inline void DataStruct::triggerNewView(Iter begin, Iter end, AudioPosition m_pos_ris, bool all)
 {
     for (; begin != end; begin ++) {
         this->triggerNewView(*begin, m_pos_ris, all);
     }
 }
 
-inline void DataStruct::triggerNewView(int m_pos_ris, bool all)
+inline void DataStruct::triggerNewView(AudioPosition m_pos_ris, bool all)
 {
     int i;
     const auto len = lengthPage();
@@ -449,7 +449,7 @@ inline void DataStruct::triggerNewView(int m_pos_ris, bool all)
         this->triggerNewView(i, m_pos_ris, all);
 }
 
-inline void DataStruct::triggerViewIfVisible(int m_pos_ris)
+inline void DataStruct::triggerViewIfVisible(AudioPosition m_pos_ris)
 {
     for (auto &page: this->_page) {
         if (page.isVisible())
@@ -483,7 +483,7 @@ inline int DataStruct::whichPage(const PointF &point) const
 /**
  * the function automatically launches the drawing for the pages
  * to which data has been added*/
-inline void DataStruct::append(const WListFast<SharedPtr<Stroke>> &stroke, int m_pos_ris)
+inline void DataStruct::append(const WListFast<SharedPtr<Stroke>> &stroke, AudioPosition m_pos_ris)
 {
     WVector<int> trigger;
 
@@ -502,17 +502,13 @@ inline void DataStruct::append(const WListFast<SharedPtr<Stroke>> &stroke, int m
 
 inline void DataStruct::removeAt(int indexPage)
 {
-    int index = indexPage, len;
     this->_page.removeAt(Index(indexPage));
 
     W_ASSERT(indexPage < this->lengthPage());
 
-    len = lengthPage();
-
-    for(; index < len; index ++){
-        this->operator[](index).setCount(index + 1);
-    }
-
+    _page.refMid(indexPage, _page.size()).forAll([](Page &page) {
+        page.setCount(page.getCount() - 1);
+    });
 }
 
 inline auto DataStruct::appendStroke(SharedPtr<Stroke> &&object) -> int

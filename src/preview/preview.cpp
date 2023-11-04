@@ -19,7 +19,7 @@ void preview::get(WPixmap &ref, const Document &doc, bool withPdf, int width)
     const auto visibleArea = RectF{Page::getResolutionSize().castTo<double>()};
 
     TabletUtils loader (painter, Bool(false),
-                        Unsigned(0u), Double(delta),
+                        AudioPosition::makeInvalid(), Double(delta),
                         Optional<Laser>(), doc,
                         Bool(true), Bool(false), visibleArea);
 

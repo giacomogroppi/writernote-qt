@@ -6,7 +6,7 @@ using namespace std::placeholders;
 
 Pen::Pen(
             WObject *parent,
-            Fn<int ()> getTime,
+            Fn<AudioPosition ()> getTime,
             WColor &color,
             WPen &pen
         )

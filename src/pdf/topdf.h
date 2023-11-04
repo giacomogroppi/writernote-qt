@@ -15,7 +15,7 @@ private:
               Bool withPdf);
 
 public:
-    topdf(const WString &path, const Document &doc);
+    explicit topdf(const WString &path, const Document &doc);
     ~topdf();
 
     bool createpdf(cbool withPdf);
@@ -26,7 +26,7 @@ inline void topdf::draw(WPainter &painter, Double m, Bool withPdf)
 {
     TabletUtils loader(painter,
         Bool(false),
-        Unsigned(0u),
+        AudioPosition::makeInvalid(),
         m,
         Optional<Laser>(),
         *data,

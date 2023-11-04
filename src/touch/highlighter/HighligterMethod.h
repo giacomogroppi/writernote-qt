@@ -6,7 +6,7 @@
 class HighligterMethod: public InsertTools {
 private:
 public:
-    HighligterMethod(Fn<int()> getTime,
+    HighligterMethod(Fn<AudioPosition()> getTime,
                      Fn<pressure_t(double)> getSize,
                      WPen &pen,
                      WColor &color);

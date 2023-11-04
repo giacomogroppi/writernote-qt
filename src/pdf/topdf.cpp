@@ -18,14 +18,14 @@ topdf::topdf(const WString &path, const Document &doc)
 
     WNew(data, Document, (doc));
 
-    this->data->triggerNewView(-1, true);
+    this->data->triggerNewView(AudioPosition::makeInvalid(), true);
 
-    for(auto i = 0; i < len; i++){
+    for (auto i = 0; i < len; i++) {
         if(data->at(i).getImg().isNull())
             page.append((int)i);
     }
 
-    data->triggerNewView(page.begin(), page.end(), -1, true);
+    data->triggerNewView(page.begin(), page.end(), AudioPosition::makeInvalid(), true);
 
     W_ASSERT(doc.lengthPage() == data->lengthPage());
 }
@@ -54,7 +54,7 @@ bool topdf::createpdf(cbool withPdf)
 
     const auto size = QSize {
         static_cast<int>(Page::getResolutionWidth()),
-        static_cast<int>(Page::getResolutionHeigth())
+        static_cast<int>(Page::getResolutionHeight())
     };
 
     pdfWriter.setPageSize(QPageSize(size * .25));

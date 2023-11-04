@@ -15,7 +15,7 @@ private:
     const Bool _withPdf;
     const Bool _isExportingPdf;
     const Bool _isPlay;
-    const Unsigned _positionAudio;
+    const AudioPosition _positionAudio;
     Double _m;
     Optional<Laser> _laser;
     RectF _visibleArea;
@@ -24,13 +24,13 @@ private:
     WPainter *_painter;
 
 public:
-    explicit TabletUtils(WPainter &painter, Bool isPlay, Unsigned positionAudio,
+    explicit TabletUtils(WPainter &painter, Bool isPlay, AudioPosition positionAudio,
                          Double m, Optional<Laser> laser, const Document &doc,
                          Bool withPdf, Bool isExporting, const RectF &visibleArea);
     ~TabletUtils() = default;
 
     [[nodiscard]]
-    auto getTime() const -> Unsigned;
+    auto getTime() const -> AudioPosition;
 
     [[nodiscard]]
     constexpr auto withPdf() const -> Bool;
@@ -50,12 +50,14 @@ private:
 
     void drawForAudio();
 
-    constexpr Laser &getLaser();
-    constexpr WPainter &getPainter();
+    constexpr auto getLaser() -> Laser &;
+    constexpr auto getPainter() -> WPainter &;
 };
 
-inline TabletUtils::TabletUtils(WPainter &painter, Bool isPlay, Unsigned positionAudio, Double m, Optional<Laser> laser,
-                                const Document &doc, Bool withPdf, Bool isExporting, const RectF &visibleArea)
+inline TabletUtils::TabletUtils(WPainter &painter, Bool isPlay, AudioPosition positionAudio,
+                                Double m, Optional<Laser> laser,
+                                const Document &doc, Bool withPdf, Bool isExporting,
+                                const RectF &visibleArea)
     : _withPdf(withPdf)
     , _isExportingPdf(isExporting)
     , _isPlay(isPlay)
@@ -104,7 +106,7 @@ inline constexpr double TabletUtils::getZoom() const
     return this->_doc.getZoom();
 }
 
-inline auto TabletUtils::getTime() const -> Unsigned
+inline auto TabletUtils::getTime() const -> AudioPosition
 {
     return this->_positionAudio;
 }

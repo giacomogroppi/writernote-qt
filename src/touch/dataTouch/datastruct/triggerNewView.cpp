@@ -7,11 +7,11 @@
 
 struct DatastructNewView{
     Page            *m_page;
-    int             time;
+    AudioPosition   time;
     WMutex          &mutex;
 };
 
-void drawStroke(Page *page, WVector<int> &pos, int pos_audio)
+void drawStroke(Page *page, WVector<int> &pos, AudioPosition pos_audio)
 {
     page->drawStroke(pos, pos_audio);
 }
@@ -35,9 +35,9 @@ class DataStructNewViewTask: public WTask
 {
 private:
     DataPrivateMuThread &_data;
-    int position_audio;
+    AudioPosition position_audio;
 
-    auto searchForStroke(Page &page, int position_audio) -> WVector<int>;
+    auto searchForStroke(Page &page, AudioPosition position_audio) -> WVector<int>;
 public:
     explicit DataStructNewViewTask(DataPrivateMuThread &data);
 
@@ -47,12 +47,12 @@ public:
 DataStructNewViewTask::DataStructNewViewTask(DataPrivateMuThread &data)
     : WTask{nullptr, WTask::NotDeleteLater}
     , _data(data)
-    , position_audio(0)
+    , position_audio(AudioPosition::makeInvalid())
 {
 
 }
 
-auto DataStructNewViewTask::searchForStroke(Page &page, int positionAudio) -> WVector<int>
+auto DataStructNewViewTask::searchForStroke(Page &page, AudioPosition positionAudio) -> WVector<int>
 {
     WVector<int> result;
 
@@ -95,7 +95,7 @@ void DataStruct::init()
     Page::init();
 }
 
-void DataStruct::newViewAudio(int newTime)
+void DataStruct::newViewAudio(AudioPosition newTime)
 {
     int index;
 
@@ -107,7 +107,7 @@ void DataStruct::newViewAudio(int newTime)
             .mutex = _changeAudioMutex
     };
 
-    if (newTime == 0) {
+    if (newTime == AudioPosition::zero()) {
         for(auto &ref : _page){
             ref.triggerRenderImage(newTime, true);
         }
@@ -121,7 +121,7 @@ void DataStruct::newViewAudio(int newTime)
 
         auto create = DataPrivateMuThreadInit(dataStructAudioTask.data, &extra, DATASTRUCT_THREAD_MAX, extra.m_page->lengthStroke(), 0);
 
-        dataStructAudioTask.tasks.refMidConst(0, create).forAll(&Scheduler::addTaskGeneric);
-        dataStructAudioTask.tasks.refMidConst(0, create).forAll(&WTask::join);
+        dataStructAudioTask.tasks.refMid(0, create).forAll(&Scheduler::addTaskGeneric);
+        dataStructAudioTask.tasks.refMid(0, create).forAll(&WTask::join);
     }
 }

@@ -7,7 +7,7 @@
 extern StrokePre *__tmp;
 
 HighligterMethod::HighligterMethod(
-        Fn<int()> getTime,
+        Fn<AudioPosition()> getTime,
         Fn<pressure_t(double)> getSize,
         WPen &pen,
         WColor &color

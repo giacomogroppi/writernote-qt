@@ -4,12 +4,12 @@
 
 class InsertTools: public Tools {
 protected:
-    Fn<int()> _getTime;
+    Fn<AudioPosition()> _getTime;
     Fn<pressure_t(double size)> _getSize;
     WColor &_color;
     WPen &_pen;
 
-    InsertTools(Fn<int()> getTime,
+    InsertTools(Fn<AudioPosition()> getTime,
                 Fn<pressure_t (double press)> getSize,
                 WColor &color,
                 WPen &pen);

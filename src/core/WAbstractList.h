@@ -43,10 +43,11 @@ namespace WAbstractList {
             }
         }
 
-        void forAll (Fn<void(T&)> method)
+        template <class ...Args>
+        void forAll (Fn<void(T&)> method, Args&& ...args)
         {
             for (auto& ref: *this)
-                method(ref);
+                method(ref, std::forward<Args>(args)...);
         }
 
         auto begin () { return _list.begin() + _start; }
@@ -72,6 +73,12 @@ namespace WAbstractList {
 
         return true;
     };
+
+    template <class Size>
+    auto numberOfAllocationNeeded(Size min, Size multiple) -> Size
+    {
+        return ((min / multiple) + Size(1)) * multiple;
+    }
 
     template<class T>
     auto isSorted(const T& list) -> bool

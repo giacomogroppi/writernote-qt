@@ -46,7 +46,7 @@ void DataStruct::drawIfInside(const RectF &area)
     const auto bottomPage = whichPage(area.bottom());
 
     for (auto b = _page.begin() + startPage; b != _page.end() + bottomPage; b++)
-        b->drawIfInside(-1, area);
+        b->drawIfInside(AudioPosition::makeInvalid(), area);
 }
 
 DataStruct::DataStruct()
@@ -56,11 +56,11 @@ DataStruct::DataStruct()
 {
 }
 
-void DataStruct::triggerIfNone(int m_pos_ris)
+void DataStruct::triggerIfNone(AudioPosition audioPosition)
 {
     for (auto &page : *this) {
         if(page._imgDraw.isNull())
-            page.triggerRenderImage(m_pos_ris, true);
+            page.triggerRenderImage(audioPosition, true);
     }
 }
 

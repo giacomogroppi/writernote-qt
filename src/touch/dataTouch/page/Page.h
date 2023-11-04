@@ -77,8 +77,8 @@ private:
 
     void drawNewPage(n_style style) noexcept;
     
-    void drawEngine(WPainter &painter, WListFast<SharedPtr<Stroke>> &strokes, int m_pos_ris, bool use_multi_thread) noexcept;
-    void draw(WPainter &painter, int m_pos_ris, bool all) noexcept;
+    void drawEngine(WPainter &painter, WListFast<SharedPtr<Stroke>> &strokes, AudioPosition m_pos_ris, bool use_multi_thread) noexcept;
+    void draw(WPainter &painter, AudioPosition m_pos_ris, bool all) noexcept;
     void drawStroke(WPainter &painter, const Stroke& stroke, const WColor &color) const noexcept;
 
     /**
@@ -93,11 +93,13 @@ private:
 
     /**
      * \brief This method is used to get a painter which is already ready for drawing
-     * on the current image in the page.
-     * If, for any reason, an error occurred, the value in the pair will have an error set and the painter return
-     * will be not valid for draw.
+     *  on the current image in the page.
+     *  If, for any reason, an error occurred, the value in the pair will have an error set and the painter return
+     *  will be not valid for draw.
+     * \param positionAudio Current position of AudioPlayer (if the value is not valid
+     *  the strokes with a time bigger that positionAudio will be colored with less alpha.)
      * */
-    auto initPainter() -> WPair<Error, WPainter>;
+    auto initPainter(AudioPosition positionAudio) -> WPair<Error, WPainter>;
 
     void decreaseAlfa(const WVector<int> &pos, WPainter *painter, int decrease);
 
@@ -122,9 +124,15 @@ public:
 
     auto clearAudio() -> void;
 
-#define PAGE_SWAP_TRIGGER_VIEW BIT(1)
-    void swap(WListFast<SharedPtr<Stroke>> &stroke, const WVector<int> & pos, int flag);
-    void swap(WListFast<SharedPtr<Stroke>> &stroke, int from, int to);
+    struct SwapItemFlag {
+        enum swapItemFlag {
+            Zero = 0x0,
+            TriggerView = 0x1 // Passing this value as parameter will trigger the view of the items removed
+        };
+    };
+
+    auto swap(const WVector<int> & pos, WFlags<SwapItemFlag::swapItemFlag> flag) -> WListFast<SharedPtr<Stroke>>;
+    auto swap(int from, int to) -> WListFast<SharedPtr<Stroke>>;
     auto swap(int index, const SharedPtr<Stroke>& newData) -> SharedPtr<Stroke>;
 
     bool updateFlag(const PointF &FirstPoint, double zoom, double heightView);
@@ -137,11 +145,11 @@ public:
     /**
      * \param pos to order positions of the stroke to be removed
      * */
-     template <class Iter>
+    template <class Iter>
     void removeAt(Iter begin, Iter end);
 
     auto last() const -> const Stroke &;
-    Stroke &lastMod();
+    auto lastMod() -> Stroke &;
 
     /**
      *  these 3 functions do not automatically launch
@@ -150,11 +158,10 @@ public:
     */
     __fast void append(const SharedPtr<Stroke> &stroke);
     __fast void append(SharedPtr<Stroke> &&stroke);
-    __fast void reserve(int stroke) { _strokeTmp.reserve(stroke); } ;
-    // TODO --> make template
-    __fast void append(const WList<SharedPtr<Stroke>> &stroke);
-    __fast void append(const WListFast<SharedPtr<Stroke>> &stroke);
+    template <template <class T> class List>
+    __fast void append(const List<SharedPtr<Stroke>> &stroke);
 
+    __fast void reserve(int stroke) { _strokeTmp.reserve(stroke); } ;
     __fast auto atStroke(int i) const -> const Stroke&;
 
     [[deprecated]]
@@ -170,7 +177,7 @@ public:
     [[deprecated]]
     auto move(uint from, uint to) -> void;
 
-    void triggerRenderImage(int m_pos_ris, bool all);
+    void triggerRenderImage(AudioPosition m_pos_ris, bool all);
 
     /**
      * \brief Getter function to retrieve the counter of the page
@@ -191,13 +198,19 @@ public:
 
     void reset();
 
-    void drawStroke(const WVector<int> &positions, int m_pos_ris);
-    void drawStroke(const Stroke &stroke, int m_pos_ris);
-    void drawForceColorStroke(const Stroke &stroke, cint m_pos_ris, const WColor &color, WPainter *painter);
-    void drawForceColorStroke(const WVector<int> &pos, int m_pos_ris, const WColor &color);
+    /**
+     * \brief This method draw all stroke for which their position is contained in 'positions'
+     * \param m_pos_ris The position, in seconds, of the audio player (pass -1 in case there is no audio
+     *  playing)
+     * \param positions The indexes fo the strokes to draw
+     */
+    void drawStroke(const WVector<int> &positions, AudioPosition m_pos_ris);
+    void drawStroke(const Stroke &stroke, AudioPosition m_pos_ris);
+    void drawForceColorStroke(const Stroke &stroke, AudioPosition m_pos_ris, const WColor &color, WPainter *painter);
+    void drawForceColorStroke(const WVector<int> &pos, AudioPosition m_pos_ris, const WColor &color);
 
-    void removeAndDraw(int m_pos_ris, const WVector<int> &pos, const RectF &area);
-    void drawIfInside(int m_pos_ris, const RectF &area);
+    void removeAndDraw(AudioPosition m_pos_ris, const WVector<int> &pos, const RectF &area);
+    void drawIfInside(AudioPosition m_pos_ris, const RectF &area);
     void decreaseAlfa(const WVector<int> &pos, int decrease);
 
     // TODO: rename to getSizeArea
@@ -213,19 +226,30 @@ public:
     static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<Error, Page>;
 
     //static void copy(const Page &src, Page &dest);
-    constexpr static double getProportion();
-    constexpr static double getHeight();
-    constexpr static double getWidth();
-    constexpr static WSize getResolutionSize();
+    constexpr static auto getProportion() -> double;
+    constexpr static auto getHeight() -> double;
+    constexpr static auto getWidth() -> double;
+    constexpr static auto getResolutionSize() -> WSize;
 
-    constexpr static PointF size();
-    constexpr static PointF sizePoint();
+    constexpr static auto size() -> PointF;
+    constexpr static auto sizePoint() -> PointF;
 
-    constexpr static double getResolutionWidth();
-    constexpr static double getResolutionHeigth();
+    constexpr static auto getResolutionWidth() -> double;
+    constexpr static auto getResolutionHeight() -> double;
 
-#define DR_IMG_INIT_IMG BIT(1) // init the image with a image transparent
-    void drawToImage(const WVector<int> &index, WPixmap &img, cint flag) const;
+    struct DrawToPageFlag {
+        enum drawToPageFlag {
+            Zero = 0x0,
+            initImage = 0x1 // if we need to init the image in case it's null
+        };
+    };
+    /**
+     * \brief This method will draw the stroke own by the page into the pixmap passed as parameter
+     * \param indexes The set of position of the stroke to draw into the pixmap passed as parameter
+     * \param img The image on which you need to draw
+     * \param flag Some flags defined in DrawToPageFlag
+     * */
+    void drawToImage(const WVector<int> &indexes, WPixmap &img, WFlags<DrawToPageFlag::drawToPageFlag> flag) const;
 
     auto operator=(const Page &other) noexcept -> Page &;
     auto operator=(Page &&other) noexcept -> Page &;
@@ -254,6 +278,15 @@ public:
     friend class copy;
     friend void actionRubberSingleTotal(struct DataPrivateMuThread *_data);
 };
+
+template <template <class T> class List>
+void Page::append(const List<SharedPtr<Stroke>> &stroke)
+{
+    reserve(stroke.size());
+    for (const auto& ref: std::as_const(stroke)) {
+        append(ref);
+    }
+}
 
 force_inline void Page::rep() const noexcept {
 #ifdef DEBUGINFO
@@ -352,7 +385,7 @@ constexpr force_inline double Page::getWidth()
 
 constexpr force_inline auto Page::getResolutionSize() -> WSize
 {
-    return WSize(Page::getResolutionWidth(), Page::getResolutionHeigth());
+    return WSize(Page::getResolutionWidth(), Page::getResolutionHeight());
 }
 
 constexpr force_inline double Page::getResolutionWidth()
@@ -360,7 +393,7 @@ constexpr force_inline double Page::getResolutionWidth()
     return getWidth() * PROP_RESOLUTION;
 }
 
-constexpr force_inline double Page::getResolutionHeigth()
+constexpr force_inline double Page::getResolutionHeight()
 {
     return getHeight() * PROP_RESOLUTION;
 }
@@ -548,7 +581,7 @@ inline Page &Page::operator=(const Page &other) noexcept
 
 force_inline void Page::drawForceColorStroke(
         const Stroke    &stroke,
-        int             m_pos_ris,
+        AudioPosition   m_pos_ris,
         const WColor    &color,
         WPainter        *painter)
 {
@@ -580,13 +613,6 @@ force_inline constexpr PointF Page::sizePoint()
             Page::size().x(),
             Page::size().y()
     };
-}
-
-inline void Page::append(const WListFast<SharedPtr<Stroke>> &stroke)
-{
-    for (auto &ref: stroke) {
-        this->append(ref);
-    }
 }
 
 inline auto Page::operator==(const Page &other) const noexcept -> bool
@@ -706,10 +732,10 @@ inline auto Page::write(WritableAbstract &writable, const Page &page, bool saveI
     return Error::makeOk();
 }
 
-inline auto Page::initPainter() -> WPair<Error, WPainter>
+inline auto Page::initPainter(AudioPosition positionAudio) -> WPair<Error, WPainter>
 {
     if(initImg(false)) {
-        this->triggerRenderImage(-1, true);
+        this->triggerRenderImage(positionAudio, true);
         return {Error::makeErrGeneric(), {}};
     }
 

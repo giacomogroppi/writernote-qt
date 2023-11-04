@@ -8,7 +8,7 @@ class PenMethod: public InsertTools
 private:
 public:
     PenMethod(Fn<pressure_t (double size)> getSize,
-              Fn<int()> getTime,
+              Fn<AudioPosition()> getTime,
               WColor &color,
               WPen &pen);
 

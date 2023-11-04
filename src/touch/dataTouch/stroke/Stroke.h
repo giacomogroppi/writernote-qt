@@ -16,17 +16,18 @@
 #include "utils/common_error_definition.h"
 #include "core/Color/WColor.h"
 #include "core/WVector.h"
+#include "AudioPosition.h"
 
 #define PROP_RESOLUTION (2.)
 constexpr double deltaPress = 2.;
 constexpr double deltaColorNull = 1.3;
 
 struct metadata_stroke{
-    int posizione_audio;
+    AudioPosition posizione_audio;
     class WColor color;
 
     metadata_stroke () = default;
-    metadata_stroke (int position_audio, const WColor &c)
+    metadata_stroke (AudioPosition position_audio, const WColor &c)
         : posizione_audio(position_audio)
         , color(c)
     {
@@ -50,14 +51,20 @@ struct metadata_stroke{
         if (versionController.getVersionMetadataStroke() != 0)
             return {Error::makeErrVersion(), result};
 
-        if (auto err = reader.read(result.posizione_audio))
-            return {err, result};
+        {
+            auto [res, data] = AudioPosition::load (versionController, reader);
+            if (res)
+                return {res, {}};
+            result.posizione_audio = std::move(data);
+        }
 
-        auto [res, color] = WColor::load (versionController, reader);
-        if (res)
-            return {res, result};
+        {
+            auto [res, color] = WColor::load (versionController, reader);
+            if (res)
+                return {res, {}};
 
-        result.color = std::move (color);
+            result.color = std::move (color);
+        }
 
         return {Error::makeOk(), result};
     }
@@ -65,7 +72,7 @@ struct metadata_stroke{
     static
     auto write (WritableAbstract &writable, const metadata_stroke &metadata) -> Error
     {
-        if (auto err = writable.write(&metadata.posizione_audio, sizeof(metadata.posizione_audio)))
+        if (auto err = AudioPosition::write(writable, metadata.posizione_audio))
             return err;
         if (auto err = WColor::write(writable, metadata.color))
             return err;
@@ -133,12 +140,12 @@ public:
     virtual void append (const PointF &point, pressure_t pressure) = 0;
     virtual void append (WListFast<PointF> &&points, WVector<pressure_t> &&pressure) = 0;
     
-    void setMetadata(int posizione_audio, const WColor &color);
+    void setMetadata(AudioPosition posizione_audio, const WColor &color);
     void setMetadata(const metadata_stroke &metadata);
-    void setPositionAudio(int m_pos_ris);
+    void setPositionAudio(AudioPosition m_pos_ris);
     virtual auto createControl() const -> size_t;
 
-    auto getPositionAudio() const -> int;
+    auto getPositionAudio() const -> AudioPosition;
     virtual auto getBiggerPointInStroke() const -> RectF;
     virtual auto isInside(const RectF &rect) const -> bool = 0;
 
@@ -255,13 +262,12 @@ inline void Stroke::setFlag(unsigned char type, bool value) const
     }
 }
 
-inline void Stroke::setPositionAudio(int m_pos_ris)
+inline void Stroke::setPositionAudio(AudioPosition m_pos_ris)
 {
-    W_ASSERT(m_pos_ris == -1 or m_pos_ris >= 0);
     this->_metadata.posizione_audio = m_pos_ris;
 }
 
-inline int Stroke::getPositionAudio() const
+inline auto Stroke::getPositionAudio() const -> AudioPosition
 {
     return this->_metadata.posizione_audio;
 }

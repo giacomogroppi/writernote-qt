@@ -237,9 +237,9 @@ WColor Stroke::getColor(double division) const
     return c;
 }
 
-void Stroke::setMetadata(int posizione_audio, const WColor &color)
+void Stroke::setMetadata(AudioPosition positionAudio, const WColor &color)
 {
-    this->_metadata = metadata_stroke(posizione_audio, color);
+    this->_metadata = metadata_stroke(positionAudio, color);
 }
 
 void Stroke::setMetadata(const metadata_stroke &metadata)
@@ -249,7 +249,7 @@ void Stroke::setMetadata(const metadata_stroke &metadata)
 
 size_t Stroke::createControl() const
 {
-    size_t controll = 0;
+    size_t control = 0;
     int i;
 
     // TODO: create controll for color
@@ -257,7 +257,7 @@ size_t Stroke::createControl() const
         controll += _metadata.color.colore[i];
     }*/
 
-    return controll;
+    return control;
 }
 
 RectF Stroke::getBiggerPointInStroke() const
@@ -268,7 +268,7 @@ RectF Stroke::getBiggerPointInStroke() const
 
 void Stroke::clearAudio()
 {
-    this->_metadata.posizione_audio = -1;
+    this->_metadata.posizione_audio = AudioPosition::makeInvalid();
 }
 
 Stroke::Stroke()

@@ -8,7 +8,7 @@ class Pen: public WObject, public PenMethod
 {
 public:
     Pen(WObject *parent,
-        Fn<int()> getTime,
+        Fn<AudioPosition()> getTime,
         WColor &color, WPen &pen);
     virtual ~Pen() = default;
 

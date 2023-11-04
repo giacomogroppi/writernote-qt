@@ -13,13 +13,12 @@ LaserMethod::LaserMethod(
             WPen &pen,
             WColor &color
         )
-    : InsertTools([]() {
-        return 0;
-    }
-    , std::move(getPress)
-    , color
-    , pen)
-    , _append_to(std::move(append_to))
+    : InsertTools(&AudioPosition::makeInvalid
+        , std::move(getPress)
+        , color
+        , pen)
+        , _append_to(std::move(append_to)
+    )
 {
 }
 

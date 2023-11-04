@@ -138,12 +138,12 @@ public:
 
     void forAll(Fn<void(T&)> method) noexcept;
 
-    nd auto refMidConst(int from, int to) const noexcept -> WAbstractList::SplitList<WVector, const T, Size>
+    nd auto refMid(int from, int to) const noexcept -> WAbstractList::SplitList<WVector, const T, Size>
     {
         return WAbstractList::SplitList<WVector, const T, Size> (*this, from, to);
     };
 
-    nd auto refMidConst(int from, int to) noexcept -> WAbstractList::SplitList<WVector, T, Size>
+    nd auto refMid(int from, int to) noexcept -> WAbstractList::SplitList<WVector, T, Size>
     {
         return WAbstractList::SplitList<WVector, T, Size> (*this, from, to);
     }

@@ -21,7 +21,7 @@ WPixmap::WPixmap(int page, bool consideringResolution)
         ? Page::getResolutionWidth()
         : Page::getWidth(),
         static_cast<int>(consideringResolution
-                         ? Page::getResolutionHeigth()
+                         ? Page::getResolutionHeight()
                          : Page::getHeight()
         ) * page)
 {

@@ -3,7 +3,7 @@
 #include <utility>
 
 Highlighter::Highlighter(WObject *parent,
-                         Fn<int()> getTime,
+                         Fn<AudioPosition()> getTime,
                          WColor &color,
                          WPen &pen)
     : WObject(parent)

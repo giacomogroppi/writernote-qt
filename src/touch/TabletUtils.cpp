@@ -25,9 +25,9 @@ static void draw_laser(WPainter &painter, Laser &_laser, double zoom)
 
 void TabletUtils::drawForAudio()
 {
-    static int last_m_pos_ris   = -1;
+    static AudioPosition last_m_pos_ris = AudioPosition::makeInvalid();
     const bool is_play          = _isPlay;
-    const auto m_pos_ris = (is_play) ? (_positionAudio) : -1;
+    const auto m_pos_ris = (is_play) ? (_positionAudio) : AudioPosition::makeInvalid();
 
     if (is_play and !_isExportingPdf) {
         // the idea is to trigger this view only when

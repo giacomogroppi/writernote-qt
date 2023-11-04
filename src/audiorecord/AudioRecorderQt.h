@@ -6,6 +6,7 @@
 #include "core/Path/WPath.h"
 #include "core/WFile.h"
 #include "AudioData/AudioData.h"
+#include "touch/dataTouch/stroke/AudioPosition.h"
 
 #ifdef USE_QT
 
@@ -40,7 +41,7 @@ public:
     /**
      * \return Time in second
      * */
-    auto getCurrentTime() -> UnsignedLong;
+    auto getCurrentTime() -> AudioPosition;
 
     void displayErrorMessage();
 
@@ -116,11 +117,11 @@ inline void AudioRecord::setOutputLocation(const WPath &path)
 }
 
 /* return time in second */
-inline auto AudioRecord::getCurrentTime() -> UnsignedLong
+inline auto AudioRecord::getCurrentTime() -> AudioPosition
 {
     if(!isRecording())
-        return UnsignedLong (0ul);
-    return UnsignedLong (static_cast<unsigned long>(this->recorder->duration()) / 1000ul);
+        return AudioPosition::makeInvalid();
+    return AudioPosition::make(recorder->duration() / 1000);
 }
 
 #endif // USE_QT

@@ -74,9 +74,9 @@ StrokeForPage &StrokeForPage::operator=(const StrokeForPage &other)
     return *this;
 }
 
-void StrokeForPage::setMetadata(const WColor &colore)
+void StrokeForPage::setMetadata(const WColor &color)
 {
-    _data->setMetadata(-1, colore);
+    _data->setMetadata(AudioPosition::makeInvalid(), color);
     rep();
 }
 

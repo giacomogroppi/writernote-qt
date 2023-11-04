@@ -20,7 +20,7 @@ private:
     [[nodiscard]] unsigned char getAlfa() const override;
 public:
     explicit Highlighter(WObject *parent,
-                         Fn<int()> getTime,
+                         Fn<AudioPosition()> getTime,
                          WColor &color,
                          WPen &pen);
 

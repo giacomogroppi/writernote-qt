@@ -3,7 +3,7 @@
 
 PenMethod::PenMethod(
             Fn<pressure_t(double)> getSize,
-            Fn<int()> getTime,
+            Fn<AudioPosition()> getTime,
             WColor &color, WPen &pen
         ) : InsertTools(
                     std::move(getTime),
