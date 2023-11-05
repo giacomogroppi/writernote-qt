@@ -200,14 +200,15 @@ public:
 
 protected:
     // old way
-    static std::shared_ptr<Stroke> load(WZipReaderSingle &reader, int version_stroke, int *ok);
+    static auto load(WZipReaderSingle &reader, int version_stroke, int *ok) -> std::shared_ptr<Stroke>;
+
     /**
      * All the class that extend this method needs to call Stroke::save and than write
      * his content, because load expect this structure.
      * */
-    virtual int save(WritableAbstract &file) const;
+    virtual auto save(WritableAbstract &file) const -> int;
 
-    Stroke &operator=(const Stroke &other);
+    auto operator=(const Stroke &other) -> Stroke&;
 
     Stroke();
     Stroke(Stroke &&other) noexcept ;
@@ -216,7 +217,7 @@ protected:
     explicit Stroke(const metadata_stroke& met);
     virtual void modify() const;
     void setBiggerData(const RectF &newRect) const;
-    bool needToUpdateBiggerData() const;
+    auto needToUpdateBiggerData() const -> bool;
 
     virtual void preappend(int l) = 0;
 

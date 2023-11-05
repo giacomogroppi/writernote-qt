@@ -31,7 +31,7 @@ AudioRecord::AudioRecord(WObject *parent,
     });
 
     QObject::connect(recorder, &QMediaRecorder::durationChanged, [this] (unsigned long d) {
-        W_ASSERT(d >= 0 and d < UINT_MAX);
+        W_ASSERT(d < UINT_MAX);
 
         W_EMIT_1(onDurationChanged, Unsigned(static_cast<unsigned>(d / 1000u)));
     });

@@ -81,7 +81,7 @@ bool StrokeRect::is_inside(const RectF &rect, double precision) const
     return this->_data.rect.intersects(r);
 }
 
-void StrokeRect::append(const PointF &point, pressure_t pressure)
+void StrokeRect::append(const PointF &point, pressure_t)
 {
     using namespace WUtils;
     const auto distanceTopLeft = distance(point, _data.rect.topLeft());

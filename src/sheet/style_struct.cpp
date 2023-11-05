@@ -9,11 +9,10 @@
 void style_struct::loadFromByte(const WByteArray &arr)
 {
     style_struct_S tmp {};
-    int i, len;
 
-    len = arr.size() / sizeof(tmp);
+    const auto len = arr.size() / sizeof(tmp);
 
-    for( i=0; i < len; ++i ){
+    for (auto i = 0ll; i < len; i++) {
 
         memcpy(&tmp, arr.mid(
                 i*sizeof(tmp),

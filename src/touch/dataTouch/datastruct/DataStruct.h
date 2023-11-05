@@ -126,6 +126,12 @@ public:
 
     void changeIdThreadSave(int indexPoint, Stroke &stroke, Page &page);
 
+    /**
+     * \brief Use this method for detach *this from any other instances of DataStruct in
+     *  the application
+     * */
+    void detachPages() {};
+
     nd constexpr auto adjustPointReverce(const PointF &pointDatastruct) const -> PointF;
     nd constexpr auto adjustPoint(const PointF &pointRealTouch) const -> PointF;
 

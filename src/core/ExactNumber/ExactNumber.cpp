@@ -69,7 +69,7 @@ ExactNumber::ExactNumber(long numerator, long denominator)
     , n(numerator)
     , d(denominator)
 {
-    if (d < 0 ^ n < 0)
+    if ((d < 0) ^ (n < 0))
         sign = true;
     simplify();
 }

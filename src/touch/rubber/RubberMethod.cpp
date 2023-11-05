@@ -376,6 +376,7 @@ auto RubberMethod::touchUpdate(const PointF &__lastPoint,
 
     __m_size_gomma = _size_gomma;
 
+    doc.detachPages();
     dataPrivate._page = &doc[indexPage];
 
     lenStroke = dataPrivate._page->lengthStroke();

@@ -14,10 +14,12 @@
 class WColor
 {
 private:
-    unsigned char red;
-    unsigned char green;
-    unsigned char blue;
-    unsigned char alpha;
+    using type = unsigned char;
+
+    type red;
+    type green;
+    type blue;
+    type alpha;
 public:
     WColor() = default;
     ~WColor() = default;
@@ -28,10 +30,10 @@ public:
     WColor (const QColor &other);
 #endif // USE_QT
 
-    constexpr WColor(unsigned char u1, unsigned char u2, unsigned char u3, unsigned char u4);
+    constexpr explicit WColor(type u1, type u2, type u3, type u4);
     WColor(WColor &&other) noexcept;
 
-    void set_alfa(unsigned char alpha);
+    void set_alfa(type alpha);
 
 #ifdef USE_QT
     [[nodiscard]] WColor tocolore_s(double division) const;
@@ -48,9 +50,9 @@ public:
     double getGreenNormalize() const;
     double getBlueNormalize() const;
 
-    void setAlfa(unsigned char newValue);
+    void setAlfa(type newValue);
 
-    static WColor fromRgb(unsigned char u1, unsigned char u2, unsigned char u3, unsigned char u4 = 255);
+    static auto fromRgb(type u1, type u2, type u3, type u4 = 255) -> WColor;
 
     static
     auto load (const VersionFileController &versionController,
@@ -73,12 +75,13 @@ public:
 #endif
 
 #ifdef USE_QT
-    static WColor from_color(const WColor &color);
-    QColor toQColor() const;
+    static auto from_color(const WColor &color) -> WColor;
+    nd auto toQColor() const -> QColor;
     auto operator=(const QColor &other) -> WColor&;
 #endif // USE_QT
-    WColor &operator=(const WColor &other);
-    bool operator==(const WColor &other) const;
+
+    auto operator=(const WColor &other) -> WColor &;
+    auto operator==(const WColor &other) const -> bool;
 };
 
 inline double WColor::getRedNormalize() const
@@ -178,10 +181,10 @@ inline bool WColor::operator==(const WColor &other) const
            and this->alpha == other.alpha;
 }
 
-inline constexpr WColor::WColor(unsigned char red,
-                                unsigned char green,
-                                unsigned char blue,
-                                unsigned char alpha)
+inline constexpr WColor::WColor(type red,
+                                type green,
+                                type blue,
+                                type alpha)
         : red(red)
         , green(green)
         , blue(blue)
@@ -191,14 +194,14 @@ inline constexpr WColor::WColor(unsigned char red,
 
 inline WColor::WColor(const WColor &color) = default;
 
-inline void WColor::setAlfa(unsigned char newValue)
+inline void WColor::setAlfa(type newValue)
 {
     this->alpha = newValue;
 }
 
-inline WColor WColor::fromRgb(unsigned char u1, unsigned char u2, unsigned char u3, unsigned char u4)
+inline WColor WColor::fromRgb(type u1, type u2, type u3, type u4)
 {
-    return {u1, u2, u3, u4};
+    return WColor {u1, u2, u3, u4};
 }
 
 inline WColor &WColor::operator=(const WColor &other) = default;
@@ -210,6 +213,7 @@ WColor::load(const VersionFileController &versionController,
              ReadableAbstract &readable) -> WPair<Error, WColor>
 {
     WColor result{};
+
     if (versionController.getVersionWColor() != 0)
         return {Error::makeErrVersion(), result};
 
