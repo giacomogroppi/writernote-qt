@@ -179,8 +179,13 @@ public:
     void insert(Size index, const T& object) noexcept;
     auto takeFirst() noexcept -> T;
 
+    // functional programming
     void forAll(Fn<void(const T&)> method) const noexcept;
     void forAll(Fn<void(T&)> method) noexcept;
+
+    auto filter(Fn<bool(const T&)> method) const -> WAbstractList::FilterList<WListFast, const T>;
+    auto filter(Fn<bool(const T&)> method) -> WAbstractList::FilterList<WListFast, T>;
+
 
     [[nodiscard]]
     auto mid(Size from, Size to) const noexcept -> WListFast<T>;
@@ -303,6 +308,30 @@ public:
     static auto write (WritableAbstract &writable, const WListFast<T> &list,
                        Fn<Error(WritableAbstract &writable, const T&)> save) noexcept-> Error;
 };
+
+template <class T>
+auto WListFast<T>::filter(Fn<bool(const T&)> method) const -> WAbstractList::FilterList<WListFast, const T>
+{
+    return WAbstractList::FilterList<WListFast, const T>(*this, method);
+}
+
+template <class T>
+auto WListFast<T>::filter(Fn<bool(const T&)> method) -> WAbstractList::FilterList<WListFast, T>
+{
+    return WAbstractList::FilterList<WListFast, T>(*this, method);
+}
+
+template <class T>
+auto WListFast<T>::refMid(int from, int to) noexcept -> WAbstractList::SplitList<WListFast, T, Size>
+{
+    return WAbstractList::SplitList<WListFast, T, Size>(*this, from, to);
+}
+
+template <class T>
+auto WListFast<T>::refMid(int from, int to) const noexcept -> WAbstractList::SplitList<WListFast, const T, Size>
+{
+    return WAbstractList::SplitList<WListFast, const T, Size>(*this, from, to);
+}
 
 template <class T>
 template <class T2>
@@ -706,12 +735,12 @@ inline auto WListFast<T>::takeAt(Size index) noexcept -> T
 }
 
 template<class T>
-inline void WListFast<T>::reserve(Size numberOfObjects) noexcept
+void WListFast<T>::reserve(Size numberOfElements) noexcept
 {
-    W_ASSERT(numberOfObjects >= 0);
+    W_ASSERT(numberOfElements >= 0);
 
-    if (numberOfObjects) {
-        this->_reserved += numberOfObjects;
+    if (numberOfElements) {
+        this->_reserved += numberOfElements;
         this->_data = (T**) realloc(_data, sizeof (T*)  * (_size + _reserved));
     }
 

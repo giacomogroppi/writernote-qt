@@ -51,7 +51,7 @@ public:
     auto append(const T &item) noexcept -> WVector<T>&;
     auto append(T &&item) noexcept -> WVector<T>&;
 
-    auto get(Index i) const noexcept -> const T&;
+    nd auto get(Index i) const noexcept -> const T&;
     nd auto size() const noexcept -> Size;
 
     template <class T2 = T>
@@ -78,7 +78,7 @@ public:
     template <class... Args>
     void emplace(Args&&... args);
 
-    auto at(Size i) const -> const T&;
+    nd auto at(Size i) const -> const T&;
 
     nd auto isEmpty() const noexcept -> bool;
 
@@ -103,8 +103,7 @@ public:
      * \param object The object to be removed from the array
      * \return The number of object removed
      */
-     // we want to disable this method if T is (int, unsigned, long, ...)
-    template <class T2 = T> requires (std::is_convertible<T2, T>::value and not std::is_arithmetic<T2>::value)
+    template <class T2 = T> requires (std::is_convertible<T2, T>::value)
     auto removeObjects(const T2& object) noexcept -> int;
 
     /**
@@ -112,7 +111,7 @@ public:
      * */
     void removeAt(const WVector<Index> &index) noexcept;
 
-    auto removeIf(Fn<bool(const T& object)> method) noexcept -> int;
+    auto removeIf(Fn<bool(const T& object)> method) noexcept -> Size;
 
     /**
      * \brief This method removeObjects the first occurrence of the object in the array
@@ -152,8 +151,6 @@ public:
     auto operator=(WVector &&other) noexcept -> WVector<T>&;
     auto operator==(const WVector<T> &other) const -> bool;
     auto operator!=(const WVector<T> &other) const -> bool;
-
-    constexpr auto asConst() const -> const WVector<T>&;
 
     template <class T2>
     class AbstractIterator
@@ -706,7 +703,7 @@ inline WVector<T>::~WVector()
 }
 
 template<class T>
-inline void WVector<T>::reserve(long numberOfElement) noexcept
+inline void WVector<T>::reserve(Size numberOfElement) noexcept
 {
     W_ASSERT(numberOfElement >= 0);
     if (numberOfElement == 0)
@@ -750,9 +747,7 @@ template <class T>
 inline void WVector<T>::append(WVector<T> &&item) noexcept
 {
     if (_reserve < item.size())
-        reserve(item.size() > WVector::numberOfAllocation
-                    ? item.size()
-                    : WVector::numberOfAllocation);
+        reserve(WAbstractList::numberOfAllocationNeeded(item.size(), WVector::numberOfAllocation));
 
     for (Size i = 0; i < item.size(); i++) {
         callConstructorOn(_data, i + _size, std::forward<T>(item._data[i]));
@@ -772,7 +767,7 @@ template<class T>
 inline void WVector<T>::append(const WVector<T> &other) noexcept
 {
     if (_reserve < other.size())
-        reserve(std::max(WVector::numberOfAllocation, other.size()));
+        reserve(WAbstractList::numberOfAllocationNeeded(other.size(), WVector::numberOfAllocation));
 
     for (Size i = 0; i < other.size(); i++) {
         callConstructorOn(_data, i + _size, other.at(i));
@@ -887,7 +882,7 @@ inline auto WVector<T>::removeOrderLowToHigh(
 }
 
 template <class T>
-inline auto WVector<T>::removeIf(Fn<bool(const T &)> method) noexcept -> int
+inline auto WVector<T>::removeIf(Fn<bool(const T &)> method) noexcept -> Size
 {
     WVector<Index> positions;
 
@@ -902,7 +897,7 @@ inline auto WVector<T>::removeIf(Fn<bool(const T &)> method) noexcept -> int
 }
 
 template <class T>
-template <class T2> requires (std::is_convertible<T2, T>::value and not std::is_arithmetic<T2>::value)
+template <class T2> requires (std::is_convertible<T2, T>::value)
 inline auto WVector<T>::removeObjects(const T2 &object) noexcept -> int
 {
     // TODO: optimize
@@ -961,12 +956,6 @@ constexpr auto WVector<T>::inBound(WVector::Size value) const -> bool
 #pragma GCC diagnostic ignored "-Wtype-limits"
     return value >= Size(0) and value < size();
 #pragma GCC diagnostic pop
-}
-
-template <class T>
-constexpr auto WVector<T>::asConst() const -> const WVector<T>&
-{
-    return static_cast<const WVector&>(*this);
 }
 
 template <class T>

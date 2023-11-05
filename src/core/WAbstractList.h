@@ -56,6 +56,53 @@ namespace WAbstractList {
         auto end() const { return begin() + _stop; }
     };
 
+    template <template <typename Ty> class List, class T>
+    class FilterList
+    {
+    private:
+        List<T> &_list;
+        const Fn<bool(const T&)> _method;
+    public:
+        explicit FilterList(List<T> &list, Fn<bool(const T&)> method)
+            : _list(list)
+            , _method(std::move(method)) {};
+
+        auto filterNot(Fn<bool(const T&)> method) const -> FilterList
+        {
+            auto newMethod = [=, this] (const T& object) {
+                return (not method(object)) and _method(object);
+            };
+
+            return FilterList(_list, newMethod);
+        }
+
+        auto filter(Fn<bool(const T&)> method) const -> FilterList
+        {
+            auto newMethod = [=, this] (const T& object) {
+                return method(object) and _method(object);
+            };
+
+            return FilterList(_list, newMethod);
+        }
+
+        template <class ...Args>
+        void forAll (Fn<void(const T&)> method, Args&& ...args) const
+        {
+            for (const auto& ref: std::as_const(_list)) {
+                if (_method(ref))
+                    method(ref, std::forward<Args>(args)...);
+            }
+        }
+
+        template <class ...Args>
+        void forAll (Fn<void(T&)> method, Args&& ...args)
+        {
+            for (auto& ref: _list)
+                if (_method(ref))
+                    method(ref, std::forward<Args>(args)...);
+        }
+    };
+
     template <class T>
     using Ptr = Pointer<T>;
 
