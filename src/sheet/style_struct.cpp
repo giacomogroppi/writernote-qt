@@ -5,15 +5,22 @@
 #define DEFAULTN 40
 #define DEFAULTTHICKNESS 1
 
+// TODO: use style_struct_S load and write methods
 void style_struct::loadFromByte(const WByteArray &arr)
 {
-    style_struct_S tmp;
+    style_struct_S tmp {};
     int i, len;
 
     len = arr.size() / sizeof(tmp);
 
     for( i=0; i < len; ++i ){
-        memcpy(&tmp, arr.mid(i*sizeof(tmp), (i+1)*sizeof(tmp)).constData(), sizeof(tmp));
+
+        memcpy(&tmp, arr.mid(
+                i*sizeof(tmp),
+                (i+1)*sizeof(tmp)).constData(),
+               sizeof(tmp)
+        );
+
         this->style.append(tmp);
     }
 }

@@ -72,12 +72,12 @@ private:
      * to be drawn will be drawn above the current image, and
      * then strokeTmp will be added to the stroke list
     */
-    WListFast<SharedPtr<Stroke>>   _strokeTmp;
-    mutable WPixmap                   _imgDraw;
+    WListFast<SharedPtr<Stroke>> _strokeTmp;
+    mutable WPixmap _imgDraw;
 
     void drawNewPage(n_style style) noexcept;
     
-    void drawEngine(WPainter &painter, WListFast<SharedPtr<Stroke>> &strokes, AudioPosition m_pos_ris, bool use_multi_thread) noexcept;
+    void drawEngine(WPainter &painter, const WListFast<SharedPtr<Stroke>> &strokes, AudioPosition m_pos_ris, bool use_multi_thread) noexcept;
     void draw(WPainter &painter, AudioPosition m_pos_ris, bool all) noexcept;
     void drawStroke(WPainter &painter, const Stroke& stroke, const WColor &color) const noexcept;
 

@@ -45,7 +45,8 @@ public:
 
     auto operator=(T value) -> DebugVariable&;
 
-    friend QDebug operator<<(QDebug d, const DebugVariable<T> &p);
+    template <class T2>
+    friend QDebug operator<<(QDebug d, const DebugVariable<T2> &p);
 };
 
 #ifdef DEBUGINFO

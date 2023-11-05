@@ -23,12 +23,12 @@ static force_inline void __initImg(WPixmap &img)
     img.fill({color_transparent});
 }
 
-struct page_thread_data{
-    WMutex                          * append;
-    WPainter                        * painter;
-    WListFast<SharedPtr<Stroke>>    * m_stroke;
-    AudioPosition                   m_pos_ris;
-    const Page                      * parent;
+struct page_thread_data {
+    WMutex                                  * append = nullptr;
+    WPainter                                * painter = nullptr;
+    const WListFast<SharedPtr<Stroke>>      * m_stroke = nullptr;
+    AudioPosition                           m_pos_ris = AudioPosition::makeInvalid();
+    const Page                              * parent = nullptr;
 };
 
 static bool initPage = false;
@@ -337,7 +337,7 @@ void Page::drawStroke(
 
 void Page::drawEngine(
         WPainter                        &painter,
-        WListFast<SharedPtr<Stroke>>    &strokes,
+        const WListFast<SharedPtr<Stroke>>    &strokes,
         AudioPosition                   m_pos_ris,
         bool                            use_multi_thread) noexcept
 {

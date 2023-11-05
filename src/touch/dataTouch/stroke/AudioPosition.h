@@ -13,34 +13,34 @@ class AudioPosition {
 private:
     int _position;
 
-    explicit AudioPosition(int position)
+    constexpr explicit AudioPosition(int position)
         : _position(position)
     {
 
     };
 public:
-    AudioPosition () : _position(-1) {};
+    constexpr explicit AudioPosition () : _position(-1) {};
 
-    static auto makeInvalid() -> AudioPosition;
+    constexpr static auto makeInvalid() -> AudioPosition;
 
     /**
      * \param time Time in seconds
      * */
-    static auto make(int time) -> AudioPosition;
+    constexpr static auto make(int time) -> AudioPosition;
 
-    static auto zero() -> AudioPosition;
+    constexpr static auto zero() -> AudioPosition;
 
-    auto isValid() const -> bool;
+    nd constexpr auto isValid() const -> bool;
 
-    auto operator<(const AudioPosition& other) const -> bool;
-    auto operator>(const AudioPosition& other) const -> bool;
-    auto operator<=(const AudioPosition& other) const -> bool;
-    auto operator>=(const AudioPosition& other) const -> bool;
+    constexpr auto operator<(const AudioPosition& other) const -> bool;
+    constexpr auto operator>(const AudioPosition& other) const -> bool;
+    constexpr auto operator<=(const AudioPosition& other) const -> bool;
+    constexpr auto operator>=(const AudioPosition& other) const -> bool;
 
-    auto operator-(int seconds) const -> AudioPosition;
-    auto operator+(int seconds) const -> AudioPosition;
+    constexpr auto operator-(int seconds) const -> AudioPosition;
+    constexpr auto operator+(int seconds) const -> AudioPosition;
 
-    auto operator==(const AudioPosition& other) const noexcept -> bool = default;
+    constexpr auto operator==(const AudioPosition& other) const noexcept -> bool = default;
 
     nd static auto write (WritableAbstract& writable, const AudioPosition& object) -> Error;
     nd static auto load (const VersionFileController& version, ReadableAbstract& readable)
@@ -65,7 +65,7 @@ inline auto AudioPosition::load (const VersionFileController& version, ReadableA
     int value;
 
     if (auto err = readable.read(value))
-        return {err, {}};
+        return {err, AudioPosition::makeInvalid()};
 
     return {Error::makeOk(), AudioPosition {value}};
 }
@@ -76,52 +76,52 @@ inline constexpr auto AudioPosition::seconds() const noexcept -> unsigned
     return this->_position;
 }
 
-inline auto AudioPosition::zero() -> AudioPosition
+inline constexpr auto AudioPosition::zero() -> AudioPosition
 {
     return AudioPosition {0};
 }
 
-inline auto AudioPosition::makeInvalid() -> AudioPosition
+inline constexpr auto AudioPosition::makeInvalid() -> AudioPosition
 {
     return AudioPosition {-1};
 }
 
-inline auto AudioPosition::make(int time) -> AudioPosition
+inline constexpr auto AudioPosition::make(int time) -> AudioPosition
 {
     return AudioPosition {time};
 }
 
-inline auto AudioPosition::isValid() const -> bool
+inline constexpr auto AudioPosition::isValid() const -> bool
 {
     return _position >= 0;
 }
 
-inline auto AudioPosition::operator<(const AudioPosition& other) const -> bool
+inline constexpr auto AudioPosition::operator<(const AudioPosition& other) const -> bool
 {
     return _position < other._position;
 }
 
-inline auto AudioPosition::operator>(const AudioPosition& other) const -> bool
+inline constexpr auto AudioPosition::operator>(const AudioPosition& other) const -> bool
 {
     return _position > other._position;
 }
 
-inline auto AudioPosition::operator<=(const AudioPosition& other) const -> bool
+inline constexpr auto AudioPosition::operator<=(const AudioPosition& other) const -> bool
 {
     return _position <= other._position;
 }
 
-inline auto AudioPosition::operator>=(const AudioPosition& other) const -> bool
+inline constexpr auto AudioPosition::operator>=(const AudioPosition& other) const -> bool
 {
     return _position >= other._position;
 }
 
-inline auto AudioPosition::operator-(int seconds) const -> AudioPosition
+inline constexpr auto AudioPosition::operator-(int seconds) const -> AudioPosition
 {
     return AudioPosition {_position - seconds};
 }
 
-inline auto AudioPosition::operator+(int seconds) const -> AudioPosition
+inline constexpr auto AudioPosition::operator+(int seconds) const -> AudioPosition
 {
     return AudioPosition {_position + seconds};
 }
