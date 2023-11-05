@@ -734,7 +734,7 @@ inline auto Page::write(WritableAbstract &writable, const Page &page, bool saveI
 
 inline auto Page::initPainter(AudioPosition positionAudio) -> WPair<Error, WPainter>
 {
-    if(initImg(false)) {
+    if (initImg(false)) {
         this->triggerRenderImage(positionAudio, true);
         return {Error::makeErrGeneric(), {}};
     }
@@ -742,5 +742,5 @@ inline auto Page::initPainter(AudioPosition positionAudio) -> WPair<Error, WPain
     WPainterUnsafe painter;
     painter.begin(&_imgDraw);
 
-    return {Error::makeOk(), painter};
+    return {Error::makeOk(), std::move(painter)};
 }

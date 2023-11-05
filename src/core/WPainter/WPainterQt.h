@@ -15,19 +15,23 @@
 #include "core/Pixmap/WPixmap.h"
 #include "core/RectF.h"
 #include "core/Pen/WPen.h"
+#include "core/pointer/UniquePtr.h"
 
 class WPainter
 {
 private:
-    QPainter *_painter;
+    UniquePtr<QPainter> _painter;
     bool _allocated;
 
 public:
     WPainter();
     ~WPainter();
 
+    WPainter(const WPainter& other) noexcept = delete;
+    WPainter(WPainter &&other) noexcept = default;
+
     explicit WPainter (QPainter *painter);
-    WPainter (QPdfWriter *pdfWriter);
+    explicit WPainter (QPdfWriter *pdfWriter);
     void setBrush(const QBrush &brush);
 
     bool begin(WPixmap *pixmap);
@@ -59,11 +63,14 @@ public:
     void setCompositionClear();
 
     void move (const PointF& point) noexcept;
-    void addCurve(const PointF &to, const PointF &controll) noexcept;
+    void addCurve(const PointF &to, const PointF &control) noexcept;
     void closePath () noexcept;
 
     bool end();
-    bool isActive() const;
+    nd auto isActive() const -> bool;
+
+    auto operator=(const WPainter& other) noexcept -> WPainter& = delete;
+    auto operator=(WPainter&& other) noexcept -> WPainter& = default;
 
 private:
     QPainterPath _path;

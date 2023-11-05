@@ -24,31 +24,23 @@ public:
     WColor() = default;
     ~WColor() = default;
 
-    WColor(const WColor &color);
-
 #ifdef USE_QT
-    WColor (const QColor &other);
+    explicit WColor (const QColor &other);
 #endif // USE_QT
 
-    constexpr explicit WColor(type u1, type u2, type u3, type u4);
-    WColor(WColor &&other) noexcept;
+    constexpr explicit WColor(type red, type green, type blue, type alpha);
 
     void set_alfa(type alpha);
 
-#ifdef USE_QT
-    [[nodiscard]] WColor tocolore_s(double division) const;
-    void fromColor(const WColor &color);
-#endif // USE_QT
+    nd auto getAlfa() const -> type;
+    nd auto getRed() const -> type { return red; };
+    nd auto getGreen() const -> type { return green; };
+    nd auto getBlue() const-> type   { return blue; };
 
-    unsigned char getAlfa() const;
-    unsigned char getRed() const    { return red; };
-    unsigned char getGreen() const  { return green; };
-    unsigned char getBlue() const   { return blue; };
-
-    double getAlfaNormalize() const;
-    double getRedNormalize() const;
-    double getGreenNormalize() const;
-    double getBlueNormalize() const;
+    nd auto getAlfaNormalize() const -> double;
+    nd auto getRedNormalize() const -> double;
+    nd auto getGreenNormalize() const -> double;
+    nd auto getBlueNormalize() const -> double;
 
     void setAlfa(type newValue);
 
@@ -68,19 +60,17 @@ public:
 # define color_white       WColor(255, 255, 255, 255)
 # define color_transparent WColor(0, 0, 0, 0)
 #else
-# define color_black       Qt::black
-# define color_white       Qt::white
-# define color_transparent Qt::transparent
-# define color_red          Qt::red
+# define color_black        WColor {Qt::black}
+# define color_white        WColor {Qt::white}
+# define color_transparent  WColor {Qt::transparent}
+# define color_red          WColor {Qt::red}
 #endif
 
 #ifdef USE_QT
     static auto from_color(const WColor &color) -> WColor;
     nd auto toQColor() const -> QColor;
-    auto operator=(const QColor &other) -> WColor&;
 #endif // USE_QT
 
-    auto operator=(const WColor &other) -> WColor &;
     auto operator==(const WColor &other) const -> bool;
 };
 
@@ -123,30 +113,6 @@ inline void WColor::set_alfa(unsigned char alpha)
 
 
 #ifdef USE_QT
-inline WColor WColor::from_color(const WColor &color)
-{
-    WColor tmp {};
-    tmp.fromColor(color);
-    return tmp;
-}
-
-inline WColor WColor::tocolore_s(double division) const
-{
-    return WColor (this->red / division,
-                   this->green / division,
-                   this->blue / division,
-                   this->alpha / division);
-}
-
-inline auto WColor::operator=(const QColor &other) -> WColor &
-{
-    this->red = other.red();
-    this->green = other.green();
-    this->blue = other.blue();
-    this->alpha = other.alpha();
-    return *this;
-}
-
 inline WColor::WColor(const QColor &other)
         : red(other.red())
         , green(other.green())
@@ -192,8 +158,6 @@ inline constexpr WColor::WColor(type red,
 {
 }
 
-inline WColor::WColor(const WColor &color) = default;
-
 inline void WColor::setAlfa(type newValue)
 {
     this->alpha = newValue;
@@ -203,10 +167,6 @@ inline WColor WColor::fromRgb(type u1, type u2, type u3, type u4)
 {
     return WColor {u1, u2, u3, u4};
 }
-
-inline WColor &WColor::operator=(const WColor &other) = default;
-
-inline WColor::WColor(WColor &&other) noexcept = default;
 
 inline auto
 WColor::load(const VersionFileController &versionController,

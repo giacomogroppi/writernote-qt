@@ -28,9 +28,9 @@ public:
      * \return True if there is no instance of scheduler in the
      * all application
      */
-    static auto isStop() noexcept -> bool ;
+    static auto isStop() noexcept -> bool;
 
-    static constexpr auto debug = true;
+    static constexpr auto debug = false;
     WList<Ptr<WTask>> _task_General;
 
     WVector<std::thread> _threads;

@@ -15,7 +15,7 @@ public:
     explicit Pointer(T* object = nullptr);
 
     template <class Z> requires (not std::is_pointer<Z>::value and std::is_convertible<Z*, T*>::value)
-    Pointer(Z* data);
+    explicit Pointer(Z* data);
 
     template <class Z> requires (not std::is_pointer<Z>::value and std::is_convertible<Z*, T*>::value)
     Pointer(const Pointer<Z> &data);

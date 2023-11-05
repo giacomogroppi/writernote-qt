@@ -387,7 +387,6 @@ inline void SharedPtrThreadSafe<T>::destroy()
     if (_counter) {
         auto valueWritten = --(*_counter);
         if (valueWritten == 0) {
-
             delete _object;
             delete _counter;
 
@@ -504,10 +503,11 @@ inline auto SharedPtrThreadSafe<T>::isUnique() const -> bool
     if (_counter == nullptr)
         return true;
 
-    if (*_counter != 1)
-        WDebug(true, *_counter);
+    const int value = *_counter;
+    if (value != 1)
+        WDebug(true, value);
     
-    if (*_counter == 1) {
+    if (value == 1) {
         return true;
     }
 

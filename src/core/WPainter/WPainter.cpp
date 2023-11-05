@@ -4,9 +4,8 @@
 
 WPainter::~WPainter()
 {
-    if (_allocated) {
-        delete this->_painter;
-    }
+    if (not _allocated)
+        (void) _painter.release();
 }
 
 void WPainter::setAntialiasing()

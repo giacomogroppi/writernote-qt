@@ -130,15 +130,15 @@ auto StrokePre::getPressure() const -> pressure_t
 void StrokePre::reset_img()
 {
     _img = WPixmap(1, false);
-    _img.fill({color_transparent});
+    _img.fill(color_transparent);
 }
 
-WColor StrokePre::getColor(double division) const
+auto StrokePre::getColor(double division) const -> WColor
 {
     return _stroke->getColor(division);
 }
 
-StrokePre &StrokePre::operator=(const StrokePre &other)
+auto StrokePre::operator=(const StrokePre &other) -> StrokePre &
 {
     if (this == &other)
         return *this;

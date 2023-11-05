@@ -543,6 +543,7 @@ auto WVector<T>::takeFirst() noexcept -> T
 
         free(_data);
         _data = newMem;
+        _reserve = 0;
     }
 
     _size --;

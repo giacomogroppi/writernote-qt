@@ -55,7 +55,7 @@ auto WPen::widthF() const -> double
 
 auto WPen::color() const -> WColor
 {
-    return {this->_pen.color()};
+    return WColor {this->_pen.color()};
 }
 
 #endif // USE_QT

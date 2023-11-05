@@ -6,17 +6,18 @@
 #define DEFAULTTHICKNESS 1
 
 // TODO: use style_struct_S load and write methods
-void style_struct::loadFromByte(const WByteArray &arr)
-{
-    style_struct_S tmp {};
+void style_struct::loadFromByte(const WByteArray &arr) {
+    style_struct_S tmp{};
 
-    const auto len = arr.size() / sizeof(tmp);
+    const auto len = static_cast<unsigned>(arr.size() / sizeof(tmp));
 
-    for (auto i = 0ll; i < len; i++) {
+    static_assert(std::is_trivial_v<WColor>);
+
+    for (auto i = 0ull; i < len; i++) {
 
         memcpy(&tmp, arr.mid(
-                i*sizeof(tmp),
-                (i+1)*sizeof(tmp)).constData(),
+                       i * sizeof(tmp),
+                       (i + 1) * sizeof(tmp)).constData(),
                sizeof(tmp)
         );
 
@@ -26,7 +27,7 @@ void style_struct::loadFromByte(const WByteArray &arr)
 
 void style_struct::setDefault(style_struct_S &ref)
 {
-    ref.colore = color_black;
+    ref.colore = WColor {color_black};
     ref.nx = ref.ny = DEFAULTN;
     ref.thickness = DEFAULTTHICKNESS;
 }

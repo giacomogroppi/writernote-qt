@@ -20,7 +20,7 @@ static force_inline void __initImg(WPixmap &img)
 {
     img = WPixmap(1, true);
     W_ASSERT(!img.isNull());
-    img.fill({color_transparent});
+    img.fill(color_transparent);
 }
 
 struct page_thread_data {

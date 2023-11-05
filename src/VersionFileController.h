@@ -48,7 +48,7 @@ private:
     static constexpr unsigned short versionVersionFileController = 0u;
 
     static
-    auto getArray(VersionFileController &versionController) -> std::unique_ptr<unsigned short *>;
+    auto getArray(VersionFileController &versionController) -> std::unique_ptr<unsigned short *[]>;
 public:
     VersionFileController() = default;
 
@@ -67,7 +67,8 @@ public:
     auto operator==(const VersionFileController& other) const noexcept -> bool = default;
 };
 
-inline auto VersionFileController::getArray(VersionFileController &versionController) -> std::unique_ptr<unsigned short *>
+inline auto VersionFileController::getArray(VersionFileController &versionController)
+    -> std::unique_ptr<unsigned short *[]>
 {
     auto array = new unsigned short* [numberOfElements]{
         &versionController._versionWListFast,
@@ -98,7 +99,7 @@ inline auto VersionFileController::getArray(VersionFileController &versionContro
     };
     static_assert(sizeof (VersionFileController) == sizeof(unsigned short) * numberOfElements);
 
-    return std::unique_ptr<unsigned short*>(array);
+    return std::unique_ptr<unsigned short*[]>(array);
 }
 
 inline auto VersionFileController::load(ReadableAbstract &readable) -> std::pair<Error, VersionFileController>
@@ -109,16 +110,16 @@ inline auto VersionFileController::load(ReadableAbstract &readable) -> std::pair
     if (auto err = readable.read(version))
         return {err, result};
 
-    std::unique_ptr<unsigned short*> d = getArray(result);
+    std::unique_ptr<unsigned short *[]> d = getArray(result);
 
     for (int i = 0; i < numberOfElements; i++) {
-        unsigned short &value = (*d)[i];
+        unsigned short &value = *(d)[i];
 
         if (auto err = readable.read (value))
             return {err, result};
     }
 
-    return {Error::makeOk(), std::move(result)};
+    return {Error::makeOk(), result};
 }
 
 inline auto VersionFileController::write(WritableAbstract& writable) -> Error
@@ -130,7 +131,7 @@ inline auto VersionFileController::write(WritableAbstract& writable) -> Error
         return err;
 
     for (int i = 0; i < VersionFileController::numberOfElements; ++i) {
-        unsigned short value = (*array)[i];
+        unsigned short value = *(array)[i];
 
         if (auto err = writable.write(value))
             return err;
