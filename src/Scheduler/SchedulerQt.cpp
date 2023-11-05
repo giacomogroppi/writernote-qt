@@ -17,7 +17,7 @@ SchedulerQt::SchedulerQt(QObject *parent)
     i->installEventFilter(this);
 }
 
-auto SchedulerQt::eventFilter(QObject *watched, QEvent *event) -> bool
+auto SchedulerQt::eventFilter(QObject *, QEvent *event) -> bool
 {
     W_ASSERT(this->thread()->currentThreadId() == QGuiApplication::instance()->thread()->currentThreadId());
 
@@ -49,11 +49,7 @@ auto Scheduler::addTaskMainThread(Ptr<WTask> task) -> void
             W_ASSERT(task.numberOfRef() == 1);
     }
 
-    auto method = [task = std::move(task)]() mutable {
-        manageExecution(std::move(task));
-    };
-
-    QGuiApplication::postEvent(instance, new SchedulerEvent(std::move(method)));
+    QGuiApplication::postEvent(instance, new SchedulerEvent(std::move(task)));
 }
 
 auto Scheduler::numberOfThread() -> Unsigned

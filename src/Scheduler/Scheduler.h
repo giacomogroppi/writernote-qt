@@ -52,7 +52,7 @@ public:
     std::mutex _muxTimers;
     std::condition_variable _conditionalVariableTimers;
 
-    static void manageExecution (Ptr<WTask> task);
+    static void manageExecution (Ptr<WTask> &&task);
     static auto numberOfThread () -> Unsigned;
 
     /**
@@ -120,6 +120,7 @@ private:
     static void joinThread(AtomicSafe<bool> &hasFinish);
 
     friend class WTask;
+    friend class SchedulerEvent;
 
     static bool isExecutionSchedulerThread();
 

@@ -9,19 +9,19 @@
 
 class SchedulerEvent: public QEvent
 {
-    Fn<void()> _method;
     constexpr static auto id = 2000;
     static_assert(id > QEvent::User and id < QEvent::MaxUser);
     DebugVariable<bool> _alreadyExecuted;
+    Scheduler::Ptr<WTask> _task;
 public:
     /**
      * \brief Constructor of the class
      * \param method Method that needs to be executed in the main thread
      * */
-    explicit SchedulerEvent(Fn<void()> method)
+    explicit SchedulerEvent(Scheduler::Ptr<WTask> &&task)
         : QEvent(static_cast<QEvent::Type>(2000))
-        , _method(std::move(method))
         , _alreadyExecuted(false)
+        , _task(std::move(task))
     {
 
     }
@@ -39,7 +39,7 @@ public:
         W_ASSERT(thisId == mainThreadId);
         W_ASSERT(_alreadyExecuted == false);
 
-        _method();
+        Scheduler::manageExecution(std::move(_task));
         _alreadyExecuted = true;
     }
 };

@@ -297,6 +297,7 @@ class SharedPtrThreadSafe
     mutable AtomicSafe<int> *_counter;
     T* _object;
 
+    void rep() const;
     void destroy();
 public:
     SharedPtrThreadSafe();
@@ -347,6 +348,16 @@ public:
     friend class SharedPtrThreadSafe;
 };
 
+template <class T>
+auto SharedPtrThreadSafe<T>::rep() const -> void
+{
+    if (_counter) {
+        W_ASSERT(_object != nullptr);
+    } else {
+        W_ASSERT(_object == nullptr);
+    }
+}
+
 template<class T>
 auto SharedPtrThreadSafe<T>::operator==(const SharedPtrThreadSafe& other) const -> bool
 {
@@ -357,6 +368,7 @@ template <class T>
 void SharedPtrThreadSafe<T>::release() noexcept
 {
     *this = SharedPtrThreadSafe<T>(nullptr);
+    rep();
 }
 
 template <class T>
@@ -373,6 +385,9 @@ void SharedPtrThreadSafe<T>::doAndUnref(Fn<void(T&)> method)
 
     _counter = nullptr;
     _object = nullptr;
+
+    rep();
+
 }
 
 template<class T>
@@ -385,15 +400,16 @@ template <class T>
 inline void SharedPtrThreadSafe<T>::destroy()
 {
     if (_counter) {
-        auto valueWritten = --(*_counter);
+        const auto valueWritten = --(*_counter);
+
         if (valueWritten == 0) {
             delete _object;
             delete _counter;
-
-            _object = nullptr;
-            _counter = nullptr;
         }
     }
+
+    _object = nullptr;
+    _counter = nullptr;
 }
 
 template<class T>
@@ -470,17 +486,19 @@ inline SharedPtrThreadSafe<T>::SharedPtrThreadSafe(const SharedPtrThreadSafe &ot
     : _counter(other._counter)
     , _object(other._object)
 {
-    if (_object) {
-        *_counter += 1;
-    }
+    if (_object)
+        ++ (*_counter);
+    WDebug(true, this << "Aumento");
+
+    rep();
 }
 
 template <class T>
 inline SharedPtrThreadSafe<T>::SharedPtrThreadSafe(T *object)
-    : _counter(new AtomicSafe<int>(1))
+    : _counter(object != nullptr ? new AtomicSafe<int>(1) : nullptr)
     , _object(object)
 {
-
+    rep();
 }
 
 template <class T>
@@ -488,13 +506,16 @@ inline SharedPtrThreadSafe<T>::SharedPtrThreadSafe()
     : _counter(nullptr)
     , _object(nullptr)
 {
-
+    rep();
 }
 
 template <class T>
 inline SharedPtrThreadSafe<T>::~SharedPtrThreadSafe()
 {
     destroy();
+
+    _counter = nullptr;
+    _object = nullptr;
 }
 
 template <class T>
@@ -510,6 +531,8 @@ inline auto SharedPtrThreadSafe<T>::isUnique() const -> bool
     if (value == 1) {
         return true;
     }
+
+    rep();
 
     return false;
 }
@@ -535,9 +558,11 @@ SharedPtrThreadSafe<T>::SharedPtrThreadSafe(const SharedPtrThreadSafe<Z>& object
     : _counter(object._counter)
     , _object(object._object)
 {
-    if (_counter) {
-        *_counter += 1;
-    }
+    if (_counter)
+        ++ (*_counter);
+    rep();
+
+    WDebug(true, this << "Aumento");
 }
 
 template <class T>
