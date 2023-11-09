@@ -42,11 +42,7 @@ public:
     void initMainThread();
     void endMainThread();
 
-    void createHeap();
-
-    bool isHeap() const;
-
-    volatile bool _needToDie;
+    std::atomic_bool _needToDie;
 
     WHeap<WTimer*, true> _timersWaiting;
     std::mutex _muxTimers;

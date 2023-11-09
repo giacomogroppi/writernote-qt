@@ -11,15 +11,23 @@ class WTimer: public WObject
 {
 private:
     mutable WRecursiveLock _lock;
-    bool _isActive: 1;
-    bool _isSingleShot: 1;
-    bool _executionMainThread: 1;
+    std::atomic_bool _isActive;
+    bool _isSingleShot;
+    bool _executionMainThread;
     unsigned long _millisecond;
     unsigned long _timeStart;
 
     Fn<void()> _function;
 public:
-    WTimer(WObject *parent, Fn<void()> function, int millisecond, bool onMainThread = true);
+    struct Flag {
+        enum flag {
+            Zero = 0x0,
+            onMainThread = 0x1,
+            singleShot = 0x2
+        };
+    };
+
+    WTimer(WObject *parent, Fn<void()> function, int millisecond, WFlags<Flag::flag> flags);
     ~WTimer() override;
 
     bool isActive() const;

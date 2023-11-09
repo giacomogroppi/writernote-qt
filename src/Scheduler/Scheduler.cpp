@@ -205,10 +205,6 @@ void Scheduler::manageExecution(Ptr<WTask> &&task)
     WDebug(debug, "Execute object" << static_cast<const void*>(&(*task)) << "with" << task.numberOfRef() << "ref");
 
     const auto needToDeleteLater = task->isDeleteLater();
-    const auto numberOfRed = task.numberOfRef();
-
-    if (needToDeleteLater)
-        W_ASSERT(numberOfRed == 1);
 
     task->run();
 
@@ -251,16 +247,6 @@ Scheduler::~Scheduler()
     endMainThread();
 
     instance = nullptr;
-}
-
-void Scheduler::createHeap()
-{
-    W_ASSERT(this->isHeap());
-}
-
-auto Scheduler::isHeap() const -> bool
-{
-    return true;
 }
 
 auto Scheduler::needToDie() const noexcept -> bool

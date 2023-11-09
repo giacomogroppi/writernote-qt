@@ -1,12 +1,12 @@
 #include "WTask.h"
 #include "Scheduler/WObject.h"
 #include "core/WMutexLocker.h"
-#include "core/WVector.h"
 #include "Scheduler.h"
+#include "WTaskAllocator.h"
 
 WTask::WTask(WObject *parent, WFlags<Flag> deleteLater)
     : WObject(parent)
-    , _waiterLock()
+    , _d(WTaskAllocator::get())
     , _deleteLater((deleteLater & Flag::DeleteLater) != 0x0)
     , _hasFinish(false)
 {
@@ -15,13 +15,17 @@ WTask::WTask(WObject *parent, WFlags<Flag> deleteLater)
 
 void WTask::releaseJoiner() noexcept
 {
-    WMutexLocker _(this->_waiterLock);
+    WMutexLocker _(this->_d->_waiterLock);
 
-    _conditionalVariable.notify_all();
+    _d->_conditionalVariable.notify_all();
     _hasFinish = true;
 }
 
-WTask::~WTask() = default;
+WTask::~WTask()
+{
+    WTaskAllocator::put(_d);
+    _d = nullptr;
+}
 
 void WTask::beforeRun()
 {
@@ -37,8 +41,8 @@ void WTask::join()
 
     Scheduler::joinThread(_hasFinish);
 
-    std::unique_lock guard (_waiterLock);
+    std::unique_lock guard (_d->_waiterLock);
 
     while (not _hasFinish)
-        _conditionalVariable.wait(guard);
+        _d->_conditionalVariable.wait(guard);
 }

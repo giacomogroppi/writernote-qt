@@ -20,7 +20,13 @@ Laser::Laser(
                 color
     )
     , _callUpdate(std::move(callUpdate))
-    , _timer(new WTimer(this, [this]() { this->endTimer(); }, Laser::_time ))
+    , _timer(new WTimer(
+                this,
+                [this]() { this->endTimer(); },
+                Laser::_time,
+                WTimer::Flag::onMainThread
+            )
+    )
 {
     _timer->setSingleShot(true);
 }

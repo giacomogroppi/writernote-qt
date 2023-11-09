@@ -13,20 +13,32 @@ class SchedulerEvent: public QEvent
     static_assert(id > QEvent::User and id < QEvent::MaxUser);
     DebugVariable<bool> _alreadyExecuted;
     Scheduler::Ptr<WTask> _task;
+    Fn<void(Scheduler::Ptr<WTask>&& task)> _method;
 public:
     /**
      * \brief Constructor of the class
      * \param method Method that needs to be executed in the main thread
      * */
-    explicit SchedulerEvent(Scheduler::Ptr<WTask> &&task)
+    explicit SchedulerEvent(auto method, Scheduler::Ptr<WTask> &&task)
         : QEvent(static_cast<QEvent::Type>(2000))
         , _alreadyExecuted(false)
         , _task(std::move(task))
+        , _method(std::move(method))
     {
 
     }
 
-    ~SchedulerEvent() override = default;
+    ~SchedulerEvent() override
+    {
+        return;
+        // TODO: execute even in exit?
+        if (_task.operator bool()) {
+            W_ASSERT(_alreadyExecuted == false);
+
+            _method(std::move(_task));
+            _alreadyExecuted = true;
+        }
+    }
 
     /**
      * \brief This method will call the associated method passed as parameter
@@ -39,7 +51,9 @@ public:
         W_ASSERT(thisId == mainThreadId);
         W_ASSERT(_alreadyExecuted == false);
 
-        Scheduler::manageExecution(std::move(_task));
+        _method(std::move(_task));
+
+        //Scheduler::manageExecution(std::move(_task));
         _alreadyExecuted = true;
     }
 };

@@ -49,7 +49,8 @@ auto Scheduler::addTaskMainThread(Ptr<WTask> task) -> void
             W_ASSERT(task.numberOfRef() == 1);
     }
 
-    QGuiApplication::postEvent(instance, new SchedulerEvent(std::move(task)));
+    QGuiApplication::postEvent(instance, new SchedulerEvent(&Scheduler::manageExecution, std::move(task)));
+    //QGuiApplication::postEvent(instance, new SchedulerEvent(std::move(task)));
 }
 
 auto Scheduler::numberOfThread() -> Unsigned

@@ -6,7 +6,6 @@
 #include <concepts>
 #include "core/AtomicSafe.h"
 
-//
 // #define SHARED_PTR_THREAD_SAFE_USE_MUTEX
 #ifdef SHARED_PTR_THREAD_SAFE_USE_MUTEX
 template <class T>
@@ -319,9 +318,6 @@ public:
 
     auto numberOfRef() const -> int;
 
-    template <class Func>
-    auto atomically(T func) -> void;
-
     template <class ...Args>
     static auto make (Args&& ...args)
     {
@@ -488,7 +484,6 @@ inline SharedPtrThreadSafe<T>::SharedPtrThreadSafe(const SharedPtrThreadSafe &ot
 {
     if (_object)
         ++ (*_counter);
-    WDebug(true, this << "Aumento");
 
     rep();
 }
@@ -559,10 +554,8 @@ SharedPtrThreadSafe<T>::SharedPtrThreadSafe(const SharedPtrThreadSafe<Z>& object
     , _object(object._object)
 {
     if (_counter)
-        ++ (*_counter);
+        ++(*_counter);
     rep();
-
-    WDebug(true, this << "Aumento");
 }
 
 template <class T>

@@ -8,11 +8,18 @@
 #include "core/WMutex.h"
 #include "core/AtomicSafe.h"
 
+class WTaskDataPrivate {
+    std::mutex _waiterLock;
+    std::condition_variable _conditionalVariable;
+
+    friend class WTask;
+};
+
 class WTask: public WObject
 {
 private:
-    std::mutex _waiterLock;
-    std::condition_variable _conditionalVariable;
+    WTaskDataPrivate *_d;
+
     const bool _deleteLater;
     AtomicSafe<bool> _hasFinish;
 public:

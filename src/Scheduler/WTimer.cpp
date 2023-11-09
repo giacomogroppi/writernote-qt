@@ -3,11 +3,11 @@
 #include <chrono>
 #include <utility>
 
-WTimer::WTimer(WObject *parent, Fn<void()> function, int millisecond, bool onMainThread)
+WTimer::WTimer(WObject *parent, Fn<void()> function, int millisecond, WFlags<Flag::flag> flags)
     : WObject(parent)
     , _isActive(false)
-    , _isSingleShot(false)
-    , _executionMainThread(onMainThread)
+    , _isSingleShot((flags & Flag::singleShot) != 0x0)
+    , _executionMainThread((flags & Flag::onMainThread) != 0x0)
     , _millisecond(millisecond)
     , _timeStart(0)
     , _function(std::move(function))
