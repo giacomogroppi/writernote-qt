@@ -1,13 +1,11 @@
 #include "WTaskAllocator.h"
+#include "core/MallocWrapper.h"
 
 static WTaskAllocator *allocator;
 
-static constexpr auto allocateNew = [] {
-    return new WTaskDataPrivate ();
-};
-
 WTaskAllocator::WTaskAllocator()
-    : _allocator(allocateNew)
+    : _allocator(MallocWrapper<WTaskDataPrivate>::allocClass,
+                 MallocWrapper<WTaskDataPrivate>::deallocClass)
 {
 
 }

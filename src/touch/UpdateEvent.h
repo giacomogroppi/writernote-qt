@@ -19,7 +19,7 @@ public:
 
     constexpr UpdateEvent(WFlags<UpdateEventType> flags) : _flags(flags), _low(0), _high(0) {};
 
-    static constexpr auto makePage(int low, int high) { return UpdateEvent(WFlags{UpdateEventType::page}, low, high); }
+    static constexpr auto makePage(int low, int high) { return UpdateEvent(WFlags{page}, low, high); }
     static constexpr auto makePageAll() -> UpdateEvent;
     static constexpr auto makePageSingle(int page) -> UpdateEvent;
 
@@ -72,12 +72,12 @@ inline constexpr auto UpdateEvent::makeEmpty() -> UpdateEvent
 
 inline constexpr auto UpdateEvent::makeSheet() -> UpdateEvent
 {
-    return WFlags{UpdateEventType::stroke};
+    return WFlags{stroke};
 }
 
 inline constexpr auto UpdateEvent::makeStroke() -> UpdateEvent
 {
-    return WFlags{UpdateEventType::stroke};
+    return WFlags{stroke};
 }
 
 inline constexpr auto UpdateEvent::makeSquare() -> UpdateEvent

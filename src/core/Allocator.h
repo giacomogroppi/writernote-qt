@@ -12,8 +12,9 @@ private:
     // TODO: use some lock-free algorithm
 
     const Fn<T*()> _allocateNew;
+    const Fn<void(T*)> _dealloc;
 public:
-    explicit Allocator(Fn<T*()> allocateNew);
+    explicit Allocator(Fn<T*()> allocateNew, Fn<void(T*)> dealloc);
     ~Allocator();
 
     auto get() -> T*;
@@ -25,12 +26,13 @@ Allocator<T, useCache>::~Allocator()
 {
     if constexpr (useCache)
         for (auto* ref: _items)
-            delete ref;
+            _dealloc(ref);
 }
 
 template <class T, bool useCache>
-Allocator<T, useCache>::Allocator(Fn<T*()> allocateNew)
-    : _allocateNew(std::move(allocateNew))
+Allocator<T, useCache>::Allocator(Fn<T*()> allocateNew, Fn<void(T*)> dealloc)
+    : _allocateNew (std::move(allocateNew))
+    , _dealloc (std::move(dealloc))
 {
 
 }
