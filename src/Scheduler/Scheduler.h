@@ -107,6 +107,8 @@ public:
     auto addTimer (WTimer *timer) -> void;
 
     auto removeTimer (WTimer *timer) -> void;
+
+    static auto getThreadIdentifier() -> unsigned long;
 private:
     /**
      * This method is NOT thread save
@@ -126,6 +128,12 @@ private:
     template <int timeWait = -1>
     bool execute();
 };
+
+inline auto Scheduler::getThreadIdentifier() -> unsigned long
+{
+    std::hash <std::thread::id> hasher;
+    return hasher(std::this_thread::get_id());
+}
 
 inline void Scheduler::addTaskGeneric(Ptr<WTask> task)
 {

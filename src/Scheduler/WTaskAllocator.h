@@ -7,7 +7,7 @@
 class WTaskAllocator
 {
 private:
-    Allocator<WTaskDataPrivate, true> _allocator;
+    Allocator<WTaskDataPrivate, false, true> _allocator;
 
     explicit WTaskAllocator();
     ~WTaskAllocator();
