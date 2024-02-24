@@ -2,6 +2,7 @@
 
 #include "utils/WCommonScript.h"
 #include "Scheduler/Scheduler.h"
+#include "core/pointer/UniquePtr.h"
 
 /**
  * \tparam T class for the allocator
@@ -25,7 +26,7 @@ private:
     template <class T2>
     using Vector = std::vector<T2>;
 
-    Vector<Mutex> _lock;
+    Vector<UniquePtr<Mutex>> _lock;
     Vector<List<T*>> _per_cpu_items;
 
     /**
@@ -77,10 +78,25 @@ Allocator<T, callDestructor, useCache, useMultipleList, useRandom>::~Allocator()
 }
 
 template <class T, bool callDestructor, bool useCache, bool useMultipleList, bool useRandom>
-Allocator<T, callDestructor, useCache, useMultipleList, useRandom>::Allocator(Fn<T*()> allocateNew, Fn<void(T*)> dealloc)
+Allocator<T,
+    callDestructor,
+    useCache,
+    useMultipleList,
+    useRandom>::Allocator(
+            Fn<T*()> allocateNew,
+            Fn<void(T*)> dealloc
+    )
     : _allocateNew (std::move(allocateNew))
     , _dealloc (std::move(dealloc))
 {
+    const unsigned numberOfThreads = (useMultipleList)
+            ? Scheduler::numberOfThread()
+            : 1;
+
+    for (unsigned i = 0u; i < numberOfThreads; i++) {
+        this->_per_cpu_items.push_back({});
+        this->_lock.push_back(std::make_unique<Mutex>());
+    }
 }
 
 template <class T, bool callDestructor, bool useCache, bool useMultipleList, bool useRandom>
@@ -109,7 +125,7 @@ auto Allocator<T, callDestructor, useCache, useMultipleList, useRandom>::get(Arg
     const auto id = this->getIdentifier();
 
     auto &ref = _per_cpu_items[id];
-    std::unique_lock guard (_lock[id]);
+    std::unique_lock guard (*_lock[id]);
 
     if (ref.empty())
         ref = std::move(allocateForVector(64));
@@ -134,6 +150,6 @@ auto Allocator<T, callDestructor, useCache, useMultipleList, useRandom>::put(T *
     const auto id = this->getIdentifier();
     auto &ref = _per_cpu_items[id];
 
-    std::unique_lock guard (_lock[id]);
+    std::unique_lock guard (*_lock[id]);
     ref.push_back(object);
 }
