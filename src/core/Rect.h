@@ -107,7 +107,7 @@ public:
 
 
     /**
-     * \return -1 in case of error
+     * \return negative value in case of error
      */
     static
     auto write (WritableAbstract &writable, const RectTemplate<T> &source) -> int

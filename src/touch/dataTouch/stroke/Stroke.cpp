@@ -6,7 +6,7 @@
 #include "utils/common_error_definition.h"
 #include "touch/TabletUtils.h"
 
-std::shared_ptr<Stroke> Stroke::load_ver_1(WZipReaderSingle &reader, int *ok)
+auto Stroke::load_ver_1(WZipReaderSingle &reader, int *ok) -> SharedPtr<Stroke>
 {
 #define manage_err(pointer) do { delete pointer; return ERROR; } while(0)
     auto *s = new StrokeNormal();
@@ -91,7 +91,7 @@ auto Stroke::loadPtr(const VersionFileController &versionController,
     return {Error::makeOk(), r.second};
 }
 
-auto Stroke::load_ver_2(WZipReaderSingle &reader, int *ok) -> std::shared_ptr<Stroke>
+auto Stroke::load_ver_2(WZipReaderSingle &reader, int *ok) -> SharedPtr<Stroke>
 {
 #define ver_2_manage_error(contr)   \
     do {                            \
@@ -114,25 +114,25 @@ auto Stroke::load_ver_2(WZipReaderSingle &reader, int *ok) -> std::shared_ptr<St
     switch (type) {
     case COMPLEX_NORMAL:
     {
-        std::shared_ptr<StrokeNormal> tmp(new StrokeNormal);
+        SharedPtr<StrokeNormal> tmp(new StrokeNormal);
         tmp->load_ver_2(reader);
         return tmp;
     }
     case COMPLEX_LINE:
     {
-        std::shared_ptr<StrokeLine> tmp(new StrokeLine);
+        SharedPtr<StrokeLine> tmp(new StrokeLine);
         tmp->load(reader);
         return tmp;
     }
     case COMPLEX_CIRCLE:
     {
-        std::shared_ptr<StrokeCircle> tmp(new StrokeCircle);
+        SharedPtr<StrokeCircle> tmp(new StrokeCircle);
         tmp->load(reader);
         return tmp;
     }
     case COMPLEX_RECT:
     {
-        std::shared_ptr<StrokeRect> tmp(new StrokeRect);
+        SharedPtr<StrokeRect> tmp(new StrokeRect);
         tmp->load(reader);
         return tmp;
     }

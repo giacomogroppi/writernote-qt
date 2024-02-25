@@ -80,18 +80,18 @@ struct metadata_stroke{
         return Error::makeOk();
     }
 
-    bool operator!=(const metadata_stroke &other) const;
-    bool operator==(const metadata_stroke &other) const;
+    auto operator!=(const metadata_stroke &other) const -> bool;
+    auto operator==(const metadata_stroke &other) const -> bool;
 
-    metadata_stroke &operator=(const metadata_stroke &other) noexcept = default;
-    metadata_stroke &operator=(metadata_stroke &&other) noexcept = default;
+    auto operator=(const metadata_stroke &other) noexcept -> metadata_stroke & = default;
+    auto operator=(metadata_stroke &&other) noexcept -> metadata_stroke & = default;
 };
 
 class Stroke
 {
 private:
-    struct metadata_stroke _metadata;
-    mutable RectF _biggerData;
+    struct metadata_stroke _metadata = {};
+    mutable RectF _biggerData = {};
 
     enum flag_status : unsigned char{
         UPDATE_BIGGER_DATA = BIT(1)
@@ -106,8 +106,8 @@ private:
 
     virtual void reset_flag();
 
-    static std::shared_ptr<Stroke> load_ver_1(WZipReaderSingle &reader, int *ok);
-    static std::shared_ptr<Stroke> load_ver_2(WZipReaderSingle &reader, int *ok);
+    static auto load_ver_1(WZipReaderSingle &reader, int *ok) -> SharedPtr<Stroke>;
+    static auto load_ver_2(WZipReaderSingle &reader, int *ok) -> SharedPtr<Stroke>;
 public:    
     virtual ~Stroke() = default;
 
