@@ -65,7 +65,7 @@ auto InsertTools::touchEnd(const PointF &, class Document &doc) -> UpdateEvent
     pageMod = doc.appendStroke(std::move(res));
 
     doc[pageMod].triggerRenderImage(
-            AudioPosition::makeInvalid(), // (before was -1) reasoning on this paramter
+            AudioPosition::makeInvalid(), // (before was -1) reasoning on this parameter
             false
     );
 

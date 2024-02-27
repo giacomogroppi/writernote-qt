@@ -1,6 +1,7 @@
 #pragma once
 
 #include "utils/WCommonScript.h"
+#include "core/DebugSTD.h"
 
 template <class T>
 class DebugVariable
@@ -148,7 +149,7 @@ auto DebugVariable<T>::operator=(T value) -> DebugVariable&
 
 #ifdef USE_QT
 template <class T>
-inline Q_CORE_EXPORT QDebug operator<<(QDebug d, const DebugVariable<T> &p)
+inline core::Output operator<<(core::Output d, const DebugVariable<T> &p)
 {
     return d.nospace() << p._value;
 }

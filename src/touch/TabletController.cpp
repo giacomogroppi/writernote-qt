@@ -216,7 +216,7 @@ void TabletController::draw(WPainter &painter, double width, WFlags<UpdateEvent:
     //this->_img.write("/Users/giacomo/Desktop/tmp_foto/prova.png", "PNG");
     
     // TODO: remove this
-    TIME_STOP(time_load, "Load function:");
+    TIME_STOP(time_load, "flags{" << flags << "} Load function: ");
 }
 
 void TabletController::checkCreatePage()

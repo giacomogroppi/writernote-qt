@@ -4,13 +4,13 @@
 #include "touch/dataTouch/datastruct/DataStruct.h"
 #include "Scheduler/WObject.h"
 
-class Pen: public WObject, public PenMethod
+class Pen final: public WObject, public PenMethod
 {
 public:
     Pen(WObject *parent,
         Fn<AudioPosition()> getTime,
         WColor &color, WPen &pen);
-    virtual ~Pen() = default;
+    ~Pen() final = default;
 
     enum TypePen {
         TypePressure,
@@ -19,15 +19,15 @@ public:
 
     void setType(enum TypePen type);
 
-    int getType() const final;
+    nd auto getType() const -> int final;
     static constexpr int type();
 
 private:
     double _pressure;
-    pressure_t getSize(double getPressure) const;
+    nd auto getSize(double getPressure) const -> pressure_t;
     enum TypePen _type;
 
-    bool isPressureVariable() const;
+    nd auto isPressureVariable() const -> bool;
 };
 
 inline constexpr int Pen::type()

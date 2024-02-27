@@ -344,7 +344,7 @@ inline void WPainter::setCompositionMode(WPainter::CompositionMode compositionMo
             W_ASSERT(0);
     }
 
-    WDebug(true, "Set composition mode to " << qtCompositionMode);
+    WDebug(false, "Set composition mode to " << qtCompositionMode);
 
     this->_painter->setCompositionMode(qtCompositionMode);
     W_ASSERT(_painter->compositionMode() == qtCompositionMode);

@@ -37,13 +37,13 @@ public:
     /**
      * This function is defined only if the event has UpdateEventType::page and isAll() return false
     */
-    constexpr auto getPageLow() const -> int;
+    nd constexpr auto getPageLow() const -> int;
 
     /**
      * This function is defined only if the event has UpdateEventType::page and isAll() return false
     */
-    constexpr auto getPageHigh() const -> int;
-    constexpr auto isAll() const -> bool;
+    nd constexpr auto getPageHigh() const -> int;
+    nd constexpr auto isAll() const -> bool;
 
 private:
     WFlags<UpdateEventType> _flags;
