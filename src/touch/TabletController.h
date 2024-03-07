@@ -111,8 +111,18 @@ public:
     W_EMITTABLE_1(onPlayAudioStateChanged, bool, isPlaying);
 
     W_EMITTABLE_0(onToolChanged);
+
+    /**
+     * @brief This method will be emit every time the Popup (canvas) in canvas should be hidden
+     */
     W_EMITTABLE_0(onPropertyHide);
     W_EMITTABLE_1(onNumberOfPageChanged, int, numerberOfPage);
+
+    /**
+     * @brief This method will be emit every time the Popup (canvas) should be shown
+     * @param point // TODO: specify the reference system of the point
+     * @param actionProperty What is clickable and what not
+     */
     W_EMITTABLE_2(onPropertyShow, const PointF&, point, ActionProperty, actionProperty);
     W_EMITTABLE_0(onPathChanged);
 };
