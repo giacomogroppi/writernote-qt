@@ -22,7 +22,7 @@ public:
     constexpr WFlags(Z f) : _d(f) {}
 
     constexpr auto operator&=(Type mask) -> WFlags<Enum> & { _d &= mask; return *this; }
-    constexpr auto operator|=(WFlags<Enum> f) -> WFlags<Enum> &{ _d |= f.i; return *this; }
+    constexpr auto operator|=(WFlags<Enum> f) -> WFlags<Enum> &{ _d |= f._d; return *this; }
 
     constexpr operator Type() const { return _d; }
 
