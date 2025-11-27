@@ -43,4 +43,11 @@
     <url type="homepage">https://github.com/giacomogroppi/writernote-qt/</url>
     <url type="bugtracker">https://github.com/giacomogroppi/writernote-qt/issues</url>
     <content_rating type="oars-1.1" />
+    <keywords>
+        <keyword>record audio note</keyword>
+        <keyword>intelligent translation</keyword>
+        <keyword>audio to text</keyword>
+        <keyword>voice to text</keyword>
+        <keyword>note recording</keyword>
+    </keywords>
 </component>
